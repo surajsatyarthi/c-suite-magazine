@@ -1,39 +1,108 @@
 @import "tailwindcss";
 
 :root {
-  /* Colors from competitor analysis */
-  --background: #ffffff;
-  --foreground: #282828;
-  --gray-dark: #282828;
-  --gray-medium: #686868;
-  --gold: #D0AF21;
-  --blue: #2A6496;
+  /* Premium Color Palette */
+  --primary-dark: #082945;
+  --secondary-dark: #0a3350;
+  --primary-gold: #c8ab3d;
+  --gold-medium: #b39935;
+  --gold-light: #f2f0eb;
+  --luxury-cream: #fefdfb;
+  
+  /* Typography Colors */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  /* Backgrounds */
+  --background-white: #ffffff;
+  --background-grey: #f8fafc;
+  --card-bg: #ffffff;
+  
+  /* Borders & Effects */
+  --border-subtle: #e2e8f0;
+  --border-light: rgba(226, 232, 240, 0.5);
+  --gold-shadow: rgba(200, 171, 61, 0.3);
+  --gold-translucent: rgba(200, 171, 61, 0.1);
+  
+  /* Shadows */
+  --shadow-minimal: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+  
+  /* Transitions */
+  --transition-fast: all 0.15s ease;
+  --transition-ease: all 0.3s ease;
+  
+  /* Border Radius */
+  --border-radius-small: 2px;
+  --border-radius-medium: 4px;
+  --border-radius-card: 8px;
+  --border-radius-rounded: 12px;
+  --border-radius-pill: 50px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
-  
-  /* Custom colors */
-  --color-gold: #D0AF21;
-  --color-blue: #2A6496;
-  --color-gray-dark: #282828;
-  --color-gray-medium: #686868;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--background-white);
+  color: var(--text-primary);
   font-family: var(--font-inter), sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Elegant typography */
-h1, h2, h3, h4, h5, h6 {
+/* Professional Typography - csuite-inspired */
+h1 {
   font-family: var(--font-playfair), serif;
-  font-weight: 900;
-  line-height: 1.2;
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 53px;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-family: var(--font-playfair), serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 42px;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-family: var(--font-playfair), serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 31px;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-family: var(--font-playfair), serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+p {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
 }
 
 /* Smooth transitions */
@@ -43,6 +112,190 @@ a, button {
 
 /* Focus styles for accessibility */
 *:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--primary-gold);
   outline-offset: 2px;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  h3 {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  h4 {
+    font-size: 16px;
+    line-height: 22px;
+  }
+}
+
+/* Gradient flash animation */
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(200, 171, 61, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(200, 171, 61, 0.8), 0 0 40px rgba(232, 203, 93, 0.4);
+  }
+}
+
+.btn-gradient-flash {
+  background: #c8ab3d;
+  position: relative;
+  overflow: hidden;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.btn-gradient-flash::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shine 3s ease-in-out infinite;
+}
+
+.btn-gradient-flash:hover::after {
+  animation-duration: 1s;
+}
+
+.btn-gradient-flash-border {
+  background: transparent;
+  border: 2px solid white;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gradient-flash-border::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shine 3s ease-in-out infinite;
+}
+
+.btn-gradient-flash-border:hover::after {
+  animation-duration: 1s;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Auto-scrolling categories animation */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 1.5rem));
+  }
+}
+
+.category-scroll-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.category-scroll-container {
+  display: flex;
+  width: fit-content;
+  animation: scroll-left 90s linear infinite;
+}
+
+.category-scroll-container:hover {
+  animation-play-state: paused;
+}
+
+.category-scroll-content {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 0;
+  white-space: nowrap;
+}
+
+/* Footer glow animation - csuite-inspired */
+@keyframes footer-glow {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 100%;
+  }
+}
+
+.animate-footer-glow {
+  animation: footer-glow 4s ease-in-out infinite;
+}
+
+/* Footer header overrides - must override global h3/h4 styles */
+footer h3,
+footer h4 {
+  color: #ffffff !important;
+}
+
+/* Category badge flash effect */
+.category-badge-flash {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.category-badge-flash::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: shine 4s ease-in-out infinite;
+  border-radius: inherit;
+}
+
+.category-badge-flash:hover::after {
+  animation-duration: 1.5s;
 }

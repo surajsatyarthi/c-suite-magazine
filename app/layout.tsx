@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "The CEO Magazine - Leadership, Innovation & Executive Insights",
+  title: "C-Suite Magazine - Leadership, Innovation & Executive Insights",
   description: "A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies.",
 };
 
