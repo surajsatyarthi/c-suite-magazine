@@ -28,9 +28,11 @@ export interface Post {
   author: Author
   mainImage: any
   categories: Category[]
+  tags?: string[]
   isFeatured?: boolean
   readTime?: number
   publishedAt: string
+  views?: number
   body: any[]
   seo?: {
     metaTitle?: string
