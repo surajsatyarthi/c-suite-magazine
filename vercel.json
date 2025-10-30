@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "nodeVersion": "18.x",
+  "redirects": [
+    {"source": "https://www.csuitemagazine.global/(.*)", "destination": "https://csuitemagazine.global/$1", "permanent": true}
+  ]
+}

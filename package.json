@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
