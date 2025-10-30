@@ -1,5 +1,38 @@
 @import "tailwindcss";
 
+/* Category scroll animation */
+.category-scroll-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 0.75rem 0;
+}
+
+.category-scroll-container {
+  display: flex;
+  width: 100%;
+}
+
+.category-scroll-content {
+  display: flex;
+  gap: 1rem;
+  padding: 0 1rem;
+  animation: scroll 30s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Pause animation on hover */
+.category-scroll-wrapper:hover .category-scroll-content {
+  animation-play-state: paused;
+}
+
 :root {
   /* Premium Color Palette */
   --primary-dark: #082945;
@@ -116,6 +149,15 @@ a, button {
   outline-offset: 2px;
 }
 
+/* Utility: Override heading colors for dark backgrounds */
+.dark-section h1,
+.dark-section h2,
+.dark-section h3,
+.dark-section h4,
+.dark-section p {
+  color: inherit;
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
   h1 {
@@ -225,7 +267,7 @@ a, button {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-100% - 1.5rem));
+    transform: translateX(-50%);
   }
 }
 
@@ -248,7 +290,7 @@ a, button {
 .category-scroll-content {
   display: flex;
   gap: 1.5rem;
-  padding: 0.75rem 0;
+  padding: 0.75rem 1.5rem 0.75rem 0;
   white-space: nowrap;
 }
 

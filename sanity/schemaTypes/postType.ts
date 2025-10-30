@@ -81,12 +81,6 @@ export const postType = defineType({
       description: 'Estimated reading time in minutes',
     }),
     defineField({
-      name: 'publishedAt',
-      type: 'datetime',
-      title: 'Published Date',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: 'body',
       type: 'blockContent',
       title: 'Article Content',

@@ -17,7 +17,7 @@ export default function ParallaxHero() {
   }, [])
 
   return (
-    <section className="relative h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden">
+    <section className="dark-section relative h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden">
       {/* Parallax Background Image */}
       <div 
         className="absolute inset-0 z-0"
@@ -65,30 +65,30 @@ export default function ParallaxHero() {
             </div>
 
             {/* Main heading */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-black mb-6 leading-tight text-white">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-black mb-6 leading-tight" style={{ color: '#ffffff' }}>
               Leadership.<br />
               <span className="text-[#c8ab3d]">Innovation.</span><br />
               Excellence.
             </h1>
             
             {/* Subtitle */}
-            <p className="text-xl md:text-2xl lg:text-3xl text-gray-200 mb-10 leading-relaxed max-w-3xl mx-auto font-light">
+            <p className="text-xl md:text-2xl lg:text-3xl mb-10 leading-relaxed max-w-3xl mx-auto font-semibold" style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
               Exclusive insights and strategies for global executives and business leaders
             </p>
 
             {/* Stats Section */}
             <div className="grid grid-cols-3 gap-6 md:gap-12 mt-16 max-w-3xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">500+</div>
-                <div className="text-sm md:text-base text-gray-300">Expert Articles</div>
+                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">2M+</div>
+                <div className="text-sm md:text-base text-gray-300">Monthly Readers</div>
               </div>
               <div className="text-center border-x border-white/20">
-                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">50K+</div>
-                <div className="text-sm md:text-base text-gray-300">Readers</div>
+                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">300+</div>
+                <div className="text-sm md:text-base text-gray-300">Fortune 500 CEOs</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">100+</div>
-                <div className="text-sm md:text-base text-gray-300">Contributors</div>
+                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">150+</div>
+                <div className="text-sm md:text-base text-gray-300">Countries</div>
               </div>
             </div>
           </div>

@@ -9,11 +9,11 @@ export default function AboutPage() {
       
       <main className="bg-white">
         {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white">
+        <section className="dark-section py-20 bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-5xl md:text-6xl font-serif font-normal mb-6">About C-Suite Magazine</h1>
-              <p className="text-xl text-gray-300 leading-relaxed">
+              <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-white">About C-Suite Magazine</h1>
+              <p className="text-xl leading-relaxed font-semibold text-white shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                 A premium source of information, inspiration and motivation for the world's most successful leaders, executives, investors and entrepreneurs.
               </p>
             </div>
@@ -53,8 +53,8 @@ export default function AboutPage() {
                   </div>
                   
                   <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                    <h3 className="text-xl font-serif font-normal text-gray-900 mb-3">Lifestyle</h3>
-                    <p className="text-gray-700">Exclusive access to the world of luxury, travel, and the finer things that complement executive success.</p>
+                    <h3 className="text-xl font-serif font-normal text-gray-900 mb-3">Sustainability</h3>
+                    <p className="text-gray-700">How leading executives balance environmental responsibility with business growth and profitability.</p>
                   </div>
                   
                   <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">

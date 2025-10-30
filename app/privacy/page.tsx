@@ -7,10 +7,19 @@ export default function PrivacyPage() {
       <Navigation />
       
       <main className="bg-white">
+        <div className="dark-section bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className="text-5xl font-serif font-black mb-4 text-white">
+              Privacy Policy
+            </h1>
+            <p className="text-xl text-white max-w-2xl mx-auto">
+              Last updated: October 28, 2025
+            </p>
+          </div>
+        </div>
+        
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-serif font-normal text-gray-900 mb-4">Privacy Policy</h1>
-            <p className="text-gray-500 mb-12">Last updated: October 28, 2025</p>
             
             <div className="prose prose-lg max-w-none">
               <p className="text-lg text-gray-700 leading-relaxed mb-8">

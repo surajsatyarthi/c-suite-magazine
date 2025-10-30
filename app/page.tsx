@@ -3,6 +3,8 @@ import Image from 'next/image'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import ParallaxHero from '@/components/ParallaxHero'
+import CEOSpotlight from '@/components/CEOSpotlight'
+import MagazineGallery from '@/components/MagazineGallery'
 import { client, urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
 
@@ -60,7 +62,7 @@ const dummyArticles = [
     readTime: 5,
     publishedAt: '2025-01-15',
     mainImage: { url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop', alt: 'Team of business leaders in a modern office setting' },
-    views: 15200
+    views: 2800000
   },
   {
     _id: 'dummy-2',
@@ -73,7 +75,7 @@ const dummyArticles = [
     readTime: 7,
     publishedAt: '2025-01-14',
     mainImage: { url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop', alt: 'Innovative technology and collaboration' },
-    views: 12800
+    views: 2400000
   },
   {
     _id: 'dummy-3',
@@ -86,7 +88,7 @@ const dummyArticles = [
     readTime: 6,
     publishedAt: '2025-01-13',
     mainImage: { url: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=600&fit=crop', alt: 'Green sustainable business environment' },
-    views: 11400
+    views: 2100000
   },
   {
     _id: 'dummy-4',
@@ -99,7 +101,7 @@ const dummyArticles = [
     readTime: 8,
     publishedAt: '2025-01-12',
     mainImage: { url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop', alt: 'Professional woman CEO in tech industry' },
-    views: 9700
+    views: 1800000
   },
   {
     _id: 'dummy-5',
@@ -112,7 +114,7 @@ const dummyArticles = [
     readTime: 9,
     publishedAt: '2025-01-11',
     mainImage: { url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=600&fit=crop', alt: 'Financial charts and business analytics' },
-    views: 8500
+    views: 1600000
   },
   {
     _id: 'dummy-6',
@@ -125,7 +127,7 @@ const dummyArticles = [
     readTime: 6,
     publishedAt: '2025-01-10',
     mainImage: { url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop', alt: 'AI and artificial intelligence technology' },
-    views: 7200
+    views: 1300000
   }
 ]
 
@@ -145,12 +147,18 @@ export default async function Home() {
         {/* Hero Section with Parallax */}
         <ParallaxHero />
 
+        {/* Magazine Gallery */}
+        <MagazineGallery />
+
+        {/* CEO Spotlight Section */}
+        <CEOSpotlight />
+
         {/* Featured Articles */}
         {displayFeatured.length > 0 && (
           <section className="py-16 bg-gray-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between mb-10">
-                <h3 className="text-4xl font-serif font-black text-gray-900">Featured Stories</h3>
+                <h3 className="text-4xl font-serif font-black text-gray-900">Featured CXOs</h3>
                 <span className="text-[#c8ab3d] font-semibold">★ Editor's Choice</span>
               </div>
               
@@ -213,18 +221,15 @@ export default async function Home() {
                       )}
                       <div className="flex items-center justify-between text-sm text-gray-500">
                         <span>{post.author?.name}</span>
-                        <div className="flex items-center gap-3">
-                          {post.readTime && <span>{post.readTime} min read</span>}
-                          {post.views && (
-                            <span className="flex items-center gap-1">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                              {(post.views / 1000).toFixed(1)}K
-                            </span>
-                          )}
-                        </div>
+                        {post.views && (
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            {(post.views / 1000000).toFixed(1)}M
+                          </span>
+                        )}
                       </div>
                     </div>
                   </Link>
@@ -300,24 +305,16 @@ export default async function Home() {
                         )}
                         <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
                           <span className="font-medium">{post.author?.name}</span>
-                          <div className="flex items-center gap-2">
-                            {post.readTime && <span>{post.readTime} min</span>}
-                            {post.views && (
-                              <span className="flex items-center gap-1">
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                {(post.views / 1000).toFixed(1)}K
-                              </span>
-                            )}
-                          </div>
+                          {post.views && (
+                            <span className="flex items-center gap-1">
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              {(post.views / 1000000).toFixed(1)}M
+                            </span>
+                          )}
                         </div>
-                        {post.publishedAt && (
-                          <time className="text-xs text-gray-400 mt-2 block">
-                            {formatDate(post.publishedAt)}
-                          </time>
-                        )}
                       </div>
                     </article>
                   </Link>

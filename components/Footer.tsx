@@ -4,7 +4,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#082945] text-white mt-20 border-t-[3px] border-[#c8ab3d] relative overflow-hidden">
+    <footer className="dark-section bg-[#082945] text-white mt-20 border-t-[3px] border-[#c8ab3d] relative overflow-hidden">
       {/* Animated Glow Effect */}
       <div 
         className="absolute top-0 left-[-100%] w-full h-full pointer-events-none z-[1] animate-footer-glow"
@@ -19,8 +19,8 @@ export default function Footer() {
             <h3 className="text-3xl font-serif font-normal text-white mb-4">
               C-Suite Magazine
             </h3>
-            <p className="text-gray-300 mb-6 text-sm leading-relaxed max-w-md">
-              The world's premier source of information, inspiration and motivation for successful leaders, executives, investors and entrepreneurs.
+            <p className="text-white mb-6 text-sm leading-relaxed max-w-md">
+              Your legacy goes global.
             </p>
           </div>
 
@@ -42,9 +42,9 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm">
               <li><Link href="/category/ceo-woman" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">CEO Woman</Link></li>
               <li><Link href="/category/entrepreneurs" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Entrepreneurs</Link></li>
-              <li><Link href="/category/lifestyle" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Lifestyle</Link></li>
               <li><Link href="/category/technology" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Technology</Link></li>
               <li><Link href="/category/sustainability" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Sustainability</Link></li>
+              <li><Link href="/category/startups" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Startups</Link></li>
             </ul>
           </div>
 
@@ -54,6 +54,8 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm">
               <li><Link href="/about" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Contact</Link></li>
+              <li><Link href="/archive" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Magazine Archive</Link></li>
+              <li><Link href="/advertise" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Advertise</Link></li>
               <li><Link href="/privacy" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Privacy Policy</Link></li>
               <li><Link href="/terms" className="text-gray-300 hover:text-[#c8ab3d] transition-colors">Terms & Conditions</Link></li>
             </ul>
