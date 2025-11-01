@@ -1,13 +1,16 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
+  const pathname = usePathname()
+  const isArticle = pathname?.startsWith('/article/')
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,6 +19,16 @@ export default function Navigation() {
       setSearchQuery('')
     }
   }
+
+  // Handle keyboard navigation for search
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setSearchQuery('')
+      searchInputRef.current?.blur()
+    }
+  }
+
+  // Sticky header removed globally per request; no scroll listeners.
 
   const allCategories = [
     'Leadership', 'Business', 'Manufacturing', 'Public Sector', 'Events',
@@ -40,85 +53,70 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className="bg-white border-b border-gray-200">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-3">
-          {/* Mobile menu button */}
-          <button 
-            className="md:hidden flex items-center p-2 rounded-md text-gray-700 hover:text-[#c8ab3d] hover:bg-gray-100"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-          
-          {/* Logo */}
-          <Link href="/" className="flex flex-col items-center text-center mx-auto md:mx-0">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-serif font-black text-gray-900 mb-0.5">
-              C-Suite Magazine
-            </h1>
-            <p className="text-xs text-gray-500 font-serif">
-              Your legacy goes global
-            </p>
-          </Link>
-          
-          {/* Desktop nav links - hidden on mobile */}
-          <div className="hidden md:flex space-x-4">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.href} 
-                href={link.href}
-                className="text-sm font-medium text-gray-700 hover:text-[#c8ab3d] transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+    <>
+      {/* Skip link removed per request to hide from top */}
+
+      {/* Main Navigation */}
+      <nav 
+        className="dark-section relative overflow-hidden bg-[#082945] text-white border-b-[3px] border-[#c8ab3d]"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Removed header background glow for a cleaner, non-shiny header */}
+          <div className="flex justify-center items-center py-3 relative z-10">
+            
+            {/* Logo with Metallic Sheen */}
+            <Link 
+              href="/" 
+              prefetch
+              className="flex flex-col items-center text-center mx-auto md:mx-0 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945] rounded-sm"
+              aria-label="C-Suite Magazine - Home"
+            >
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-serif font-black text-white mb-0.5">
+                C-Suite <span className="metallic-sheen">Magazine</span>
+              </h1>
+              <p className="text-xs text-white font-serif uppercase tracking-wide">
+                Your legacy goes <span className="metallic-sheen">global</span>
+              </p>
+            </Link>
           </div>
         </div>
-      </div>
+      
 
-      {/* Mobile menu - shown when menu is open */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 py-2">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col space-y-2">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.href} 
-                  href={link.href}
-                  className="text-sm font-medium text-gray-700 hover:text-[#c8ab3d] transition-colors py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Search Bar - Below Logo */}
+      {/* Search Bar - Below Logo (no glow overlay) */}
       <div className="border-t border-gray-200 bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <form onSubmit={handleSearch} className="flex items-center justify-center gap-2 max-w-2xl mx-auto">
+          <form 
+            onSubmit={handleSearch} 
+            className="flex items-center justify-center gap-2 max-w-2xl mx-auto"
+            role="search"
+            aria-label="Search articles"
+          >
             <div className="relative flex-1">
+              <label htmlFor="search-input" className="sr-only">
+                Search articles
+              </label>
               <input
+                id="search-input"
+                ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 placeholder="Search articles..."
                 className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:border-transparent"
+                aria-describedby="search-help"
               />
+              <div id="search-help" className="sr-only">
+                Enter keywords to search for articles. Press Escape to clear.
+              </div>
               <svg
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -130,7 +128,8 @@ export default function Navigation() {
             </div>
             <button
               type="submit"
-              className="px-4 sm:px-6 py-2 bg-[#082945] text-white rounded-lg hover:bg-[#0a3a5c] transition-colors font-medium text-sm"
+              className="px-4 sm:px-6 py-2 bg-[#082945] text-white rounded-lg hover:bg-[#0a3a5c] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 transition-colors font-medium text-sm"
+              aria-label="Submit search"
             >
               Search
             </button>
@@ -138,16 +137,22 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Horizontal Category Menu with Auto-Scroll */}
-      <div className="border-b border-gray-200 bg-gray-50 overflow-hidden">
+      {/* Horizontal Category Menu with Auto-Scroll (no glow overlay) */}
+      <div className="border-b border-white/10 bg-[#0b2f4c]/40 overflow-hidden">
         <div className="category-scroll-wrapper">
-          <div className="category-scroll-container">
+          <nav 
+            className="category-scroll-container"
+            role="navigation"
+            aria-label="Article categories"
+          >
             <div className="category-scroll-content">
               {allCategories.map((category) => (
                 <Link
                   key={category}
                   href={`/category/${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                  className="text-sm font-medium text-gray-700 hover:text-[#c8ab3d] whitespace-nowrap transition-colors px-2"
+                  prefetch
+                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] focus:text-[#c8ab3d] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#0b2f4c] whitespace-nowrap transition-colors premium-underline rounded-sm px-1"
+                  aria-label={`View ${category} articles`}
                 >
                   {category}
                 </Link>
@@ -159,16 +164,18 @@ export default function Navigation() {
                 <Link
                   key={`${category}-duplicate`}
                   href={`/category/${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                  className="text-sm font-medium text-gray-700 hover:text-[#c8ab3d] whitespace-nowrap transition-colors px-2"
+                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] whitespace-nowrap transition-colors premium-underline"
                   tabIndex={-1}
+                  aria-hidden="true"
                 >
                   {category}
                 </Link>
               ))}
             </div>
-          </div>
+          </nav>
         </div>
       </div>
-    </nav>
+      </nav>
+    </>
   )
 }

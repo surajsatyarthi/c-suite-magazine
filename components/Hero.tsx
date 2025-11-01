@@ -1,38 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
 
-export default function ParallaxHero() {
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+export default function Hero() {
 
   return (
     <section className="dark-section relative h-[600px] md:h-[700px] lg:h-[800px] overflow-hidden">
       {/* Parallax Background Image */}
       <div 
         className="absolute inset-0 z-0"
-        style={{
-          transform: `translateY(${scrollY * 0.5}px)`,
-          willChange: 'transform'
-        }}
       >
-        <Image
+        <OptimizedImage
           src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&h=1080&fit=crop"
           alt="Modern business cityscape"
           fill
           className="object-cover"
           priority
           quality={90}
+          sizes="100vw"
         />
         {/* Dark overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#082945]/95 via-[#0a3350]/90 to-[#082945]/95" />
@@ -50,24 +35,19 @@ export default function ParallaxHero() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             className="max-w-4xl mx-auto text-center"
-            style={{
-              transform: `translateY(${scrollY * 0.2}px)`,
-              opacity: Math.max(1 - scrollY / 500, 0),
-              willChange: 'transform, opacity'
-            }}
           >
             {/* Small badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#c8ab3d]/20 border border-[#c8ab3d]/40 rounded-full text-[#c8ab3d] text-sm font-semibold mb-6 backdrop-blur-sm">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
               </svg>
-              Trusted by 50,000+ Executives Worldwide
+              Leading Global C-Suite Magazine
             </div>
 
             {/* Main heading */}
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-black mb-6 leading-tight" style={{ color: '#ffffff' }}>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-black mb-6 leading-tight heading-premium" style={{ color: '#ffffff' }}>
               Leadership.<br />
-              <span className="text-[#c8ab3d]">Innovation.</span><br />
+              <span className="metallic-sheen">Innovation.</span><br />
               Excellence.
             </h1>
             
@@ -78,15 +58,15 @@ export default function ParallaxHero() {
 
             {/* Stats Section */}
             <div className="grid grid-cols-3 gap-6 md:gap-12 mt-16 max-w-3xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">2M+</div>
+              <div className="text-center reveal" style={{ transitionDelay: '0ms' }}>
+                <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">3M+</div>
                 <div className="text-sm md:text-base text-gray-300">Monthly Readers</div>
               </div>
-              <div className="text-center border-x border-white/20">
+              <div className="text-center border-x border-white/20 reveal" style={{ transitionDelay: '80ms' }}>
                 <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">300+</div>
                 <div className="text-sm md:text-base text-gray-300">Fortune 500 CEOs</div>
               </div>
-              <div className="text-center">
+              <div className="text-center reveal" style={{ transitionDelay: '160ms' }}>
                 <div className="text-3xl md:text-5xl font-serif font-bold text-[#c8ab3d] mb-2">150+</div>
                 <div className="text-sm md:text-base text-gray-300">Countries</div>
               </div>

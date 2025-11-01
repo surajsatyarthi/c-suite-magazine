@@ -1,0 +1,193 @@
+/* Accessibility Styles - Focus Management and Indicators */
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 9999;
+  font-weight: bold;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Enhanced focus indicators */
+*:focus {
+  outline: none;
+}
+
+/* High contrast focus ring for better visibility */
+.focus-visible,
+*:focus-visible {
+  outline: 3px solid #c8ab3d !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Custom focus styles for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[role="link"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #c8ab3d !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px rgba(200, 171, 61, 0.2) !important;
+}
+
+/* Focus styles for navigation elements */
+nav a:focus-visible {
+  background-color: rgba(200, 171, 61, 0.1);
+  border-radius: 4px;
+}
+
+/* Focus styles for cards and interactive containers */
+.card-focus:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Focus trap styles for modals */
+.focus-trap {
+  position: relative;
+}
+
+.focus-trap::before,
+.focus-trap::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .focus-visible,
+  *:focus-visible {
+    outline: 4px solid #000 !important;
+    outline-offset: 2px !important;
+  }
+  
+  button:focus-visible,
+  a:focus-visible {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 2px solid #000 !important;
+  }
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Focus management for carousel/slider components */
+.carousel-container:focus-within .carousel-controls {
+  opacity: 1;
+}
+
+/* Keyboard navigation indicators */
+.keyboard-user *:focus {
+  outline: 3px solid #c8ab3d !important;
+  outline-offset: 2px !important;
+}
+
+.mouse-user *:focus {
+  outline: none !important;
+}
+
+/* Loading state accessibility */
+[aria-busy="true"] {
+  cursor: wait;
+}
+
+/* Live region styles */
+[aria-live] {
+  position: relative;
+}
+
+[aria-live="assertive"] {
+  font-weight: bold;
+}
+
+/* Focus management for dropdown menus */
+.dropdown-menu {
+  position: relative;
+}
+
+.dropdown-menu:focus-within .dropdown-content {
+  display: block;
+}
+
+/* Accessible form focus styles */
+.form-field:focus-within label {
+  color: #c8ab3d;
+  font-weight: 600;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  border-color: #c8ab3d;
+  box-shadow: 0 0 0 3px rgba(200, 171, 61, 0.1);
+}
+
+/* Error state focus styles */
+.form-field.error input:focus,
+.form-field.error textarea:focus,
+.form-field.error select:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+/* Success state focus styles */
+.form-field.success input:focus,
+.form-field.success textarea:focus,
+.form-field.success select:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}

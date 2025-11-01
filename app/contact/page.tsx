@@ -1,6 +1,7 @@
 'use client'
 
 import Navigation from '@/components/Navigation'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import { useState } from 'react'
 
@@ -34,12 +35,13 @@ export default function ContactPage() {
   return (
     <>
       <Navigation />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
       
       <main className="min-h-screen bg-gray-50">
         {/* Hero Section */}
         <div className="dark-section bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl font-serif font-black mb-4 text-white">
+            <h1 className="text-5xl font-serif font-black mb-4 text-white heading-premium">
               Get in Touch
             </h1>
             <p className="text-xl text-white max-w-2xl mx-auto">

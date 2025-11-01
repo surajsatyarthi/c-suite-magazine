@@ -2,6 +2,23 @@
 
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
+## Deployment Policy (MANDATORY)
+
+- Always deploy updates to the existing Vercel project for this repo.
+- Never create a new Vercel project during deployment.
+- Link the folder to the correct project before deploying:
+  ```bash
+  npx vercel link --project ceo-magazine --yes --scope <your-team-or-org>
+  ```
+- Deploy production builds non-interactively:
+  ```bash
+  npx vercel deploy --prod --yes
+  ```
+- Domain mapping must point to the same project:
+  - Primary: `csuitemagazine.global`
+  - `www` redirects to primary (handled in `vercel.json`).
+  - Add the domain in Vercel → Project Settings → Domains and update DNS to Vercel.
+
 ## Commands
 
 ### Development

@@ -1,4 +1,5 @@
 import Navigation from '@/components/Navigation'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 
@@ -6,14 +7,15 @@ export default function AboutPage() {
   return (
     <>
       <Navigation />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
       
       <main className="bg-white">
         {/* Hero Section */}
-        <section className="dark-section py-20 bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white">
+        <section className="dark-section py-20 bg-[#082945] text-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-white">About C-Suite Magazine</h1>
-              <p className="text-xl leading-relaxed font-semibold text-white shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-white heading-premium">About C-Suite Magazine</h1>
+              <p className="text-lg md:text-xl leading-relaxed font-normal text-white/85">
                 A premium source of information, inspiration and motivation for the world's most successful leaders, executives, investors and entrepreneurs.
               </p>
             </div>

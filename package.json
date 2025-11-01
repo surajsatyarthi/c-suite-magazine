@@ -2,19 +2,23 @@
   "name": "ceo-magazine",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@9",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "eslint"
   },
   "engines": {
     "node": "22.x"
   },
   "dependencies": {
+    "@sanity/client": "^6.20.1",
+    "@portabletext/react": "^3.0.11",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.12.0",
+    "dotenv": "^16.6.1",
     "next": "16.0.1",
     "next-sanity": "^11.6.2",
     "react": "19.2.0",

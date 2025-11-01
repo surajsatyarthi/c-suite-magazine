@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
 import Navigation from '@/components/Navigation'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import { client, urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
@@ -11,6 +12,9 @@ interface Category {
   description?: string
   color?: string
 }
+
+// Enable ISR to avoid heavy full-build prerenders for category pages
+export const revalidate = 600
 
 async function getCategory(slug: string): Promise<Category | null> {
   const query = `*[_type == "category" && slug.current == $slug][0] {
@@ -75,6 +79,7 @@ export default async function CategoryPage({
   return (
     <>
       <Navigation />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: displayCategory.title }]} />
       
       <main className="min-h-screen bg-gray-50">
         {/* Category Header */}
@@ -124,7 +129,7 @@ export default async function CategoryPage({
               </p>
               <Link
                 href="/"
-                className="inline-block px-6 py-3 bg-[#082945] text-white rounded-lg hover:bg-[#0a3a5c] transition-colors font-medium"
+                className="inline-block px-6 py-3 bg-[#082945] text-white rounded-lg hover:bg-[#0a3a5c] transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2"
               >
                 Back to Home
               </Link>
@@ -135,11 +140,12 @@ export default async function CategoryPage({
                 <Link
                   key={post._id}
                   href={`/article/${post.slug.current}`}
-                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
+                  prefetch
+                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2"
                 >
                   <div className="relative h-56 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
                     {post.mainImage ? (
-                      <Image
+                      <OptimizedImage
                         src={urlFor(post.mainImage).width(500).height(350).url()}
                         alt={post.title}
                         fill
@@ -176,7 +182,7 @@ export default async function CategoryPage({
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
-                          {(post.views / 1000).toFixed(1)}K
+                          {(post.views / 1000000).toFixed(1)}M
                         </span>
                       )}
                     </div>

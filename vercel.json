@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install --prefer-offline",
   "framework": "nextjs",
   "redirects": [
     {"source": "/(.*)", "destination": "https://csuitemagazine.global/$1", "permanent": true, "has": [{"type": "host", "value": "www.csuitemagazine.global"}]}

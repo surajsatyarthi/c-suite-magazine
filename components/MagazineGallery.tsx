@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
 import Link from 'next/link'
 
 export default function MagazineGallery() {
@@ -72,7 +72,7 @@ export default function MagazineGallery() {
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
             Featured Issues
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -85,10 +85,10 @@ export default function MagazineGallery() {
             <Link
               key={cover.id}
               href="/archive"
-              className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300"
+              className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 card-hover-scale"
             >
               <div className="relative aspect-[2/3] overflow-hidden bg-gray-200">
-                <Image
+                <OptimizedImage
                   src={cover.image}
                   alt={cover.title}
                   fill
@@ -124,9 +124,10 @@ export default function MagazineGallery() {
         <div className="text-center mt-12">
           <Link
             href="/archive"
-            className="inline-block px-8 py-4 bg-[#082945] text-white font-bold rounded-lg hover:bg-[#0a3a5c] transition-colors"
+            prefetch
+            className="inline-block px-8 py-4 bg-[#082945] text-white font-bold rounded-lg hover:bg-[#0a3a5c] transition-colors btn-shimmer focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2"
           >
-            View Complete Archive
+            Read More
           </Link>
         </div>
       </div>

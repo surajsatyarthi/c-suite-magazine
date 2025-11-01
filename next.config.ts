@@ -32,6 +32,8 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: 'https',
@@ -40,6 +42,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.iconify.design',
       },
     ],
   },

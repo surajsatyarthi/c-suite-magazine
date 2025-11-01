@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
 
 export default function Testimonials() {
   const testimonials = [
@@ -42,11 +42,12 @@ export default function Testimonials() {
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
+                  <OptimizedImage
                     src={testimonial.image}
                     alt={testimonial.name}
                     fill
                     className="object-cover"
+                    sizes="64px"
                   />
                 </div>
                 <div>

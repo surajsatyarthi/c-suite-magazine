@@ -1,97 +1,78 @@
-import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
+import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
 
-interface AdData {
-  _id: string
-  name: string
-  image: any
-  targetUrl: string
-  placement: string
-  dimensions?: {
-    width: number
-    height: number
-  }
-  openInNewTab: boolean
-}
-
-interface AdProps {
-  placement: string
+type AdProps = {
+  placement: 'article-sidebar' | 'article-sidebar-large' | 'in-article' | 'homepage-banner' | 'homepage-sidebar' | 'footer-banner'
   className?: string
 }
 
-async function getActiveAd(placement: string): Promise<AdData | null> {
-  const now = new Date().toISOString()
-  
-  const query = `*[
-    _type == "advertisement" && 
-    placement == $placement && 
-    isActive == true &&
-    (!defined(startDate) || startDate <= $now) &&
-    (!defined(endDate) || endDate >= $now)
-  ] | order(priority desc) [0] {
+async function fetchAd(placement: string) {
+  const query = `*[_type == "advertisement" && placement == $placement && isActive == true && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())] | order(priority desc)[0] {
     _id,
     name,
     image,
     targetUrl,
     placement,
     dimensions,
-    openInNewTab
+    isActive,
+    priority
   }`
-  
-  try {
-    return await client.fetch(query, { placement, now })
-  } catch (error) {
-    console.error(`Failed to fetch ad for placement: ${placement}`, error)
-    return null
-  }
+  return client.fetch(query, { placement })
 }
 
-export default async function Ad({ placement, className = '' }: AdProps) {
-  const ad = await getActiveAd(placement)
-  
-  // If no ad found, show placeholder
+export default async function Ad({ placement, className }: AdProps) {
+  const ad = await fetchAd(placement)
+
   if (!ad) {
     return (
-      <div className={`bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 ${className}`}>
-        <div className="text-center">
-          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Advertisement</p>
-          <div className="bg-white rounded p-8 flex items-center justify-center" style={{ minHeight: '250px' }}>
-            <div className="text-gray-400">
-              <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p className="text-sm">Ad Space: {placement}</p>
-            </div>
+      <div className={className}>
+        <div className="bg-white rounded p-8 flex items-center justify-center" style={{ minHeight: '250px' }}>
+          <div className="text-gray-400 text-center">
+            <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+            </svg>
+            <p className="text-sm">Ad slot: {placement}</p>
           </div>
         </div>
       </div>
     )
   }
-  
-  const imageUrl = urlFor(ad.image).url()
-  const width = ad.dimensions?.width || 300
-  const height = ad.dimensions?.height || 250
-  const target = ad.openInNewTab ? '_blank' : '_self'
-  const rel = ad.openInNewTab ? 'noopener noreferrer' : undefined
-  
+
+  const width = ad?.dimensions?.width || (placement === 'article-sidebar-large' ? 300 : placement === 'homepage-banner' ? 970 : placement === 'in-article' ? 728 : 300)
+  const height = ad?.dimensions?.height || (placement === 'article-sidebar-large' ? 600 : placement === 'homepage-banner' ? 250 : placement === 'in-article' ? 90 : 250)
+
+  const imageUrl = urlFor(ad.image).width(width).height(height).url()
+  const isSidebar = placement === 'article-sidebar' || placement === 'article-sidebar-large'
+  const isBanner = placement === 'homepage-banner' || placement === 'footer-banner'
+  const isInArticle = placement === 'in-article'
+
+  // Responsive sizes: sidebar fills container on <= lg, caps on desktop
+  const sizes = isSidebar
+    ? '(max-width: 1024px) 100vw, 300px'
+    : isBanner
+    ? '(max-width: 1024px) 100vw, 970px'
+    : isInArticle
+    ? '(max-width: 1024px) 100vw, 728px'
+    : '(max-width: 640px) 100vw, 300px'
+
   return (
-    <div className={`ad-container ${className}`}>
-      <a 
-        href={ad.targetUrl} 
-        target={target}
-        rel={rel}
-        className="block hover:opacity-90 transition-opacity"
-      >
-        <Image
-          src={imageUrl}
-          alt={ad.image.alt || 'Advertisement'}
-          width={width}
-          height={height}
-          className="w-full h-auto"
-          priority={false}
-        />
-      </a>
-      <p className="text-xs text-gray-400 text-center mt-1">Advertisement</p>
+    <div className={className}>
+      <Link href={ad.targetUrl} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
+        <div
+          className={`relative w-full ${isSidebar ? 'lg:max-w-[300px]' : ''} ${isBanner ? 'max-w-[970px] mx-auto' : ''} ${isInArticle ? 'max-w-[728px] mx-auto' : ''}`}
+          style={{ aspectRatio: `${width}/${height}` }}
+        >
+          <OptimizedImage
+            src={imageUrl}
+            alt={ad.image?.alt || ad.name || 'Sponsored'}
+            fill
+            className="rounded object-contain"
+            sizes={sizes}
+            priority
+          />
+        </div>
+      </Link>
     </div>
   )
 }

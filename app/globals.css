@@ -1,38 +1,5 @@
 @import "tailwindcss";
 
-/* Category scroll animation */
-.category-scroll-wrapper {
-  width: 100%;
-  overflow: hidden;
-  padding: 0.75rem 0;
-}
-
-.category-scroll-container {
-  display: flex;
-  width: 100%;
-}
-
-.category-scroll-content {
-  display: flex;
-  gap: 1rem;
-  padding: 0 1rem;
-  animation: scroll 30s linear infinite;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-/* Pause animation on hover */
-.category-scroll-wrapper:hover .category-scroll-content {
-  animation-play-state: paused;
-}
-
 :root {
   /* Premium Color Palette */
   --primary-dark: #082945;
@@ -277,10 +244,14 @@ a, button {
   width: 100%;
 }
 
+/* Seam star overlay — marks the repeat boundary without affecting layout */
+/* (removed) seam star overlay — now using inline star for correct seam alignment */
+
 .category-scroll-container {
   display: flex;
   width: fit-content;
-  animation: scroll-left 90s linear infinite;
+  /* 20% slower: duration increased from 90s to 112.5s */
+  animation: scroll-left 112.5s linear infinite;
 }
 
 .category-scroll-container:hover {
@@ -289,10 +260,14 @@ a, button {
 
 .category-scroll-content {
   display: flex;
-  gap: 1.5rem;
-  padding: 0.75rem 1.5rem 0.75rem 0;
+  gap: 1.25rem; /* increased spacing between categories for better readability */
+  padding: 0.6rem 0; /* minimal vertical padding, no horizontal padding to avoid seam gaps */
   white-space: nowrap;
+  align-items: center; /* vertically align any inline dividers */
 }
+
+/* Minimal seam divider to mark repetition */
+/* (removed) seam divider styles — no divider in the scroller */
 
 /* Footer glow animation - csuite-inspired */
 @keyframes footer-glow {
@@ -340,4 +315,291 @@ footer h4 {
 
 .category-badge-flash:hover::after {
   animation-duration: 1.5s;
+}
+
+/* Subtle site-wide grain overlay */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 0.75px, rgba(255,255,255,0) 0.75px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+}
+
+/* Premium gradient underline for links */
+.premium-underline {
+  background-image: linear-gradient(90deg, #C8AB3D, #E3D279);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 300ms ease;
+}
+.premium-underline:hover {
+  background-size: 100% 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .premium-underline {
+    transition: none;
+  }
+}
+
+/* Shimmer effect for premium CTA buttons */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.35) 40%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0.35) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-20deg);
+  filter: blur(0.5px);
+}
+.btn-shimmer:hover::before {
+  animation: shimmer-slide 800ms ease;
+}
+/* Keyboard accessibility */
+.btn-shimmer:focus-visible::before {
+  animation: shimmer-slide 800ms ease;
+}
+.btn-shimmer:focus-visible {
+  outline: 2px solid #f5e6a3;
+  outline-offset: 2px;
+}
+@keyframes shimmer-slide {
+  0% { left: -150%; }
+  100% { left: 200%; }
+}
+
+/* Subtle card scale on hover */
+.card-hover-scale {
+  transform: translateZ(0);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+.card-hover-scale:hover {
+  transform: translateY(-3px);
+}
+
+/* Typography tightening for premium headings */
+.heading-premium {
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+/* Improved image overlays on dark cards for contrast */
+.overlay-brand-contrast {
+  background-image: linear-gradient(to top, rgba(8,41,69,0.7), rgba(10,51,80,0.4), rgba(8,41,69,0));
+}
+.overlay-brand-contrast-horizontal {
+  background-image: linear-gradient(to right, rgba(8,41,69,0.6), rgba(8,41,69,0));
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .btn-shimmer::before,
+  .btn-shimmer:hover::before,
+  .btn-shimmer:focus-visible::before {
+    animation: none !important;
+  }
+  .card-hover-scale {
+    transition: none !important;
+  }
+  .card-hover-scale:hover {
+    transform: none !important;
+  }
+}
+
+/* (skip-link removed by request) */
+
+/* ===== PREMIUM VISUAL POLISH EFFECTS ===== */
+
+/* Sticky Glass Navigation */
+.nav-glass-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(8, 41, 69, 0.85);
+  border-bottom: 1px solid rgba(200, 171, 61, 0.3);
+  box-shadow: 0 4px 20px rgba(8, 41, 69, 0.4);
+  transition: all 0.3s ease;
+  transform: translateY(-100%);
+}
+
+.nav-glass-sticky.visible {
+  transform: translateY(0);
+}
+
+.nav-glass-sticky .container {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Metallic Sheen Effect for Gold Text */
+.metallic-sheen {
+  background: linear-gradient(
+    135deg,
+    #c8ab3d 0%,
+    #f2e68a 25%,
+    #c8ab3d 50%,
+    #b39935 75%,
+    #c8ab3d 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: metallic-shimmer 3s ease-in-out infinite;
+  position: relative;
+  display: inline; /* keep inline to preserve baseline alignment */
+  vertical-align: baseline;
+  line-height: inherit;
+}
+
+@keyframes metallic-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+
+
+
+/* Premium Glass Card Effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Premium Button with Gradient Border */
+.btn-premium-gradient {
+  position: relative;
+  background: linear-gradient(135deg, #c8ab3d, #b39935);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex; /* ensure icon and text align horizontally */
+  align-items: center;
+  gap: 0.5rem; /* consistent spacing between text and arrow */
+  white-space: nowrap; /* prevent wrapping onto two lines */
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-premium-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #d4b84a, #c8ab3d);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-premium-gradient:hover::before {
+  opacity: 1;
+}
+
+.btn-premium-gradient span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .metallic-sheen {
+    animation: none !important;
+  }
+  
+  .nav-glass-sticky,
+  .glass-card,
+  .btn-premium-gradient {
+    transition: none !important;
+  }
+  
+  .glass-card:hover {
+    transform: none !important;
+  }
+}
+
+/* Reveal on scroll (staggered) */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Gradient Border Utility for Feature Cards */
+.gradient-card {
+  /* Gradient border without extra wrappers */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(135deg, #c8ab3d, #e3d279, #082945) border-box;
+  /* Respect existing radius set via Tailwind classes (rounded-*) */
+  transition: box-shadow 250ms ease, transform 250ms ease;
+}
+
+.gradient-card:hover {
+  box-shadow: 0 12px 30px rgba(8, 41, 69, 0.15);
+  transform: translateY(-1px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gradient-card {
+    /* Keep content area white even in dark mode */
+    background:
+      linear-gradient(#ffffff, #ffffff) padding-box,
+      linear-gradient(135deg, #c8ab3d, #e3d279, #0b2f4a) border-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-card {
+    transition: none !important;
+  }
 }

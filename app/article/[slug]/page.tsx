@@ -1,64 +1,25 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
+import ArticleProgress from '@/components/ArticleProgress'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
-import AdPopup from '@/components/AdPopup'
+import dynamic from 'next/dynamic'
+import Ad from '@/components/Ad'
 import SocialShare from '@/components/SocialShare'
+import PortableBody from '@/components/PortableBody'
+import ViewTracker from '@/components/ViewTracker'
 import { client, urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
+import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
 
-// Dummy articles matching homepage
-const dummyArticles: any = {
-  'future-of-leadership-digital-world': {
-    _id: 'dummy-1',
-    title: 'The Future of Leadership in a Digital World',
-    slug: { current: 'future-of-leadership-digital-world' },
-    excerpt: 'How modern CEOs are adapting their leadership styles to navigate digital transformation and remote work environments.',
-    author: { name: 'Sarah Johnson', slug: { current: 'sarah-johnson' }, position: 'Editor-in-Chief', image: { url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop' }, bio: 'An experienced writer and thought leader in the field of executive leadership and business strategy.' },
-    categories: [{ title: 'Leadership', slug: { current: 'leadership' }, color: '#082945' }],
-    tags: ['DigitalTransformation', 'RemoteWork', 'ExecutiveLeadership'],
-    readTime: 5,
-    views: 15200,
-    publishedAt: '2025-01-15',
-    mainImage: { url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop', alt: 'Team of business leaders in a modern office setting' },
-    body: []
-  },
-  'innovation-strategies-fortune-500': {
-    _id: 'dummy-2',
-    title: 'Innovation Strategies from Fortune 500 Companies',
-    slug: { current: 'innovation-strategies-fortune-500' },
-    excerpt: 'Exclusive insights into how top companies are fostering cultures of innovation and staying ahead of market disruption.',
-    author: { name: 'Michael Chen', slug: { current: 'michael-chen' }, position: 'Senior Contributor', image: { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' }, bio: 'Technology and innovation expert covering Fortune 500 companies and emerging startups.' },
-    categories: [{ title: 'Innovation', slug: { current: 'innovation' }, color: '#c8ab3d' }],
-    tags: ['Fortune500', 'InnovationStrategy', 'CorporateCulture'],
-    readTime: 7,
-    views: 12800,
-    publishedAt: '2025-01-14',
-    mainImage: { url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=600&fit=crop', alt: 'Innovative technology and collaboration' },
-    body: []
-  },
-  'sustainable-business-practices-profit': {
-    _id: 'dummy-3',
-    title: 'Sustainable Business Practices That Drive Profit',
-    slug: { current: 'sustainable-business-practices-profit' },
-    excerpt: 'Discover how leading organizations are balancing environmental responsibility with financial success.',
-    author: { name: 'Emma Williams', slug: { current: 'emma-williams' }, position: 'Sustainability Editor', image: { url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop' }, bio: 'Sustainability advocate and business journalist focused on ESG and environmental responsibility.' },
-    categories: [{ title: 'Sustainability', slug: { current: 'sustainability' }, color: '#22c55e' }],
-    tags: ['ESG', 'GreenBusiness', 'SustainableProfit'],
-    readTime: 6,
-    views: 11400,
-    publishedAt: '2025-01-13',
-    mainImage: { url: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&h=600&fit=crop', alt: 'Green sustainable business environment' },
-    body: []
-  }
-}
+// Removed local dummy articles. Articles now rely solely on Sanity content.
 
 async function getPost(slug: string): Promise<Post | null> {
-  // Check if it's a dummy article first
-  if (dummyArticles[slug]) {
-    return dummyArticles[slug]
-  }
+  // Fetch exclusively from Sanity
   
   const query = `*[_type == "post" && slug.current == $slug][0] {
     _id,
@@ -73,7 +34,11 @@ async function getPost(slug: string): Promise<Post | null> {
     seo
   }`
   
-  return client.fetch(query, { slug })
+  try {
+    return await client.fetch(query, { slug })
+  } catch (e) {
+    return null
+  }
 }
 
 async function getRelatedPosts(currentPostId: string): Promise<Post[]> {
@@ -86,8 +51,14 @@ async function getRelatedPosts(currentPostId: string): Promise<Post[]> {
     readTime
   }`
   
-  return client.fetch(query, { currentPostId })
+  try {
+    return await client.fetch(query, { currentPostId })
+  } catch (e) {
+    return []
+  }
 }
+
+export const revalidate = 600
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -98,34 +69,63 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   }
   
   const relatedPosts = await getRelatedPosts(post._id)
+  const bodyText: string = typeof (post as any)?.body === 'string' ? (post as any).body : ''
+
+  const slugify = (s: string) => String(s || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+
+  const headings = Array.isArray((post as any)?.body)
+    ? ((post as any).body as any[])
+        .filter(b => ['h2','h3'].includes(b?.style))
+        .map(b => {
+          const text = (b?.children || []).map((c: any) => String(c?.text || '')).join(' ').trim()
+          return { id: slugify(text), text, level: b?.style }
+        })
+    : []
+
+  const wordCount = Array.isArray((post as any)?.body)
+    ? ((post as any).body as any[]).reduce((acc, b) => acc + (b?.children || []).reduce((a: number, c: any) => a + String(c?.text || '').split(/\s+/).filter(Boolean).length, 0), 0)
+    : (bodyText ? bodyText.split(/\s+/).filter(Boolean).length : 0)
+
+  const readTime = Math.max(1, Math.ceil(wordCount / 200))
 
   return (
     <>
+      {/* Track a view for this article */}
+      <ViewTracker slug={slug} />
       <AdPopup />
       <Navigation />
       
       <main className="bg-white">
-        {/* Breadcrumb */}
-        <div className="border-b border-gray-200">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <nav className="flex items-center space-x-2 text-xs font-medium text-gray-600 uppercase tracking-wider">
-              <Link href="/" className="hover:text-[#082945] transition-colors">Home</Link>
-              <span>/</span>
-              {post.categories && post.categories[0] && (
-                <>
-                  <Link 
-                    href={`/category/${post.categories[0].slug.current}`}
-                    className="hover:text-[#082945] transition-colors"
-                  >
-                    {post.categories[0].title}
-                  </Link>
-                  <span>/</span>
-                </>
-              )}
-              <span className="text-gray-900">{post.title}</span>
-            </nav>
-          </div>
-        </div>
+        <ArticleProgress />
+        {/* Enhanced Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateStructuredData('article', {
+            title: post.title,
+            description: post.excerpt || post.body?.[0]?.children?.[0]?.text?.substring(0, 160) + '...',
+            image: post.mainImage ? (post.mainImage.url || urlFor(post.mainImage).url()) : undefined,
+            publishedTime: post.publishedAt,
+            author: post.author?.name,
+            url: `https://csuitemagazine.global/article/${post.slug?.current}`,
+            wordCount,
+            readTime
+          })),
+        }}
+      />
+        <Breadcrumbs
+          items={[
+            { label: 'Home', href: '/' },
+            ...(post.categories && post.categories[0]
+              ? [{ label: post.categories[0].title, href: `/category/${post.categories[0].slug.current}` }]
+              : []),
+            { label: post.title },
+          ]}
+        />
 
         <article className="py-8">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -164,12 +164,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     {/* Featured Image */}
                     {post.mainImage && (
                       <div className="relative w-full h-[400px] md:h-[500px] mb-8 rounded-lg overflow-hidden">
-                        <Image
+                        <OptimizedImage
                           src={post.mainImage.url || urlFor(post.mainImage).width(1200).height(800).url()}
                           alt={post.mainImage.alt || post.title}
                           fill
                           className="object-cover"
                           priority
+                          sizes="100vw"
+                          quality={90}
                         />
                       </div>
                     )}
@@ -182,7 +184,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                       <div className="flex items-center gap-3">
                         {post.author.image && (
                           <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                            <Image
+                            <OptimizedImage
                               src={post.author.image.url || urlFor(post.author.image).width(100).height(100).url()}
                               alt={post.author.name}
                               fill
@@ -200,9 +202,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                               </svg>
-                              {(post.views / 1000).toFixed(1)}K views
+                              {(post.views / 1000000).toFixed(1)}M views
                             </span>
                           )}
+                          <span className="text-xs text-gray-500">•</span>
+                          <span className="text-xs text-gray-500" aria-label={`Estimated read time ${readTime} minutes`}>
+                            {readTime} min read
+                          </span>
                         </div>
                       </div>
                     )}
@@ -214,161 +220,135 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                         </svg>
                       </button>
-                      <button className="w-10 h-10 flex items-center justify-center bg-[#1877F2] rounded hover:bg-[#166FE5] transition-colors" aria-label="Share on Facebook">
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                      </button>
-                      <button className="w-10 h-10 flex items-center justify-center bg-[#1DA1F2] rounded hover:bg-[#1A8CD8] transition-colors" aria-label="Share on Twitter">
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
-                        </svg>
-                      </button>
-                      <button className="w-10 h-10 flex items-center justify-center bg-[#0A66C2] rounded hover:bg-[#094D92] transition-colors" aria-label="Share on LinkedIn">
+                      {/* WhatsApp */}
+                      <a
+                        href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + ' ' + ((process.env.NEXT_PUBLIC_SITE_URL || 'https://csuitemag.com') + '/article/' + post.slug.current))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 flex items-center justify-center bg-[#25D366] rounded hover:bg-[#1EBE5A] transition-colors"
+                        aria-label="Share on WhatsApp"
+                      >
+                        <Image
+                          src="https://api.iconify.design/simple-icons/whatsapp.svg?color=white"
+                          alt="WhatsApp"
+                          width={20}
+                          height={20}
+                          className="w-5 h-5"
+                        />
+                      </a>
+                      {/* LinkedIn */}
+                      <a
+                        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent((process.env.NEXT_PUBLIC_SITE_URL || 'https://csuitemag.com') + '/article/' + post.slug.current)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 flex items-center justify-center bg-[#0A66C2] rounded hover:bg-[#094D92] transition-colors"
+                        aria-label="Share on LinkedIn"
+                      >
                         <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                         </svg>
-                      </button>
-                      <button className="w-10 h-10 flex items-center justify-center bg-[#EA4335] rounded hover:bg-[#D33426] transition-colors" aria-label="Share via email">
+                      </a>
+                      {/* Email */}
+                      <a
+                        href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent((process.env.NEXT_PUBLIC_SITE_URL || 'https://csuitemag.com') + '/article/' + post.slug.current)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 flex items-center justify-center bg-[#EA4335] rounded hover:bg-[#D33426] transition-colors"
+                        aria-label="Share via email"
+                      >
                         <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                      </button>
+                      </a>
+                      {/* Twitter */}
+                      <a
+                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent((process.env.NEXT_PUBLIC_SITE_URL || 'https://csuitemag.com') + '/article/' + post.slug.current)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 flex items-center justify-center bg-[#1DA1F2] rounded hover:bg-[#1A8CD8] transition-colors"
+                        aria-label="Share on Twitter"
+                      >
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                        </svg>
+                      </a>
+                      {/* Facebook */}
+                      <a
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent((process.env.NEXT_PUBLIC_SITE_URL || 'https://csuitemag.com') + '/article/' + post.slug.current)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 flex items-center justify-center bg-[#1877F2] rounded hover:bg-[#166FE5] transition-colors"
+                        aria-label="Share on Facebook"
+                      >
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                      </a>
                     </div>
                   </div>
 
-                  {/* Social Sharing */}
-                  <div className="mb-8">
-                    <SocialShare 
-                      title={post.title} 
-                      url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://csuitemag.com'}/article/${post.slug.current}`} 
-                    />
-                  </div>
+                  {/* Social Sharing removed to avoid duplicate blocks */}
                   
                   {/* Article Body */}
-                  <div className="prose prose-lg max-w-none">
-                    <div className="space-y-6 text-gray-700 leading-relaxed">
-                      <p className="text-lg first-letter:text-5xl first-letter:font-serif first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-[#082945]">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                      </p>
-                      
-                      <p>
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                      </p>
-                      
-                      <p>
-                        Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-                      </p>
-                      
-                      <h2 id="path-excellence" className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">
-                        The Path to Excellence
-                      </h2>
-                      
-                      <p>
-                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.
-                      </p>
-                      
-                      <p>
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
-                      </p>
-                      
-                      <blockquote className="border-l-4 border-[#c8ab3d] pl-6 my-8 italic text-xl text-gray-600">
-                        "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus."
-                      </blockquote>
-                      
-                      {/* In-Article Ad */}
-                      <div className="my-12 bg-gray-50 border-2 border-gray-200 rounded-lg p-8">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide text-center mb-4">Advertisement</p>
-                        <div className="bg-white rounded-lg p-12 flex flex-col items-center justify-center" style={{ minHeight: '250px' }}>
-                          <div className="text-center text-gray-400">
-                            <svg className="w-20 h-20 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <p className="text-lg font-medium mb-2">In-Article Advertisement</p>
-                            <p className="text-sm">728 x 90 (Leaderboard) or 300 x 250</p>
-                          </div>
+                  {Array.isArray(post.body) && post.body.length > 0 ? (
+                    <PortableBody value={post.body as any[]} />
+                  ) : bodyText && bodyText.trim().length > 0 ? (
+                    <div className="prose prose-lg max-w-none">
+                      <div className="space-y-6 text-gray-700 leading-relaxed">
+                        <p className="text-lg whitespace-pre-line">
+                          {bodyText}
+                        </p>
+                        {/* End-of-Article Ad */}
+                        <div className="my-12 bg-gray-50 border-2 border-gray-200 rounded-lg p-8">
+                          <Ad placement="in-article" />
                         </div>
                       </div>
-                      
-                      <h2 id="strategic-innovation" className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">
-                        Strategic Innovation
-                      </h2>
-                      
-                      <p>
-                        Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.
-                      </p>
-                      
-                      <p>
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
-                      </p>
-                      
-                      <h3 id="key-takeaways" className="text-2xl font-serif font-normal text-gray-900 mt-8 mb-4">
-                        Key Takeaways
-                      </h3>
-                      
-                      <ul className="list-disc list-inside space-y-2 text-gray-700">
-                        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-                        <li>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</li>
-                        <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris</li>
-                        <li>Duis aute irure dolor in reprehenderit in voluptate velit esse</li>
-                      </ul>
-                      
-                      <p className="mt-6">
-                        Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-                      </p>
-                      
-                      <h2 id="looking-forward" className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">
-                        Looking Forward
-                      </h2>
-                      
-                      <p>
-                        Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.
-                      </p>
-                      
-                      <p>
-                        Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.
-                      </p>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="prose prose-lg max-w-none">
+                      <div className="space-y-6 text-gray-700 leading-relaxed">
+                        <p className="text-lg first-letter:text-5xl first-letter:font-serif first-letter:float-left first-letter:mr-3 first-letter:mt-1 first-letter:text-[#082945]">
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
+                        </p>
+
+                        <h2 className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">A Practical Framework</h2>
+                        <p>
+                          Cras mattis consectetur purus sit amet fermentum. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Vestibulum id ligula porta felis euismod semper.
+                        </p>
+
+                        <ul className="list-disc list-inside space-y-2">
+                          <li>Set clear, measurable outcomes to align teams.</li>
+                          <li>Communicate decisions transparently to build trust.</li>
+                          <li>Iterate in small steps to reduce risk while learning.</li>
+                        </ul>
+
+                        <blockquote className="border-l-4 border-[#c8ab3d] pl-6 my-8 italic text-xl text-gray-600">
+                          “We do well by doing good — and by learning fast.”
+                        </blockquote>
+
+
+                        <h3 className="text-2xl font-serif font-normal text-gray-900 mt-8 mb-4">Bottom Line</h3>
+                        <p>
+                          Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Etiam porta sem malesuada magna mollis euismod. Aenean lacinia bibendum nulla sed consectetur.
+                        </p>
+
+                        {/* End-of-Article Ad */}
+                        <div className="my-12 bg-gray-50 border-2 border-gray-200 rounded-lg p-8">
+                          <Ad placement="in-article" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Sidebar */}
                 <div className="lg:col-span-1">
                   <div className="sticky top-8 space-y-8">
-                    {/* Table of Contents */}
-                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-5">
-                      <h3 className="font-serif text-base font-semibold text-gray-900 mb-4">
-                        In This Article
-                      </h3>
-                      <nav className="space-y-2 text-sm font-sans">
-                        <a href="#path-excellence" className="block text-gray-600 hover:text-[#082945] transition-colors py-1">
-                          The Path to Excellence
-                        </a>
-                        <a href="#strategic-innovation" className="block text-gray-600 hover:text-[#082945] transition-colors py-1">
-                          Strategic Innovation
-                        </a>
-                        <a href="#key-takeaways" className="block text-gray-600 hover:text-[#082945] transition-colors py-1">
-                          Key Takeaways
-                        </a>
-                        <a href="#looking-forward" className="block text-gray-600 hover:text-[#082945] transition-colors py-1">
-                          Looking Forward
-                        </a>
-                      </nav>
-                    </div>
+                    {/* Table of Contents removed as per request */}
                     
                     {/* Ad Slot 1 */}
                     <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8">
-                      <div className="text-center">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Advertisement</p>
-                        <div className="bg-white rounded p-8 flex items-center justify-center" style={{ minHeight: '250px' }}>
-                          <div className="text-gray-400">
-                            <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                            </svg>
-                            <p className="text-sm">300 x 250</p>
-                          </div>
-                        </div>
-                      </div>
+                      <Ad placement="article-sidebar" />
                     </div>
                     
                     {/* Author Bio */}
@@ -380,7 +360,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         <div className="flex items-start gap-4 mb-4">
                           {post.author.image && (
                             <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                              <Image
+                              <OptimizedImage
                                 src={post.author.image.url || urlFor(post.author.image).width(100).height(100).url()}
                                 alt={post.author.name}
                                 fill
@@ -395,11 +375,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             )}
                           </div>
                         </div>
-                        <p className="font-sans text-sm text-gray-600 leading-relaxed mb-4">
-                          {post.author.bio || 'An experienced writer and thought leader in the field of executive leadership and business strategy.'}
-                        </p>
+                        {Array.isArray(post.author.bio) && post.author.bio.length > 0 ? (
+                          <div className="prose prose-sm max-w-none mb-4">
+                            <PortableBody value={post.author.bio as any[]} />
+                          </div>
+                        ) : (
+                          <p className="font-sans text-sm text-gray-600 leading-relaxed mb-4">
+                            {typeof post.author.bio === 'string'
+                              ? post.author.bio
+                              : 'An experienced writer and thought leader in the field of executive leadership and business strategy.'}
+                          </p>
+                        )}
                         <Link 
                           href={`/author/${post.author.slug?.current || post.author.name.toLowerCase().replace(/ /g, '-')}`}
+                          prefetch
                           className="font-sans text-sm font-medium text-[#082945] hover:text-[#0a3350] transition-colors"
                         >
                           More by {post.author.name} →
@@ -410,7 +399,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     {/* Related Articles */}
                     {relatedPosts.length > 0 && (
                       <div>
-                        <h3 className="dark-section font-serif text-base font-semibold text-white bg-[#082945] px-4 py-3 mb-4">
+                        <h3 className="font-serif text-base font-semibold bg-[#082945] px-4 py-3 mb-4" style={{ color: '#ffffff' }}>
                           Related Articles
                         </h3>
                         <div className="space-y-6">
@@ -418,15 +407,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             <Link
                               key={relatedPost._id}
                               href={`/article/${relatedPost.slug.current}`}
+                              prefetch
                               className="block group"
                             >
                               {relatedPost.mainImage && (
                                 <div className="relative w-full h-48 mb-3 rounded overflow-hidden">
-                                  <Image
+                                  <OptimizedImage
                                     src={urlFor(relatedPost.mainImage).width(400).height(300).url()}
                                     alt={relatedPost.mainImage.alt || relatedPost.title}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                   />
                                 </div>
                               )}
@@ -441,7 +432,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
-                                    {(relatedPost.views / 1000).toFixed(1)}K
+                                    {(relatedPost.views / 1000000).toFixed(1)}M
                                   </span>
                                 )}
                               </div>
@@ -453,17 +444,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     
                     {/* Ad Slot 2 */}
                     <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8">
-                      <div className="text-center">
-                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Advertisement</p>
-                        <div className="bg-white rounded p-8 flex items-center justify-center" style={{ minHeight: '250px' }}>
-                          <div className="text-gray-400">
-                            <svg className="w-16 h-16 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                            </svg>
-                            <p className="text-sm">300 x 250</p>
-                          </div>
-                        </div>
-                      </div>
+                      <Ad placement="article-sidebar-large" />
                     </div>
                     
                     {/* Trending Now */}
@@ -482,7 +463,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                               <h4 className="font-sans text-sm font-medium text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-1">
                                 AI Revolution in Executive Decision Making
                               </h4>
-                              <p className="font-sans text-xs text-gray-500">15.2K views</p>
+                              <p className="font-sans text-xs text-gray-500">2.8M views</p>
                             </div>
                           </div>
                         </Link>
@@ -493,7 +474,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                               <h4 className="font-sans text-sm font-medium text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-1">
                                 Women CEOs Breaking Tech Barriers
                               </h4>
-                              <p className="font-sans text-xs text-gray-500">12.8K views</p>
+                              <p className="font-sans text-xs text-gray-500">2.4M views</p>
                             </div>
                           </div>
                         </Link>
@@ -504,7 +485,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                               <h4 className="font-sans text-sm font-medium text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-1">
                                 Sustainable Practices Drive Profit
                               </h4>
-                              <p className="font-sans text-xs text-gray-500">11.4K views</p>
+                              <p className="font-sans text-xs text-gray-500">2.1M views</p>
                             </div>
                           </div>
                         </Link>
@@ -515,7 +496,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                               <h4 className="font-sans text-sm font-medium text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-1">
                                 The New Era of Remote Leadership
                               </h4>
-                              <p className="font-sans text-xs text-gray-500">9.7K views</p>
+                              <p className="font-sans text-xs text-gray-500">1.1M views</p>
                             </div>
                           </div>
                         </Link>
@@ -526,7 +507,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                               <h4 className="font-sans text-sm font-medium text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-1">
                                 Innovation Strategies from Fortune 500
                               </h4>
-                              <p className="font-sans text-xs text-gray-500">8.9K views</p>
+                              <p className="font-sans text-xs text-gray-500">1.9M views</p>
                             </div>
                           </div>
                         </Link>
@@ -544,3 +525,33 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     </>
   )
 }
+
+export async function generateMetadata(
+  props: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await props.params
+  const post = await getPost(slug)
+  
+  if (!post) {
+    return {
+      title: 'Article not found — C-Suite Magazine',
+      description: 'The requested article could not be found.',
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }
+  }
+
+  return generateSEOMetadata({
+    title: post.title,
+    description: post.excerpt || post.body?.[0]?.children?.[0]?.text?.substring(0, 160) + '...',
+    keywords: post.tags || [],
+    image: post.mainImage ? (post.mainImage.url || urlFor(post.mainImage).url()) : undefined,
+    type: 'article',
+    publishedTime: post.publishedAt,
+    author: post.author?.name,
+    section: post.categories?.[0]?.title
+  })
+}
+const AdPopup = dynamic(() => import('@/components/AdPopup'))

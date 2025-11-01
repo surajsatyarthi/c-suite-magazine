@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import OptimizedImage from '@/components/OptimizedImage'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { client, urlFor } from '@/lib/sanity'
@@ -99,11 +99,12 @@ export default async function SearchPage({
                 <Link
                   key={post._id}
                   href={`/article/${post.slug.current}`}
-                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300"
+                  prefetch
+                  className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2"
                 >
                   <div className="relative h-56 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
                     {post.mainImage ? (
-                      <Image
+                      <OptimizedImage
                         src={urlFor(post.mainImage).width(500).height(350).url()}
                         alt={post.title}
                         fill

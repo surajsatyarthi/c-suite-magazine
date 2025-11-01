@@ -1,11 +1,12 @@
 import Navigation from '@/components/Navigation'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 
 export default function AdvertisePage() {
   const audienceStats = [
     { label: "Open Rate", value: "42%", icon: "📧" },
-    { label: "Monthly Readers", value: "500K+", icon: "👥" },
+    { label: "Monthly Readers", value: "3M+", icon: "👥" },
     { label: "Click-Through Rate", value: "7.5%", icon: "🎯" },
     { label: "Global Reach", value: "45+", subtext: "Countries", icon: "🌍" }
   ]
@@ -47,7 +48,7 @@ export default function AdvertisePage() {
         "Premium positioning",
         "High-resolution graphics",
         "Print & digital editions",
-        "500K+ impressions",
+        "3M+ impressions",
         "Performance tracking"
       ]
     }
@@ -83,19 +84,17 @@ export default function AdvertisePage() {
   return (
     <>
       <Navigation />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Advertise' }]} />
       
       <main className="min-h-screen bg-gray-50">
         {/* Hero */}
         <div className="dark-section bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl font-serif font-black mb-4 text-white">
+            <h1 className="text-5xl font-serif font-black mb-4 text-white heading-premium">
               Advertise in the World's Leading Executive Magazine
             </h1>
             <p className="text-xl text-white max-w-3xl mx-auto mb-4">
-              Promote Your Brand to 500,000+ C-Suite Decision-Makers
-            </p>
-            <p className="text-lg text-[#c8ab3d] font-semibold">
-              42% Open Rate & 7.5% CTR – 5x Industry Average
+              Promote Your Brand to 3M+ C-Suite Decision-Makers
             </p>
             <Link
               href="/contact"
