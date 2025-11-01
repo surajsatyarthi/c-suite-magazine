@@ -344,8 +344,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 {/* Sidebar */}
                 <div className="lg:col-span-1">
                   <div className="sticky top-8 space-y-8">
-                    {/* Table of Contents removed as per request */}
-                    
                     {/* Ad Slot 1 */}
                     <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8">
                       <Ad placement="article-sidebar" />

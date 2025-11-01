@@ -1,24 +1,5 @@
 /* Accessibility Styles - Focus Management and Indicators */
 
-/* Skip to main content link */
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 6px;
-  background: #000;
-  color: #fff;
-  padding: 8px;
-  text-decoration: none;
-  border-radius: 4px;
-  z-index: 9999;
-  font-weight: bold;
-  transition: top 0.3s;
-}
-
-.skip-link:focus {
-  top: 6px;
-}
-
 /* Enhanced focus indicators */
 *:focus {
   outline: none;
