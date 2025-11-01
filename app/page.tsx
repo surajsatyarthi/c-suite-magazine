@@ -2,10 +2,11 @@ import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import Hero from '@/components/Hero'
-import CEOSpotlight from '@/components/CEOSpotlight'
-import MagazineGallery from '@/components/MagazineGallery'
-import FeaturedCXOs from '@/components/FeaturedCXOs'
-import LatestInsights from '@/components/LatestInsights'
+import dynamic from 'next/dynamic'
+const CEOSpotlight = dynamic(() => import('@/components/CEOSpotlight'))
+const MagazineGallery = dynamic(() => import('@/components/MagazineGallery'))
+const FeaturedCXOs = dynamic(() => import('@/components/FeaturedCXOs'))
+const LatestInsights = dynamic(() => import('@/components/LatestInsights'))
 import { client, urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
 import type { Metadata } from 'next'
@@ -18,17 +19,18 @@ export const metadata: Metadata = generateMetadata({
   type: 'website'
 })
 
+// Ensure homepage content refreshes periodically and doesn’t freeze test data into static build
+export const revalidate = 600
+
 async function getFeaturedPosts(): Promise<Post[]> {
-  const query = `*[_type == "post" && isFeatured == true] | order(publishedAt desc) [0...12] {
+  const query = `*[_type == "post" && mainImage.alt match "*Executive Interview*"] | order(publishedAt desc) [0...12] {
     _id,
     title,
     slug,
     excerpt,
-    "author": author->{name, slug, position, image},
+    "author": author->{name, slug, image},
     mainImage,
     "categories": categories[]->{title, slug, color},
-    isFeatured,
-    readTime,
     publishedAt
   }`
   try {
@@ -39,15 +41,14 @@ async function getFeaturedPosts(): Promise<Post[]> {
 }
 
 async function getLatestPosts(): Promise<Post[]> {
-  const query = `*[_type == "post"] | order(publishedAt desc) [0...6] {
+  const query = `*[_type == "post" && (!defined(mainImage.alt) || !(mainImage.alt match "*Executive Interview*"))] | order(publishedAt desc) [0...6] {
     _id,
     title,
     slug,
     excerpt,
-    "author": author->{name, slug, position, image},
+    "author": author->{name, slug, image},
     mainImage,
     "categories": categories[]->{title, slug, color},
-    readTime,
     publishedAt
   }`
   try {

@@ -1,19 +1,9 @@
 /* Accessibility Styles - Focus Management and Indicators */
 
-/* Enhanced focus indicators */
-*:focus {
-  outline: none;
-}
-
-/* High contrast focus ring for better visibility */
+/* Disable focus visuals across the site (per UI request) */
+*:focus,
+*:focus-visible,
 .focus-visible,
-*:focus-visible {
-  outline: 3px solid #c8ab3d !important;
-  outline-offset: 2px !important;
-  border-radius: 4px;
-}
-
-/* Custom focus styles for interactive elements */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -21,22 +11,10 @@ textarea:focus-visible,
 select:focus-visible,
 [role="button"]:focus-visible,
 [role="link"]:focus-visible,
-[tabindex]:focus-visible {
-  outline: 3px solid #c8ab3d !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 2px rgba(200, 171, 61, 0.2) !important;
-}
-
-/* Focus styles for navigation elements */
+[tabindex]:focus-visible,
 nav a:focus-visible {
-  background-color: rgba(200, 171, 61, 0.1);
-  border-radius: 4px;
-}
-
-/* Focus styles for cards and interactive containers */
-.card-focus:focus-within {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Focus trap styles for modals */
@@ -69,16 +47,14 @@ nav a:focus-visible {
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .focus-visible,
-  *:focus-visible {
-    outline: 4px solid #000 !important;
-    outline-offset: 2px !important;
-  }
-  
+  *:focus-visible,
   button:focus-visible,
   a:focus-visible {
-    background-color: #fff !important;
-    color: #000 !important;
-    border: 2px solid #000 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background-color: transparent !important;
+    color: inherit !important;
   }
 }
 
@@ -104,11 +80,6 @@ nav a:focus-visible {
   overflow: visible;
   clip: auto;
   white-space: normal;
-}
-
-/* Focus management for carousel/slider components */
-.carousel-container:focus-within .carousel-controls {
-  opacity: 1;
 }
 
 /* Keyboard navigation indicators */
@@ -153,22 +124,22 @@ nav a:focus-visible {
 .form-field input:focus,
 .form-field textarea:focus,
 .form-field select:focus {
-  border-color: #c8ab3d;
-  box-shadow: 0 0 0 3px rgba(200, 171, 61, 0.1);
+  border-color: inherit;
+  box-shadow: none;
 }
 
 /* Error state focus styles */
 .form-field.error input:focus,
 .form-field.error textarea:focus,
 .form-field.error select:focus {
-  border-color: #dc2626;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  border-color: inherit;
+  box-shadow: none;
 }
 
 /* Success state focus styles */
 .form-field.success input:focus,
 .form-field.success textarea:focus,
 .form-field.success select:focus {
-  border-color: #16a34a;
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+  border-color: inherit;
+  box-shadow: none;
 }

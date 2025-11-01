@@ -28,24 +28,26 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Form submitted:', formData)
+    }
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 5000)
   }
   return (
     <>
       <Navigation />
-      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Contact Us' }]} />
       
       <main className="min-h-screen bg-gray-50">
         {/* Hero Section */}
         <div className="dark-section bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-5xl font-serif font-black mb-4 text-white heading-premium">
-              Get in Touch
+              Contact Us
             </h1>
             <p className="text-xl text-white max-w-2xl mx-auto">
-              Submit your press release, company news, or get featured in C-Suite Magazine
+              Submit your press release or reach out to the C-Suite Magazine team.
             </p>
           </div>
         </div>
@@ -64,29 +66,36 @@ export default function ContactPage() {
                     </svg>
                     <div>
                       <h3 className="font-semibold text-gray-900">Email</h3>
-                      <p className="text-gray-600">editorial@csuitemag.com</p>
-                      <p className="text-gray-600">pr@csuitemag.com</p>
+                      <p className="text-gray-600">contact@csuitemagazine.global</p>
                     </div>
                   </div>
-
-                  <div className="flex items-start gap-4">
-                    <svg className="w-6 h-6 text-[#c8ab3d] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">Phone</h3>
-                      <p className="text-gray-600">+1 (555) 123-4567</p>
-                    </div>
-                  </div>
-
+                  
                   <div className="flex items-start gap-4">
                     <svg className="w-6 h-6 text-[#c8ab3d] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Office</h3>
-                      <p className="text-gray-600">New York, NY 10001</p>
+                      <h3 className="font-semibold text-gray-900">Offices</h3>
+                      <div className="text-gray-600">
+                        <h4 className="text-lg font-serif font-bold text-gray-900">United States</h4>
+                        <p className="font-medium text-gray-800">Global Head Office</p>
+                        <p>930, N 96th Street,</p>
+                        <p>Seattle, WA, 98103, USA</p>
+                        <div className="h-px bg-gray-200 my-3" />
+                        <h4 className="text-lg font-serif font-bold text-gray-900">Singapore</h4>
+                        <p className="font-medium text-gray-800">Singapore Office</p>
+                        <p className="font-medium text-gray-800">Capital Square</p>
+                        <p>C-101, Level 7, Capital Square,</p>
+                        <p>23 Church Street,</p>
+                        <p>049481, Singapore</p>
+                        <div className="h-px bg-gray-200 my-3" />
+                        <h4 className="text-lg font-serif font-bold text-gray-900">India</h4>
+                        <p className="font-medium text-gray-800">Gurugram Office</p>
+                        <p>C 1620, 4th Floor, Peach Tree Road,</p>
+                        <p>Sushant Lok Phase 1,</p>
+                        <p>Gurugram, Haryana - 122002</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -101,7 +110,7 @@ export default function ContactPage() {
             {/* PR Submission Form */}
             <div className="lg:col-span-2">
               <div className="bg-white p-8 rounded-lg shadow-md">
-                <h2 className="text-3xl font-serif font-bold text-gray-900 mb-6">Submit Your Story</h2>
+                <h2 className="text-3xl font-serif font-bold text-gray-900 mb-6">Get in Touch</h2>
                 
                 {submitted && (
                   <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">

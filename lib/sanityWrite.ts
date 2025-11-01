@@ -18,7 +18,9 @@ export function getWriteClient(): SanityClient | null {
 
   if (!isValidProjectId(projectId) || !dataset) {
     // Avoid throwing during build; routes will handle the null client at runtime.
+  if (process.env.NODE_ENV !== 'production') {
     console.warn('Sanity write client not configured. Missing or invalid projectId/dataset.')
+  }
     return null
   }
 

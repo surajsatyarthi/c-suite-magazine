@@ -6,8 +6,18 @@
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
+const { createClient } = require('@sanity/client')
+require('dotenv').config({ path: '.env.local' })
 
 const PROD_BASE = process.env.IMPORT_API_BASE || 'https://csuitemagazine.global'
+
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-28',
+  token: process.env.SANITY_API_TOKEN,
+  useCdn: false,
+})
 
 async function sleep(ms) {
   return new Promise((res) => setTimeout(res, ms))
@@ -152,6 +162,8 @@ async function upsertArticle({ title, slug, excerpt, bodyText, category, mainIma
     title,
     slug,
     excerpt,
+    // Assign editors equally by slug (round-robin, computed in main())
+    authorSlug: upsertArticle.__authorSlug,
     mainImageAssetId,
     mainImageAlt: title,
     isFeatured: false,
@@ -188,6 +200,10 @@ async function main() {
   const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : mdFiles.length
 
   console.log(`Importing up to ${limit} articles from: ${mdDir}`)
+  // Load authors sorted by slug for stable order
+  const authors = await client.fetch('*[_type == "author"] | order(slug.current asc){ _id, slug }')
+  if (!authors?.length) throw new Error('No authors found in Sanity for author assignment')
+  let authorIndex = 0
   let count = 0
   for (const md of mdFiles) {
     if (count >= limit) break
@@ -205,6 +221,8 @@ async function main() {
       } else {
         console.warn(`No image matched for ${md}`)
       }
+      // Set author slug per article before sending (round-robin)
+      upsertArticle.__authorSlug = authors[authorIndex % authors.length]?.slug?.current
       const result = await upsertArticle({
         title,
         slug,
@@ -213,6 +231,7 @@ async function main() {
         category: info.category,
         mainImageAssetId: assetId,
       })
+      authorIndex++
       console.log(`✔ ${result.action}: ${title} (id: ${result.id})`)
       count++
       await sleep(200)

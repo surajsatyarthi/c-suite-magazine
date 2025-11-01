@@ -108,14 +108,18 @@ export default function AdPopup() {
             }
             img.onerror = () => {
               // If image fails to load, don't show popup
-              console.warn('Ad image failed to load:', data.imageUrl)
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('Ad image failed to load:', data.imageUrl)
+      }
               detachAll()
             }
             img.src = data.imageUrl
             return // Don't continue with showing popup until image loads
           }
         } catch (error) {
-          console.warn('Failed to fetch ad:', error)
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('Failed to fetch ad:', error)
+      }
         }
       }
       // Only reach here if no ad data or already fetching - don't show popup

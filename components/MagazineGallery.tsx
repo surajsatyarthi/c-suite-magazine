@@ -8,7 +8,7 @@ export default function MagazineGallery() {
       title: "Innovation Leaders 2025",
       issue: "January 2025",
       views: 2500000,
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop"
+      image: "/featured-issue-1.png"
     },
     {
       id: 2,

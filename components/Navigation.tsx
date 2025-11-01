@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 
@@ -49,7 +48,7 @@ export default function Navigation() {
     { href: '/', label: 'Home' },
     { href: '/articles', label: 'Articles' },
     { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/contact', label: 'Contact Us' },
   ]
 
   return (
@@ -149,9 +148,9 @@ export default function Navigation() {
               {allCategories.map((category) => (
                 <Link
                   key={category}
-                  href={`/category/${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                  href={`/archive?category=${encodeURIComponent(category)}`}
                   prefetch
-                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] focus:text-[#c8ab3d] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#0b2f4c] whitespace-nowrap transition-colors premium-underline rounded-sm px-1"
+                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] focus:text-[#c8ab3d] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#0b2f4c] whitespace-nowrap transition-colors premium-underline rounded-sm px-3"
                   aria-label={`View ${category} articles`}
                 >
                   {category}
@@ -163,8 +162,8 @@ export default function Navigation() {
               {allCategories.map((category) => (
                 <Link
                   key={`${category}-duplicate`}
-                  href={`/category/${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] whitespace-nowrap transition-colors premium-underline"
+                  href={`/archive?category=${encodeURIComponent(category)}`}
+                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] whitespace-nowrap transition-colors premium-underline px-3"
                   tabIndex={-1}
                   aria-hidden="true"
                 >
