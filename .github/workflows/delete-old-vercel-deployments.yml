@@ -1,0 +1,22 @@
+name: Delete Old Vercel Preview Deployments
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+
+jobs:
+  delete-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Remove non-aliased (preview) deployments safely
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel rm --safe ceo-magazine --scope suraj-satyarthis-projects --token "$VERCEL_TOKEN" --yes
