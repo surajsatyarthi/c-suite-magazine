@@ -1,31 +1,50 @@
 {
   "name": "ceo-magazine",
-  "version": "0.1.0",
+  "version": "13.11.1.2",
   "private": true,
   "packageManager": "pnpm@9",
   "scripts": {
     "dev": "next dev -p 3000",
+    "prebuild": "node scripts/vercel-preflight.js",
     "build": "next build",
+    "smoke": "node scripts/smoke-check.js",
+    "icons:gen": "node scripts/generate-favicons.js",
+    "deploy:prod": "bash scripts/deploy-gated.sh",
     "start": "next start -p 3000",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:content": "node scripts/lint-content.js",
+    "fix:excerpts": "node scripts/fix-excerpts.js",
+    "import:docx": "node scripts/import-docx-batch.js",
+    "sanity:dev": "sanity dev -p 3333",
+    "sanity:build": "sanity build",
+    "sanity:deploy": "sanity deploy",
+    "sanity:backup": "mkdir -p exports/backups && sanity dataset export production exports/backups/$(date +%F-%H%M)-production.tar.gz --yes",
+    "sanity:restore": "sanity dataset import $BACKUP_FILE --dataset production --replace --missing --yes",
+    "backfill-data": "tsx scripts/backfill-article-data.ts"
   },
   "engines": {
     "node": "22.x"
   },
   "dependencies": {
     "@portabletext/react": "^4.0.3",
-    "@sanity/client": "^7.12.0",
+    "@sanity/client": "^7.12.1",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
-    "@sanity/vision": "^4.12.0",
+    "@sanity/vision": "^4.14.1",
+    "@vercel/analytics": "^1.5.0",
     "dotenv": "^17.2.3",
+    "mammoth": "^1.6.0",
     "next": "16.0.1",
-    "next-sanity": "^11.6.3",
+    "next-sanity": "^11.6.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "sanity": "^4.12.0"
+    "sanity": "^4.14.1",
+    "styled-components": "^6.1.19",
+    "turndown": "^7.2.0"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@sanity/dashboard": "^5.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.9.2",
     "@types/react": "^19",
@@ -33,6 +52,8 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.0",
     "eslint-config-next": "16.0.1",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
