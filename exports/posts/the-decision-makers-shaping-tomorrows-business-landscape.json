@@ -1,0 +1,103 @@
+{
+  "_id": "VzElbecBTke30RM0jLUOxK",
+  "_createdAt": "2025-11-02T00:01:57Z",
+  "_updatedAt": "2025-11-02T04:08:32Z",
+  "title": "The Decision-Makers Shaping Tomorrow's Business Landscape",
+  "slug": "the-decision-makers-shaping-tomorrows-business-landscape",
+  "excerpt": "![Article Image](images/046_article.jpg)",
+  "isFeatured": false,
+  "readTime": 1,
+  "wordCount": null,
+  "views": 4981753,
+  "author": {
+    "name": "Elena Petrov",
+    "slug": {
+      "_type": "slug",
+      "current": "elena-petrov"
+    }
+  },
+  "categories": [
+    {
+      "title": "Leadership",
+      "slug": {
+        "current": "leadership"
+      }
+    }
+  ],
+  "mainImage": {
+    "alt": "The Decision-Makers Shaping Tomorrow's Business Landscape",
+    "asset": {
+      "_id": "image-ca2d74352e4dd58a7a3601b52c300be38703df61-1200x800-jpg",
+      "url": "https://cdn.sanity.io/images/2f93fcy8/production/ca2d74352e4dd58a7a3601b52c300be38703df61-1200x800.jpg"
+    }
+  },
+  "body": [
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Visionary Leadership Takes Center Stage"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Australia's most influential business leaders convened at The Star Sydney for 's prestigious 13th annual Executive of the Year Awards, marking a defining moment in the nation's corporate calendar."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Celebrating Exceptional Achievement"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "The glittering ceremony honored outstanding executives who have demonstrated remarkable resilience and innovation throughout challenging market conditions. These decision-makers represent diverse sectors, from technology and finance to healthcare and manufacturing, each contributing unique perspectives on navigating today's complex business environment."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Shaping Tomorrow's Success"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Winners exemplified strategic thinking and transformative leadership, showcasing how visionary executives continue driving organizational growth while fostering sustainable practices. Their collective impact reflects the dynamic evolution of Australian business leadership on the global stage."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "writerSlug": "elena-petrov"
+}

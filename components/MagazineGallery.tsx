@@ -1,119 +1,112 @@
 import OptimizedImage from '@/components/OptimizedImage'
 import Link from 'next/link'
+import path from 'path'
+import fs from 'fs/promises'
+import { client, urlFor } from '@/lib/sanity'
 
-export default function MagazineGallery() {
-  const covers = [
-    {
-      id: 1,
-      title: "Innovation Leaders 2025",
-      issue: "January 2025",
-      views: 2500000,
-      image: "/featured-issue-1.png"
-    },
-    {
-      id: 2,
-      title: "Women in Leadership",
-      issue: "December 2024",
-      views: 1800000,
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Sustainable Business",
-      issue: "November 2024",
-      views: 2200000,
-      image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&h=600&fit=crop"
-    },
-    {
-      id: 4,
-      title: "Global Expansion",
-      issue: "October 2024",
-      views: 1500000,
-      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=600&fit=crop"
-    },
-    {
-      id: 5,
-      title: "Digital Transformation",
-      issue: "September 2024",
-      views: 1900000,
-      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=600&fit=crop"
-    },
-    {
-      id: 6,
-      title: "Financial Excellence",
-      issue: "August 2024",
-      views: 1300000,
-      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=600&fit=crop"
-    },
-    {
-      id: 7,
-      title: "Startup Unicorns",
-      issue: "July 2024",
-      views: 2100000,
-      image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=600&fit=crop"
-    },
-    {
-      id: 8,
-      title: "Healthcare Innovation",
-      issue: "June 2024",
-      views: 1700000,
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=600&fit=crop"
-    },
-    {
-      id: 9,
-      title: "Manufacturing 4.0",
-      issue: "May 2024",
-      views: 1400000,
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=600&fit=crop"
+type SpotlightItem = {
+  image: string
+  href?: string
+  title?: string
+}
+
+export default async function MagazineGallery() {
+  const envCountRaw = process.env.NEXT_PUBLIC_SPOTLIGHT_COUNT
+  const envCount = envCountRaw ? Math.max(1, Math.min(50, parseInt(envCountRaw, 10) || 0)) : undefined
+  let items: SpotlightItem[] = []
+  let desiredCount: number | undefined = envCount
+
+  // Prefer static spotlight.json from public
+  const publicDir = path.join(process.cwd(), 'public')
+  try {
+    const configPath = path.join(publicDir, 'spotlight.json')
+    const raw = await fs.readFile(configPath, 'utf-8')
+    const parsed = JSON.parse(raw)
+    if (Array.isArray(parsed)) items = parsed as SpotlightItem[]
+  } catch {
+    items = []
+  }
+
+  // If no static config present, fall back to Sanity spotlightConfig
+  if (items.length === 0) {
+    try {
+      const data = await client.fetch(
+        `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{
+          cardCount,
+          items[]->{ _id, title, slug, mainImage }
+        }`
+      )
+      if (data && Array.isArray(data.items) && data.items.length > 0) {
+        desiredCount = desiredCount ?? (typeof data.cardCount === 'number' ? data.cardCount : undefined)
+        items = data.items.map((p: { title?: string; slug?: { current?: string } | null; mainImage?: unknown }, idx: number) => ({
+          image: p?.mainImage ? urlFor(p.mainImage as unknown).width(1200).height(1800).url() : `/Featured%20section/${idx + 1}.png`,
+          href: p?.slug?.current ? `/article/${p.slug.current}` : '/archive',
+          title: p?.title || 'C‑Suite Magazine Issue',
+        }))
+      }
+    } catch {
+      // Ignore
     }
-  ]
+  }
+
+  // Custom homepage order for first 12 cards: 1,8,2,7,3,9,4,10,5,11,6,12
+  // Map from original zero-based indices
+  const orderMap = [0, 7, 1, 6, 2, 8, 3, 9, 4, 10, 5, 11]
+  const itemsWithIndex = items.map((it, i) => ({ ...it, __idx: i + 1 }))
+  const reorderedFirst12 = orderMap
+    .filter((i) => i >= 0 && i < itemsWithIndex.length)
+    .map((i) => itemsWithIndex[i])
+  const remaining = itemsWithIndex.slice(12)
+  const orderedItems = [...reorderedFirst12, ...remaining]
+
+  // Render up to desired count (env → Sanity config → default 16)
+  const maxCount = typeof desiredCount === 'number' ? desiredCount : 16
+  const initialCount = Math.min(orderedItems.length, maxCount)
 
   return (
     <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-none">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
-            Featured Issues
+            C-suite spotlight
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Browse our collection of exclusive issues featuring the world's top executives
+            Browse our collection of exclusive issues featuring the world&apos;s top executives
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {covers.map((cover) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          {orderedItems.slice(0, initialCount).map((item, index) => (
             <Link
-              key={cover.id}
-              href="/archive"
+              key={`${index}`}
+              href={item.href || '/archive'}
               className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 card-hover-scale"
             >
               <div className="relative aspect-[2/3] overflow-hidden bg-gray-200">
                 <OptimizedImage
-                  src={cover.image}
-                  alt={cover.title}
+                  src={item.image || `/Featured%20section/${index + 1}.png`}
+                  alt={item.title || 'C‑Suite Magazine Issue'}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  quality={90}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 25vw, 20vw"
+                  loading="lazy"
                 />
-                
-                {/* View Count Badge - Top Right */}
-                <div className="absolute top-4 right-4 bg-[#c8ab3d] text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  {(cover.views / 1000000).toFixed(1)}M
-                </div>
+                {/* Temporary number badge - Top Left (dev-only) */}
+                {process.env.NODE_ENV !== 'production' && (
+                  <div className="absolute top-4 left-4 bg-[#c8ab3d] text-white px-3 py-1 rounded-full text-xs font-bold shadow">
+                    {item.__idx || index + 1}
+                  </div>
+                )}
+                {/* Views removed per rule: featured section does not display views */}
                 
                 {/* Strong dark overlay on hover for text readability */}
                 <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                {/* Title Overlay - Only visible on hover */}
+                {/* Overlay - Only visible on hover ('View issue' with arrow) */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
-                  <h3 className="font-serif font-bold text-xl mb-2" style={{ color: '#ffffff' }}>
-                    {cover.title}
-                  </h3>
-                  <p className="text-sm" style={{ color: '#ffffff' }}>
-                    View Issue →
+                  <p className="text-sm font-semibold tracking-wide" style={{ color: '#ffffff' }}>
+                    View issue →
                   </p>
                 </div>
               </div>
@@ -121,15 +114,7 @@ export default function MagazineGallery() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Link
-            href="/archive"
-            prefetch
-            className="inline-block px-8 py-4 bg-[#082945] text-white font-bold rounded-lg hover:bg-[#0a3a5c] transition-colors btn-shimmer focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2"
-          >
-            Read More
-          </Link>
-        </div>
+        {/* Read More CTA removed per request */}
       </div>
     </section>
   )

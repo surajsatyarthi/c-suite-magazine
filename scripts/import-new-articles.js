@@ -64,6 +64,19 @@ function readMarkdownInfo(markdownPath) {
   const paras = bodyText.split(/\n\n+/)
   excerpt = (paras[0] || '').replace(/\n/g, ' ').trim()
 
+  // Sanitize excerpt: strip markdown images and noise
+  const sanitizeExcerpt = (s) => String(s || '')
+    .replace(/!\[[^\]]*\]\([^\)]*\)/g, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]*`/g, '')
+    .replace(/\*\*|__|\*|_/g, '')
+    .replace(/^\s*#{1,6}\s+/gm, '')
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  excerpt = sanitizeExcerpt(excerpt).substring(0, 200)
+
   return { title, category, excerpt, bodyText }
 }
 
@@ -163,7 +176,7 @@ async function upsertArticle({ title, slug, excerpt, bodyText, category, mainIma
     slug,
     excerpt,
     // Assign editors equally by slug (round-robin, computed in main())
-    authorSlug: upsertArticle.__authorSlug,
+    writerSlug: upsertArticle.__writerSlug,
     mainImageAssetId,
     mainImageAlt: title,
     isFeatured: false,
@@ -200,10 +213,10 @@ async function main() {
   const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : mdFiles.length
 
   console.log(`Importing up to ${limit} articles from: ${mdDir}`)
-  // Load authors sorted by slug for stable order
-  const authors = await client.fetch('*[_type == "author"] | order(slug.current asc){ _id, slug }')
-  if (!authors?.length) throw new Error('No authors found in Sanity for author assignment')
-  let authorIndex = 0
+  // Load writers sorted by slug for stable order
+  const writers = await client.fetch('*[_type == "writer"] | order(slug.current asc){ _id, slug }')
+  if (!writers?.length) throw new Error('No writers found in Sanity for writer assignment')
+  let writerIndex = 0
   let count = 0
   for (const md of mdFiles) {
     if (count >= limit) break
@@ -221,8 +234,8 @@ async function main() {
       } else {
         console.warn(`No image matched for ${md}`)
       }
-      // Set author slug per article before sending (round-robin)
-      upsertArticle.__authorSlug = authors[authorIndex % authors.length]?.slug?.current
+      // Set writer slug per article before sending (round-robin)
+      upsertArticle.__writerSlug = writers[writerIndex % writers.length]?.slug?.current
       const result = await upsertArticle({
         title,
         slug,
@@ -231,7 +244,7 @@ async function main() {
         category: info.category,
         mainImageAssetId: assetId,
       })
-      authorIndex++
+      writerIndex++
       console.log(`✔ ${result.action}: ${title} (id: ${result.id})`)
       count++
       await sleep(200)

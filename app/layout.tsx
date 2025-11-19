@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import "../styles/accessibility.css";
-import RevealController from "@/components/RevealController";
 import FocusManager from "@/components/FocusManager";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+// Defer non-critical client components to reduce initial JS via client wrapper
+import LazyEntryLocale from "@/components/LazyEntryLocale";
+const AdInterstitial = dynamic(() => import("@/components/AdInterstitial"));
 import { generateMetadata, generateStructuredData } from "@/lib/seo";
+import { Analytics } from "@vercel/analytics/next";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -38,6 +43,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Performance: resource hints for critical origins */}
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://api.iconify.design" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://api.iconify.design" />
+        {/* Fonts loaded via next/font to avoid render-blocking; remove external CSS links */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -49,12 +62,16 @@ export default function RootLayout({
         className={`${playfair.variable} ${inter.variable} font-sans antialiased bg-white text-gray-900`}
       >
         {/* Focus management for keyboard vs mouse users */}
-        <FocusManager />
-        {/* Global IntersectionObserver to reveal elements with .reveal */}
-        <RevealController />
+        <FocusManager />        {/* Entry popup for locale selection (client-only) */}
+        <LazyEntryLocale />
+        {/* Globally mounted interstitial ad (wrap in Suspense due to useSearchParams) */}
+        <Suspense fallback={null}>
+          <AdInterstitial />
+        </Suspense>
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>
+        {process.env.NEXT_PUBLIC_ENABLE_INSIGHTS === '1' ? <Analytics /> : null}
       </body>
     </html>
   );

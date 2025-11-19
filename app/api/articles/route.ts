@@ -1,13 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { writeClient } from '@/lib/sanityWrite'
+import { client } from '@/lib/sanity'
+import { validateWriteRequest } from '@/lib/security'
 
 type ArticlePayload = {
   id?: string
   title?: string
   slug?: string
   excerpt?: string
-  authorId?: string
-  authorSlug?: string
+  writerId?: string
+  writerSlug?: string
   categoryIds?: string[]
   categorySlugs?: string[]
   mainImageAssetId?: string
@@ -20,13 +22,13 @@ type ArticlePayload = {
   publishedAt?: string
 }
 
-async function resolveAuthorRef(payload: ArticlePayload) {
-  if (payload.authorId) return { _type: 'reference', _ref: payload.authorId }
-  if (payload.authorSlug) {
-    const author = await writeClient.fetch(`*[_type == "author" && slug.current == $slug][0]{_id}`, {
-      slug: payload.authorSlug,
+async function resolveWriterRef(payload: ArticlePayload) {
+  if (payload.writerId) return { _type: 'reference', _ref: payload.writerId }
+  if (payload.writerSlug) {
+    const writer = await writeClient.fetch(`*[_type == "writer" && slug.current == $slug][0]{_id}`, {
+      slug: payload.writerSlug,
     })
-    if (author?._id) return { _type: 'reference', _ref: author._id }
+    if (writer?._id) return { _type: 'reference', _ref: writer._id }
   }
   return undefined
 }
@@ -56,7 +58,7 @@ function buildMainImage(payload: ArticlePayload) {
 }
 
 async function upsertArticle(payload: ArticlePayload) {
-  const authorRef = await resolveAuthorRef(payload)
+  const writerRef = await resolveWriterRef(payload)
   const categoryRefs = await resolveCategoryRefs(payload)
   const mainImage = buildMainImage(payload)
 
@@ -65,7 +67,7 @@ async function upsertArticle(payload: ArticlePayload) {
     ...(payload.title ? { title: payload.title } : {}),
     ...(payload.slug ? { slug: { current: payload.slug } } : {}),
     ...(payload.excerpt ? { excerpt: payload.excerpt } : {}),
-    ...(authorRef ? { author: authorRef } : {}),
+    ...(writerRef ? { writer: writerRef } : {}),
     ...(categoryRefs ? { categories: categoryRefs } : {}),
     ...(mainImage ? { mainImage } : {}),
     ...(typeof payload.isFeatured === 'boolean' ? { isFeatured: payload.isFeatured } : {}),
@@ -102,8 +104,17 @@ async function upsertArticle(payload: ArticlePayload) {
   return { id: result._id, action: 'created' }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Validate request with security checks
+    const validationError = await validateWriteRequest(request, {
+      requireReferer: true,
+      validateContent: true,
+      allowedContentTypes: ['application/json']
+    })
+    
+    if (validationError) return validationError
+    
     const payload = (await request.json()) as ArticlePayload
     if (!payload || (!payload.title && !payload.slug && !payload.id)) {
       return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 })
@@ -115,8 +126,17 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
+    // Validate request with security checks
+    const validationError = await validateWriteRequest(request, {
+      requireReferer: true,
+      validateContent: true,
+      allowedContentTypes: ['application/json']
+    })
+    
+    if (validationError) return validationError
+    
     const payload = (await request.json()) as ArticlePayload
     if (!payload || (!payload.id && !payload.slug)) {
       return NextResponse.json({ ok: false, error: 'Provide id or slug for update' }, { status: 400 })
@@ -128,3 +148,16 @@ export async function PUT(request: Request) {
   }
 }
 
+export async function GET() {
+  try {
+    const articles = await client.fetch(`*[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...20] {
+      _id,
+      title,
+      "slug": slug.current,
+      publishedAt
+    }`)
+    return NextResponse.json({ ok: true, count: (articles || []).length, articles })
+  } catch (e) {
+    return NextResponse.json({ ok: false, error: 'Failed to fetch articles' }, { status: 500 })
+  }
+}

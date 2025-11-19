@@ -47,12 +47,8 @@ export const adType = defineType({
       description: 'Where should this ad appear?',
       options: {
         list: [
-          {title: 'Article Sidebar (300x250)', value: 'article-sidebar'},
           {title: 'Article Sidebar Large (300x600)', value: 'article-sidebar-large'},
           {title: 'In-Article (728x90 Leaderboard)', value: 'in-article'},
-          {title: 'Homepage Top Banner (970x250)', value: 'homepage-banner'},
-          {title: 'Homepage Sidebar (300x250)', value: 'homepage-sidebar'},
-          {title: 'Footer Banner (728x90)', value: 'footer-banner'},
         ],
         layout: 'radio',
       },

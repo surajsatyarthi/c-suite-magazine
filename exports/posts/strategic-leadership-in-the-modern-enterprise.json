@@ -1,0 +1,82 @@
+{
+  "_id": "2i7iadib5QZf8Z2hekfkyA",
+  "_createdAt": "2025-11-02T00:01:24Z",
+  "_updatedAt": "2025-11-02T04:06:39Z",
+  "title": "Strategic Leadership in the Modern Enterprise",
+  "slug": "strategic-leadership-in-the-modern-enterprise",
+  "excerpt": "![Article Image](images/038_article.jpg)",
+  "isFeatured": false,
+  "readTime": 1,
+  "wordCount": null,
+  "views": 3017080,
+  "author": {
+    "name": "Raj Patel",
+    "slug": {
+      "_type": "slug",
+      "current": "raj-patel"
+    }
+  },
+  "categories": [
+    {
+      "slug": {
+        "_type": "slug",
+        "current": "leadership"
+      },
+      "title": "Leadership"
+    }
+  ],
+  "mainImage": {
+    "alt": "Strategic Leadership in the Modern Enterprise",
+    "asset": {
+      "_id": "image-8f5c3351e896b03fb54e0d7a55fc9f94cb7b108f-1200x801-jpg",
+      "url": "https://cdn.sanity.io/images/2f93fcy8/production/8f5c3351e896b03fb54e0d7a55fc9f94cb7b108f-1200x801.jpg"
+    }
+  },
+  "body": [
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Strategic Leadership in the Modern Enterprise"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Today's executives face unprecedented complexity. Digital transformation, geopolitical uncertainty, and evolving workforce expectations demand adaptive leadership approaches that balance short-term execution with long-term vision."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Navigating Tomorrow's Challenges"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Success requires mastering strategic foresight while maintaining operational excellence. Leaders must cultivate resilience, foster innovation cultures, and make data-driven decisions that position their organizations for sustainable growth in an increasingly volatile business landscape."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "writerSlug": "raj-patel"
+}

@@ -1,8 +1,9 @@
-export interface Author {
+export interface Writer {
   _id: string
   name: string
   slug: { current: string }
   position?: string
+  imageUrl?: string
   image: any
   bio?: any[]
   social?: {
@@ -25,7 +26,7 @@ export interface Post {
   title: string
   slug: { current: string }
   excerpt?: string
-  author: Author
+  writer?: Writer
   mainImage: any
   categories: Category[]
   tags?: string[]

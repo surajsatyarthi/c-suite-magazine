@@ -39,22 +39,22 @@ async function purgeTestPosts() {
 async function purgeTestAuthors() {
   console.log('Searching for test authors...')
   const authors = await client.fetch(
-    '*[_type == "author" && (name match "*test*" || name match "*Test*" || slug.current match "*test*" || slug.current match "*Test*")] { _id, name, slug }'
+  '*[_type == "writer" && (name match "*test*" || name match "*Test*" || slug.current match "*test*" || slug.current match "*Test*")] { _id, name, slug }'
   )
-  console.log(`Found ${authors.length} test author(s) to delete`)
+  console.log(`Found ${authors.length} test writer(s) to delete`)
 
   let deleted = 0
   for (const a of authors) {
     try {
       await client.delete(a._id)
-      console.log(`🗑️ Deleted author: ${a.name} (${a.slug?.current || 'no-slug'})`)
+  console.log(`🗑️ Deleted writer: ${a.name} (${a.slug?.current || 'no-slug'})`)
       deleted++
       await new Promise((r) => setTimeout(r, 75))
     } catch (e) {
-      console.error(`Failed to delete author ${a._id}:`, e.message)
+  console.error(`Failed to delete writer ${a._id}:`, e.message)
     }
   }
-  console.log(`Done. Deleted ${deleted} test author(s).`)
+  console.log(`Done. Deleted ${deleted} test writer(s).`)
 }
 
 async function main() {
@@ -70,4 +70,3 @@ main().catch((e) => {
   console.error('Fatal purge error:', e)
   process.exit(1)
 })
-

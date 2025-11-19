@@ -57,6 +57,14 @@ body {
   line-height: 24px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Global sanitation: avoid accidental horizontal scroll */
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Safety net: clip horizontal overflow within main content */
+main#main-content {
+  overflow-x: clip;
 }
 
 /* Professional Typography - csuite-inspired */
@@ -156,6 +164,152 @@ a, button {
   }
 }
 
+/* ==========================
+   Site Logo Styles
+   ========================== */
+.site-logo {
+  position: relative;
+  display: block; /* make logo container full-width to align subtitle right */
+  width: 100%;
+  color: #fff;
+  /* allow color override via parent using currentColor */
+  text-align: center; /* center-align logo text */
+}
+
+/* Inner wrapper: center the block, right-align its text so last letters align */
+.site-logo-inner {
+  display: inline-block; /* allow parent to center this block */
+  text-align: right; /* align right edges for E-over-E */
+}
+
+/* Rail: sizes to the subtitle width and sits centered via the outer logo */
+.site-logo-rail {
+  display: flex; /* split rails flanking MAGAZINE */
+  align-items: center; /* lines pass through subtitle midpoint */
+  gap: 0;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.site-logo-title {
+  font-family: 'BodoniFLF', 'Bodoni FLF', 'Bodoni Moda', var(--font-playfair), serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  font-size: clamp(28px, 6vw, 56px);
+  color: currentColor;
+}
+
+.site-logo-dash {
+  font-weight: 700; /* reduced ~25% from 900 for lighter dash */
+  color: currentColor;
+  display: inline-block;
+  font-size: 1.4em;
+  line-height: 1;
+  transform: scaleY(1.05) translateY(-0.03em); /* thinner dash to match reduced boldness */
+}
+
+.site-logo-line {
+  height: 2px;
+  background-color: currentColor;
+}
+
+.site-logo-line-left,
+.site-logo-line-right {
+  flex: 1 1 auto; /* grow to container edges */
+}
+
+.site-logo-subtitle {
+  position: relative; /* allow pseudo rails without reflowing text */
+  display: inline-block;
+  font-family: var(--font-playfair), serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: clamp(12px, 2.5vw, 20px);
+  color: currentColor;
+  white-space: nowrap;
+  line-height: 1; /* clean vertical centering */
+}
+
+/* Header subtitle should propagate gold color to rails while text uses gradient */
+.site-logo:not(.site-logo--footer) .site-logo-subtitle {
+  color: var(--primary-gold);
+}
+
+/* Header-only rails flanking MAGAZINE without affecting alignment */
+.site-logo:not(.site-logo--footer) .site-logo-subtitle::before,
+.site-logo:not(.site-logo--footer) .site-logo-subtitle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  background-image: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f6e9a8 18%,
+    #c8ab3d 42%,
+    #b39935 68%,
+    #ffffff 100%
+  );
+  background-size: 260% 260%;
+  animation: metallic-shimmer-strong 2.2s ease-in-out infinite;
+}
+.site-logo:not(.site-logo--footer) .site-logo-subtitle::before {
+  right: 100%; /* immediately to the left of the word */
+  width: 100vw; /* extend to far left within viewport */
+}
+.site-logo:not(.site-logo--footer) .site-logo-subtitle::after {
+  left: 100%; /* immediately to the right of the word */
+  width: 100vw; /* extend to far right within viewport */
+}
+
+/* Footer rails: mirror header shimmer but respect footer alignment */
+.site-logo--footer .site-logo-subtitle::before,
+.site-logo--footer .site-logo-subtitle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2px;
+  background-image: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f6e9a8 18%,
+    #c8ab3d 42%,
+    #b39935 68%,
+    #ffffff 100%
+  );
+  background-size: 260% 260%;
+  animation: metallic-shimmer-strong 2.2s ease-in-out infinite;
+}
+.site-logo--footer .site-logo-subtitle::before {
+  right: 100%;
+  width: 100vw; /* extend left across footer, constrained to viewport width */
+}
+.site-logo--footer .site-logo-subtitle::after {
+  left: 100%;
+  width: 100vw; /* extend right across footer, constrained to viewport width */
+}
+
+/* Footer-specific scaling */
+.site-logo--footer {
+  display: inline-block; /* shrink to content, no full-width centering */
+  width: auto;
+  text-align: right; /* align MAGAZINE right edge to column's right */
+}
+.site-logo--footer .site-logo-title {
+  font-size: clamp(24px, 4.5vw, 44px);
+}
+.site-logo--footer .site-logo-subtitle {
+  font-size: clamp(10px, 2vw, 18px);
+  bottom: -5px;
+}
+.site-logo--footer .site-logo-line {
+  height: 2px;
+}
+
 
 
 /* Auto-scrolling categories animation */
@@ -168,42 +322,49 @@ a, button {
   }
 }
 
-.category-scroll-wrapper {
+/* Minimal Clean Category Scroll */
+.category-scroll-wrapper-minimal {
   overflow: hidden;
-  position: relative;
   width: 100%;
 }
 
-/* Seam star overlay — marks the repeat boundary without affecting layout */
-/* (removed) seam star overlay — now using inline star for correct seam alignment */
-
-.category-scroll-container {
+.category-scroll-container-minimal {
   display: flex;
-  width: fit-content;
-  /* 20% slower: duration increased from 90s to 112.5s */
-  animation: scroll-left 112.5s linear infinite;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
-.category-scroll-container:hover {
-  animation-play-state: paused;
+.category-scroll-container-minimal::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
-.category-scroll-content {
+.category-scroll-content-minimal {
   display: flex;
-  gap: 1.5rem; /* slightly more space between category items */
-  padding: 0.75rem 0; /* a bit more vertical padding to separate from border */
+  gap: 0; /* No gap between items */
+  padding: 0 1rem; /* Simple horizontal padding */
   white-space: nowrap;
-  align-items: center; /* vertically align any inline dividers */
+  align-items: center;
+  min-width: 100%;
 }
 
-/* Add a small spacer at the end to avoid seam crowding */
-.category-scroll-content::after {
-  content: '';
-  flex: 0 0 2rem;
+/* Simple clean link styling */
+.category-scroll-content-minimal a {
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
 }
 
-/* Minimal seam divider to mark repetition */
-/* (removed) seam divider styles — no divider in the scroller */
+.category-scroll-content-minimal a:hover {
+  color: #c8ab3d;
+}
+
+/* Active state - single gold line */
+.category-scroll-content-minimal a[data-active='true'] {
+  color: #c8ab3d;
+  border-bottom-color: #c8ab3d;
+}
 
 /* Footer glow animation - csuite-inspired */
 @keyframes footer-glow {
@@ -223,6 +384,31 @@ a, button {
 footer h3,
 footer h4 {
   color: #ffffff !important;
+}
+
+/* Force pure white text inside the entry locale popup */
+.entry-locale-popup h1,
+.entry-locale-popup h2,
+.entry-locale-popup h3,
+.entry-locale-popup h4,
+.entry-locale-popup p,
+.entry-locale-popup label,
+.entry-locale-popup span,
+.entry-locale-popup select {
+  color: #ffffff !important;
+}
+.entry-locale-popup select {
+  background-color: rgba(0,0,0,0.3);
+}
+.entry-locale-popup option {
+  color: #111 !important; /* ensures readable text in open dropdowns */
+  background-color: #fff;  /* improves contrast in option list */
+}
+
+/* Footer note size reduction (≈20%) within popup */
+.entry-locale-popup .footer-note {
+  font-size: 0.72rem !important; /* +20% from 0.6rem */
+  line-height: 1rem;
 }
 
 /* Category badge flash effect */
@@ -384,6 +570,29 @@ html::before {
   50% { background-position: 100% 50%; }
 }
 
+/* Stronger Metallic Sheen variant for emphasis */
+.metallic-sheen-strong {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f6e9a8 18%,
+    #c8ab3d 42%,
+    #b39935 68%,
+    #ffffff 100%
+  );
+  background-size: 260% 260%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: metallic-shimmer-strong 2.2s ease-in-out infinite;
+  filter: drop-shadow(0 2px 8px rgba(200, 171, 61, 0.45)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.22));
+}
+
+@keyframes metallic-shimmer-strong {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 
 
 
@@ -432,28 +641,54 @@ html::before {
   .metallic-sheen {
     animation: none !important;
   }
+  .metallic-sheen-strong {
+    animation: none !important;
+    filter: drop-shadow(0 2px 6px rgba(200, 171, 61, 0.35));
+  }
+  .site-logo .site-logo-subtitle::before,
+  .site-logo .site-logo-subtitle::after {
+    animation: none !important;
+  }
   
   .btn-premium-gradient {
     transition: none !important;
   }
 }
 
-/* Reveal on scroll (staggered) */
+/* Reveal disabled for performance */
 .reveal {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 500ms ease, transform 500ms ease;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+}
+
+/* Subtle entrance animation for locale popup */
+@keyframes popup-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.entry-locale-popup {
+  will-change: opacity, transform;
+  animation: popup-in 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .entry-locale-popup {
+    animation: none !important;
   }
 }

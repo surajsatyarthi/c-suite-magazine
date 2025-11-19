@@ -36,7 +36,7 @@ export async function GET(request: Request) {
     const width = ad?.dimensions?.width || defaultDims[placement]?.width || 300
     const height = ad?.dimensions?.height || defaultDims[placement]?.height || 250
 
-    const imageUrl = urlFor(ad.image).width(width).height(height).url()
+    const imageUrl = urlFor(ad.image).width(width).height(height).auto('format').url()
 
     return NextResponse.json({
       ok: true,

@@ -22,7 +22,7 @@ export default function AdvertisePage() {
         "Brand equity & recognition",
         "Digital & print exposure",
         "Social media amplification",
-        "Archive placement"
+        "Magzine Archive placement"
       ]
     },
     {
@@ -35,7 +35,7 @@ export default function AdvertisePage() {
         "Multi-page spread",
         "Homepage feature",
         "Newsletter distribution",
-        "Permanent digital archive"
+        "Permanent digital Magzine Archive"
       ],
       popular: true
     },

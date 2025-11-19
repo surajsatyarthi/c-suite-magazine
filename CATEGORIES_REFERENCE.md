@@ -83,7 +83,7 @@ const categories = [
 ### CXO Interview
 - **Slug:** `cxo-interview`
 - **Purpose:** Specifically for executive interviews
-- **Usage:** Used in the "Featured CXOs" section on homepage
+- **Usage:** Previously used in the "Featured CXOs" homepage section (now removed)
 - **Import:** Automatically assigned by `scripts/import-cxo-interviews.js`
 
 ### Opinion

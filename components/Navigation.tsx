@@ -1,42 +1,152 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useRef, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
+import React from 'react'
+import { getCountryFlag } from './CountrySelector'
+// Fetch categories via server API to avoid client-side Sanity failures
 
 export default function Navigation() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const router = useRouter()
   const pathname = usePathname()
-  const isArticle = pathname?.startsWith('/article/')
-  const searchInputRef = useRef<HTMLInputElement>(null)
+  const [countryCode, setCountryCode] = useState<string>('US')
+  const [isLoading, setIsLoading] = useState(true)
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
-      setSearchQuery('')
+  // Fetch country from server-side detection API
+  useEffect(() => {
+    async function fetchCountry() {
+      try {
+        const response = await fetch('/api/country')
+        const data = await response.json()
+        setCountryCode(data.country || 'US')
+      } catch (error) {
+        console.error('Failed to fetch country:', error)
+        // Fallback to browser locale detection
+        try {
+          const locale = (navigator.languages && navigator.languages[0]) || navigator.language || 'en-US'
+          const parts = locale.split('-')
+          const cc = parts.length > 1 ? parts[1].toUpperCase() : 'US'
+          setCountryCode(cc)
+        } catch {
+          setCountryCode('US')
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchCountry()
+  }, [])
+
+  // Handle manual country selection
+  const handleCountryChange = async (newCountryCode: string) => {
+    try {
+      const response = await fetch('/api/country', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ country: newCountryCode }),
+      })
+
+      if (response.ok) {
+        setCountryCode(newCountryCode)
+      } else {
+        console.error('Failed to update country preference')
+      }
+    } catch (error) {
+      console.error('Error updating country:', error)
     }
   }
 
-  // Handle keyboard navigation for search
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setSearchQuery('')
-      searchInputRef.current?.blur()
+  // Listen for country changes from EntryLocalePopup
+  useEffect(() => {
+    const handleCountryUpdate = (event: Event) => {
+      const customEvent = event as CustomEvent
+      if (customEvent.detail?.country) {
+        setCountryCode(customEvent.detail.country)
+      }
     }
-  }
 
-  // Sticky header removed globally per request; no scroll listeners.
+    document.addEventListener('csuite:country-updated', handleCountryUpdate)
+    return () => document.removeEventListener('csuite:country-updated', handleCountryUpdate)
+  }, [])
 
-  const allCategories = [
-    'Leadership', 'Business', 'Manufacturing', 'Public Sector', 'Events',
-    'Innovation', 'Not-For-Profit', 'Philanthropy', 'IT & Telco', 'Money & Finance',
-    'Engineering', 'Science & Technology', 'Sustainability',
-    'Professional Services', 'Startups', 'Retail', 'Energy',
-    'Changemakers', 'CEO Woman', 'Education', 'Automotive & Logistics',
-    'Healthcare', 'Entrepreneurs', 'Property & Real Estate', 'BFSI', 'Construction & Mining'
-  ]
+  const [allCategories, setAllCategories] = useState<Array<{ title: string, slug: string }>>([])
+  const REMOVED_CATEGORIES = new Set<string>(['Business', 'Events', 'Retail', 'Cover Story'])
+  const scrollContainerRef = React.useRef<HTMLElement>(null)
+
+  // Fetch categories with articles (server-side via API)
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch('/api/categories')
+        const data = await res.json()
+        const cats = Array.isArray(data?.categories) ? data.categories : []
+        if (cats.length) {
+          setAllCategories(
+            cats
+              .filter((c: any) => !REMOVED_CATEGORIES.has(String(c?.title || '')))
+          )
+          return
+        }
+      } catch (error) {
+        console.error('Failed to fetch categories:', error)
+      }
+      setAllCategories([])
+    }
+    fetchCategories()
+  }, [])
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (!container || allCategories.length === 0) return
+
+    let scrollDirection = 1
+    let scrollInterval: NodeJS.Timeout
+
+    const startScrolling = () => {
+      scrollInterval = setInterval(() => {
+        if (!container) return
+        
+        const maxScroll = container.scrollWidth - container.clientWidth
+        const currentScroll = container.scrollLeft
+        
+        if (currentScroll >= maxScroll) {
+          scrollDirection = -1
+        } else if (currentScroll <= 0) {
+          scrollDirection = 1
+        }
+        
+        container.scrollLeft += scrollDirection * 0.5
+      }, 50)
+    }
+
+    const stopScrolling = () => {
+      clearInterval(scrollInterval)
+    }
+
+    // Start scrolling after 2 seconds
+    const startDelay = setTimeout(startScrolling, 2000)
+    
+    // Stop scrolling on user interaction
+    container.addEventListener('mouseenter', stopScrolling)
+    container.addEventListener('touchstart', stopScrolling)
+    
+    // Resume scrolling when user leaves
+    container.addEventListener('mouseleave', startScrolling)
+    container.addEventListener('touchend', startScrolling)
+
+    return () => {
+      clearTimeout(startDelay)
+      clearInterval(scrollInterval)
+      container.removeEventListener('mouseenter', stopScrolling)
+      container.removeEventListener('touchstart', stopScrolling)
+      container.removeEventListener('mouseleave', startScrolling)
+      container.removeEventListener('touchend', startScrolling)
+    }
+  }, [allCategories.length])
 
   const categories = [
     'Leadership', 'Business', 'Innovation', 'Money & Finance', 'Startups',
@@ -65,111 +175,82 @@ export default function Navigation() {
           {/* Removed header background glow for a cleaner, non-shiny header */}
           <div className="flex justify-center items-center py-3 relative z-10">
             
-            {/* Logo with Metallic Sheen */}
+            {/* Site Logo (Bodoni FLF + Playfair Display) */}
             <Link 
               href="/" 
               prefetch
-              className="flex flex-col items-center text-center mx-auto md:mx-0 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945] rounded-sm"
+              className="block w-full mx-auto md:mx-0 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945] rounded-sm"
               aria-label="C-Suite Magazine - Home"
             >
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-serif font-black text-white mb-0.5">
-                C-Suite <span className="metallic-sheen">Magazine</span>
-              </h1>
-              <p className="text-xs text-white font-serif uppercase tracking-wide">
-                Your legacy goes <span className="metallic-sheen">global</span>
-              </p>
+              <div className="site-logo text-white">
+                <div className="site-logo-inner">
+                  <div className="site-logo-title">C<span className="site-logo-dash">-</span>SUITE</div>
+                  <div className="site-logo-subtitle metallic-sheen metallic-sheen-strong">MAGAZINE</div>
+                </div>
+              </div>
             </Link>
+
+            {/* Country trigger (top-right) */}
+            <div className="absolute right-4 top-3 flex items-center gap-3">
+              {!isLoading && (
+                <>
+                  {/* Flag button opens locale popup */}
+                  <button
+                    onClick={() => document.dispatchEvent(new Event('csuite:open-locale-popup'))}
+                    className="px-3 py-2 min-w-[44px] min-h-[44px] text-white hover:text-[#c8ab3d] transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]"
+                    title="Change country"
+                    aria-label="Change country"
+                    aria-haspopup="dialog"
+                  >
+                    <span className="text-2xl leading-none" style={{ textShadow: '0 1px 1px rgba(0,0,0,0.6)' }}>
+                      {getCountryFlag(countryCode)}
+                    </span>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+          {/* Header tagline */}
+          <div className="text-center pb-3">
+            <p className="uppercase tracking-wide font-semibold text-[#c8ab3d] text-sm">
+              YOUR LEGACY GOES GLOBAL
+            </p>
           </div>
         </div>
       
 
-      {/* Search Bar - Below Logo (no glow overlay) */}
-      <div className="border-t border-gray-200 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <form 
-            onSubmit={handleSearch} 
-            className="flex items-center justify-center gap-2 max-w-2xl mx-auto"
-            role="search"
-            aria-label="Search articles"
-          >
-            <div className="relative flex-1">
-              <label htmlFor="search-input" className="sr-only">
-                Search articles
-              </label>
-              <input
-                id="search-input"
-                ref={searchInputRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                placeholder="Search articles..."
-                className="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:border-transparent"
-                aria-describedby="search-help"
-              />
-              <div id="search-help" className="sr-only">
-                Enter keywords to search for articles. Press Escape to clear.
-              </div>
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-            <button
-              type="submit"
-              className="px-4 sm:px-6 py-2 bg-[#082945] text-white rounded-lg hover:bg-[#0a3a5c] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 transition-colors font-medium text-sm"
-              aria-label="Submit search"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-      </div>
+      {/* Search Bar removed per request */}
 
-      {/* Horizontal Category Menu with Auto-Scroll (no glow overlay) */}
-      <div className="border-b border-white/10 bg-[#0b2f4c]/40 overflow-hidden">
-        <div className="category-scroll-wrapper">
+      {/* Horizontal Category Menu - Clean Minimal Design */}
+      <div className="border-b border-gray-200 bg-white">
+        <div className="category-scroll-wrapper-minimal">
           <nav 
-            className="category-scroll-container"
+            ref={scrollContainerRef}
+            className="category-scroll-container-minimal"
             role="navigation"
             aria-label="Article categories"
           >
-            <div className="category-scroll-content">
-              {allCategories.map((category) => (
-                <Link
-                  key={category}
-                  href={`/archive?category=${encodeURIComponent(category)}`}
-                  prefetch
-                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] focus:text-[#c8ab3d] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#0b2f4c] whitespace-nowrap transition-colors premium-underline rounded-sm px-3"
-                  aria-label={`View ${category} articles`}
-                >
-                  {category}
-                </Link>
-              ))}
-            </div>
-            {/* Duplicate for seamless loop */}
-            <div className="category-scroll-content" aria-hidden="true">
-              {allCategories.map((category) => (
-                <Link
-                  key={`${category}-duplicate`}
-                  href={`/archive?category=${encodeURIComponent(category)}`}
-                  className="text-sm font-medium text-gray-100 hover:text-[#c8ab3d] whitespace-nowrap transition-colors premium-underline px-3"
-                  tabIndex={-1}
-                  aria-hidden="true"
-                >
-                  {category}
-                </Link>
-              ))}
+            <div className="category-scroll-content-minimal">
+              {allCategories.map((category) => {
+                const categoryPath = `/category/${encodeURIComponent(category.slug || category.title)}`
+                const isActive = pathname === categoryPath
+                return (
+                  <Link
+                    key={category.slug || category.title}
+                    href={categoryPath}
+                    prefetch
+                    className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${
+                      isActive 
+                        ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]' 
+                        : 'text-[#082945] hover:text-[#c8ab3d]'
+                    }`}
+                    aria-label={`View ${category.title} articles`}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {category.title}
+                  </Link>
+                )
+              })}
             </div>
           </nav>
         </div>

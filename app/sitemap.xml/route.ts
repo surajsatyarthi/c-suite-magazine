@@ -10,10 +10,11 @@ export async function GET() {
   
   // Get all published articles
   const posts = await client.fetch(`
-    *[_type == "post" && defined(slug.current)] {
+    *[_type == "post" && defined(slug.current) && count(categories) > 0 && isHidden != true] {
       slug,
       publishedAt,
-      _updatedAt
+      _updatedAt,
+      "categories": categories[]->{ slug }
     }
   `)
 
@@ -64,9 +65,9 @@ export async function GET() {
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
-    // Article pages
+    // Article pages (category + title only)
     ...posts.map((post: any) => ({
-      url: `${baseUrl}/article/${post.slug.current}`,
+      url: `${baseUrl}/category/${post?.categories?.[0]?.slug?.current}/${post.slug.current}`,
       lastModified: new Date(post._updatedAt || post.publishedAt),
       changeFrequency: 'monthly' as const,
       priority: 0.9,

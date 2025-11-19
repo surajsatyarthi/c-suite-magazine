@@ -6,6 +6,7 @@ import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 import { Post, Category } from '@/lib/types'
+import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 
 interface ArchiveFiltersProps {
   posts: Post[]
@@ -14,67 +15,25 @@ interface ArchiveFiltersProps {
 
 export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProps) {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
-  const [contentTypeFilter, setContentTypeFilter] = useState<string>('all')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [currentPage, setCurrentPage] = useState<number>(1)
   const searchParams = useSearchParams()
   const router = useRouter()
   
   const POSTS_PER_PAGE = 12
-  const TOTAL_ARTICLES = 740 // Hard coded total count
 
   // Set initial filters from URL parameters
   useEffect(() => {
     const categoryParam = searchParams.get('category')
-    const contentTypeParam = searchParams.get('contentType')
     
     if (categoryParam) {
       setCategoryFilter(categoryParam)
-    }
-    
-    if (contentTypeParam) {
-      setContentTypeFilter(contentTypeParam)
     }
   }, [searchParams])
 
   // Filter posts based on selected filters
   useEffect(() => {
     let filtered = posts
-
-    // Filter by content type
-    if (contentTypeFilter === 'cxo-interview') {
-      filtered = filtered.filter(post => 
-        post.title.toLowerCase().includes('interview') ||
-        post.title.toLowerCase().includes('cxo') ||
-        post.title.toLowerCase().includes('ceo') ||
-        post.title.toLowerCase().includes('executive') ||
-        (post.categories && post.categories.some(cat => 
-          cat.title.toLowerCase().includes('interview') ||
-          cat.title.toLowerCase().includes('executive') ||
-          cat.title.toLowerCase().includes('cxo')
-        ))
-      )
-    } else if (contentTypeFilter === 'opinion') {
-      filtered = filtered.filter(post => 
-        post.title.toLowerCase().includes('opinion') ||
-        post.title.toLowerCase().includes('perspective') ||
-        post.title.toLowerCase().includes('insight') ||
-        post.title.toLowerCase().includes('analysis') ||
-        (post.categories && post.categories.some(cat => 
-          cat.title.toLowerCase().includes('opinion') ||
-          cat.title.toLowerCase().includes('perspective') ||
-          cat.title.toLowerCase().includes('insight') ||
-          cat.title.toLowerCase().includes('analysis')
-        )) ||
-        // Include articles that are not interviews
-        (!post.title.toLowerCase().includes('interview') &&
-         !post.title.toLowerCase().includes('cxo') &&
-         !(post.categories && post.categories.some(cat => 
-           cat.title.toLowerCase().includes('interview') ||
-           cat.title.toLowerCase().includes('cxo')
-         )))
-      )
-    }
 
     // Filter by category
     if (categoryFilter !== 'all') {
@@ -87,7 +46,7 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
 
     setFilteredPosts(filtered)
     setCurrentPage(1) // Reset to first page when filters change
-  }, [posts, contentTypeFilter, categoryFilter])
+  }, [posts, categoryFilter])
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
@@ -96,7 +55,6 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
   const currentPosts = filteredPosts.slice(startIndex, endIndex)
 
   const clearFilters = () => {
-    setContentTypeFilter('all')
     setCategoryFilter('all')
     setCurrentPage(1)
     router.push('/archive')
@@ -104,34 +62,12 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Article Archive</h1>
-        <p className="text-xl text-gray-600">
-          Explore our comprehensive collection of insights and interviews
-        </p>
-      </div>
+      {/* Header removed per request */}
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Content Type Filter */}
-          <div>
-            <label htmlFor="contentType" className="block text-sm font-medium text-gray-700 mb-2">
-              Content Type
-            </label>
-            <select
-              id="contentType"
-              value={contentTypeFilter}
-              onChange={(e) => setContentTypeFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="all">All Content</option>
-              <option value="cxo-interview">CXO Interviews</option>
-              <option value="opinion">Opinion & Analysis</option>
-            </select>
-          </div>
-
-          {/* Category Filter */}
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+          {/* Category Filter only */}
           <div>
             <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
               Category
@@ -153,17 +89,7 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="mb-8 text-center">
-        <p className="text-gray-600">
-          Showing {currentPosts.length} of {TOTAL_ARTICLES} articles
-          {(contentTypeFilter !== 'all' || categoryFilter !== 'all') && (
-            <span className="ml-2 text-sm">
-              ({filteredPosts.length} filtered results)
-            </span>
-          )}
-        </p>
-      </div>
+      {/* Removed results count display */}
 
       {/* Articles Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -186,21 +112,27 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
             const slug = post?.slug?.current as string | undefined
             const isValidSlug = !!slug && !slug.startsWith('#')
             const imageUrl = post.mainImage?.asset?.url || post.mainImage?.url
-            const authorImageUrl = post.author?.image?.asset?.url || post.author?.image?.url
+            const authorImageUrl = (post as any)?.writer?.image?.asset?.url || (post as any)?.writer?.image?.url
 
             return (
               <article key={post._id || idx} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                {/* Article Image */}
-                {imageUrl && (
-                  <div className="aspect-video relative overflow-hidden">
+                {/* Article Image / Placeholder */}
+                <div className="aspect-video relative overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+                  {imageUrl ? (
                     <OptimizedImage
                       src={imageUrl}
                       alt={post.mainImage?.alt || post.title}
                       fill
                       className="object-cover hover:scale-105 transition-transform duration-300"
                     />
-                  </div>
-                )}
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center" role="img" aria-label="No image available">
+                      <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
 
                 <div className="p-6">
                   {/* Categories */}
@@ -221,36 +153,46 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
                   {/* Title */}
                   <h2 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
                     {isValidSlug ? (
-                      <Link href={`/article/${slug}`} className="hover:text-[#082945] transition-colors">
-                        {post.title}
+                      <Link href={(() => { const cat = ((post as any)?.categories?.[0]?.slug?.current as string | undefined); return `/category/${cat}/${slug}` })()} className="hover:text-[#082945] transition-colors">
+                        {sanitizeTitle(post.title)}
                       </Link>
                     ) : (
-                      post.title
+                      sanitizeTitle(post.title)
                     )}
                   </h2>
 
                   {/* Excerpt */}
                   {post.excerpt && (
                     <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {post.excerpt}
+                      {sanitizeExcerpt(post.excerpt, sanitizeTitle(post.title))}
                     </p>
                   )}
 
-                  {/* Author and Date */}
+        {/* Meta: Writer and Views (date removed) */}
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <div className="flex items-center space-x-2">
                       {authorImageUrl && (
                         <OptimizedImage
                           src={authorImageUrl}
-                          alt={post.author?.name || 'Author'}
+                          alt={(post as any)?.writer?.name || 'Writer'}
                           width={24}
                           height={24}
                           className="rounded-full"
                         />
                       )}
-                      <span>{post.author?.name || 'Anonymous'}</span>
+                      <span>{(post as any)?.writer?.name || 'Anonymous'}</span>
                     </div>
-                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                    <div className="flex items-center gap-3">
+                      {typeof post.views === 'number' && (
+                        <span className="flex items-center gap-1">
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                          {(post.views / 1000000).toFixed(1)}M
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>
@@ -260,7 +202,7 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
       </div>
 
       {/* Clear Filters Button */}
-      {(contentTypeFilter !== 'all' || categoryFilter !== 'all') && (
+      {(categoryFilter !== 'all') && (
         <div className="mt-8 text-center">
           <button
             onClick={clearFilters}

@@ -10,12 +10,12 @@ import { Suspense } from 'react'
 
 async function getPosts(): Promise<Post[]> {
   const query = `
-    *[_type == "post"] | order(publishedAt desc) {
+    *[_type == "post" && isHidden != true] | order(publishedAt desc) {
       _id,
       title,
       slug,
       excerpt,
-      author->{name, image},
+      writer->{name, image},
       mainImage{
         asset->{
           _id,
@@ -67,16 +67,10 @@ export default async function ArchivePage() {
   return (
     <>
       <Navigation />
-      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Archive' }]} />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Magzine Archive' }]} />
 
       <main className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="dark-section bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white py-20">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl font-serif font-black mb-4 text-white">Archive</h1>
-            <p className="text-xl text-white max-w-2xl mx-auto">Browse all articles — jump straight into reading</p>
-          </div>
-        </div>
+        {/* Header removed per request */}
 
         {/* Archive Content with Filters and Pagination */}
         <Suspense fallback={

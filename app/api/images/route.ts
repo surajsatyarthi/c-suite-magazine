@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { Readable } from 'stream'
 import { writeClient } from '@/lib/sanityWrite'
+import { validateWriteRequest, validateImageUpload } from '@/lib/security'
 
 type ImageUploadPayload = {
   imageUrl?: string
@@ -19,8 +20,16 @@ async function fetchImageStream(url: string): Promise<{ stream: Readable; conten
   return { stream, contentType }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Basic security validation for image uploads
+    const validationError = await validateWriteRequest(request, {
+      requireReferer: true,
+      allowedContentTypes: ['multipart/form-data', 'application/json']
+    })
+    
+    if (validationError) return validationError
+    
     const contentTypeHeader = request.headers.get('content-type') || ''
     // Multipart form-data upload path (preferred when sending files)
     if (contentTypeHeader.startsWith('multipart/form-data')) {
@@ -31,6 +40,13 @@ export async function POST(request: Request) {
       if (!file) {
         return NextResponse.json({ ok: false, error: 'Missing file' }, { status: 400 })
       }
+      
+      // Validate image file
+      const validation = validateImageUpload(file)
+      if (!validation.valid) {
+        return NextResponse.json({ ok: false, error: validation.error }, { status: 400 })
+      }
+      
       const asset = await writeClient.assets.upload('image', file, { filename, contentType: file.type || 'image/jpeg' })
       const imageField = {
         _type: 'image',

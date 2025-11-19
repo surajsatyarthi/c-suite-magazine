@@ -1,0 +1,103 @@
+{
+  "_id": "2i7iadib5QZf8Z2hekfiec",
+  "_createdAt": "2025-11-02T00:00:49Z",
+  "_updatedAt": "2025-11-02T04:06:37Z",
+  "title": "Australia's Elite Gather: Awards Night Insights",
+  "slug": "australias-elite-gather-awards-night-insights",
+  "excerpt": "![Article Image](images/028_article.jpg)",
+  "isFeatured": false,
+  "readTime": 1,
+  "wordCount": null,
+  "views": 3927898,
+  "author": {
+    "name": "Arjun Mehta",
+    "slug": {
+      "_type": "slug",
+      "current": "arjun-mehta"
+    }
+  },
+  "categories": [
+    {
+      "title": "Leadership",
+      "slug": {
+        "current": "leadership"
+      }
+    }
+  ],
+  "mainImage": {
+    "alt": "Australia's Elite Gather: Awards Night Insights",
+    "asset": {
+      "_id": "image-8d9c93ef02fc5a8185d51855ff40ef0baebc3567-1200x800-jpg",
+      "url": "https://cdn.sanity.io/images/2f93fcy8/production/8d9c93ef02fc5a8185d51855ff40ef0baebc3567-1200x800.jpg"
+    }
+  },
+  "body": [
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Australia's Elite Gather: Awards Night Insights"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Australia's most influential business leaders converged at The Star Sydney for 's prestigious 13th annual Executive of the Year Awards, marking a triumphant celebration of corporate excellence."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Celebrating Outstanding Leadership"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "The black-tie gala honored exceptional executives who demonstrated remarkable resilience and innovation throughout challenging market conditions. Industry titans from finance, technology, healthcare, and manufacturing shared the spotlight, recognizing their transformative contributions to Australian business."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Networking and Excellence"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Guests enjoyed world-class entertainment while forging strategic connections that will shape tomorrow's business landscape. The evening highlighted how Australia's corporate elite continues to drive economic growth through visionary leadership and sustainable practices, setting benchmarks for global competitiveness."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "writerSlug": "arjun-mehta"
+}

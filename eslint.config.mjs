@@ -11,7 +11,12 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    ".vercel/**",
     "next-env.d.ts",
+    // Ignore Node scripts and temporary utilities
+    "scripts/**",
+    "tmp/**",
+    "tmp-*.js",
   ]),
 ]);
 

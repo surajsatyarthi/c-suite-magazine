@@ -1,0 +1,114 @@
+{
+  "_id": "2i7iadib5QZf8Z2hekfl9S",
+  "_createdAt": "2025-11-02T00:01:35Z",
+  "_updatedAt": "2025-11-02T04:06:41Z",
+  "title": "Inside the Rooms Where Decisions Shape Industries",
+  "slug": "inside-the-rooms-where-decisions-shape-industries",
+  "excerpt": "![Article Image](images/041_article.jpg)",
+  "isFeatured": false,
+  "readTime": 1,
+  "wordCount": null,
+  "views": 1448094,
+  "author": {
+    "name": "Aisha Farouk",
+    "slug": {
+      "_type": "slug",
+      "current": "aisha-farouk"
+    }
+  },
+  "categories": [
+    {
+      "title": "Leadership",
+      "slug": {
+        "current": "leadership"
+      }
+    }
+  ],
+  "mainImage": {
+    "alt": "Inside the Rooms Where Decisions Shape Industries",
+    "asset": {
+      "_id": "image-0c8079da89548576a956fc6e8e3d96d2199082b6-1200x800-jpg",
+      "url": "https://cdn.sanity.io/images/2f93fcy8/production/0c8079da89548576a956fc6e8e3d96d2199082b6-1200x800.jpg"
+    }
+  },
+  "body": [
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Where Leadership Meets Legacy"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Behind closed doors, Australia's most influential business leaders gather to shape tomorrow's corporate landscape. These aren't just award ceremonies—they're strategic battlegrounds where vision meets execution."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "The Power of Presence"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Last month's premier business gathering brought together titans from finance, technology, and manufacturing. Over fine dining and spirited conversation, decisions emerged that will redirect entire sectors. Key conversations centered on sustainable growth, digital transformation, and workforce evolution."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Moments That Matter"
+        }
+      ],
+      "markDefs": [],
+      "style": "h2"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "The evening's most telling moment came when industry veterans and emerging disruptors found common ground. Their dialogue sparked partnerships worth millions and inspired initiatives that will reshape Australian business for years ahead."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    },
+    {
+      "_type": "block",
+      "children": [
+        {
+          "_type": "span",
+          "text": "Success isn't just celebrated here—it's strategically engineered."
+        }
+      ],
+      "markDefs": [],
+      "style": "normal"
+    }
+  ],
+  "writerSlug": "aisha-farouk"
+}

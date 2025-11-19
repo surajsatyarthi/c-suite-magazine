@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Country Selector Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .flag { font-size: 24px; margin: 10px; }
+        button { margin: 5px; padding: 8px 12px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Country Selector Fix Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions:</h2>
+        <ol>
+            <li>Open the main application at <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+            <li>Click on the flag icon in the header (top right)</li>
+            <li>Select a different country from the popup</li>
+            <li>Verify that the flag icon in the header changes immediately</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Expected Behavior:</h2>
+        <p>After selecting a country from the popup, the flag icon in the header should update immediately without requiring a page refresh.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>Technical Details:</h2>
+        <p>The fix implements a custom event system:</p>
+        <ul>
+            <li><strong>EntryLocalePopup</strong> dispatches <code>csuite:country-updated</code> event when country is selected</li>
+            <li><strong>Navigation</strong> component listens for this event and updates its state</li>
+            <li>This ensures real-time synchronization between the popup and header flag</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Test:</h2>
+        <button onclick="simulateCountryChange()">Simulate Country Change (US → GB)</button>
+        <button onclick="simulateCountryChange('CA')">Simulate Country Change (US → CA)</button>
+        <button onclick="simulateCountryChange('JP')">Simulate Country Change (US → JP)</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function simulateCountryChange(newCountry = 'GB') {
+            const result = document.getElementById('result');
+            try {
+                // Dispatch the custom event that Navigation component listens for
+                const event = new CustomEvent('csuite:country-updated', {
+                    detail: { country: newCountry }
+                });
+                document.dispatchEvent(event);
+                
+                result.innerHTML = `
+                    <div class="success">
+                        <strong>✅ Success!</strong><br>
+                        Dispatched csuite:country-updated event with country: <strong>${newCountry}</strong><br>
+                        If the Navigation component is listening, the flag should update.
+                    </div>
+                `;
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Listen for the event to confirm it's working
+        document.addEventListener('csuite:country-updated', function(event) {
+            console.log('Country update event received:', event.detail);
+            const result = document.getElementById('result');
+            if (result) {
+                result.innerHTML += `
+                    <div class="success">
+                        <strong>📡 Event Listener Confirmed:</strong><br>
+                        Received csuite:country-updated event with country: <strong>${event.detail.country}</strong>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

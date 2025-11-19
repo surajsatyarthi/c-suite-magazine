@@ -1,0 +1,31 @@
+/ -> 200 
+/about -> 200 
+/contact -> 200 
+/advertise -> 200 
+/privacy -> 200 
+/terms -> 200 
+/archive -> 200 
+/sitemap.xml -> 200 
+/robots.txt -> 200 
+
+Homepage headers:
+HTTP/2 200 
+age: 8
+cache-control: public, max-age=0, must-revalidate
+content-security-policy-report-only: default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: https://cdn.sanity.io https://*.sanity.io https://*.vercel.app https://*.vercel.sh; frame-ancestors 'self'
+content-type: text/html; charset=utf-8
+date: Mon, 03 Nov 2025 03:49:51 GMT
+etag: "10mrr7rm4v75bh1"
+permissions-policy: camera=(), microphone=(), geolocation=()
+referrer-policy: strict-origin-when-cross-origin
+server: Vercel
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-matched-path: /
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+x-powered-by: Next.js
+x-vercel-cache: HIT
+x-vercel-id: bom1::iad1::jhvvf-1762164151705-197aac163b23

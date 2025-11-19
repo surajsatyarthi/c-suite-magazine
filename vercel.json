@@ -2,6 +2,11 @@
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install --prefer-offline",
   "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_SANITY_PROJECT_ID": "2f93fcy8",
+    "NEXT_PUBLIC_SANITY_DATASET": "production",
+    "NEXT_PUBLIC_SANITY_API_VERSION": "2024-10-01"
+  },
   "redirects": [
     {"source": "/(.*)", "destination": "https://csuitemagazine.global/$1", "permanent": true, "has": [{"type": "host", "value": "www.csuitemagazine.global"}]}
   ]

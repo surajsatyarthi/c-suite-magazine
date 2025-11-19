@@ -1,36 +1,24 @@
-"use client"
 
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
-import { useState } from 'react'
+import { getViews, formatViewsMillion } from '@/lib/views'
 import { urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
+import { getCategoryColor } from '@/lib/categoryColors'
 import SkeletonCard from '@/components/SkeletonCard'
+import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 
 type LatestInsightsProps = {
   articles: Post[]
 }
 
 export default function LatestInsights({ articles }: LatestInsightsProps) {
-  const [visibleCount, setVisibleCount] = useState(6)
-  const visibleArticles = articles.slice(0, visibleCount)
-  const hasMore = visibleCount < articles.length
+    const visibleArticles = articles.slice(0, 6)
 
-  const loadMore = () => {
-    setVisibleCount((prev) => Math.min(prev + 6, articles.length))
-  }
-
-  // Handle keyboard navigation for load more button
-  const handleLoadMoreKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      loadMore()
-    }
-  }
 
   return (
     <section className="py-16" aria-labelledby="latest-insights-heading">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-none">
         <h3 id="latest-insights-heading" className="text-4xl font-serif font-black text-gray-900 mb-10">
           Latest Insights
         </h3>
@@ -45,11 +33,17 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
             {visibleArticles.map((post, index) => {
               const slug = (post as any)?.slug?.current as string | undefined
               const isValidSlug = !!slug && !slug.startsWith('#')
-              const postTitle = (post as any).title
-              const postExcerpt = (post as any).excerpt
-              const authorName = (post as any)?.author?.name
-              const categoryTitle = post.categories && (post.categories as any)[0] ? ((post.categories as any)[0]).title : null
-              const viewCount = (post as any).views
+              const postTitleRaw = (post as any)?.seo?.metaTitle || (post as any).title
+              const postTitle = sanitizeTitle(postTitleRaw)
+              const postExcerptRaw = (post as any).excerpt
+              const postExcerpt = sanitizeExcerpt(postExcerptRaw, postTitle)
+              const authorName = (post as any)?.writer?.name
+              const categories = (post as any)?.categories || []
+              const nonCxoCategory = categories.find((c: any) => c?.slug?.current !== 'cxo-interview')
+              const displayCategory = nonCxoCategory || categories[0]
+              const categoryTitle = displayCategory?.title || null
+              const viewsNum = getViews(slug, (post as any)?.views)
+              const displayViews = formatViewsMillion(viewsNum)
 
               const ArticleCard = (
                 <article 
@@ -59,22 +53,26 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                   aria-labelledby={`article-title-${index}`}
                   aria-describedby={postExcerpt ? `article-excerpt-${index}` : undefined}
                 >
-                  <div className="relative h-56 overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
+                  <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
                     {post.mainImage?.url ? (
                       <OptimizedImage
-                        src={post.mainImage.url || urlFor(post.mainImage).width(500).height(350).url()}
+                        src={post.mainImage.url || urlFor(post.mainImage).width(800).height(560).quality(85).auto('format').url()}
                         alt={post.mainImage.alt || `Featured image for ${postTitle}`}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        priority={index < 3}
+                        quality={88}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        loading="lazy"
                       />
                     ) : (post as any).mainImage ? (
                       <OptimizedImage
-                        src={urlFor((post as any).mainImage).width(500).height(350).url()}
+                        src={urlFor((post as any).mainImage).width(800).height(560).quality(85).auto('format').url()}
                         alt={(post as any).mainImage.alt || `Featured image for ${postTitle}`}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        priority={index < 3}
+                        quality={88}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center" role="img" aria-label="No image available">
@@ -86,7 +84,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                     {categoryTitle && (
                       <span
                         className="category-badge-flash absolute top-4 left-4 px-3 py-1 text-xs font-bold text-white rounded"
-                        style={{ backgroundColor: ((post.categories as any)[0]).color || '#c8ab3d' }}
+                        style={{ backgroundColor: getCategoryColor(displayCategory) }}
                         role="badge"
                         aria-label={`Category: ${categoryTitle}`}
                       >
@@ -101,19 +99,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                     >
                       {postTitle}
                     </h4>
-                    {post.tags && (post.tags as any)?.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-3" role="list" aria-label="Article tags">
-                        {(post.tags as any).slice(0, 2).map((tag: string, tagIndex: number) => (
-                          <span 
-                            key={tagIndex} 
-                            className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full"
-                            role="listitem"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    {/* Tags suppressed; Latest Insights shows industry category badge only */}
                     {postExcerpt && (
                       <p 
                         id={`article-excerpt-${index}`}
@@ -124,17 +110,17 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                     )}
                     <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
                       {authorName && (
-                        <span className="font-medium" aria-label={`Author: ${authorName}`}>
+                        <span className="font-medium" aria-label={`Writer: ${authorName}`}>
                           {authorName}
                         </span>
                       )}
-                      {viewCount && (
-                        <span className="flex items-center gap-1" aria-label={`${(viewCount / 1000000).toFixed(1)} million views`}>
+                      {displayViews && (
+                        <span className="flex items-center gap-1" aria-label={`Views: ${displayViews} million`}>
                           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
-                          <span aria-hidden="true">{((viewCount as number) / 1000000).toFixed(1)}M</span>
+                          {displayViews}
                         </span>
                       )}
                     </div>
@@ -145,10 +131,10 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
               return isValidSlug ? (
                 <Link 
                   key={(post as any)._id} 
-                  href={`/article/${slug}`} 
-                  prefetch
+                  href={(() => { const cat = (categories?.[0]?.slug?.current as string | undefined); return `/category/${cat}/${slug}` })()} 
+                  prefetch={false}
                   className="group bg-white focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 rounded-lg overflow-hidden shadow-md"
-                  aria-label={`Read article: ${postTitle}${authorName ? ` by ${authorName}` : ''}`}
+                  aria-label={`Read article: ${postTitle}${authorName ? ` by writer ${authorName}` : ''}`}
                 >
                   {ArticleCard}
                 </Link>
@@ -179,12 +165,13 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
           </div>
         )}
 
-        <div className="flex justify-center mt-10">
+        {/* Read More CTA */}
+        <div className="mt-10 text-center">
           <Link
             href="/archive"
-            prefetch
-            className="px-6 py-3 rounded-md bg-[#082945] text-white font-medium hover:bg-[#0b3764] focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 transition-colors btn-shimmer"
-            aria-label="View all articles in archive"
+            prefetch={false}
+            className="inline-flex items-center px-6 py-3 bg-[#082945] text-white rounded-md hover:bg-[#0a3761] transition-colors font-semibold"
+            aria-label="View all latest insights"
           >
             Read More
           </Link>

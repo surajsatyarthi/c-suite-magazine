@@ -14,7 +14,7 @@ export function getWriteClient(): SanityClient | null {
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
   const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-10-28'
-  const token = process.env.SANITY_API_TOKEN
+  const token = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN
 
   if (!isValidProjectId(projectId) || !dataset) {
     // Avoid throwing during build; routes will handle the null client at runtime.

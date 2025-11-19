@@ -1,0 +1,26 @@
+# Prevent large, unnecessary uploads to Vercel from local CLI deploys
+# This keeps deployments lean and reduces rate-limit hits.
+
+# Build outputs and dependencies (re-built on Vercel)
+.next/
+node_modules/
+dist/
+coverage/
+
+# VCS and editor noise
+.git/
+.vscode/
+.DS_Store
+
+# Logs and temp files
+*.log
+*.tmp
+tmp/
+tmp-*/
+
+# Local export utilities and data not needed at runtime
+exports/
+
+# Env files are handled via Vercel Project Settings
+.env*
+

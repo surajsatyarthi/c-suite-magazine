@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export async function GET() {
-  const baseUrl = 'https://ceomagazine.com'
+  const baseUrl = 'https://csuitemagazine.global'
   
   const robots = `User-agent: *
 Allow: /

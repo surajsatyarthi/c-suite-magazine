@@ -81,10 +81,10 @@ function parseMarkdownToBlocks(content) {
   })
 }
 
-async function getAuthors() {
-  const authors = await client.fetch('*[_type == "author"] | order(slug.current asc){ _id, name, slug }')
-  if (!authors?.length) throw new Error('No authors found in Sanity')
-  return authors
+async function getWriters() {
+  const writers = await client.fetch('*[_type == "writer"] | order(slug.current asc){ _id, name, slug }')
+  if (!writers?.length) throw new Error('No writers found in Sanity')
+  return writers
 }
 
 async function getCategoryRefBySlug(categorySlug) {
@@ -122,9 +122,9 @@ async function importCXOInterviews() {
     let successCount = 0
     let errorCount = 0
 
-    // Load editors/authors and assign round-robin for equal distribution
-    const authors = await getAuthors()
-    let authorIndex = 0
+    // Load writers and assign round-robin for equal distribution
+    const writers = await getWriters()
+    let writerIndex = 0
     
     for (const [index, interview] of jsonData.entries()) {
       try {
@@ -139,9 +139,9 @@ async function importCXOInterviews() {
           continue
         }
         
-        // Assign author equally (round-robin)
-        const authorRef = { _type: 'reference', _ref: authors[authorIndex % authors.length]._id }
-        authorIndex++
+        // Assign writer equally (round-robin)
+        const writerRef = { _type: 'reference', _ref: writers[writerIndex % writers.length]._id }
+        writerIndex++
         
         // Parse category from the category field
         let categoryRefs = []
@@ -189,7 +189,7 @@ async function importCXOInterviews() {
           title: interview.title,
           slug: { _type: 'slug', current: slug },
           excerpt,
-          author: authorRef,
+          writer: writerRef,
           categories: categoryRefs,
           readTime,
           body: bodyBlocks,

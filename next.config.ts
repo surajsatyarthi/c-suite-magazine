@@ -2,7 +2,33 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  reactCompiler: true,
+  // Disable React Compiler for production stability; re-enable after verifying compatibility
+  // reactCompiler: true,
+  async redirects() {
+    return [
+      {
+        source: '/author/:slug',
+        destination: '/writer/:slug',
+        permanent: true,
+      },
+      {
+        source: '/sanity',
+        destination: '/studio',
+        permanent: false,
+      },
+      // Normalize broken article slug artifact
+      {
+        source: '/article/from-vision-to-market-victory-the-s-blueprint-for-concept-commercialization',
+        destination: '/article/from-vision-to-market-victory-the-blueprint-for-concept-commercialization',
+        permanent: true,
+      },
+      {
+        source: '/category/:cat/from-vision-to-market-victory-the-s-blueprint-for-concept-commercialization',
+        destination: '/category/:cat/from-vision-to-market-victory-the-blueprint-for-concept-commercialization',
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {
@@ -23,9 +49,14 @@ const nextConfig: NextConfig = {
           },
           { key: "X-Frame-Options", value: "DENY" },
           {
+            key: "Content-Security-Policy",
+            value:
+              "default-src 'self'; img-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: wss: https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh; frame-ancestors 'self'",
+          },
+          {
             key: "Content-Security-Policy-Report-Only",
             value:
-              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: https://cdn.sanity.io https://*.sanity.io https://*.vercel.app https://*.vercel.sh; frame-ancestors 'self'",
+              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: wss: https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh; frame-ancestors 'self'",
           },
         ],
       },
@@ -33,7 +64,9 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
-    qualities: [75, 90],
+    qualities: [65, 70, 75, 90],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2560],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: 'https',
@@ -48,6 +81,10 @@ const nextConfig: NextConfig = {
         hostname: 'api.iconify.design',
       },
     ],
+  },
+  compiler: {
+    // Strip console.* in production builds to reduce bundle noise
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 };
 

@@ -1,5 +1,3 @@
-'use client'
-
 import Image, { ImageProps } from 'next/image'
 import { memo } from 'react'
 
@@ -26,7 +24,7 @@ type Props = Omit<ImageProps, 'loader'> & {
 
 const OptimizedImage = memo(function OptimizedImage({
   alt,
-  quality = 90,
+  quality = 85,
   sizes,
   placeholder,
   blurDataURL,
@@ -40,6 +38,16 @@ const OptimizedImage = memo(function OptimizedImage({
   const usePlaceholder = placeholder || 'blur'
   const useBlurDataURL = blurDataURL || shimmer(700, 475)
 
+  // Prefer WebP for local Featured hero assets
+  let effectiveSrc: any = (rest as any).src
+  if (typeof effectiveSrc === 'string') {
+    const isFeaturedHero = effectiveSrc.startsWith('/Featured hero/')
+    const isPngOrJpg = /\.(png|jpg|jpeg)$/i.test(effectiveSrc)
+    if (isFeaturedHero && isPngOrJpg) {
+      effectiveSrc = effectiveSrc.replace(/\.(png|jpg|jpeg)$/i, '.webp')
+    }
+  }
+
   return (
     <Image
       alt={alt}
@@ -49,9 +57,9 @@ const OptimizedImage = memo(function OptimizedImage({
       blurDataURL={useBlurDataURL}
       priority={priority}
       {...rest}
+      src={effectiveSrc}
     />
   )
 })
 
 export default OptimizedImage
-

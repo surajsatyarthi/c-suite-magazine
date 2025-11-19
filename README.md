@@ -68,7 +68,7 @@ Open [http://localhost:3000](http://localhost:3000) to see your magazine.
 1. Navigate to `http://localhost:3000/studio`
 2. Log in with your Sanity account (GitHub OAuth)
 3. Start creating:
-   - **Authors**: Add writer profiles with photos and bios
+   - **Writers**: Add writer profiles with photos and bios
    - **Categories**: Create content categories (Leadership, Innovation, etc.)
    - **Articles**: Write and publish your magazine articles
 
@@ -77,14 +77,14 @@ Open [http://localhost:3000](http://localhost:3000) to see your magazine.
 #### Articles (Posts)
 - Title, slug, excerpt
 - Featured image with alt text
-- Author reference
+- Writer reference (required)
 - Categories
 - Rich text content
 - Featured flag for homepage
 - Read time
 - SEO fields
 
-#### Authors
+#### Writers
 - Name, slug, position
 - Profile photo
 - Biography
@@ -189,6 +189,40 @@ Edit fonts in `app/layout.tsx`
 - [Sanity Documentation](https://www.sanity.io/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
+### Project Docs
+- `STANDARDS.md` — Coding standards, image/hero policy, terminology (Writer-only)
+- `OPERATIONAL_RULES.md` — Ops rules, cookies (`user-country`), routing conventions
+- `PROJECT_DOCUMENTATION.md` — Architecture overview, data flow, terminology & policies
+- `OPERATIONS_RUNBOOK.md` — Deployment runbook and operational procedures
+
 ---
 
 **Built with ❤️ for global executives and business leaders**
+## Spotlight Grid Policy (Featured Section)
+
+- Source of truth: The homepage “C‑suite spotlight” grid uses only static assets from `public/Featured section/` and optional config `public/spotlight.json`.
+- Stability rule: The 9 cards are fixed and do not auto‑change. No Sanity fetching or backfill is used for this section.
+- Views rule: Featured section cards never display view counts. Views for other sections may be hardcoded or omitted per content rules.
+- Config: `public/spotlight.json` should list exactly 9 items: `{ image, href?, title? }`. If missing or invalid, the component falls back to `/Featured%20section/1.png` … `/9.png` and links to `/archive`.
+- Update procedure: Only update images or links via a PR that changes `public/Featured section/` files or `public/spotlight.json`. Preview locally before deploy.
+
+## Deployment Automation Setup
+
+We've implemented a GitHub Actions workflow to automatically clean up old Vercel preview deployments. This helps manage costs and keeps your Vercel dashboard tidy.
+
+### Key Components:
+- **Workflow File**: `.github/workflows/delete-old-vercel-deployments.yml`
+- **Trigger**: Runs on pull request merge/close
+- **What it does**: Uses Vercel CLI to safely remove non-aliased preview deployments
+- **Required Secret**: `VERCEL_TOKEN` (added to GitHub repo secrets)
+
+### Manual Trigger:
+You can manually run the workflow from GitHub Actions tab:
+1. Go to repo > Actions
+2. Select "Delete Old Vercel Preview Deployments"
+3. Click "Run workflow"
+
+### Retention Policy Note:
+Vercel deployment retention is configured at the team/project level via the Vercel dashboard (not directly via CLI). Set it in Project Settings > General > Deployment Retention to auto-expire old deployments (e.g., 7 days for previews).
+
+For more details, see Vercel documentation on retention policies.

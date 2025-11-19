@@ -1,0 +1,10 @@
+$ORIGIN csuitemagazine.global.
+@ 600 IN A 76.76.21.21
+www 600 IN CNAME cname.vercel-dns.com.
+@ 3600 IN MX 0 smtp.secureserver.net.
+@ 3600 IN MX 10 mailstore1.secureserver.net.
+@ 3600 IN TXT "v=spf1 include:secureserver.net -all"
+_dmarc 3600 IN TXT "v=DMARC1; p=quarantine; adkim=r; aspf=r; rua=mailto:dmarc_rua@onsecureserver.net;"
+secureserver1._domainkey 3600 IN CNAME s1.dkim.csuitemagazine_global.900.onsecureserver.net.
+secureserver2._domainkey 3600 IN CNAME s2.dkim.csuitemagazine_global.900.onsecureserver.net.
+_autodiscover._tcp 3600 IN SRV 0 0 443 autodiscover.secureserver.net.

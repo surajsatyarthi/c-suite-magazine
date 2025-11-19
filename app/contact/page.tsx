@@ -90,6 +90,12 @@ export default function ContactPage() {
                         <p>23 Church Street,</p>
                         <p>049481, Singapore</p>
                         <div className="h-px bg-gray-200 my-3" />
+                        <h4 className="text-lg font-serif font-bold text-gray-900">United Arab Emirates</h4>
+                        <p className="font-medium text-gray-800">Dubai Office</p>
+                        <p>C-1211, Zaa'beel Second</p>
+                        <p>Za'abeel 2</p>
+                        <p>Dubai, United Arab Emirates</p>
+                        <div className="h-px bg-gray-200 my-3" />
                         <h4 className="text-lg font-serif font-bold text-gray-900">India</h4>
                         <p className="font-medium text-gray-800">Gurugram Office</p>
                         <p>C 1620, 4th Floor, Peach Tree Road,</p>
@@ -113,7 +119,7 @@ export default function ContactPage() {
                 <h2 className="text-3xl font-serif font-bold text-gray-900 mb-6">Get in Touch</h2>
                 
                 {submitted && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg" role="status" aria-live="polite">
                     <p className="text-green-800 font-medium">✓ Thank you! Your submission has been received.</p>
                   </div>
                 )}
