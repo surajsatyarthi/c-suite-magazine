@@ -10,7 +10,7 @@ This document provides an overview of the architecture, terminology, policies, a
 ## Architecture Map
 - `app/` — Next.js routes and layouts
   - `page.tsx` — Homepage
-  - `article/[slug]/page.tsx` — Article detail
+  - `category/[slug]/[article]/page.tsx` — Article detail (category-based routing)
   - `writer/[slug]/page.tsx` — Writer profile
   - `studio/` — Embedded Sanity Studio
 - `components/` — UI building blocks (e.g., `Hero`, `OptimizedImage`)
@@ -38,7 +38,7 @@ This document provides an overview of the architecture, terminology, policies, a
 ## Routing Conventions
 - Attribution pages: `/writer/[slug]`.
 - Deprecate and redirect any `/author/*` routes.
-- Articles: `/article/[slug]`.
+- Articles: `/category/<category>/<slug>` (category-based). Trending Now links construct this safely with defaults; if slug is missing, render a non-link.
 
 ## Tag Normalization Policy
 - Normalize tags to lowercase and trim whitespace on write and audit.

@@ -49,6 +49,13 @@
 - Footer version bumps by updating `package.json` to surface in UI (`components/Footer.tsx:46`).
 - Sanity Studio deploy: `pnpm sanity:deploy`.
 
+## Current Ops Notes
+- Ads are CMS‑first. Fallback Brabus vertical creative appears only when CMS ad is missing or invalid (`ceo-magazine/components/Ad.tsx:29-31`, `33-59`).
+- Footer version is read from `package.json`; set the desired release version there (`ceo-magazine/package.json:3`).
+- For urgent releases, `FAST_DEPLOY=1 pnpm deploy:prod` skips preview smoke checks.
+ - Trending Now links on article pages construct `/category/<cat>/<slug>` with defaults and prefetch disabled; if slug is missing, render a non-link to avoid server exceptions (`ceo-magazine/app/category/[slug]/[article]/page.tsx:612-636`).
+ - If Vercel CLI shows “Not authorized”, run `npx vercel login` then `npx vercel link --project ceo-magazine` once.
+
 ## Smoke Checks
 - Validations performed:
   - Article hero served from `Featured hero` and not `object-contain`.

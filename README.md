@@ -118,6 +118,16 @@ git push -u origin main
    - Add your custom domain
    - Update DNS records as instructed
 
+## Project Status & Recent Changes
+
+- Site is live on `csuitemagazine.global`.
+- Footer displays version from `package.json`; current version: `3.3.3.3` (rendered in `ceo-magazine/components/Footer.tsx:46`).
+- Ads are CMS‑controlled; sidebar uses fallback Brabus vertical ad only when CMS content is missing or invalid (`ceo-magazine/components/Ad.tsx:29-31`, `33-59`).
+- Deploy via gated script for safety: `pnpm deploy:prod` (see `ceo-magazine/scripts/deploy-gated.sh`).
+- Linked articles and category routes are pre‑rendered; smoke checks validate key pages.
+ - Trending Now links fixed: safe `/category/<cat>/<slug>` construction with defaults; non-link render when slug missing; prefetch disabled to avoid resource spikes (`ceo-magazine/app/category/[slug]/[article]/page.tsx:612-636`).
+ - If Vercel CLI shows “Not authorized”, log in once (`npx vercel login`) and link the project (`npx vercel link --project ceo-magazine`).
+
 ### Sanity Studio Deployment
 
 The Sanity Studio is embedded at `/studio` route and will be deployed automatically with your Next.js app.

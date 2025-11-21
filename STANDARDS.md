@@ -22,6 +22,14 @@ This document defines project-wide standards, display conventions, and verificat
 
 > Canonical and detailed steps live in `PROJECT_DOCUMENTATION.md` → "Deployment Runbook" (use prebuilt deploy flow and verify envs before build).
 
+### Vercel Auth & Linking
+- If the CLI returns "Not authorized", log in and link once:
+  ```bash
+  npx vercel login
+  npx vercel link --project ceo-magazine --yes
+  ```
+  After linking, use the gated script or prebuilt flow consistently.
+
 ## Commands
 
 ### Development
@@ -108,6 +116,12 @@ const posts = await client.fetch(query)
 - GROQ: always request `"writer": writer->{name, slug, image}` and never `author`.
 - UI copy: labels and badges must say `Writer`.
 
+## Routing Conventions
+- Articles are served under category-based routes: `/category/<category>/<slug>`.
+- Sidebar "Trending Now" links must construct category + slug safely; if slug is missing, render a non-link block.
+- Disable `prefetch` for sidebar trending links to avoid resource spikes.
+- Reference implementation: `ceo-magazine/app/category/[slug]/[article]/page.tsx:612-636`.
+
 ## Image & Hero Rendering Policy
 - Avoid unintended upscaling/cropping in hero and spotlight images.
 - Prefer explicit aspect wrappers (e.g., `aspect-[4/5]`, `aspect-video`) around image containers.
@@ -187,9 +201,10 @@ Images should include alt text (required in schema validation).
 **Active Ads (as of version 1.9.1.1.2.5):**
 
 1. **Sidebar Vertical Brabus Ad**
-   - File: `/app/category/[slug]/[article]/page.tsx:459`
+   - File: `/components/Ad.tsx` (rendered on `/app/category/[slug]/[article]/page.tsx`)
    - Position: Right sidebar of article pages only
    - Fallback: Brabus car ad linking to `https://www.brabus.com/en-int/cars/classics/C4S192C.html`
+   - Fallback rules: Only when CMS ad is missing or invalid (e.g., image absent or target URL contains `example.com`).
 
 2. **Popup Interstitial Ads**
    - File: `/components/AdInterstitial.tsx` mounted in `/app/layout.tsx:69`

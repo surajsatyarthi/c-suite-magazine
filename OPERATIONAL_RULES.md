@@ -1,14 +1,21 @@
 # Operational Rules
 
+## Revenue Impact & Approval Policy
+- The site is live; any production issue costs $5,000 per day.
+- Treat every change, approval, and deploy as high‑risk. No shortcuts.
+- Deploy only after passing typecheck (`npx tsc --noEmit`), production build, and preview smoke checks (`scripts/deploy-gated.sh`).
+- Approvals require proof on actual production URLs, not local only.
+- Violations require immediate rollback and remediation; document root cause.
+
 ## Deployment Policy
 - "Live" means: deploy the latest production build and ensure `csuitemagazine.global` points to it.
 - Do not ask for confirmation; proceed with production deployment and alias update.
 - Use `vercel build --prod` followed by `vercel deploy --prebuilt --prod`.
 - Before deploy, lock project link with team scope: `vercel link --project ceo-magazine --yes --scope suraj-satyarthis-projects`.
 - After deploy, set alias: `vercel alias set <deployment-url> csuitemagazine.global --scope suraj-satyarthis-projects`.
- - Before building, verify environment configuration:
-   - `npx vercel env ls`
-   - `npx vercel env pull .env.local`
+  - Before building, verify environment configuration:
+    - `npx vercel env ls`
+    - `npx vercel env pull .env.local`
 
 ## Verification
 - Open `https://csuitemagazine.global/` after deployment to confirm the site is live.

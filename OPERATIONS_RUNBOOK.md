@@ -42,6 +42,17 @@ This runbook documents the standard operating procedures for DNS, deployments, e
   - If rate‑limited, use dashboard redeploy or `npx vercel --prod --archive=tgz` (cloud build).
 - Gated script: `scripts/deploy-gated.sh` builds preview, smoke‑checks, builds prod, and promotes.
 
+### Recent Changes
+- Ads remain CMS‑driven. A guarded fallback renders a Brabus vertical creative only when the CMS ad is missing or invalid (e.g., placeholder `example.com` links).
+  - Implementation references: `ceo-magazine/components/Ad.tsx:29-31`, `33-59`, `61-88`, `94-118`.
+- Footer shows site version read from `package.json`; bump the version to surface it in UI.
+  - Rendering: `ceo-magazine/components/Footer.tsx:46`.
+  - Source: `ceo-magazine/package.json:3`.
+- Preferred deployment path: `pnpm deploy:prod` (gated). Set `FAST_DEPLOY=1` to skip preview smoke checks for urgent pushes.
+- Preview environments may be protected (401). Use dashboard or bypass token for automated checks; production apex serves normally.
+ - Trending Now sidebar links fixed to construct `/category/<cat>/<slug>` safely with defaults and disable prefetch; if slug is missing, render as non-link to avoid server exceptions.
+   - Implementation references: `ceo-magazine/app/category/[slug]/[article]/page.tsx:612-636`.
+
 ## Environment Variables
 - Client‑side:
   - `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_SANITY_API_VERSION`.
@@ -128,6 +139,8 @@ Normalize exported post JSONs to include a top‑level `writerSlug` so imports r
 - If CLI rate‑limited: use dashboard redeploy or push a tiny Git commit.
 - If Sanity reads fail: verify `SANITY_API_TOKEN` exists (Production) and dataset is correct.
 - If email issues: re‑validate MX/SPF/DKIM/DMARC values in Vercel DNS.
+ - If “Application error … Digest: 3125437772” occurs on Trending links: check category/slug resolution; ensure hrefs do not contain `undefined` and follow `/category/<cat>/<slug>`.
+ - If “Not authorized” from Vercel CLI: log in (`npx vercel login`) and link project (`npx vercel link --project ceo-magazine`).
 
 ---
 This runbook is versioned in the repo. Update it whenever DNS, deploy, or content processes change.
