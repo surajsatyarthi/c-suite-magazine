@@ -153,14 +153,22 @@ async function getPostFromExports(slug: string): Promise<Post | null> {
   }
 }
 
-async function getPostStub(slug: string): Promise<Post | null> {
+async function getPostStub(slug: string, categorySlug?: string): Promise<Post | null> {
   try {
-    let hero = resolveFeaturedHeroImage({ slug: { current: slug }, title: slug })
-    if (!hero) {
-      const section = resolveFeaturedSectionImage({ slug: { current: slug }, title: slug })
-      if (!section) return null
-      hero = section
+    // Only use Featured hero images for CXO interview articles
+    const isCXO = categorySlug === 'cxo-interview' || categorySlug === 'cxo-spotlight';
+
+    let hero = null;
+    if (isCXO) {
+      hero = resolveFeaturedHeroImage({ slug: { current: slug }, title: slug })
+      if (!hero) {
+        const section = resolveFeaturedSectionImage({ slug: { current: slug }, title: slug })
+        if (section) hero = section
+      }
     }
+
+    if (!hero) return null
+
     const base = hero.split('/').pop() || slug
     const nameRaw = base.replace(/\.(png|jpg|jpeg|webp)$/i, '')
     const name = nameRaw.replace(/_/g, ' ').replace(/-/g, ' ').replace(/\s+/g, ' ').trim()
@@ -272,7 +280,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       : false
 
     if (!post) {
-      const stub = await getPostStub(article)
+      const stub = await getPostStub(article, categorySlug)
       if (!stub) {
         notFound()
       }
@@ -693,12 +701,14 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       </>
     )
   } catch (e) {
+    console.error('[CategoryArticlePage] Error rendering:', e)
     const { article, slug: categorySlug } = (await (arguments[0] as any)?.params) || { article: '', slug: '' }
-    const stub = await getPostStub(String(article || ''))
+    const stub = await getPostStub(String(article || ''), categorySlug)
     if (!stub) {
       notFound()
     }
-    const featuredHeroSrc = resolveFeaturedHeroImage(stub)
+    // resolveFeaturedHeroImage is already called inside getPostStub if applicable
+    const featuredHeroSrc = isCXOInterview || isSpotlight ? resolveFeaturedHeroImage(stub) : null
     const featuredHeroAspect = featuredHeroSrc ? 16 / 9 : null
     return (
       <>
