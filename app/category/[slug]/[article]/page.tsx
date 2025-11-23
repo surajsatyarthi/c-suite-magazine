@@ -95,7 +95,9 @@ async function getPost(slug: string): Promise<Post | null> {
       }
       // Filter out potential null categories from broken references
       if (Array.isArray(p.categories)) {
+        console.log(`[getPost] Categories before filter:`, JSON.stringify(p.categories))
         p.categories = p.categories.filter((c: any) => c !== null)
+        console.log(`[getPost] Categories after filter:`, JSON.stringify(p.categories))
       }
       return p
     } else {
@@ -278,6 +280,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     const params = await props.params
     const { slug: categorySlug, article } = params || { slug: '', article: '' }
     let post: any = await getPost(article)
+
+    if (post) {
+      console.log(`[CategoryArticlePage] Post categories:`, JSON.stringify(post.categories))
+    }
+
     const isCXOInterview = String(categorySlug) === 'cxo-interview'
     const isSpotlight = Array.isArray(post?.categories)
       ? post.categories.some((c: any) => /spotlight|cxo[-_ ]?spotlight/i.test(String(c?.slug?.current || '')) || /spotlight/i.test(String(c?.title || '')))
