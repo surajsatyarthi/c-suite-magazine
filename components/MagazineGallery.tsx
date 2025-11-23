@@ -100,12 +100,7 @@ export default async function MagazineGallery() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 25vw, 20vw"
                   loading="lazy"
                 />
-                {/* Temporary number badge - Top Left (dev-only) */}
-                {process.env.NODE_ENV !== 'production' && (
-                  <div className="absolute top-4 left-4 bg-[#c8ab3d] text-white px-3 py-1 rounded-full text-xs font-bold shadow">
-                    {item.__idx || index + 1}
-                  </div>
-                )}
+                {/* Number badge removed per requirement */}
                 {/* Views removed per rule: featured section does not display views */}
 
                 {/* Strong dark overlay on hover for text readability */}
