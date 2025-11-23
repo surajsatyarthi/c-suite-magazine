@@ -15,6 +15,7 @@ import Footer from '@/components/Footer'
 import Ad from '@/components/Ad'
 import SocialShare from '@/components/SocialShare'
 import PortableBody from '@/components/PortableBody'
+import PortableBodyV2 from '@/components/PortableBodyV2'
 // View tracking disabled per marketing policy
 import { client, urlFor } from '@/lib/sanity'
 import { getViews, formatViewsMillion } from '@/lib/views'
@@ -591,7 +592,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
 
                     {/* Body */}
                     <div className="prose prose-lg max-w-none">
-                      <PortableBody value={cleanedBody} interviewMode={interviewMode} />
+                      {process.env.NEXT_PUBLIC_USE_PORTABLE_V2 === 'true' ? (
+                        <PortableBodyV2 value={cleanedBody} interviewMode={interviewMode} />
+                      ) : (
+                        <PortableBody value={cleanedBody} interviewMode={interviewMode} />
+                      )}
                     </div>
                   </div>
 
@@ -792,7 +797,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       </div>
                     )}
                     <div className="prose prose-lg max-w-none">
-                      <PortableBody value={[]} interviewMode={false} />
+                      {process.env.NEXT_PUBLIC_USE_PORTABLE_V2 === 'true' ? (
+                        <PortableBodyV2 value={[]} interviewMode={false} />
+                      ) : (
+                        <PortableBody value={[]} interviewMode={false} />
+                      )}
                     </div>
                   </div>
                   <div className="space-y-6">
