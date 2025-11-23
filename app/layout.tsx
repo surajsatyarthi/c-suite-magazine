@@ -8,6 +8,7 @@ import { Suspense } from "react";
 // Defer non-critical client components to reduce initial JS via client wrapper
 import LazyEntryLocale from "@/components/LazyEntryLocale";
 const AdInterstitial = dynamic(() => import("@/components/AdInterstitial"));
+const AdInterstitialV2 = dynamic(() => import("@/components/AdInterstitialV2"));
 import { generateMetadata, generateStructuredData } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -66,7 +67,11 @@ export default function RootLayout({
         <LazyEntryLocale />
         {/* Globally mounted interstitial ad (wrap in Suspense due to useSearchParams) */}
         <Suspense fallback={null}>
-          <AdInterstitial />
+          {process.env.NEXT_PUBLIC_USE_AD_V2 === 'true' ? (
+            <AdInterstitialV2 />
+          ) : (
+            <AdInterstitial />
+          )}
         </Suspense>
         <main id="main-content" tabIndex={-1}>
           {children}
