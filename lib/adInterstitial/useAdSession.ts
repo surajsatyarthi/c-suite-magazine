@@ -13,7 +13,8 @@ export function useAdSession() {
 
     // Treat category article pages as eligible for interstitials
     const isCategoryArticle = !!pathname && /^\/category\/[^/]+\/[^/]+$/.test(pathname)
-    const enabled = !!(forceOpen || isCategoryArticle)
+    const isTestPage = pathname === '/test-ad'
+    const enabled = !!(forceOpen || isCategoryArticle || isTestPage)
 
     const [hasInteracted, setHasInteracted] = useState<boolean>(false)
     const shownRef = useRef(false)
