@@ -1,8 +1,7 @@
-'use client'
-
+import { useState } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { AD_LINK, ADS } from '@/lib/adInterstitial/constants'
 import { useLocaleGate } from '@/lib/adInterstitial/useLocaleGate'
 import { useAdSession } from '@/lib/adInterstitial/useAdSession'
@@ -28,14 +27,73 @@ export default function AdInterstitialV2() {
         pathname
     })
 
+    const debug = useSearchParams()?.get('debug') === '1'
+    const [debugState, setDebugState] = useState<any>({})
+
     useScrollDetection({
         enabled,
         localeReady,
         hasInteracted,
         forceOpen,
         shownRef,
-        onTrigger: () => loadAd(0)
+        onTrigger: () => loadAd(0),
+        onDebug: setDebugState // Pass debug callback
     })
+
+    if (debug) {
+        return (
+            <>
+                <div className="fixed bottom-4 left-4 z-[100] bg-black/80 text-white p-4 text-xs font-mono rounded pointer-events-none">
+                    <p>Enabled: {String(enabled)}</p>
+                    <p>LocaleReady: {String(localeReady)}</p>
+                    <p>Interacted: {String(hasInteracted)}</p>
+                    <p>ForceOpen: {String(forceOpen)}</p>
+                    <p>Shown: {String(shownRef.current)}</p>
+                    <p>PopupInDOM: {String(debugState.popupInDom)}</p>
+                    <p>PassedHalf: {String(debugState.passedHalf)}</p>
+                    <p>ScrollY: {debugState.scrollY?.toFixed(0)}</p>
+                </div>
+                {(!enabled || !show) ? null : (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                        {/* ... existing ad render ... */}
+                        <div className="relative bg-black/40 text-white rounded-2xl backdrop-blur-sm shadow-2xl shadow-black/50 border border-white/10 max-w-4xl w-full mx-4 max-h-[90vh] overflow-auto">
+                            <button
+                                onClick={() => {
+                                    if (adIndex === 0) {
+                                        // Switch to second ad instead of closing
+                                        loadAd(1)
+                                    } else {
+                                        setShow(false)
+                                    }
+                                }}
+                                className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors z-10"
+                                aria-label="Close ad"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <div className="p-6">
+                                <Link href={ad?.targetUrl || AD_LINK} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
+                                    <div className="relative w-full rounded-xl overflow-hidden min-h-[220px]" style={{ aspectRatio }}>
+                                        <OptimizedImage
+                                            src={ad?.imageUrl || ADS[0].imageUrl}
+                                            alt={ad?.alt || 'Sponsored'}
+                                            fill
+                                            className="object-contain"
+                                            sizes="(max-width: 1024px) 100vw, 970px"
+                                            priority
+                                            decoding="async"
+                                        />
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </>
+        )
+    }
 
     if (!enabled || !show) return null
 

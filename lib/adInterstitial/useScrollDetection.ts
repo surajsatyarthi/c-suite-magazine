@@ -13,6 +13,7 @@ type UseScrollDetectionProps = {
     forceOpen: boolean
     shownRef: React.MutableRefObject<boolean>
     onTrigger: () => void
+    onDebug?: (state: any) => void
 }
 
 export function useScrollDetection({
@@ -21,7 +22,8 @@ export function useScrollDetection({
     hasInteracted,
     forceOpen,
     shownRef,
-    onTrigger
+    onTrigger,
+    onDebug
 }: UseScrollDetectionProps) {
     const cachedArticleElRef = useRef<HTMLElement | null>(null)
 
@@ -77,7 +79,15 @@ export function useScrollDetection({
 
             scrollTimeout = setTimeout(() => {
                 scrollTimeout = null
-                if (passedHalf()) reveal()
+                const half = passedHalf()
+                if (onDebug) {
+                    onDebug({
+                        popupInDom: isPopupPresentInDOM(),
+                        passedHalf: half,
+                        scrollY: window.scrollY
+                    })
+                }
+                if (half) reveal()
             }, 50) // Throttle to 50ms for smooth performance
         }
 
@@ -149,6 +159,13 @@ export function useScrollDetection({
         // Force open for QA still respects locale gating site-wide
         if (forceOpen && localeReady && !isPopupPresentInDOM()) {
             reveal()
+        }
+
+        // NEW: If we just became ready (e.g. user dismissed popup), check immediately
+        // This fixes the race condition where user dismisses popup but ad doesn't show until next scroll
+        if (localeReady && !shownRef.current && !isPopupPresentInDOM()) {
+            // Trigger a check immediately
+            onScroll()
         }
 
         return () => {
