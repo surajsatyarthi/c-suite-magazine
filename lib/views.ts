@@ -8,7 +8,13 @@ export function getViews(slug?: string, fallback?: number | null): number | null
   return typeof fallback === 'number' && fallback > 0 ? fallback : null
 }
 
+/**
+ * Format view counts in millions.
+ * • If count >= 5,000,000 → "5M+"
+ * • Otherwise show one decimal place followed by " M"
+ */
 export function formatViewsMillion(n?: number | null): string | null {
   if (typeof n !== 'number' || !isFinite(n) || n <= 0) return null
-  return `${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 5000000) return '5M+'
+  return `${(n / 1000000).toFixed(1)} M`
 }
