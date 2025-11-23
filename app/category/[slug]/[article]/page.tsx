@@ -93,6 +93,10 @@ async function getPost(slug: string): Promise<Post | null> {
             ; (p as any).writer = full || fallback
         }
       }
+      // Filter out potential null categories from broken references
+      if (Array.isArray(p.categories)) {
+        p.categories = p.categories.filter((c: any) => c !== null)
+      }
       return p
     } else {
       console.log(`[getPost] Article not found in Sanity: ${slug}`)
