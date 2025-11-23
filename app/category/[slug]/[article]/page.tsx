@@ -708,7 +708,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       notFound()
     }
     // resolveFeaturedHeroImage is already called inside getPostStub if applicable
-    const featuredHeroSrc = isCXOInterview || isSpotlight ? resolveFeaturedHeroImage(stub) : null
+    const featuredHeroSrc = stub?.mainImage?.asset?.url || null
     const featuredHeroAspect = featuredHeroSrc ? 16 / 9 : null
     return (
       <>
