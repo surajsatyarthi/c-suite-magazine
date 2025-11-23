@@ -21,11 +21,8 @@ function setCookie(name: string, value: string, days = 365) {
 }
 
 export default function EntryLocalePopup() {
-  const pathname = usePathname()
-  // Only show locale popup on first visit to homepage
-  if (pathname && pathname !== '/') {
-    return null
-  }
+  // Show locale popup on all pages (global gatekeeper)
+  // if (pathname && pathname !== '/') { return null }
   const [isOpen, setIsOpen] = useState(false)
   const [country, setCountry] = useState<string>('US')
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -50,23 +47,23 @@ export default function EntryLocalePopup() {
       if (cookieCountry) setCountry(cookieCountry)
 
       if (previouslySelected && cookieCountry) {
-        try { setHasCountry(true) } catch {}
-        try { setLocaleOpen(false) } catch {}
+        try { setHasCountry(true) } catch { }
+        try { setLocaleOpen(false) } catch { }
         setIsOpen(false)
         return
       }
 
       if (sessionShown || dnd === '1' || dismissed) {
-        try { setLocaleOpen(false) } catch {}
+        try { setLocaleOpen(false) } catch { }
         setIsOpen(false)
         return
       }
 
       setIsOpen(true)
-      try { setLocaleOpen(true) } catch {}
+      try { setLocaleOpen(true) } catch { }
     } catch {
       setIsOpen(true)
-      try { setLocaleOpen(true) } catch {}
+      try { setLocaleOpen(true) } catch { }
     }
   }, [])
 
@@ -104,15 +101,15 @@ export default function EntryLocalePopup() {
         const prev = document.body.style.overflow
         document.body.setAttribute('data-prev-overflow', prev)
         document.body.style.overflow = 'hidden'
-      } catch {}
+      } catch { }
     } else {
       try {
         const prev = document.body.getAttribute('data-prev-overflow') || ''
         document.body.style.overflow = prev
         document.body.removeAttribute('data-prev-overflow')
         // Reflect close to LocaleGate without implying dismissal
-        try { setLocaleOpen(false) } catch {}
-      } catch {}
+        try { setLocaleOpen(false) } catch { }
+      } catch { }
     }
 
     return () => {
@@ -120,7 +117,7 @@ export default function EntryLocalePopup() {
         const prev = document.body.getAttribute('data-prev-overflow') || ''
         document.body.style.overflow = prev
         document.body.removeAttribute('data-prev-overflow')
-      } catch {}
+      } catch { }
     }
   }, [isOpen])
 
@@ -132,8 +129,8 @@ export default function EntryLocalePopup() {
       try {
         setHasCountry(true)
         setLocaleDismissed()
-      } catch {}
-      try { if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('localeShown', '1') } catch {}
+      } catch { }
+      try { if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('localeShown', '1') } catch { }
 
       // Try to sync country with existing API used by Navigation
       try {
@@ -142,7 +139,7 @@ export default function EntryLocalePopup() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ country }),
         })
-      } catch {}
+      } catch { }
 
       // Dispatch event to notify Navigation component about country change
       try {
@@ -150,7 +147,7 @@ export default function EntryLocalePopup() {
           detail: { country }
         })
         document.dispatchEvent(event)
-      } catch {}
+      } catch { }
 
       setIsOpen(false)
     } catch (err) {
@@ -206,7 +203,7 @@ export default function EntryLocalePopup() {
           <button
             onClick={() => {
               setIsOpen(false)
-              try { setLocaleDismissed() } catch {}
+              try { setLocaleDismissed() } catch { }
             }}
             className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/40"
           >
@@ -229,15 +226,15 @@ const handleClose = () => {
   try {
     if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('localeShown', '1')
     setCookie('locale-dnd', '1', 1)
-    try { setLocaleDismissed() } catch {}
-  } catch {}
+    try { setLocaleDismissed() } catch { }
+  } catch { }
   try {
     const evt = new Event('csuite:close-locale-popup')
     document.dispatchEvent(evt)
-  } catch {}
+  } catch { }
   // Best-effort close: element will unmount due to isOpen state managed inside component
   const el = document.querySelector('.entry-locale-popup')
   if (el) {
-    try { (el.parentElement as HTMLElement)?.remove() } catch {}
+    try { (el.parentElement as HTMLElement)?.remove() } catch { }
   }
 }
