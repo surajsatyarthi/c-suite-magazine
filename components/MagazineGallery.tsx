@@ -33,16 +33,24 @@ export default async function MagazineGallery() {
       const data = await client.fetch(
         `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{
           cardCount,
-          items[]->{ _id, title, slug, mainImage }
+          items[]->{ _id, title, slug, mainImage, "primaryCategory": categories[0]->{ slug } }
         }`
       )
       if (data && Array.isArray(data.items) && data.items.length > 0) {
         desiredCount = desiredCount ?? (typeof data.cardCount === 'number' ? data.cardCount : undefined)
-        items = data.items.map((p: { title?: string; slug?: { current?: string } | null; mainImage?: unknown }, idx: number) => ({
-          image: p?.mainImage ? urlFor(p.mainImage as unknown).width(1200).height(1800).url() : `/Featured%20section/${idx + 1}.png`,
-          href: p?.slug?.current ? `/article/${p.slug.current}` : '/archive',
-          title: p?.title || 'C‑Suite Magazine Issue',
-        }))
+        items = data.items
+          .filter((p: any) => p !== null && p !== undefined) // Filter out null/undefined elements
+          .map((p: { title?: string; slug?: { current?: string } | null; mainImage?: unknown; primaryCategory?: { slug?: { current?: string } } }, idx: number) => {
+            const image = p?.mainImage ? urlFor(p.mainImage as unknown).width(1200).height(1800).url() : `/Featured%20section/${idx + 1}.png`
+            const cat = p?.primaryCategory?.slug?.current
+            const postSlug = p?.slug?.current
+            const href = (cat && postSlug) ? `/category/${cat}/${postSlug}` : '/archive'
+            return {
+              image,
+              href,
+              title: p?.title || 'C‑Suite Magazine Issue',
+            }
+          })
       }
     } catch {
       // Ignore
@@ -99,7 +107,7 @@ export default async function MagazineGallery() {
                   </div>
                 )}
                 {/* Views removed per rule: featured section does not display views */}
-                
+
                 {/* Strong dark overlay on hover for text readability */}
                 <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 

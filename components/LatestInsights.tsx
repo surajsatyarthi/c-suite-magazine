@@ -13,7 +13,7 @@ type LatestInsightsProps = {
 }
 
 export default function LatestInsights({ articles }: LatestInsightsProps) {
-    const visibleArticles = articles.slice(0, 6)
+  const visibleArticles = articles.slice(0, 6)
 
 
   return (
@@ -24,7 +24,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
         </h3>
 
         {visibleArticles.length > 0 ? (
-          <div 
+          <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             role="feed"
             aria-label="Latest articles"
@@ -46,8 +46,8 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
               const displayViews = formatViewsMillion(viewsNum)
 
               const ArticleCard = (
-                <article 
-                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 h-full flex flex-col card-hover-scale reveal focus-within:ring-2 focus-within:ring-[#c8ab3d] focus-within:ring-offset-2" 
+                <article
+                  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 h-full flex flex-col card-hover-scale reveal focus-within:ring-2 focus-within:ring-[#c8ab3d] focus-within:ring-offset-2"
                   style={{ transitionDelay: `${index * 80}ms` }}
                   role="article"
                   aria-labelledby={`article-title-${index}`}
@@ -93,7 +93,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                     )}
                   </div>
                   <div className="p-6 flex-1 flex flex-col">
-                    <h4 
+                    <h4
                       id={`article-title-${index}`}
                       className="text-xl font-serif font-bold text-gray-900 mb-2 group-hover:text-[#082945] transition-colors line-clamp-2"
                     >
@@ -101,7 +101,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                     </h4>
                     {/* Tags suppressed; Latest Insights shows industry category badge only */}
                     {postExcerpt && (
-                      <p 
+                      <p
                         id={`article-excerpt-${index}`}
                         className="text-gray-600 mb-4 line-clamp-2 flex-1"
                       >
@@ -129,9 +129,13 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
               )
 
               return isValidSlug ? (
-                <Link 
-                  key={(post as any)._id} 
-                  href={(() => { const cat = (categories?.[0]?.slug?.current as string | undefined); return `/category/${cat}/${slug}` })()} 
+                <Link
+                  key={(post as any)._id}
+                  href={(() => {
+                    const categories = (post as any)?.categories || [];
+                    const cat = (Array.isArray(categories) && categories.length > 0 && categories[0]?.slug?.current) || 'general';
+                    return `/category/${cat}/${slug}`;
+                  })()}
                   prefetch={false}
                   className="group bg-white focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 rounded-lg overflow-hidden shadow-md"
                   aria-label={`Read article: ${postTitle}${authorName ? ` by writer ${authorName}` : ''}`}
@@ -139,9 +143,9 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                   {ArticleCard}
                 </Link>
               ) : (
-                <div 
-                  key={(post as any)._id} 
-                  className="group bg-white rounded-lg overflow-hidden shadow-md" 
+                <div
+                  key={(post as any)._id}
+                  className="group bg-white rounded-lg overflow-hidden shadow-md"
                   aria-disabled="true"
                   role="article"
                   aria-label={`Article unavailable: ${postTitle}`}
@@ -152,8 +156,8 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
             })}
           </div>
         ) : (
-          <div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             aria-busy="true"
             aria-label="Loading articles"
             role="status"
