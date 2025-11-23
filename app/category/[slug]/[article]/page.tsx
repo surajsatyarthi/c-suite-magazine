@@ -243,16 +243,17 @@ async function getRelatedPosts(
 
 
 async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' | 'views'>[]> {
-  // Prioritize Spotlight items (CXO Interviews) as requested
+  // Show 5 latest articles from Spotlight (sorted by publishedAt desc)
   const spotlightQuery = `*[_id == "spotlightConfig"][0].items[]->{
     _id,
     title,
     slug,
     views,
+    publishedAt,
     "categories": categories[]->{title, slug}
-  }[0...5]`
+  } | order(publishedAt desc)[0...5]`
 
-  // Fallback to views if spotlight is empty
+  // Fallback to most viewed if spotlight is empty
   const fallbackQuery = `*[_type == "post" && defined(views) && isHidden != true] | order(views desc)[0...5] {
     _id,
     title,
@@ -332,11 +333,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
         p !== null &&
         p !== undefined &&
         p.title &&
-        p.slug?.current &&
-        Array.isArray(p.categories) &&
-        p.categories.length > 0 &&
-        p.categories[0] !== null &&
-        p.categories[0]?.slug?.current
+        p.slug?.current
       )
     } else {
       trendingPosts = []
