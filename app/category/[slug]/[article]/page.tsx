@@ -658,7 +658,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                           {relatedPosts.map((relatedPost) => (
                             <Link
                               key={relatedPost._id}
-                              href={`/category/${(relatedPost as any)?.categories?.[0]?.slug?.current}/${relatedPost.slug.current}`}
+                              href={`/category/${(relatedPost as any)?.categories?.[0]?.slug?.current}/${relatedPost.slug?.current || relatedPost.slug}`}
                               prefetch
                               className="block group"
                             >
@@ -894,13 +894,14 @@ function resolveFeaturedHeroImage(p: any): string | null {
     let match = normalizedMap.find((x) => x.norm === slug) || normalizedMap.find((x) => x.norm === name)
 
     // 2) Includes fallback (both directions) and subject name from title
-    if (!match) {
+    // Require minimum length to avoid false positives
+    if (!match && slug.length > 3 && name.length > 3) {
       match =
-        normalizedMap.find((x) => x.norm.includes(slug)) ||
-        normalizedMap.find((x) => x.norm.includes(name)) ||
-        normalizedMap.find((x) => slug.includes(x.norm)) ||
-        normalizedMap.find((x) => name.includes(x.norm)) ||
-        normalizedMap.find((x) => title.includes(x.norm))
+        normalizedMap.find((x) => x.norm.length > 3 && x.norm.includes(slug)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && x.norm.includes(name)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && slug.includes(x.norm)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && name.includes(x.norm)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && title.includes(x.norm))
     }
 
     if (!match) return null
@@ -943,13 +944,14 @@ function resolveFeaturedSectionImage(p: any): string | null {
     let match = normalizedMap.find((x) => x.norm === slug) || normalizedMap.find((x) => x.norm === name)
 
     // Includes fallback (both directions) and subject name from title
-    if (!match) {
+    // Require minimum length to avoid false positives
+    if (!match && slug.length > 3 && name.length > 3) {
       match =
-        normalizedMap.find((x) => x.norm.includes(slug)) ||
-        normalizedMap.find((x) => x.norm.includes(name)) ||
-        normalizedMap.find((x) => slug.includes(x.norm)) ||
-        normalizedMap.find((x) => name.includes(x.norm)) ||
-        normalizedMap.find((x) => title.includes(x.norm))
+        normalizedMap.find((x) => x.norm.length > 3 && x.norm.includes(slug)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && x.norm.includes(name)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && slug.includes(x.norm)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && name.includes(x.norm)) ||
+        normalizedMap.find((x) => x.norm.length > 3 && title.includes(x.norm))
     }
 
     if (!match) return null
