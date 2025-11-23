@@ -32,10 +32,14 @@ export function useAdSession() {
         window.addEventListener('pointerdown', markInteracted, { once: true })
         window.addEventListener('keydown', markInteracted, { once: true })
         window.addEventListener('touchstart', markInteracted, { once: true })
+        window.addEventListener('wheel', markInteracted, { once: true })
+        window.addEventListener('click', markInteracted, { once: true })
         return () => {
             try { window.removeEventListener('pointerdown', markInteracted) } catch { }
             try { window.removeEventListener('keydown', markInteracted) } catch { }
             try { window.removeEventListener('touchstart', markInteracted) } catch { }
+            try { window.removeEventListener('wheel', markInteracted) } catch { }
+            try { window.removeEventListener('click', markInteracted) } catch { }
         }
     }, [])
 
