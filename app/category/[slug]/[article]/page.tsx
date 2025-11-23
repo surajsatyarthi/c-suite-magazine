@@ -305,13 +305,40 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       (post as any)?.contentPillar,
       (post as any)?.tags || []
     )
+    // Comprehensive validation: filter null, undefined, items with empty/missing categories, missing slug, missing title, missing mainImage
     if (Array.isArray(relatedPosts)) {
-      relatedPosts = relatedPosts.filter((p: any) => p !== null)
+      relatedPosts = relatedPosts.filter((p: any) =>
+        p !== null &&
+        p !== undefined &&
+        p.title &&
+        p.slug?.current &&
+        p.mainImage &&
+        p.mainImage.asset &&
+        Array.isArray(p.categories) &&
+        p.categories.length > 0 &&
+        p.categories[0] !== null &&
+        p.categories[0]?.slug?.current
+      )
+    } else {
+      relatedPosts = []
     }
 
     let trendingPosts = await getTrendingPosts()
+    // Comprehensive validation: filter null, undefined, items with empty/missing categories, missing slug, missing title
+    // Note: Trending posts don't require mainImage as they only show title
     if (Array.isArray(trendingPosts)) {
-      trendingPosts = trendingPosts.filter((p: any) => p !== null)
+      trendingPosts = trendingPosts.filter((p: any) =>
+        p !== null &&
+        p !== undefined &&
+        p.title &&
+        p.slug?.current &&
+        Array.isArray(p.categories) &&
+        p.categories.length > 0 &&
+        p.categories[0] !== null &&
+        p.categories[0]?.slug?.current
+      )
+    } else {
+      trendingPosts = []
     }
     const bodyText: string = typeof (post as any)?.body === 'string' ? (post as any).body : ''
 
@@ -820,7 +847,7 @@ export async function generateMetadata(
 
   return generateSEOMetadata({
     title: (post as any)?.seo?.metaTitle || post.title,
-    description: post.excerpt || post.body?.[0]?.children?.[0]?.text?.substring(0, 160) + '...',
+    description: post.excerpt || (post.body?.[0]?.children?.[0]?.text?.substring(0, 160) || '') + '...',
     keywords: post.tags || [],
     image: (post as any)?.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
     type: 'article',
