@@ -1,58 +1,46 @@
+
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 import { Post, Category } from '@/lib/types'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
+import { formatViewsMillion } from '@/lib/views'
 
 interface ArchiveFiltersProps {
   posts: Post[]
   categories: Category[]
+  initialCategory?: string
 }
 
-export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProps) {
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>(posts)
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+export default function ArchiveFilters({ posts, categories, initialCategory = 'all' }: ArchiveFiltersProps) {
+  const [categoryFilter, setCategoryFilter] = useState<string>(initialCategory)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const searchParams = useSearchParams()
   const router = useRouter()
-  
+
   const POSTS_PER_PAGE = 12
 
-  // Set initial filters from URL parameters
-  useEffect(() => {
-    const categoryParam = searchParams.get('category')
-    
-    if (categoryParam) {
-      setCategoryFilter(categoryParam)
-    }
-  }, [searchParams])
-
-  // Filter posts based on selected filters
-  useEffect(() => {
-    let filtered = posts
-
-    // Filter by category
-    if (categoryFilter !== 'all') {
-      filtered = filtered.filter(post => 
-        post.categories && post.categories.some(cat => 
-          cat.title === categoryFilter
-        )
-      )
-    }
-
-    setFilteredPosts(filtered)
-    setCurrentPage(1) // Reset to first page when filters change
-  }, [posts, categoryFilter])
-
-  // Calculate pagination
-  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
+  // Calculate pagination (filtering is now server-side)
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE
   const endIndex = startIndex + POSTS_PER_PAGE
-  const currentPosts = filteredPosts.slice(startIndex, endIndex)
+  const currentPosts = posts.slice(startIndex, endIndex)
+
+  // Handle category filter change - triggers server-side refetch
+  const handleCategoryChange = (newCategory: string) => {
+    setCategoryFilter(newCategory)
+    setCurrentPage(1)
+
+    // Update URL to trigger server-side filtering
+    if (newCategory === 'all') {
+      router.push('/archive')
+    } else {
+      router.push(`/ archive ? category = ${encodeURIComponent(newCategory)} `)
+    }
+  }
 
   const clearFilters = () => {
     setCategoryFilter('all')
@@ -75,7 +63,7 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
             <select
               id="category"
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
+              onChange={(e) => handleCategoryChange(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="all">All Categories</option>
@@ -93,12 +81,12 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
 
       {/* Articles Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredPosts.length === 0 ? (
+        {posts.length === 0 ? (
           <div className="text-center py-16 col-span-full">
             <p className="text-lg text-gray-600">
               {posts.length === 0 ? 'No articles yet. Please check back soon.' : 'No articles match your current filters.'}
             </p>
-            {posts.length > 0 && filteredPosts.length === 0 && (
+            {posts.length === 0 && (
               <button
                 onClick={clearFilters}
                 className="mt-4 px-4 py-2 bg-[#082945] text-white rounded-lg hover:bg-[#0a3a5c] transition-colors"
@@ -153,22 +141,24 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
                   {/* Title */}
                   <h2 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
                     {isValidSlug ? (
-                      <Link href={(() => { const cat = ((post as any)?.categories?.[0]?.slug?.current as string | undefined); return `/category/${cat}/${slug}` })()} className="hover:text-[#082945] transition-colors">
+                      <Link href={(() => { const cat = ((post as any)?.categories?.[0]?.slug?.current as string | undefined) || 'general'; return `/ category / ${cat}/${slug}` })()} className="hover:text-[#082945] transition-colors" >
                         {sanitizeTitle(post.title)}
-                      </Link>
+                      </Link >
                     ) : (
                       sanitizeTitle(post.title)
                     )}
-                  </h2>
+                  </h2 >
 
                   {/* Excerpt */}
-                  {post.excerpt && (
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                      {sanitizeExcerpt(post.excerpt, sanitizeTitle(post.title))}
-                    </p>
-                  )}
+                  {
+                    post.excerpt && (
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                        {sanitizeExcerpt(post.excerpt, sanitizeTitle(post.title))}
+                      </p>
+                    )
+                  }
 
-        {/* Meta: Writer and Views (date removed) */}
+                  {/* Meta: Writer and Views (date removed) */}
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <div className="flex items-center space-x-2">
                       {authorImageUrl && (
@@ -189,87 +179,83 @@ export default function ArchiveFilters({ posts, categories }: ArchiveFiltersProp
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
-                          {(post.views / 1000000).toFixed(1)}M
+                          {formatViewsMillion(post.views)}
                         </span>
                       )}
                     </div>
                   </div>
-                </div>
-              </article>
+                </div >
+              </article >
             )
           })
         )}
-      </div>
+      </div >
 
       {/* Clear Filters Button */}
-      {(categoryFilter !== 'all') && (
-        <div className="mt-8 text-center">
-          <button
-            onClick={clearFilters}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
-          >
-            Clear All Filters
-          </button>
-        </div>
-      )}
+      {
+        (categoryFilter !== 'all') && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={clearFilters}
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium transition-colors"
+            >
+              Clear All Filters
+            </button>
+          </div>
+        )
+      }
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-12 flex justify-center items-center space-x-2">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Previous
-          </button>
-          
-          {/* Page Numbers */}
-          <div className="flex space-x-1">
-            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
-              
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`px-3 py-2 text-sm font-medium rounded-md ${
-                    currentPage === pageNum
+      {
+        totalPages > 1 && (
+          <div className="mt-12 flex justify-center items-center space-x-2">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+
+            {/* Page Numbers */}
+            <div className="flex space-x-1">
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`px-3 py-2 text-sm font-medium rounded-md ${currentPage === pageNum
                       ? 'bg-blue-600 text-white'
                       : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-          </div>
-          
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Next
-          </button>
-        </div>
-      )}
+                      }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
 
-      {/* Page Info */}
-      {totalPages > 1 && (
-        <div className="mt-4 text-center text-sm text-gray-600">
-          Page {currentPage} of {totalPages}
-        </div>
-      )}
-    </div>
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        )
+      }
+    </div >
   )
 }

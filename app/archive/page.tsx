@@ -8,27 +8,33 @@ import { client, urlFor } from '@/lib/sanity'
 import { Post, Category } from '@/lib/types'
 import { Suspense } from 'react'
 
-async function getPosts(): Promise<Post[]> {
-  const query = `
-    *[_type == "post" && isHidden != true] | order(publishedAt desc) {
-      _id,
-      title,
-      slug,
-      excerpt,
-      writer->{name, image},
-      mainImage{
-        asset->{
-          _id,
-          url
-        },
-        alt
+async function getPosts(categoryFilter?: string): Promise<Post[]> {
+  // Build query with server-side filtering
+  let query = `*[_type == "post" && isHidden != true`
+
+  // Add category filter if provided
+  if (categoryFilter && categoryFilter !== 'all') {
+    query += ` && "${categoryFilter}" in categories[]->title`
+  }
+
+  query += `] | order(publishedAt desc) {
+    _id,
+    title,
+    slug,
+    excerpt,
+    writer->{name, image},
+    mainImage{
+      asset->{
+        _id,
+        url
       },
-      categories[]->{title, color, slug},
-      publishedAt,
-      views
-    }
-  `
-  
+      alt
+    },
+    categories[]->{title, color, slug},
+    publishedAt,
+    views
+  }`
+
   try {
     return await client.fetch(query)
   } catch (error) {
@@ -47,7 +53,7 @@ async function getCategories(): Promise<Category[]> {
       slug
     }
   `
-  
+
   try {
     return await client.fetch(query)
   } catch (error) {
@@ -58,9 +64,15 @@ async function getCategories(): Promise<Category[]> {
   }
 }
 
-export default async function ArchivePage() {
+type PageProps = {
+  searchParams: { category?: string }
+}
+
+export default async function ArchivePage({ searchParams }: PageProps) {
+  const categoryFilter = searchParams.category || 'all'
+
   const [posts, categories] = await Promise.all([
-    getPosts(),
+    getPosts(categoryFilter),
     getCategories()
   ])
 
@@ -85,11 +97,11 @@ export default async function ArchivePage() {
             </div>
           </div>
         }>
-          <ArchiveFilters posts={posts} categories={categories} />
+          <ArchiveFilters posts={posts} categories={categories} initialCategory={categoryFilter} />
         </Suspense>
-       </main>
+      </main>
 
-       <Footer />
-     </>
-   )
- }
+      <Footer />
+    </>
+  )
+}
