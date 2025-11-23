@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-
+import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig: NextConfig = {
   /* config options here */
   // Disable React Compiler for production stability; re-enable after verifying compatibility
@@ -50,8 +50,15 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
           {
             key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; img-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: wss: https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh; frame-ancestors 'self'",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://*.sentry.io",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: https: blob:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://*.sanity.io https://*.sentry.io https://www.googletagmanager.com",
+              "frame-ancestors 'none'",
+            ].join('; '),
           },
           {
             key: "Content-Security-Policy-Report-Only",
@@ -64,7 +71,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
-    qualities: [65, 70, 75, 90],
+    qualities: [85, 90, 95], // PREMIUM: High quality only
     deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2560],
     minimumCacheTTL: 31536000,
     remotePatterns: [
@@ -84,8 +91,12 @@ const nextConfig: NextConfig = {
   },
   compiler: {
     // Strip console.* in production builds to reduce bundle noise
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: false, // process.env.NODE_ENV === 'production',
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "csuite-x2",
+  project: "ceo-magazine",
+  silent: !process.env.CI,
+});
