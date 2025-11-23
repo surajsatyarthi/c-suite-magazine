@@ -37,7 +37,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
               const postTitle = sanitizeTitle(postTitleRaw)
               const postExcerptRaw = (post as any).excerpt
               const postExcerpt = sanitizeExcerpt(postExcerptRaw, postTitle)
-              const authorName = (post as any)?.writer?.name
+              const writerName = (post as any)?.writer?.name
               const categories = (post as any)?.categories || []
               const nonCxoCategory = categories.find((c: any) => c?.slug?.current !== 'cxo-interview')
               const displayCategory = nonCxoCategory || categories[0]
@@ -109,9 +109,9 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                       </p>
                     )}
                     <div className="flex items-center justify-between text-sm text-gray-500 mt-auto">
-                      {authorName && (
-                        <span className="font-medium" aria-label={`Writer: ${authorName}`}>
-                          {authorName}
+                      {writerName && (
+                        <span className="font-medium" aria-label={`Writer: ${writerName}`}>
+                          {writerName}
                         </span>
                       )}
                       {displayViews && (
@@ -138,7 +138,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                   })()}
                   prefetch={false}
                   className="group bg-white focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 rounded-lg overflow-hidden shadow-md"
-                  aria-label={`Read article: ${postTitle}${authorName ? ` by writer ${authorName}` : ''}`}
+                  aria-label={`Read article: ${postTitle}${writerName ? ` by writer ${writerName}` : ''}`}
                 >
                   {ArticleCard}
                 </Link>

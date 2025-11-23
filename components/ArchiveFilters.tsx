@@ -100,7 +100,7 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
             const slug = post?.slug?.current as string | undefined
             const isValidSlug = !!slug && !slug.startsWith('#')
             const imageUrl = post.mainImage?.asset?.url || post.mainImage?.url
-            const authorImageUrl = (post as any)?.writer?.image?.asset?.url || (post as any)?.writer?.image?.url
+            const writerImageUrl = (post as any)?.writer?.image?.asset?.url || (post as any)?.writer?.image?.url
 
             return (
               <article key={post._id || idx} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -161,9 +161,9 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
                   {/* Meta: Writer and Views (date removed) */}
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <div className="flex items-center space-x-2">
-                      {authorImageUrl && (
+                      {writerImageUrl && (
                         <OptimizedImage
-                          src={authorImageUrl}
+                          src={writerImageUrl}
                           alt={(post as any)?.writer?.name || 'Writer'}
                           width={24}
                           height={24}
