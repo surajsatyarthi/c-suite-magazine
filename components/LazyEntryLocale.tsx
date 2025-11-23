@@ -9,9 +9,7 @@ const EntryLocalePopup = dynamic(() => import('@/components/EntryLocalePopup'), 
 })
 
 export default function LazyEntryLocale() {
-  const pathname = usePathname()
-  // Guard rendering to homepage to avoid loading on other routes
-  if (pathname && pathname !== '/') return null
+  // Load on all pages to ensure country selection is captured before ads
   return <EntryLocalePopup />
 }
 

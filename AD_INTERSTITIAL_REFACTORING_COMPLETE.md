@@ -50,15 +50,17 @@ components/
 **Test Page Created**: `/test-ad`
 
 1. Visit: `http://localhost:3000/test-ad`
-2. Click "Force Open Ad"
-3. Verify ad appears
-4. Verify close button works
-5. Verify clicking "X" switches to second ad (if applicable)
+2. **Verify Country Popup appears first** (if not already dismissed)
+3. Dismiss Country Popup
+4. Click "Force Open Ad"
+5. Verify ad appears
 
 ### Step 2: Scroll Testing
-1. Visit: `http://localhost:3000/test-ad` (without ?openAd=1)
-2. Scroll down 50%
-3. Verify ad appears (might need to interact with page first due to browser policies)
+1. Visit: `http://localhost:3000/test-ad` (incognito/private window to reset country)
+2. **Verify Country Popup appears immediately**
+3. Dismiss it
+4. Scroll down 50%
+5. Verify ad appears
 
 ### Step 3: Production Rollout
 ```typescript
