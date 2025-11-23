@@ -60,6 +60,7 @@ async function fetchWriterBySlug(slug: string) {
 }
 
 async function getPost(slug: string): Promise<Post | null> {
+  console.log(`[getPost] Fetching article: ${slug}`)
   const query = `*[_type in ["post","article"] && (slug.current == $slug || slug == $slug) && isHidden != true][0] {
     _id,
     title,
@@ -82,29 +83,31 @@ async function getPost(slug: string): Promise<Post | null> {
   }`
   try {
     const p = await client.fetch(query, { slug })
-    // Deterministic display-only fallback to approved writer list when missing.
-    // If fallback is used, attempt to fetch full writer profile by slug for image/bio.
-    if (p && !p.writer) {
-      const fallback = getDefaultWriterFromCsv()
-      if (fallback) {
-        const full = await fetchWriterBySlug(fallback.slug.current)
-          ; (p as any).writer = full || fallback
+    if (p) {
+      console.log(`[getPost] Found article: ${p.title}`)
+      // Deterministic display-only fallback to approved writer list when missing.
+      if (!p.writer) {
+        const fallback = getDefaultWriterFromCsv()
+        if (fallback) {
+          const full = await fetchWriterBySlug(fallback.slug.current)
+            ; (p as any).writer = full || fallback
+        }
       }
+      return p
+    } else {
+      console.log(`[getPost] Article not found in Sanity: ${slug}`)
     }
-    if (p) return p
   } catch (e) {
+    console.error(`[getPost] Error fetching article ${slug}:`, e)
   }
   try {
     const fallback = await getPostFromExports(slug)
-    return fallback
+    if (fallback) return fallback
   } catch {
   }
-  try {
-    const stub = await getPostStub(slug)
-    return stub
-  } catch {
-    return null
-  }
+  // Do NOT fall back to getPostStub here blindly.
+  // getPostStub should only be used if we are sure it's a legacy/stub page.
+  return null
 }
 
 async function getPostFromExports(slug: string): Promise<Post | null> {
