@@ -56,14 +56,15 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.sanity.io https://*.sentry.io https://www.googletagmanager.com",
+              "connect-src 'self' https: wss: https://core.sanity-cdn.com https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.sanity.studio wss://*.sanity.studio https://studio.csuitemagazine.global wss://studio.csuitemagazine.global https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh https://*.sentry.io https://www.googletagmanager.com",
+              "frame-src 'self' https://*.sanity.studio https://*.sanity.io https://studio.csuitemagazine.global",
               "frame-ancestors 'none'",
             ].join('; '),
           },
           {
             key: "Content-Security-Policy-Report-Only",
             value:
-              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: wss: https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh; frame-ancestors 'self'",
+              "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: wss: https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.sanity.studio wss://*.sanity.studio https://studio.csuitemagazine.global wss://studio.csuitemagazine.global https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh; frame-src 'self' https://*.sanity.studio https://*.sanity.io https://studio.csuitemagazine.global; frame-ancestors 'self'",
           },
         ],
       },
@@ -71,7 +72,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
-    qualities: [85, 90, 95], // PREMIUM: High quality only
+    qualities: [85, 88, 90, 95], // PREMIUM: include 88 to match usage
     deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2560],
     minimumCacheTTL: 31536000,
     remotePatterns: [
@@ -93,6 +94,7 @@ const nextConfig: NextConfig = {
     // Strip console.* in production builds to reduce bundle noise
     removeConsole: false, // process.env.NODE_ENV === 'production',
   },
+  turbopack: {},
 };
 
 export default withSentryConfig(nextConfig, {

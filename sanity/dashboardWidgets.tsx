@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import Link from 'next/link'
 import {useClient, type SanityClient} from 'sanity'
+import {projectId} from './env'
 
 type Counts = {
   totalPosts: number
@@ -89,6 +90,20 @@ export function QuickLinksWidget() {
         <a href="intent://create?type=writer" style={linkStyle}>New Writer</a>
         <a href="intent://create?type=category" style={linkStyle}>New Category</a>
         <a href="intent://create?type=advertisement" style={linkStyle}>New Ad</a>
+      </div>
+      <div style={{ marginTop: 12 }}>
+        <a
+          href={`https://www.sanity.io/manage/project/${projectId}/settings/api`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={linkStyle}
+        >Sanity Project Settings</a>
+        <a
+          href={`https://www.sanity.io/manage/project/${projectId}/settings/api`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={linkStyle}
+        >CORS Origins</a>
       </div>
     </div>
   )

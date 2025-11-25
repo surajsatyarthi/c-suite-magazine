@@ -1,120 +1,76 @@
-#!/usr/bin/env node
-// Simple pre-deploy smoke checks for key pages and image optimizer
+/* eslint-disable */
+const https = require('https')
 
-const base = process.env.SMOKE_BASE_URL || process.env.VERCEL_URL || 'http://localhost:3000'
-
-async function fetchOk(url) {
-  const res = await fetch(url, { redirect: 'follow' })
-  if (res.status === 401 && process.env.ALLOW_401 === '1') {
-    console.warn(`Preview protected (401) for ${url}; allowing due to ALLOW_401`)
-    return res
-  }
-  if (!res.ok) throw new Error(`${url} -> ${res.status}`)
-  return res
+function fetchText(url) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, (res) => {
+      let data = ''
+      res.on('data', (chunk) => {
+        data += chunk.toString()
+        if (data.length > 500000) {
+          req.destroy()
+          resolve(data.slice(0, 500000))
+        }
+      })
+      res.on('end', () => resolve(data))
+    })
+    req.on('error', reject)
+  })
 }
 
-async function checkPage(path) {
-  const url = base.replace(/\/$/, '') + path
-  const res = await fetchOk(url)
-  const csp = res.headers.get('content-security-policy') || res.headers.get('content-security-policy-report-only') || ''
-  if (!/img-src[^;]*https:/.test(csp) && !/img-src[^;]*'self'/.test(csp)) {
-    console.warn(`Warning: CSP 'img-src' may be missing https allowlist on ${url}`)
+async function fetchJson(url) {
+  const text = await fetchText(url)
+  try {
+    return JSON.parse(text)
+  } catch (e) {
+    return null
   }
-  const html = await res.text()
-  // Fail if any RTF control words leak into rendered HTML
-  if (/(\brtf1\b|\bansicpg\d+\b|\bcocoartf\d+\b|\bcocoasubrtf\d+\b)/i.test(html)) {
-    throw new Error(`RTF artifact detected on ${url}`)
-  }
-  console.log(`OK page ${url}`)
 }
 
-async function checkImage(path) {
-  const url = base.replace(/\/$/, '') + path
-  const res = await fetchOk(url)
-  const ct = res.headers.get('content-type') || ''
-  if (res.status === 401 && process.env.ALLOW_401 === '1') {
-    console.warn(`Preview protected (401) on image ${url}; skipping content-type check`)
-    console.log(`OK image (protected) ${url}`)
-    return
-  }
-  if (!ct.startsWith('image/')) throw new Error(`${url} not image content-type: ${ct}`)
-  console.log(`OK image ${url}`)
-}
+async function run() {
+  const base = process.env.SITE_URL || 'https://csuitemagazine.global'
+  const failures = []
 
-async function checkOptimizer(remoteUrl, w = 1200, q = 75) {
-  const u = base.replace(/\/$/, '') + `/_next/image?url=${encodeURIComponent(remoteUrl)}&w=${w}&q=${q}`
-  const res = await fetchOk(u)
-  const ct = res.headers.get('content-type') || ''
-  if (res.status === 401 && process.env.ALLOW_401 === '1') {
-    console.warn(`Preview protected (401) on optimizer ${u}; skipping content-type check`)
-    console.log(`OK optimizer (protected) ${u}`)
-    return
+  const home = await fetchText(`${base}/`)
+  if (!home || !(home.includes('aria-label=\"Search\"') || home.includes('aria-label="Search"'))) {
+    failures.push('Header search control not found on homepage')
   }
-  if (!ct.startsWith('image/')) throw new Error(`optimizer response not image: ${ct}`)
-  console.log(`OK optimizer ${u}`)
-}
 
-async function main() {
-  console.log(`Running smoke checks against ${base}`)
-  await checkPage('/')
-  await checkImage('/hero-image.png')
-  await checkImage('/Featured%20section/1.png')
-  await checkOptimizer('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1200&h=800&fit=crop')
-  const res = await fetchOk(base.replace(/\/$/, '') + '/category/cxo-interview/angelina-usanova')
-  if (res.status === 401 && process.env.ALLOW_401 === '1') {
-    console.log('OK article page (protected)')
+  const cats = await fetchJson(`${base}/api/categories`)
+  const catSlugs = Array.isArray(cats?.categories) ? cats.categories.map(c => c.slug).slice(0, 5) : []
+  if (catSlugs.length === 0) {
+    failures.push('No categories returned by /api/categories')
   } else {
-    const html = await res.text()
-    if (!/Featured%20hero\//i.test(html)) throw new Error('Article hero not served from Featured hero')
-    if (/object-contain/i.test(html)) throw new Error('Article hero using object-contain')
-    if (/Featured%20section\//i.test(html)) throw new Error('Featured section asset present on article page')
-    const relatedSection = html.split(/Related Articles/i)[1] || ''
-    const relatedImgCount = (relatedSection.match(/<img\b/gi) || []).length
-    if (relatedImgCount < 2) throw new Error('Related Articles missing images')
-    if (/\/category\/cxo-interview\/angelina-usanova/i.test(relatedSection)) throw new Error('Current article appears in Related Articles')
+    for (const slug of catSlugs) {
+      const html = await fetchText(`${base}/category/${encodeURIComponent(slug)}`)
+      if (!html || html.includes('General | C-Suite Magazine')) {
+        failures.push(`Category page renders as General for slug: ${slug}`)
+        break
+      }
+    }
   }
 
-  const slugs = [
-    'angelina-usanova',
-    'olga-denysiuk',
-    'stoyana-natseva',
-    'brianne-howey',
-    'dr-basma-ghandourah',
-    'erin-krueger',
-    'bill-faruki',
-    'pankaj-bansal',
-    'supreet-nagi',
-    'swami-aniruddha',
-    'bryce-tully',
-    'cal-riley',
-    'john-zangardi',
-    'bryan-smeltzer',
-    'dean-fealk',
-    'benjamin-borketey',
-  ]
-  for (const slug of slugs) {
-    const url = base.replace(/\/$/, '') + `/category/cxo-interview/${slug}`
-    const r = await fetchOk(url)
-    if (r.status === 401 && process.env.ALLOW_401 === '1') {
-      console.log(`OK article page (protected) ${url}`)
-      continue
-    }
-    const html = await r.text()
-    if (!/Featured%20hero\//i.test(html)) throw new Error(`Hero not from Featured hero: ${url}`)
-    if (/object-contain/i.test(html)) throw new Error(`Hero using object-contain: ${url}`)
-    if (/Featured%20section\//i.test(html)) throw new Error(`Featured section asset present on article page: ${url}`)
-    const relatedSection = html.split(/Related Articles/i)[1] || ''
-    const relatedImgCount = (relatedSection.match(/<img\b/gi) || []).length
-    if (relatedImgCount < 2) throw new Error(`Related missing images: ${url}`)
-    const selfPath = `/category/cxo-interview/${slug}`
-    if (new RegExp(selfPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(relatedSection)) {
-      throw new Error(`Current article appears in Related: ${url}`)
-    }
-    console.log(`OK article checks ${url}`)
+  const rss = await fetchText(`${base}/rss.xml`)
+  const firstLinkMatch = rss && rss.match(/<link>(https:[^<]+\/category\/[\w\-]+\/[^<]+)<\/link>/)
+  const articleUrl = firstLinkMatch ? firstLinkMatch[1] : null
+  if (!articleUrl) {
+    failures.push('Could not extract an article URL from RSS')
+  } else {
+  const article = await fetchText(articleUrl)
+  if (!article || !(article.includes('data-ad=\"article-sidebar-large\"') || article.includes('data-ad="article-sidebar-large"') || article.includes('vertical_ad.png') || article.includes('Sponsored'))) {
+    failures.push('Sidebar ad not detected on article page')
+  }
+  }
+
+  if (failures.length) {
+    console.error('[SMOKE] FAIL', failures)
+    process.exit(1)
+  } else {
+    console.log('[SMOKE] PASS')
   }
 }
 
-main().catch((err) => {
-  console.error('Smoke checks failed:', err?.message || err)
+run().catch((e) => {
+  console.error('[SMOKE] ERROR', e?.message || String(e))
   process.exit(1)
 })

@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { getCountryFlag } from './CountrySelector'
+import Search from '@/components/Search'
 // Fetch categories via server API to avoid client-side Sanity failures
 
 export default function Navigation() {
@@ -192,21 +193,21 @@ export default function Navigation() {
 
             {/* Country trigger (top-right) */}
             <div className="absolute right-4 top-3 flex items-center gap-3">
+              {/* Render Search unconditionally to ensure SSR visibility */}
+              <Search />
+              {/* Flag button opens locale popup */}
               {!isLoading && (
-                <>
-                  {/* Flag button opens locale popup */}
-                  <button
-                    onClick={() => document.dispatchEvent(new Event('csuite:open-locale-popup'))}
-                    className="px-3 py-2 min-w-[44px] min-h-[44px] text-white hover:text-[#c8ab3d] transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]"
-                    title="Change country"
-                    aria-label="Change country"
-                    aria-haspopup="dialog"
-                  >
-                    <span className="text-2xl leading-none" style={{ textShadow: '0 1px 1px rgba(0,0,0,0.6)' }}>
-                      {getCountryFlag(countryCode)}
-                    </span>
-                  </button>
-                </>
+                <button
+                  onClick={() => document.dispatchEvent(new Event('csuite:open-locale-popup'))}
+                  className="px-3 py-2 min-w-[44px] min-h-[44px] text-white hover:text-[#c8ab3d] transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]"
+                  title="Change country"
+                  aria-label="Change country"
+                  aria-haspopup="dialog"
+                >
+                  <span className="text-2xl leading-none" style={{ textShadow: '0 1px 1px rgba(0,0,0,0.6)' }}>
+                    {getCountryFlag(countryCode)}
+                  </span>
+                </button>
               )}
             </div>
           </div>
@@ -219,7 +220,7 @@ export default function Navigation() {
         </div>
       
 
-      {/* Search Bar removed per request */}
+      
 
       {/* Horizontal Category Menu - Clean Minimal Design */}
       <div className="border-b border-gray-200 bg-white">
@@ -231,12 +232,12 @@ export default function Navigation() {
             aria-label="Article categories"
           >
             <div className="category-scroll-content-minimal">
-              {allCategories.map((category) => {
-                const categoryPath = `/category/${encodeURIComponent(category.slug || category.title)}`
+              {allCategories.filter((c: any) => typeof c?.slug === 'string' && c.slug.length > 0).map((category) => {
+                const categoryPath = `/category/${encodeURIComponent(category.slug)}`
                 const isActive = pathname === categoryPath
                 return (
                   <Link
-                    key={category.slug || category.title}
+                    key={category.slug}
                     href={categoryPath}
                     prefetch
                     className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${

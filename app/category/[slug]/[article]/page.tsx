@@ -62,7 +62,7 @@ async function fetchWriterBySlug(slug: string) {
 
 async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`)
-  const query = `*[_type in ["post","article"] && (slug.current == $slug || slug == $slug) && isHidden != true][0] {
+  const query = `*[_type in ["post","article","csa"] && (slug.current == $slug || slug == $slug) && isHidden != true][0] {
     _id,
     title,
     slug,
@@ -78,9 +78,12 @@ async function getPost(slug: string): Promise<Post | null> {
     "categories": categories[]->{title, slug, color},
     tags,
     contentPillar,
+    articleVariant,
     views,
     body,
-    seo
+    seo,
+    adAnchorKeywords,
+    popupAd{ targetUrl, image, alt }
   }`
   try {
     const p = await client.fetch(query, { slug })
@@ -119,8 +122,15 @@ async function getPost(slug: string): Promise<Post | null> {
 
 async function getPostFromExports(slug: string): Promise<Post | null> {
   try {
-    const filePath = path.join(process.cwd(), 'exports', 'posts', `${slug}.json`)
-    const raw = fs.readFileSync(filePath, 'utf8')
+    // Prefer public copy for serverless/preview packaging
+    const publicPath = path.join(process.cwd(), 'public', 'exports', 'posts', `${slug}.json`)
+    let raw = ''
+    try {
+      raw = fs.readFileSync(publicPath, 'utf8')
+    } catch {
+      const filePath = path.join(process.cwd(), 'exports', 'posts', `${slug}.json`)
+      raw = fs.readFileSync(filePath, 'utf8')
+    }
     const data = JSON.parse(raw)
     const writerName = (data?.writer?.name) || (data?.author?.name) || String(data?.title || '').trim() || ''
     const writerSlug = (data?.writerSlug) || (data?.writer?.slug?.current) || (data?.author?.slug?.current) || slug
@@ -243,18 +253,8 @@ async function getRelatedPosts(
 
 
 async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' | 'views'>[]> {
-  // Show 5 latest articles from Spotlight (sorted by publishedAt desc)
-  const spotlightQuery = `*[_id == "spotlightConfig"][0].items[]->{
-    _id,
-    title,
-    slug,
-    views,
-    publishedAt,
-    "categories": categories[]->{title, slug}
-  } | order(publishedAt desc)[0...5]`
-
-  // Fallback to most viewed if spotlight is empty
-  const fallbackQuery = `*[_type == "post" && defined(views) && isHidden != true] | order(views desc)[0...5] {
+  // Requirement: strictly 5 most recent CXO interview articles
+  const interviewQuery = `*[_type == "post" && isHidden != true && "cxo-interview" in categories[]->slug.current] | order(publishedAt desc)[0...5] {
     _id,
     title,
     slug,
@@ -263,11 +263,8 @@ async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' |
   }`
 
   try {
-    const spotlight = await client.fetch(spotlightQuery)
-    if (spotlight && spotlight.length > 0) {
-      return spotlight
-    }
-    return await client.fetch(fallbackQuery)
+    const interviews = await client.fetch(interviewQuery)
+    return Array.isArray(interviews) ? interviews : []
   } catch (e) {
     return []
   }
@@ -288,6 +285,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     }
 
     const isCXOInterview = String(categorySlug) === 'cxo-interview'
+    const isCompanySponsored = String(categorySlug) === 'company-sponsored' || (
+      Array.isArray(post?.categories)
+        ? post.categories.some((c: any) => String(c?.slug?.current || c?.slug || '').toLowerCase() === 'company-sponsored')
+        : false
+    )
     const isSpotlight = Array.isArray(post?.categories)
       ? post.categories.some((c: any) => /spotlight|cxo[-_ ]?spotlight/i.test(String(c?.slug?.current || '')) || /spotlight/i.test(String(c?.title || '')))
       : false
@@ -371,7 +373,9 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     const readTime = Math.max(1, Math.round(wordCount / 200))
 
     // Only use Featured hero images for CXO interview articles
-    const featuredHeroSrc = isCXOInterview || isSpotlight ? resolveFeaturedHeroImage(post) : null
+    const featuredHeroSrc = isCompanySponsored
+      ? null
+      : (isCXOInterview || isSpotlight ? resolveFeaturedHeroImage(post) : null)
     let featuredHeroAspect: number | null = null
     if (featuredHeroSrc) {
       featuredHeroAspect = 16 / 9
@@ -403,7 +407,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       }
     }
 
-    const interviewMode = detectInterviewMode(post)
+    const interviewMode = String((post as any)?.articleVariant || '').toLowerCase() === 'interview' ? true : detectInterviewMode(post)
 
     const firstBlockText = Array.isArray((post as any)?.body)
       ? (() => {
@@ -468,6 +472,18 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
               })),
             }}
           />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: (() => {
+                const kws = Array.isArray((post as any)?.adAnchorKeywords) ? (post as any).adAnchorKeywords.filter((x: any) => !!x).map((x: any) => String(x)) : []
+                const target = (post as any)?.popupAd?.targetUrl || ''
+                const img = (post as any)?.popupAd?.image ? urlFor((post as any).popupAd.image).auto('format').url() : ''
+                const alt = (post as any)?.popupAd?.alt || 'Sponsored'
+                const cfg = { keywords: kws, popup: { imageUrl: img, targetUrl: target, alt } }
+                return `window.__AD_CONFIG__=${JSON.stringify(cfg)}`
+              })()
+            }}
+          />
           <Breadcrumbs
             items={[
               { label: 'Home', href: '/' },
@@ -486,9 +502,18 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       <h1 className="text-3xl md:text-5xl font-serif font-black text-gray-900 leading-tight tracking-tight">
                         {sanitizeTitle(post.title)}
                       </h1>
-                      {Array.isArray(post.tags) && post.tags.length > 0 && (
-                        <TagChips tags={post.tags} className="mt-3" size="sm" variant="blue" />
-                      )}
+                      {(() => {
+                        const rawTags: string[] = Array.isArray(post.tags)
+                          ? (post.tags as any[]).map((x) => String(x || ''))
+                          : []
+                        const tagsFiltered = isCompanySponsored
+                          ? rawTags.filter((t: string) => t.toLowerCase() !== 'sponsored')
+                          : rawTags
+                        return tagsFiltered.length > 0 ? (
+                          <TagChips tags={tagsFiltered} className="mt-3" size="sm" variant="blue" />
+                        ) : null
+                      })()}
+                      {/* Opinion variant renders standard layout; interview handled by interviewMode */}
                       {post.writer && (
                         <div className="flex items-center gap-3 mt-3" aria-label={`By ${post.writer.name}`}>
                           <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
@@ -521,9 +546,8 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                         </div>
                       )}
                       <div className="flex items-center gap-2 text-sm text-gray-600 mt-3">
-                        {/* Keep read time separate; do not attach writer name to it */}
                         <span>{readTime} min read</span>
-                        {post.categories && post.categories.length > 0 && (
+                        {!isCompanySponsored && post.categories && post.categories.length > 0 && (
                           <span className="flex items-center gap-2">
                             <span aria-hidden>•</span>
                             <Link href={`/category/${post.categories[0].slug.current}`} className="font-medium text-[#082945] hover:text-[#0a3350] transition-colors">
@@ -531,8 +555,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                             </Link>
                           </span>
                         )}
-                        {/* Do not repeat writer attribution here; shown above with avatar */}
-                        {/* Tags are rendered as chips under the heading */}
                       </div>
 
                       <SocialShare
@@ -595,10 +617,42 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                         <PortableBody value={cleanedBody} interviewMode={interviewMode} />
                       )}
                     </div>
+
+                    {/* Company Sponsored Inline Ads */}
+                    {isCompanySponsored && (
+                      <div className="mt-8 space-y-8">
+                        {/* Half page inline ad (300x600) */}
+                        <div className="relative w-full mx-auto" style={{ aspectRatio: '300/600' }}>
+                          <Link href={"https://www.brabus.com/en-int/cars/classics/C4S192C.html"} target="_blank" rel="noopener noreferrer" className="block">
+                            <OptimizedImage
+                              src={'/vertical_ad.png'}
+                              alt={'Sponsored'}
+                              fill
+                              className="object-contain rounded"
+                              sizes="(max-width: 1024px) 100vw, 300px"
+                              priority
+                            />
+                          </Link>
+                        </div>
+                        {/* Quarter page inline ad (300x250) */}
+                        <div className="relative w-full mx-auto" style={{ aspectRatio: '300/250' }}>
+                          <Link href={"https://www.brabus.com/en-int/cars/classics/C4S192C.html"} target="_blank" rel="noopener noreferrer" className="block">
+                            <OptimizedImage
+                              src={'/vertical_ad.png'}
+                              alt={'Sponsored'}
+                              fill
+                              className="object-contain rounded"
+                              sizes="(max-width: 1024px) 100vw, 300px"
+                              priority
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Sidebar */}
-                  <div className="space-y-6">
+                    {/* Sidebar */}
+                    <div className="space-y-6" data-ad="article-sidebar-large">
                     {/* Writer */}
                     {post.writer && (
                       <div className="bg-white border border-gray-200 rounded-lg p-6">
@@ -644,9 +698,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
 
 
                     {/* Sidebar Ad (Vertical) */}
-                    <div className="bg-transparent border border-gray-200/30 rounded-lg p-3">
-                      <Ad placement="article-sidebar-large" />
-                    </div>
+                    {!isCompanySponsored && (
+                      <div className="bg-transparent border border-gray-200/30 rounded-lg p-3">
+                        <Ad placement="article-sidebar-large" />
+                      </div>
+                    )}
 
                     {/* Related Articles */}
                     {relatedPosts.length > 0 && (

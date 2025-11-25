@@ -33,15 +33,16 @@ export default async function MagazineGallery() {
       const data = await client.fetch(
         `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{
           cardCount,
-          items[]->{ _id, title, slug, mainImage, "primaryCategory": categories[0]->{ slug } }
+          items[]->{ _id, title, slug, mainImage, spotlightImage, "primaryCategory": categories[0]->{ slug } }
         }`
       )
       if (data && Array.isArray(data.items) && data.items.length > 0) {
         desiredCount = desiredCount ?? (typeof data.cardCount === 'number' ? data.cardCount : undefined)
         items = data.items
           .filter((p: any) => p !== null && p !== undefined) // Filter out null/undefined elements
-          .map((p: { title?: string; slug?: { current?: string } | null; mainImage?: unknown; primaryCategory?: { slug?: { current?: string } } }, idx: number) => {
-            const image = p?.mainImage ? urlFor(p.mainImage as unknown).width(1200).height(1800).url() : `/Featured%20section/${idx + 1}.png`
+          .map((p: { title?: string; slug?: { current?: string } | null; mainImage?: unknown; spotlightImage?: unknown; primaryCategory?: { slug?: { current?: string } } }, idx: number) => {
+            const chosen = (p as any)?.spotlightImage || (p as any)?.mainImage
+            const image = chosen ? urlFor(chosen as unknown).width(1200).height(1800).url() : `/Featured%20section/${idx + 1}.png`
             const cat = p?.primaryCategory?.slug?.current
             const postSlug = p?.slug?.current
             const href = (cat && postSlug) ? `/category/${cat}/${postSlug}` : '/archive'

@@ -19,8 +19,6 @@ const dataset = idRegex.test(String(datasetRaw || ''))
 
 export default defineCliConfig({
   api: { projectId, dataset },
-  // Set a non-interactive hosted Studio hostname; override via env when needed
-  studioHost: process.env.SANITY_STUDIO_HOSTNAME || 'ceo-magazine-2f93fcy8',
-  // Enable auto-updates (per current CLI expectation)
-  deployment: { autoUpdates: true },
+  studioHost: process.env.SANITY_STUDIO_HOSTNAME || 'csuitemagazine-global',
+  deployment: { autoUpdates: true, appId: 'jpr8xcy4rfm8fomkxotywboi' },
 })

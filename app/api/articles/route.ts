@@ -74,8 +74,14 @@ async function upsertArticle(payload: ArticlePayload) {
     ...(payload.body ? { body: payload.body } : {}),
     ...(payload.readTime ? { readTime: payload.readTime } : {}),
     ...(payload.publishedAt ? { publishedAt: payload.publishedAt } : {}),
-    ...(payload.seo?.metaTitle ? { metaTitle: payload.seo.metaTitle } : {}),
-    ...(payload.seo?.metaDescription ? { metaDescription: payload.seo.metaDescription } : {}),
+    ...(payload.seo && (payload.seo.metaTitle || payload.seo.metaDescription)
+      ? {
+          seo: {
+            ...(payload.seo.metaTitle ? { metaTitle: payload.seo.metaTitle } : {}),
+            ...(payload.seo.metaDescription ? { metaDescription: payload.seo.metaDescription } : {}),
+          },
+        }
+      : {}),
   }
 
   // If ID provided, patch existing

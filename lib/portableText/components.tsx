@@ -11,9 +11,20 @@ import { slugify, extractTextFromChildren } from './textUtils'
 export const portableTextComponents: PortableTextComponents = {
     types: {
         image: ({ value }) => {
-            if (!value?.asset) return null
-            const src = urlFor(value).width(1200).height(800).auto('format').url()
-            const alt = value?.alt || 'Image'
+            let src: string | undefined
+            const asset: any = (value as any)?.asset
+            if (asset && typeof asset.url === 'string') {
+                src = asset.url
+            } else if (typeof (value as any)?.url === 'string') {
+                src = (value as any).url
+            } else if ((value as any)?.asset) {
+                src = urlFor(value).width(1200).height(800).auto('format').url()
+            } else if (typeof value === 'string') {
+                const s = String(value).trim()
+                if (s) src = s
+            }
+            if (!src) return null
+            const alt = (value as any)?.alt || 'Image'
             return (
                 <div className="relative w-full h-[400px] md:h-[500px] my-8 rounded-lg overflow-hidden">
                     <OptimizedImage

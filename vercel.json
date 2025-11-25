@@ -8,6 +8,7 @@
     "NEXT_PUBLIC_SANITY_API_VERSION": "2024-10-01"
   },
   "redirects": [
-    {"source": "/(.*)", "destination": "https://csuitemagazine.global/$1", "permanent": true, "has": [{"type": "host", "value": "www.csuitemagazine.global"}]}
+    {"source": "/(.*)", "destination": "https://csuitemagazine.global/$1", "permanent": true, "has": [{"type": "host", "value": "www.csuitemagazine.global"}]},
+    {"source": "/(.*)", "destination": "https://ceo-magazine-2f93fcy8.sanity.studio/$1", "permanent": false, "has": [{"type": "host", "value": "studio.csuitemagazine.global"}]}
   ]
 }

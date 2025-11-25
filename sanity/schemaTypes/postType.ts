@@ -117,6 +117,28 @@ export const postType = defineType({
       validation: (Rule) => Rule.required().min(3).max(3),
     }),
     defineField({
+      name: 'contentPillar',
+      type: 'string',
+      title: 'Content Pillar',
+      group: 'meta',
+    }),
+    // Removed keyPoints (was for placeholder variant)
+    defineField({
+      name: 'articleVariant',
+      type: 'string',
+      title: 'Article Variant',
+      description: 'Choose the rendering type',
+      options: {
+        list: [
+          { title: 'Interview', value: 'interview' },
+          { title: 'Opinion', value: 'opinion' },
+        ],
+        layout: 'radio'
+      },
+      group: 'meta',
+      initialValue: 'opinion',
+    }),
+    defineField({
       name: 'isFeatured',
       type: 'boolean',
       title: 'Featured Article',
@@ -129,6 +151,12 @@ export const postType = defineType({
       type: 'number',
       title: 'Read Time (minutes)',
       description: 'Estimated reading time in minutes',
+      group: 'meta',
+    }),
+    defineField({
+      name: 'articleType',
+      type: 'string',
+      title: 'Article Type',
       group: 'meta',
     }),
     defineField({
@@ -157,9 +185,40 @@ export const postType = defineType({
     }),
     defineField({
       name: 'body',
-      type: 'blockContent',
+      type: 'array',
       title: 'Article Content',
+      description: 'Rich text blocks and inline images',
       group: 'content',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'H1', value: 'h1' },
+            { title: 'H2', value: 'h2' },
+            { title: 'H3', value: 'h3' },
+            { title: 'H4', value: 'h4' },
+            { title: 'Quote', value: 'blockquote' },
+          ],
+          lists: [{ title: 'Bullet', value: 'bullet' }],
+          marks: {
+            decorators: [
+              { title: 'Strong', value: 'strong' },
+              { title: 'Emphasis', value: 'em' },
+              { title: 'Underline', value: 'underline' },
+            ],
+            annotations: [
+              {
+                title: 'URL',
+                name: 'link',
+                type: 'object',
+                fields: [{ title: 'URL', name: 'href', type: 'url' }],
+              },
+            ],
+          },
+        }),
+        defineArrayMember({ type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', type: 'string', title: 'Alternative text' }] }),
+      ],
       validation: (Rule) => Rule.required().custom((value) => {
         const blocks = Array.isArray(value) ? value : []
         const textBlocks = blocks.filter((b: any) => b?._type === 'block')
@@ -201,23 +260,41 @@ export const postType = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'adAnchorKeywords',
+      type: 'array',
+      title: 'Ad Anchor Keywords',
+      description: 'Words or phrases that should trigger the popup on scroll.',
+      of: [defineArrayMember({ type: 'string' })],
+      group: 'meta',
+    }),
+    defineField({
+      name: 'popupAd',
+      type: 'object',
+      title: 'Popup Ad',
+      group: 'meta',
+      fields: [
+        defineField({ name: 'image', type: 'image', title: 'Image' }),
+        defineField({ name: 'targetUrl', type: 'url', title: 'Target URL' }),
+        defineField({ name: 'alt', type: 'string', title: 'Alt Text' }),
+      ],
+    }),
   ],
   preview: {
     select: {
       title: 'title',
       writer: 'writer.name',
       media: 'mainImage',
-      isFeatured: 'isFeatured',
       views: 'views',
       readTime: 'readTime',
     },
     prepare(selection) {
-      const {writer, isFeatured, views, readTime} = selection as any
+      const {writer, views, readTime} = selection as any
       const v = typeof views === 'number' && views > 0 ? `${(views / 1_000_000).toFixed(1)}M views` : '—'
       const rt = typeof readTime === 'number' && readTime > 0 ? `${readTime} min` : ''
       return {
         ...selection,
-        subtitle: `${isFeatured ? '⭐ ' : ''}${writer ? `by ${writer}` : 'No writer'}${rt ? ` • ${rt}` : ''} • ${v}`
+        subtitle: `${writer ? `by ${writer}` : 'No writer'}${rt ? ` • ${rt}` : ''} • ${v}`
       }
     },
   },

@@ -5,16 +5,15 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { client } from '@/lib/sanity'
-import { articleImageService } from '@/lib/articleImageService'
 
 export async function POST(request: NextRequest) {
   try {
     const payload = await request.json()
     const { _id, _type, articleType } = payload
 
-    // Only process article creations
-    if (_type !== 'article') {
-      return NextResponse.json({ status: 'ignored', reason: 'Not an article' })
+    // Only process post creations (align with schema)
+    if (_type !== 'post') {
+      return NextResponse.json({ status: 'ignored', reason: 'Not a post' })
     }
 
     // Skip spotlight articles (business rule)
@@ -26,23 +25,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch complete article data
-    const article = await client.fetch(`
-      *[_id == $id][0] {
-        _id,
-        title,
-        excerpt,
-        articleType,
-        category->{
-          title
-        },
-        featuredImage{
-          asset->{
-            _id,
-            url
-          }
-        }
-      }
-    `, { id: _id })
+    const article = await client.fetch(
+      `*[_id == $id][0]{ _id, title, excerpt, articleType, mainImage{asset->{_id,url}} }`,
+      { id: _id }
+    )
 
     if (!article) {
       return NextResponse.json(
@@ -51,38 +37,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate unique image for new article
-    const newImageUrl = await articleImageService.generateUniqueImage(article)
-    
-    if (newImageUrl) {
-      // Update article with generated image
-      await client
-        .patch(_id)
-        .set({
-          featuredImage: {
-            _type: 'image',
-            asset: {
-              _type: 'reference',
-              _ref: `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-            },
-            generatedUrl: newImageUrl,
-            generatedAt: new Date().toISOString()
-          }
-        })
-        .commit()
-
-      return NextResponse.json({
-        status: 'success',
-        articleId: _id,
-        imageUrl: newImageUrl,
-        method: 'auto-generated'
-      })
-    }
-
-    return NextResponse.json({
-      status: 'no_change',
-      reason: 'Article already has unique image'
-    })
+    // No-op: image generation disabled to avoid invalid asset refs. Keep webhook healthy.
+    return NextResponse.json({ status: 'ignored', reason: 'Image generation disabled' })
 
   } catch (error) {
     console.error('Article webhook error:', error)

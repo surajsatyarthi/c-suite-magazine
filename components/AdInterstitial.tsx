@@ -24,10 +24,35 @@ export default function AdInterstitial() {
   const [hasInteracted, setHasInteracted] = useState<boolean>(false)
   // Treat category article pages as eligible for interstitials (remove legacy /article route)
   const isCategoryArticle = !!pathname && /^\/category\/[^/]+\/[^/]+$/.test(pathname)
+  const categoryFromPath = (() => {
+    try {
+      const parts = String(pathname || '').split('/')
+      return parts[2] || ''
+    } catch { return '' }
+  })()
+  const isCompanySponsored = /^(company-sponsored)$/i.test(categoryFromPath)
   const enabled = !!(forceOpen || isCategoryArticle)
+  const cooldownMs = (() => {
+    try {
+      const raw = String(process.env.NEXT_PUBLIC_AD_COOLDOWN_MS || '').trim()
+      return raw === '' ? 1000 : (parseInt(raw, 10) || 1000)
+    } catch {
+      return 1000
+    }
+  })()
+  const keywordCap = (() => {
+    try {
+      return parseInt(String(process.env.NEXT_PUBLIC_AD_KEYWORD_CAP || '').trim(), 10) || 3
+    } catch {
+      return 3
+    }
+  })()
+  const AD_CONFIG: any = (typeof window !== 'undefined' ? (window as any).__AD_CONFIG__ : null)
+  const primaryImage = AD_CONFIG?.popup?.imageUrl || '/popup-ad.png'
+  const primaryTarget = AD_CONFIG?.popup?.targetUrl || AD_LINK
+  const primaryAlt = AD_CONFIG?.popup?.alt || 'Sponsored'
   const ADS: PopupAd[] = [
-    // Use clean filename first; keep variant as secondary
-    { imageUrl: '/popup-ad.png', targetUrl: AD_LINK, alt: 'Sponsored' },
+    { imageUrl: primaryImage, targetUrl: primaryTarget, alt: primaryAlt },
     { imageUrl: '/popup-ad%202.png', targetUrl: GULFSTREAM_LINK, alt: 'Sponsored' },
   ]
   // Allow legacy/variant filenames with spaces or hyphens
@@ -46,6 +71,8 @@ export default function AdInterstitial() {
   const [adIndex, setAdIndex] = useState<number>(0)
   const [aspectRatio, setAspectRatio] = useState<string>('970/550')
   const shownRef = useRef(false)
+  const lastShownAtRef = useRef<number>(0)
+  const keywordTriggerCountRef = useRef<number>(0)
   // Cached article element to avoid repeated DOM queries
   const cachedArticleElRef = useRef<HTMLElement | null>(null)
   
@@ -74,6 +101,7 @@ export default function AdInterstitial() {
       setAd({ imageUrl: src, targetUrl: ADS[index]?.targetUrl || AD_LINK, alt: 'Sponsored' })
       setShow(true)
       setAdIndex(index)
+      lastShownAtRef.current = Date.now()
       shownRef.current = true
       try { onReady?.() } catch {}
     }
@@ -84,6 +112,7 @@ export default function AdInterstitial() {
       setAd({ imageUrl: fallbackDataUri, targetUrl: ADS[index]?.targetUrl || AD_LINK, alt: 'Sponsored' })
       setShow(true)
       setAdIndex(index)
+      lastShownAtRef.current = Date.now()
       shownRef.current = true
       try { onReady?.() } catch {}
       return
@@ -99,10 +128,11 @@ export default function AdInterstitial() {
         img2.onerror = () => {
           setAspectRatio('970/550')
           setAd({ imageUrl: fallbackDataUri, targetUrl: ADS[index]?.targetUrl || AD_LINK, alt: 'Sponsored' })
-          setShow(true)
-          setAdIndex(index)
-          shownRef.current = true
-          try { onReady?.() } catch {}
+      setShow(true)
+      setAdIndex(index)
+      lastShownAtRef.current = Date.now()
+      shownRef.current = true
+      try { onReady?.() } catch {}
         }
         img2.src = alt
       } else {
@@ -159,16 +189,26 @@ export default function AdInterstitial() {
           img.removeEventListener('load', handler)
         }
       }
+      try { sponsorObserver?.disconnect() } catch {}
     }
-    const reveal = () => {
+    const reveal = (fromKeyword?: boolean) => {
       // Hard gate: do not reveal the FIRST ad until locale popup is dismissed
       if (!localeReady) return
       // Require a user interaction before first reveal (unless force-open)
       if (!hasInteracted && !forceOpen) return
       // Safety net: if popup is present in DOM or marked open, bail
       if (isPopupPresentInDOM()) return
-      if (shownRef.current) return
+      if (fromKeyword && isCompanySponsored) {
+        const now = Date.now()
+        if (now - lastShownAtRef.current < cooldownMs) return
+        if (keywordTriggerCountRef.current >= keywordCap) return
+      } else {
+        if (shownRef.current) return
+      }
       loadAd(0)
+      if (fromKeyword && isCompanySponsored) {
+        keywordTriggerCountRef.current = keywordTriggerCountRef.current + 1
+      }
     }
 
     // Homepage disabled: no immediate reveal on home
@@ -210,7 +250,7 @@ export default function AdInterstitial() {
       
       scrollTimeout = setTimeout(() => {
         scrollTimeout = null
-        if (passedHalf()) reveal()
+        if (passedHalf()) reveal(false)
       }, 50) // Throttle to 50ms for smooth performance
     }
 
@@ -222,7 +262,7 @@ export default function AdInterstitial() {
       
       mutationTimeout = setTimeout(() => {
         mutationTimeout = null
-        if (passedHalf()) reveal()
+        if (passedHalf()) reveal(false)
       }, 100) // Throttle to 100ms
     }
     
@@ -241,7 +281,7 @@ export default function AdInterstitial() {
         if (processedImages.has(img)) continue // Skip already processed images
         
         const handler = () => { 
-          if (!shownRef.current && passedHalf()) reveal() 
+          if (!shownRef.current && passedHalf()) reveal(false) 
         }
         img.addEventListener('load', handler)
         imgListeners.push({ img, handler })
@@ -249,11 +289,42 @@ export default function AdInterstitial() {
       }
     }
 
+    // Sponsor mention anchor trigger for CSA
+    let sponsorObserver: IntersectionObserver | null = null
+    const setupSponsorTrigger = () => {
+      if (!isCompanySponsored) return
+      const el = getArticleEl()
+      if (!el) return
+      // Keywords come from ENV or sensible defaults
+      const raw = String(process.env.NEXT_PUBLIC_SPONSOR_KEYWORDS || '').trim()
+      const defaults = ['sponsor', 'sponsored', 'executive partner', 'partner showcase', 'advertiser', 'brabus', 'patek', 'gulfstream', 'isfacebook2002so']
+      const fromArticle: string[] | null = Array.isArray(AD_CONFIG?.keywords)
+        ? (AD_CONFIG.keywords as any[]).map((x) => String(x || ''))
+        : null
+      const base: string[] = fromArticle && fromArticle.length ? fromArticle : (raw ? raw.split(',') : defaults)
+      const keys = base.map((s: string) => String(s).trim().toLowerCase()).filter(Boolean)
+      const paras = Array.from(el.querySelectorAll('p')) as HTMLParagraphElement[]
+      const target = paras.find(p => {
+        const t = String(p.textContent || '').toLowerCase()
+        return keys.some(k => k && t.includes(k))
+      })
+      if (!target) return
+      sponsorObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            reveal(true)
+          }
+        }
+      }, { threshold: 0.6 })
+      sponsorObserver.observe(target)
+    }
+
     // Kickoff
     window.addEventListener('scroll', onScroll, { passive: true })
     const el = getArticleEl()
     if (el) mo.observe(el, { childList: true, subtree: true })
     attachImageListeners()
+    setupSponsorTrigger()
 
       // Consolidated settling checks using RAF-based scheduling
     let checkCount = 0
@@ -283,7 +354,7 @@ export default function AdInterstitial() {
 
     // Force open for QA still respects locale gating site-wide
     if (forceOpen && localeReady && !isPopupPresentInDOM()) {
-      reveal()
+      reveal(true)
     }
 
     return () => {
@@ -308,11 +379,12 @@ export default function AdInterstitial() {
       <div className="relative bg-black/40 text-white rounded-2xl backdrop-blur-sm shadow-2xl shadow-black/50 border border-white/10 max-w-4xl w-full mx-4 max-h-[90vh] overflow-auto">
         <button
           onClick={() => {
-            if (adIndex === 0) {
-              // Switch to second ad instead of closing
+            if (!isCompanySponsored && adIndex === 0) {
+              // Non-CSA: switch to second ad instead of closing
               loadAd(1)
               setAdIndex(1)
             } else {
+              // CSA: single full popup only; close
               setShow(false)
             }
           }}

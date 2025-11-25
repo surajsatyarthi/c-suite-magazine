@@ -334,6 +334,25 @@
         "type": "array"
       },
       {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 3
+              },
+              {
+                "flag": "max",
+                "constraint": 3
+              }
+            ],
+            "level": "error"
+          }
+        ],
         "description": "Short topical labels displayed on article cards",
         "of": [
           {
@@ -342,6 +361,29 @@
         ],
         "name": "tags",
         "type": "array"
+      },
+      {
+        "name": "contentPillar",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Interview",
+              "value": "interview"
+            },
+            {
+              "title": "Opinion",
+              "value": "opinion"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "opinion",
+        "description": "Choose the rendering type",
+        "name": "articleVariant",
+        "type": "string"
       },
       {
         "initialValue": false,
@@ -355,6 +397,10 @@
         "name": "readTime",
         "type": "number",
         "title": "Read Time (minutes)"
+      },
+      {
+        "name": "articleType",
+        "type": "string"
       },
       {
         "description": "Total words in the article (from source JSON)",
@@ -400,8 +446,111 @@
             "level": "error"
           }
         ],
+        "description": "Rich text blocks and inline images",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object",
+                  "title": "URL"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Emphasis"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bullet"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "H1"
+              },
+              {
+                "value": "h2",
+                "title": "H2"
+              },
+              {
+                "value": "h3",
+                "title": "H3"
+              },
+              {
+                "value": "h4",
+                "title": "H4"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alternative text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
         "name": "body",
-        "type": "blockContent",
+        "type": "array",
         "title": "Article Content"
       },
       {
@@ -431,11 +580,392 @@
         "name": "seo",
         "type": "object",
         "title": "SEO Settings"
+      },
+      {
+        "description": "Words or phrases that should trigger the popup on scroll.",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "adAnchorKeywords",
+        "type": "array"
+      },
+      {
+        "fields": [
+          {
+            "name": "image",
+            "type": "image"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "targetUrl",
+            "type": "url",
+            "title": "Target URL"
+          },
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "popupAd",
+        "type": "object"
       }
     ],
     "name": "post",
     "type": "document",
     "title": "Article"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 200
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Short description for article cards and SEO",
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "to": [
+          {
+            "type": "writer"
+          }
+        ],
+        "name": "writer",
+        "type": "reference"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative text"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "name": "mainImage",
+        "type": "image",
+        "title": "Featured Image"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Use a 2:3 vertical crop for the homepage spotlight card. If empty, mainImage will be used.",
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative text"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "name": "spotlightImage",
+        "type": "image",
+        "title": "Homepage Card Image"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "category"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to category"
+          }
+        ],
+        "name": "categories",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Rich text blocks and inline images",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object",
+                  "title": "URL"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Emphasis"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bullet"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "H1"
+              },
+              {
+                "value": "h2",
+                "title": "H2"
+              },
+              {
+                "value": "h3",
+                "title": "H3"
+              },
+              {
+                "value": "h4",
+                "title": "H4"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alternative text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Article Content"
+      },
+      {
+        "fields": [
+          {
+            "name": "metaTitle",
+            "type": "string"
+          },
+          {
+            "rows": 3,
+            "name": "metaDescription",
+            "type": "text"
+          }
+        ],
+        "name": "seo",
+        "type": "object",
+        "title": "SEO Settings"
+      },
+      {
+        "description": "Words or phrases that should trigger the popup on scroll.",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "adAnchorKeywords",
+        "type": "array"
+      },
+      {
+        "fields": [
+          {
+            "name": "image",
+            "type": "image"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "targetUrl",
+            "type": "url",
+            "title": "Target URL"
+          },
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "popupAd",
+        "type": "object"
+      }
+    ],
+    "name": "csa",
+    "type": "document",
+    "title": "Company Sponsored Article (CSA)"
   },
   {
     "fields": [
@@ -766,28 +1296,12 @@
         "options": {
           "list": [
             {
-              "title": "Article Sidebar (300x250)",
-              "value": "article-sidebar"
-            },
-            {
               "title": "Article Sidebar Large (300x600)",
               "value": "article-sidebar-large"
             },
             {
               "title": "In-Article (728x90 Leaderboard)",
               "value": "in-article"
-            },
-            {
-              "title": "Homepage Top Banner (970x250)",
-              "value": "homepage-banner"
-            },
-            {
-              "title": "Homepage Sidebar (300x250)",
-              "value": "homepage-sidebar"
-            },
-            {
-              "title": "Footer Banner (728x90)",
-              "value": "footer-banner"
             }
           ],
           "layout": "radio"
@@ -798,12 +1312,8 @@
               {
                 "flag": "valid",
                 "constraint": [
-                  "article-sidebar",
                   "article-sidebar-large",
-                  "in-article",
-                  "homepage-banner",
-                  "homepage-sidebar",
-                  "footer-banner"
+                  "in-article"
                 ]
               },
               {
@@ -957,10 +1467,13 @@
             "to": [
               {
                 "type": "post"
+              },
+              {
+                "type": "csa"
               }
             ],
             "type": "reference",
-            "title": "Reference to article"
+            "title": "Reference to article or company sponsored article (csa)"
           }
         ],
         "name": "items",

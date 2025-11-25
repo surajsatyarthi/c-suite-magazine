@@ -25,7 +25,7 @@ export const spotlightConfigType: SchemaTypeDefinition = {
       of: [
         {
           type: 'reference',
-          to: [{ type: 'post' }],
+          to: [{ type: 'post' }, { type: 'csa' }],
         },
       ],
       description: 'Ordered list of posts to feature in the spotlight',

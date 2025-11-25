@@ -18,6 +18,7 @@ export default function SocialShare({ title, url }: SocialShareProps) {
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
+  const whatsappUrl = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`
   
   // Handle copy link to clipboard
   const copyToClipboard = async () => {
@@ -68,6 +69,20 @@ export default function SocialShare({ title, url }: SocialShareProps) {
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+          </svg>
+        </a>
+
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-[#25D366] text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-[#25D366] focus:ring-offset-2 transition-colors"
+          aria-label={`Share "${title}" on WhatsApp (opens in new window)`}
+          role="listitem"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.868-2.03-.967-.273-.099-.472-.149-.671.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.149-.173.198-.297.297-.496.099-.198.05-.372-.025-.521-.075-.149-.671-1.614-.919-2.212-.242-.579-.487-.5-.671-.51-.173-.009-.372-.011-.571-.011-.198 0-.521.074-.794.372-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.099 3.2 5.077 4.487.71.306 1.263.489 1.693.626.712.227 1.36.195 1.872.118.571-.085 1.758-.718 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.123-.272-.198-.57-.347z"/>
+            <path d="M12.004 2C6.486 2 2 6.486 2 12.004c0 2.113.688 4.074 1.865 5.671L3 22l4.418-1.161a10.004 10.004 0 004.586 1.165c5.518 0 10.004-4.486 10.004-10.004S17.522 2 12.004 2zm0 18.27a8.257 8.257 0 01-4.205-1.156l-.302-.18-2.512.661.671-2.453-.196-.317A8.259 8.259 0 013.73 12.004c0-4.56 3.714-8.274 8.274-8.274s8.274 3.714 8.274 8.274-3.714 8.274-8.274 8.274z"/>
           </svg>
         </a>
         

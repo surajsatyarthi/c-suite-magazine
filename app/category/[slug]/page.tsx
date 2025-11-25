@@ -70,9 +70,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: { slug?: string } }): Promise<Metadata> {
-  const slug = typeof params?.slug === 'string' ? params.slug : 'general'
-  const title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
-  const description = `Explore articles about ${slug.replace(/-/g, ' ')}`
+  const slug = typeof params?.slug === 'string' ? params.slug : ''
+  const title = slug ? slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Category'
+  const description = slug ? `Explore articles about ${slug.replace(/-/g, ' ')}` : 'Explore curated articles by category'
   const url = `https://csuitemagazine.global/category/${slug}`
 
   return generateSEOMetadata({

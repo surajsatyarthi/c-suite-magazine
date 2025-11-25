@@ -61,36 +61,30 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title('CXO Features')
-            .filter('_type == "post" && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
+            .filter('_type in ["post","csa"] && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
         ),
-      // CXO Interviews (not featured)
-      S.listItem()
-        .id('cxo-interviews')
-        .title('CXO Interviews (not featured)')
-        .child(
-          S.documentList()
-            .title('CXO Interviews (not featured)')
-            .filter('_type == "post" && "cxo-interview" in categories[]->slug.current && !(_id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, []))')
-            .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
-        ),
-      // Normal Articles (everything not spotlighted)
+      
+      // Articles (not spotlighted)
       S.listItem()
         .id('normal-articles')
-        .title('Normal Articles')
+        .title('All Articles (not spotlighted)')
         .child(
           S.documentList()
-            .title('Normal Articles')
+            .title('All Articles (not spotlighted)')
             .filter('_type == "post" && !(_id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, []))')
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
         ),
+      
+      // Company Sponsored Articles (CSA)
       S.listItem()
-        .title('Featured Articles')
+        .id('csa-articles')
+        .title('CSA Articles')
         .child(
           S.documentList()
-            .title('Featured Articles')
-            .filter('_type == "post" && isFeatured == true')
-            .defaultOrdering([{field: '_updatedAt', direction: 'desc'}])
+            .title('CSA Articles')
+            .filter('_type == "csa"')
+            .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
         ),
       S.documentTypeListItem('post').title('Posts'),
       S.documentTypeListItem('category').title('Categories'),
@@ -105,6 +99,6 @@ export const structure: StructureResolver = (S) =>
         ),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'writer', 'spotlightConfig'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'writer', 'spotlightConfig', 'csa'].includes(item.getId()!),
       ),
     ])

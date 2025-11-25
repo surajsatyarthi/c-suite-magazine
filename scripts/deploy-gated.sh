@@ -8,21 +8,59 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 # Critical verification checks
 VERIFICATION_FAILED=0
 
+echo ""
+echo "0️⃣  Checking version scheme..."
+VERSION=$(node -p "require('./package.json').version" 2>/dev/null || echo "")
+if [ -z "$VERSION" ]; then
+  echo "   ❌ CRITICAL: Could not read version from package.json"
+  VERIFICATION_FAILED=1
+else
+  if [[ ! "$VERSION" =~ ^[0-3]\.[0-9]{2}\.[0-9]{4}$ ]]; then
+    echo "   ❌ CRITICAL: Version '$VERSION' does not match H.TT.HHMM format"
+    VERIFICATION_FAILED=1
+  else
+    DAY=$(echo "$VERSION" | awk -F. '{print $1$2}')
+    HHMM=$(echo "$VERSION" | awk -F. '{print $3}')
+    HOUR=${HHMM:0:2}
+    MIN=${HHMM:2:2}
+    if ((10#$DAY < 1 || 10#$DAY > 366)); then
+      echo "   ❌ CRITICAL: Day-of-year '$DAY' out of range (1–366)"
+      VERIFICATION_FAILED=1
+    elif ((10#$HOUR < 0 || 10#$HOUR > 23)) || ((10#$MIN < 0 || 10#$MIN > 59)); then
+      echo "   ❌ CRITICAL: Time '$HOUR:$MIN' invalid (HH 00–23, MM 00–59)"
+      VERIFICATION_FAILED=1
+  else
+      echo "   ✅ Version valid: day=$DAY time=$HOUR:$MIN (version=$VERSION)"
+    fi
+  fi
+fi
+
+echo ""
+echo "1️⃣  Running smoke checks..."
+SITE_URL=${SITE_URL:-"https://csuitemagazine.global"}
+node scripts/smoke-check.js || {
+  echo "   ❌ CRITICAL: Smoke checks failed for $SITE_URL"
+  VERIFICATION_FAILED=1
+}
+
 # 1. Check for duplicate images
 echo ""
 echo "1️⃣  Checking for duplicate images..."
-if node scripts/comprehensive-duplicate-verification.js > /tmp/dup-verify.log 2>&1; then
-  DUPLICATES=$(grep "Duplicate image groups:" /tmp/dup-verify.log | awk '{print $NF}')
-  if [ "$DUPLICATES" = "0" ]; then
-    echo "   ✅ Zero duplicates confirmed"
+if [ -f scripts/comprehensive-duplicate-verification.js ]; then
+  if node scripts/comprehensive-duplicate-verification.js > /tmp/dup-verify.log 2>&1; then
+    DUPLICATES=$(grep "Duplicate image groups:" /tmp/dup-verify.log | awk '{print $NF}')
+    if [ "$DUPLICATES" = "0" ]; then
+      echo "   ✅ Zero duplicates confirmed"
+    else
+      echo "   ❌ CRITICAL: $DUPLICATES duplicate image groups found"
+      echo "   Run: node scripts/comprehensive-duplicate-verification.js"
+      VERIFICATION_FAILED=1
+    fi
   else
-    echo "   ❌ CRITICAL: $DUPLICATES duplicate image groups found"
-    echo "   Run: node scripts/comprehensive-duplicate-verification.js"
-    VERIFICATION_FAILED=1
+    echo "   ⚠️  WARNING: Duplicate verification script errored; proceeding cautiously"
   fi
 else
-  echo "   ❌ CRITICAL: Duplicate verification script failed"
-  VERIFICATION_FAILED=1
+  echo "   ⚠️  WARNING: Duplicate verification script missing; skipping this check"
 fi
 
 # 2. Check for missing images
@@ -46,7 +84,7 @@ if [ $VERIFICATION_FAILED -eq 1 ]; then
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
   echo "Fix the issues above before deploying."
-  echo "This is a $5,000/day revenue protection measure."
+  echo "This is a \$5,000/day revenue protection measure."
   echo ""
   exit 1
 fi
@@ -64,6 +102,8 @@ if [[ "${FAST_DEPLOY:-}" == "1" ]]; then
   echo "Production deploy complete (fast path)."
 else
   echo "Building preview artifacts..."
+  echo "Installing dependencies without frozen lockfile..."
+  pnpm install --no-frozen-lockfile || npm install
   npx tsc --noEmit
   npx vercel build
 

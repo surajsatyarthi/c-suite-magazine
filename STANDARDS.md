@@ -40,6 +40,17 @@ npm run start      # Start production server
 npm run lint       # Run ESLint
 ```
 
+## Versioning Scheme
+
+- Source of truth: `package.json:version` rendered in footer (`components/Footer.tsx:46`).
+- Format: `H.TT.HHMM` where day-of-year `DDD` is split as `H` (hundreds digit 0–3) and `TT` (last two digits 00–99), and time is 24‑hour `HHMM`.
+- Examples:
+  - Day 328 at 21:54 → `3.28.2154`
+  - Day 115 at 09:07 → `1.15.0907`
+  - Day 5 at 00:00 → `0.05.0000`
+- Constraints: `DDD` must be 1–366; `HH` 00–23; `MM` 00–59.
+- Release step: Update `package.json.version` to this format before deploy.
+
 ### Sanity CMS
 ```bash
 # Studio is embedded at http://localhost:3000/studio
