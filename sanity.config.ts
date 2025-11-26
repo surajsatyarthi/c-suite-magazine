@@ -4,16 +4,18 @@
  * This configuration is used to for the Sanity Studio that’s mounted on the `/app/studio/[[...tool]]/page.tsx` route
  */
 
-import {visionTool} from '@sanity/vision'
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {dashboardTool} from '@sanity/dashboard'
-import {OverviewCountsWidget, QuickLinksWidget} from './sanity/dashboardWidgets'
+import { visionTool } from '@sanity/vision'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { presentationTool } from 'sanity/presentation'
+import { dashboardTool } from '@sanity/dashboard'
+import { OverviewCountsWidget, QuickLinksWidget } from './sanity/dashboardWidgets'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
-import {apiVersion, dataset, projectId} from './sanity/env'
-import {schema} from './sanity/schemaTypes'
-import {structure} from './sanity/structure'
+import { apiVersion, dataset, projectId } from './sanity/env'
+import { table } from '@sanity/table'
+import { schema } from './sanity/schemaTypes'
+import { structure } from './sanity/structure'
 
 export default defineConfig({
   basePath: '/studio',
@@ -23,7 +25,17 @@ export default defineConfig({
   schema,
   document: {},
   plugins: [
-    structureTool({structure}),
+    structureTool({ structure }),
+    table(),
+    presentationTool({
+      title: 'Preview',
+      previewUrl: {
+        origin: typeof location === 'undefined' ? 'http://localhost:3000' : location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://csuitemagazine.global',
+        previewMode: {
+          enable: '/api/draft',
+        },
+      },
+    }),
     dashboardTool({
       widgets: [
         { name: 'overview-counts', component: OverviewCountsWidget, layout: { width: 'medium' } },
@@ -32,6 +44,6 @@ export default defineConfig({
     }),
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
-    visionTool({defaultApiVersion: apiVersion}),
+    visionTool({ defaultApiVersion: apiVersion }),
   ],
 })

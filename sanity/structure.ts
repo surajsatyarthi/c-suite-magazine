@@ -1,4 +1,4 @@
-import type {StructureResolver} from 'sanity/structure'
+import type { StructureResolver } from 'sanity/structure'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -54,17 +54,20 @@ export const structure: StructureResolver = (S) =>
                 ),
             ])
         ),
-      // CXO Features (Homepage Spotlight)
+      // Homepage Spotlight (formerly CXO Features)
       S.listItem()
-        .id('cxo-features')
-        .title('CXO Features')
+        .id('homepage-spotlight')
+        .title('Homepage Spotlight')
         .child(
           S.documentList()
-            .title('CXO Features')
-            .filter('_type in ["post","csa"] && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
+            .title('Homepage Spotlight')
+            .filter('_type == "post" && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
+            .child((documentId) =>
+              S.document().documentId(documentId).schemaType('post')
+            )
         ),
-      
+
       // Articles (not spotlighted)
       S.listItem()
         .id('normal-articles')
@@ -75,7 +78,7 @@ export const structure: StructureResolver = (S) =>
             .filter('_type == "post" && !(_id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, []))')
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
         ),
-      
+
       // Company Sponsored Articles (CSA)
       S.listItem()
         .id('csa-articles')

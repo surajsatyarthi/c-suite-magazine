@@ -60,3 +60,18 @@ See `OPERATIONS_RUNBOOK.md` for step-by-step deployment and post-deploy checks.
 - `STANDARDS.md` — Coding and image policies; Writer-only guidance
 - `OPERATIONAL_RULES.md` — Ops rules (cookies, routing)
 - `README.md` — Quickstart, structure, and external docs
+
+## Content Workflow
+
+### Converting Markdown to Rich Text
+Sanity's Portable Text editor is a "Rich Text" editor (like Word), not a Markdown editor. If you paste raw Markdown code (e.g., `**bold**`, `## Heading`), it will display exactly as typed rather than formatting it.
+
+**To paste Markdown content:**
+1.  **Convert it first:** Use a free online tool like [Markdown Live Preview](https://markdownlivepreview.com/).
+    - Paste your raw Markdown on the **left**.
+    - Copy the formatted result from the **right**.
+2.  **Paste into Sanity:** Paste the formatted text directly into the article body. Sanity will preserve the headings, bolding, and lists.
+
+### Adding Ads
+- **Popup Ad:** Insert the `[ AD TRIGGER ]` block where you want the popup to appear.
+- **Inline Ad:** Insert an **Image** block and fill in the **Link URL** field to make it clickable.

@@ -4,12 +4,25 @@
  */
 
 import { PortableTextComponents } from '@portabletext/react'
+import VideoPlayer from '@/components/VideoPlayer'
+import TableBlock from '@/components/TableBlock'
+import CarouselBlock from '@/components/CarouselBlock'
+import CtaBlock from '@/components/CtaBlock'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 import { slugify, extractTextFromChildren } from './textUtils'
+import AdTriggerMarker from '@/components/AdTriggerMarker'
 
 export const portableTextComponents: PortableTextComponents = {
     types: {
+        adTrigger: () => <AdTriggerMarker />,
+        video: ({ value }) => {
+            const { url, caption } = value as any
+            return <VideoPlayer url={url} caption={caption} />
+        },
+        table: TableBlock,
+        carousel: CarouselBlock,
+        cta: CtaBlock,
         image: ({ value }) => {
             let src: string | undefined
             const asset: any = (value as any)?.asset
@@ -25,17 +38,37 @@ export const portableTextComponents: PortableTextComponents = {
             }
             if (!src) return null
             const alt = (value as any)?.alt || 'Image'
-            return (
-                <div className="relative w-full h-[400px] md:h-[500px] my-8 rounded-lg overflow-hidden">
-                    <OptimizedImage
-                        src={src}
-                        alt={alt}
-                        fill
-                        className="object-cover"
-                        sizes="100vw"
-                    />
+            const href = (value as any)?.href
+            const caption = (value as any)?.caption
+
+            const img = (
+                <div className="relative w-full my-8">
+                    <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden">
+                        <OptimizedImage
+                            src={src}
+                            alt={alt}
+                            fill
+                            className="object-cover"
+                            sizes="100vw"
+                        />
+                    </div>
+                    {caption && (
+                        <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
+                            {caption}
+                        </div>
+                    )}
                 </div>
             )
+
+            if (href) {
+                return (
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
+                        {img}
+                    </a>
+                )
+            }
+
+            return img
         },
     },
 
@@ -131,8 +164,16 @@ export const portableTextComponents: PortableTextComponents = {
         },
 
         blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-[#c8ab3d] pl-6 my-8 italic text-xl text-gray-600">
-                {children}
+            <blockquote className="my-12 relative">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl text-[#c8ab3d] opacity-20 font-serif">
+                    &ldquo;
+                </div>
+                <div className="relative z-10 text-center px-8 md:px-16">
+                    <p className="text-2xl md:text-3xl font-serif italic text-gray-800 leading-relaxed">
+                        {children}
+                    </p>
+                    <div className="mt-6 w-16 h-1 bg-[#c8ab3d] mx-auto opacity-60"></div>
+                </div>
             </blockquote>
         ),
     },

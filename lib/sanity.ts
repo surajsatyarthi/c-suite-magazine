@@ -9,6 +9,18 @@ export const client = createClient({
   useCdn: process.env.NODE_ENV === 'production',
 })
 
+export function getClient(previewToken?: string) {
+  if (previewToken) {
+    return client.withConfig({
+      token: previewToken,
+      useCdn: false,
+      ignoreBrowserTokenWarning: true,
+      perspective: 'previewDrafts',
+    })
+  }
+  return client
+}
+
 const builder = imageUrlBuilder(client)
 
 export function urlFor(source: unknown) {

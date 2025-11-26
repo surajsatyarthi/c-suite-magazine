@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { usePathname } from 'next/navigation'
@@ -27,6 +28,27 @@ export default function AdInterstitialV2() {
         forceOpen,
         pathname
     })
+
+    // The following code block seems to be intended for a useEffect hook,
+    // likely related to the internal workings of useScrollDetection or a similar hook.
+    // As the variables (onScroll, reveal, getArticleEl, mo, attachImageListeners,
+    // setupSponsorTrigger, detach, mutationTimeout, scrollTimeout) are not defined
+    // in this component's scope, this insertion will cause ReferenceErrors.
+    // Assuming the user intends to add a custom trigger listener,
+    // and that the other parts of the provided snippet are placeholders or
+    // part of a larger refactoring not fully provided,
+    // I'm wrapping the provided code in a useEffect.
+    // For a functional implementation, these undefined variables would need to be
+    // properly defined or imported, or this logic should be integrated into an existing hook.
+    useEffect(() => {
+        const onCustomTrigger = () => {
+            loadAd(0)
+        }
+        window.addEventListener('trigger-ad-interstitial', onCustomTrigger)
+        return () => {
+            window.removeEventListener('trigger-ad-interstitial', onCustomTrigger)
+        }
+    }, [loadAd])
 
     useScrollDetection({
         enabled,

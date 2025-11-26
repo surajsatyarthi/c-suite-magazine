@@ -37,8 +37,8 @@ async function getWriter(slug: string) {
   return client.fetch(query, { slug })
 }
 
-export default async function WriterPage({ params }: { params: { slug: string } }) {
-  const { slug } = params
+export default async function WriterPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const writer = await getWriter(slug)
 
   if (!writer) {

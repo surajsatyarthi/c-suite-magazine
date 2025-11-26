@@ -15,10 +15,9 @@ const projectId = idRegex.test(String(projectIdRaw || ''))
 
 const dataset = idRegex.test(String(datasetRaw || ''))
   ? String(datasetRaw)
-  : 'production'
+  : 'production-fixed'
 
 export default defineCliConfig({
   api: { projectId, dataset },
-  studioHost: process.env.SANITY_STUDIO_HOSTNAME || 'csuitemagazine-global',
-  deployment: { autoUpdates: true, appId: 'jpr8xcy4rfm8fomkxotywboi' },
+  studioHost: 'ceo-magazine-2f93fcy8',
 })

@@ -2,7 +2,6 @@
   "name": "ceo-magazine",
   "version": "3.28.2154",
   "private": true,
-  "packageManager": "pnpm@9",
   "scripts": {
     "dev": "next dev -p 3000",
     "prebuild": "node scripts/vercel-preflight.js && node scripts/precompute-hero-aspects.js && node scripts/write-build-info.js",
@@ -32,6 +31,8 @@
     "@sanity/client": "^7.12.1",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.2.0",
+    "@sanity/preview-url-secret": "^3.0.0",
+    "@sanity/table": "^2.0.0",
     "@sanity/vision": "^4.18.0",
     "@sentry/nextjs": "^8.55.0",
     "@vercel/analytics": "^1.5.0",
@@ -41,6 +42,7 @@
     "next-sanity": "^11.6.5",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "react-player": "^2.16.0",
     "sanity": "^4.18.0",
     "styled-components": "^6.1.19",
     "turndown": "^7.2.0"

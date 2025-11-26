@@ -17,7 +17,8 @@ import SocialShare from '@/components/SocialShare'
 import PortableBody from '@/components/PortableBody'
 import PortableBodyV2 from '@/components/PortableBodyV2'
 // View tracking disabled per marketing policy
-import { client, urlFor } from '@/lib/sanity'
+import { client, urlFor, getClient } from '@/lib/sanity'
+import { draftMode } from 'next/headers'
 import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { Post } from '@/lib/types'
@@ -86,7 +87,9 @@ async function getPost(slug: string): Promise<Post | null> {
     popupAd{ targetUrl, image, alt }
   }`
   try {
-    const p = await client.fetch(query, { slug })
+    const { isEnabled } = await draftMode()
+    const token = isEnabled ? process.env.SANITY_API_READ_TOKEN : undefined
+    const p = await getClient(token).fetch(query, { slug })
     if (p) {
       console.log(`[getPost] Found article: ${p.title}`)
       // Deterministic display-only fallback to approved writer list when missing.
@@ -651,8 +654,8 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                     )}
                   </div>
 
-                    {/* Sidebar */}
-                    <div className="space-y-6" data-ad="article-sidebar-large">
+                  {/* Sidebar */}
+                  <div className="space-y-6" data-ad="article-sidebar-large">
                     {/* Writer */}
                     {post.writer && (
                       <div className="bg-white border border-gray-200 rounded-lg p-6">

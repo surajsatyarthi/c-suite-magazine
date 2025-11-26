@@ -75,7 +75,7 @@ export default function AdInterstitial() {
   const keywordTriggerCountRef = useRef<number>(0)
   // Cached article element to avoid repeated DOM queries
   const cachedArticleElRef = useRef<HTMLElement | null>(null)
-  
+
 
   // Helper to try loading an ad image and update state
   const loadAd = (index: number, onReady?: () => void) => {
@@ -103,7 +103,7 @@ export default function AdInterstitial() {
       setAdIndex(index)
       lastShownAtRef.current = Date.now()
       shownRef.current = true
-      try { onReady?.() } catch {}
+      try { onReady?.() } catch { }
     }
 
     const src = tryUrls[0]
@@ -114,7 +114,7 @@ export default function AdInterstitial() {
       setAdIndex(index)
       lastShownAtRef.current = Date.now()
       shownRef.current = true
-      try { onReady?.() } catch {}
+      try { onReady?.() } catch { }
       return
     }
 
@@ -128,11 +128,11 @@ export default function AdInterstitial() {
         img2.onerror = () => {
           setAspectRatio('970/550')
           setAd({ imageUrl: fallbackDataUri, targetUrl: ADS[index]?.targetUrl || AD_LINK, alt: 'Sponsored' })
-      setShow(true)
-      setAdIndex(index)
-      lastShownAtRef.current = Date.now()
-      shownRef.current = true
-      try { onReady?.() } catch {}
+          setShow(true)
+          setAdIndex(index)
+          lastShownAtRef.current = Date.now()
+          shownRef.current = true
+          try { onReady?.() } catch { }
         }
         img2.src = alt
       } else {
@@ -141,13 +141,13 @@ export default function AdInterstitial() {
         setShow(true)
         setAdIndex(index)
         shownRef.current = true
-        try { onReady?.() } catch {}
+        try { onReady?.() } catch { }
       }
     }
     img.src = src
   }
 
-  
+
 
   // Reset on route change with cache invalidation
   useEffect(() => {
@@ -168,9 +168,9 @@ export default function AdInterstitial() {
     window.addEventListener('keydown', markInteracted, { once: true })
     window.addEventListener('touchstart', markInteracted, { once: true })
     return () => {
-      try { window.removeEventListener('pointerdown', markInteracted) } catch {}
-      try { window.removeEventListener('keydown', markInteracted) } catch {}
-      try { window.removeEventListener('touchstart', markInteracted) } catch {}
+      try { window.removeEventListener('pointerdown', markInteracted) } catch { }
+      try { window.removeEventListener('keydown', markInteracted) } catch { }
+      try { window.removeEventListener('touchstart', markInteracted) } catch { }
     }
   }, [])
 
@@ -178,18 +178,18 @@ export default function AdInterstitial() {
     if (!enabled) return
     // Always gate the FIRST popup ad until locale is dismissed (site-wide)
     const onLocaleDismissed = () => {
-      try { setLocaleReady(true) } catch {}
+      try { setLocaleReady(true) } catch { }
     }
     window.addEventListener('localePopupDismissed', onLocaleDismissed, { once: true })
     const detach = () => {
-      try { window.removeEventListener('scroll', onScroll) } catch {}
-      try { mo.disconnect() } catch {}
+      try { window.removeEventListener('scroll', onScroll) } catch { }
+      try { mo.disconnect() } catch { }
       if (imgListeners.length) {
         for (const { img, handler } of imgListeners) {
           img.removeEventListener('load', handler)
         }
       }
-      try { sponsorObserver?.disconnect() } catch {}
+      try { sponsorObserver?.disconnect() } catch { }
     }
     const reveal = (fromKeyword?: boolean) => {
       // Hard gate: do not reveal the FIRST ad until locale popup is dismissed
@@ -227,7 +227,7 @@ export default function AdInterstitial() {
       const vh = window.innerHeight
       const scrollY = window.scrollY
       const viewportBottom = scrollY + vh
-      
+
       if (el) {
         // Use cached values where possible
         const rect = el.getBoundingClientRect()
@@ -247,7 +247,7 @@ export default function AdInterstitial() {
     const onScroll = () => {
       if (shownRef.current) return
       if (scrollTimeout) return // Skip if already scheduled
-      
+
       scrollTimeout = setTimeout(() => {
         scrollTimeout = null
         if (passedHalf()) reveal(false)
@@ -259,29 +259,29 @@ export default function AdInterstitial() {
     const throttledMutationCallback = () => {
       if (shownRef.current) return
       if (mutationTimeout) return // Skip if already scheduled
-      
+
       mutationTimeout = setTimeout(() => {
         mutationTimeout = null
         if (passedHalf()) reveal(false)
       }, 100) // Throttle to 100ms
     }
-    
+
     const mo = new MutationObserver(throttledMutationCallback)
 
     // Optimized image listeners with deduplication
     const imgListeners: Array<{ img: HTMLImageElement; handler: () => void }> = []
     const processedImages = new WeakSet<HTMLImageElement>()
-    
+
     const attachImageListeners = () => {
       const el = getArticleEl()
       if (!el) return
       const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[]
-      
+
       for (const img of imgs) {
         if (processedImages.has(img)) continue // Skip already processed images
-        
-        const handler = () => { 
-          if (!shownRef.current && passedHalf()) reveal(false) 
+
+        const handler = () => {
+          if (!shownRef.current && passedHalf()) reveal(false)
         }
         img.addEventListener('load', handler)
         imgListeners.push({ img, handler })
@@ -321,21 +321,23 @@ export default function AdInterstitial() {
 
     // Kickoff
     window.addEventListener('scroll', onScroll, { passive: true })
+    const onCustomTrigger = () => reveal(true)
+    window.addEventListener('trigger-ad-interstitial', onCustomTrigger)
     const el = getArticleEl()
     if (el) mo.observe(el, { childList: true, subtree: true })
     attachImageListeners()
     setupSponsorTrigger()
 
-      // Consolidated settling checks using RAF-based scheduling
+    // Consolidated settling checks using RAF-based scheduling
     let checkCount = 0
     const maxChecks = 4
     const delays = [0, 600, 1800, 3500] // ms delays for each check
-    
+
     const scheduleNextCheck = () => {
       if (checkCount >= maxChecks) return
       const delay = delays[checkCount]
       checkCount++
-      
+
       if (delay === 0) {
         requestAnimationFrame(onScroll)
       } else {
@@ -345,10 +347,10 @@ export default function AdInterstitial() {
         }, delay)
       }
     }
-    
+
     try {
       scheduleNextCheck()
-    } catch {}
+    } catch { }
 
     // Reveal via scroll/mutation only when localeReady
 
@@ -359,6 +361,7 @@ export default function AdInterstitial() {
 
     return () => {
       detach()
+      window.removeEventListener('trigger-ad-interstitial', onCustomTrigger)
       if (mutationTimeout) clearTimeout(mutationTimeout)
       if (scrollTimeout) clearTimeout(scrollTimeout)
     }
@@ -367,9 +370,9 @@ export default function AdInterstitial() {
   // Subscribe to LocaleGate changes
   useEffect(() => {
     const unsub = onLocaleGateChange((st) => {
-      try { setLocaleReady(st.dismissed && !st.open) } catch {}
+      try { setLocaleReady(st.dismissed && !st.open) } catch { }
     })
-    return () => { try { unsub() } catch {} }
+    return () => { try { unsub() } catch { } }
   }, [])
 
   if (!enabled || !show) return null
@@ -398,15 +401,15 @@ export default function AdInterstitial() {
         <div className="p-6">
           <Link href={ad?.targetUrl || AD_LINK} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
             <div className="relative w-full rounded-xl overflow-hidden min-h-[220px]" style={{ aspectRatio }}>
-          <OptimizedImage
-            src={ad?.imageUrl || ADS[0].imageUrl}
-            alt={ad?.alt || 'Sponsored'}
-            fill
-            className="object-contain"
-            sizes="(max-width: 1024px) 100vw, 970px"
-            priority
-            decoding="async"
-          />
+              <OptimizedImage
+                src={ad?.imageUrl || ADS[0].imageUrl}
+                alt={ad?.alt || 'Sponsored'}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 970px"
+                priority
+                decoding="async"
+              />
             </div>
           </Link>
         </div>

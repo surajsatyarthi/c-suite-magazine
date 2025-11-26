@@ -8,8 +8,11 @@ export const apiVersion = apiVersionRaw || '2024-10-01'
 
 export const dataset = idRegex.test(String(datasetRaw || ''))
   ? String(datasetRaw)
-  : 'production'
+  : 'production-fixed'
 
 export const projectId = idRegex.test(String(projectIdRaw || ''))
   ? String(projectIdRaw)
   : '2f93fcy8'
+
+export const token = process.env.SANITY_API_READ_TOKEN
+

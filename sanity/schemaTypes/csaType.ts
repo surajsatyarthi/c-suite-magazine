@@ -1,5 +1,5 @@
-import {DocumentTextIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { DocumentTextIcon } from '@sanity/icons'
+import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export const csaType = defineType({
   name: 'csa',
@@ -26,7 +26,6 @@ export const csaType = defineType({
       options: {
         source: 'title',
         maxLength: 96,
-        isUnique: (value, context) => context?.defaultIsUnique?.(value, context) ?? true,
       },
       group: 'content',
       validation: (Rule) => Rule.required(),
@@ -75,7 +74,7 @@ export const csaType = defineType({
       name: 'categories',
       type: 'array',
       title: 'Categories',
-      of: [defineArrayMember({type: 'reference', to: {type: 'category'}})],
+      of: [defineArrayMember({ type: 'reference', to: { type: 'category' } })],
       group: 'meta',
       initialValue: [],
     }),
@@ -115,7 +114,20 @@ export const csaType = defineType({
             ],
           },
         }),
-        defineArrayMember({ type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', type: 'string', title: 'Alternative text' }] }),
+        defineArrayMember({
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            { name: 'alt', type: 'string', title: 'Alternative text' },
+            { name: 'href', type: 'url', title: 'Link URL', description: 'Optional: Make this image clickable (e.g., for ads)' },
+            { name: 'caption', type: 'string', title: 'Caption', description: 'Optional: Text to display below the image' },
+          ],
+        }),
+        defineArrayMember({ type: 'adTrigger' }),
+        defineArrayMember({ type: 'video' }),
+        defineArrayMember({ type: 'table' }),
+        defineArrayMember({ type: 'carousel' }),
+        defineArrayMember({ type: 'cta' }),
       ],
       validation: (Rule) => Rule.required(),
     }),
@@ -129,14 +141,7 @@ export const csaType = defineType({
         defineField({ name: 'metaDescription', type: 'text', title: 'Meta Description', rows: 3 }),
       ],
     }),
-    defineField({
-      name: 'adAnchorKeywords',
-      type: 'array',
-      title: 'Ad Anchor Keywords',
-      description: 'Words or phrases that should trigger the popup on scroll.',
-      of: [defineArrayMember({ type: 'string' })],
-      group: 'meta',
-    }),
+    // Removed adAnchorKeywords (replaced by adTrigger block)
     defineField({
       name: 'popupAd',
       type: 'object',

@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
-          { key: "X-Frame-Options", value: "DENY" },
+          // { key: "X-Frame-Options", value: "DENY" },
           {
             key: "Content-Security-Policy",
             value: [
@@ -58,7 +58,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' data:",
               "connect-src 'self' https: wss: https://core.sanity-cdn.com https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.sanity.studio wss://*.sanity.studio https://studio.csuitemagazine.global wss://studio.csuitemagazine.global https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh https://*.sentry.io https://www.googletagmanager.com",
               "frame-src 'self' https://*.sanity.studio https://*.sanity.io https://studio.csuitemagazine.global",
-              "frame-ancestors 'none'",
+              "frame-ancestors 'self' https://ceo-magazine-2f93fcy8.sanity.studio https://*.sanity.studio https://*.sanity.io",
             ].join('; '),
           },
           {

@@ -87,9 +87,9 @@ export async function generateMetadata({ params }: { params: { slug?: string } }
 export default async function CategoryPage({
   params,
 }: {
-  params?: { slug?: string }
+  params: Promise<{ slug: string }>
 }) {
-  const slug = params?.slug ?? 'general'
+  const { slug = 'general' } = await params
   // Redirect merged categories and 404 removed ones
   const MERGE_MAP: Record<string, string> = {
     'engineering': 'science-technology',
@@ -139,10 +139,10 @@ export default async function CategoryPage({
           )
         }}
       />
-      
+
       <main className="min-h-screen bg-gray-50">
         {/* Category Header */}
-        <div 
+        <div
           className="dark-section py-20 text-white"
           style={{ backgroundColor: displayCategory.color || '#082945' }}
         >
