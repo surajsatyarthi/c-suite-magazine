@@ -52,6 +52,7 @@ export default async function WriterPage({ params }: { params: Promise<{ slug: s
 
       <main className="bg-white">
         {/* Writer Header */}
+        <div className="hidden">VERSION_CHECK_V1</div>
         <section className="dark-section py-16 bg-gradient-to-br from-[#082945] via-[#0a3350] to-[#082945] text-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
