@@ -156,6 +156,21 @@ export default function EntryLocalePopup() {
     }
   }
 
+  const handleClose = () => {
+    try {
+      if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('localeShown', '1')
+      setCookie('locale-dnd', '1', 1)
+      try { setLocaleDismissed() } catch { }
+    } catch { }
+
+    try {
+      const evt = new Event('csuite:close-locale-popup')
+      document.dispatchEvent(evt)
+    } catch { }
+
+    setIsOpen(false)
+  }
+
   if (!isOpen) return null
 
   return (
@@ -221,20 +236,4 @@ export default function EntryLocalePopup() {
       </div>
     </div>
   )
-}
-const handleClose = () => {
-  try {
-    if (typeof sessionStorage !== 'undefined') sessionStorage.setItem('localeShown', '1')
-    setCookie('locale-dnd', '1', 1)
-    try { setLocaleDismissed() } catch { }
-  } catch { }
-  try {
-    const evt = new Event('csuite:close-locale-popup')
-    document.dispatchEvent(evt)
-  } catch { }
-  // Best-effort close: element will unmount due to isOpen state managed inside component
-  const el = document.querySelector('.entry-locale-popup')
-  if (el) {
-    try { (el.parentElement as HTMLElement)?.remove() } catch { }
-  }
 }
