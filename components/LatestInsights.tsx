@@ -54,10 +54,11 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
                   aria-describedby={postExcerpt ? `article-excerpt-${index}` : undefined}
                 >
                   <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300">
-                    {post.mainImage?.url ? (
+                    {/* @ts-ignore - handling potential legacy data structure */}
+                    {(post.mainImage?.asset?.url || (post.mainImage as any)?.url) ? (
                       <OptimizedImage
-                        src={post.mainImage.url || urlFor(post.mainImage).width(800).height(560).quality(85).auto('format').url()}
-                        alt={post.mainImage.alt || `Featured image for ${postTitle}`}
+                        src={post.mainImage?.asset?.url || (post.mainImage as any)?.url || urlFor(post.mainImage!).width(800).height(560).quality(85).auto('format').url()}
+                        alt={post.mainImage?.alt || `Featured image for ${postTitle}`}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         quality={88}

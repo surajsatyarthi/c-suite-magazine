@@ -99,8 +99,9 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
           currentPosts.map((post, idx) => {
             const slug = post?.slug?.current as string | undefined
             const isValidSlug = !!slug && !slug.startsWith('#')
-            const imageUrl = post.mainImage?.asset?.url || post.mainImage?.url
-            const writerImageUrl = (post as any)?.writer?.image?.asset?.url || (post as any)?.writer?.image?.url
+            // @ts-ignore - handling potential legacy data structure
+            const imageUrl = post.mainImage?.asset?.url || (post.mainImage as any)?.url
+            const writerImageUrl = post.writer?.image?.asset?.url || post.writer?.imageUrl
 
             return (
               <article key={post._id || idx} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">

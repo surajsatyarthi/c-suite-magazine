@@ -1,16 +1,37 @@
+export interface SanityImage {
+  asset: {
+    _ref: string
+    _type: string
+    url?: string
+    metadata?: {
+      dimensions?: {
+        width: number
+        height: number
+        aspectRatio: number
+      }
+    }
+  }
+  alt?: string
+  hotspot?: any
+  crop?: any
+}
+
 export interface Writer {
   _id: string
   name: string
   slug: { current: string }
   position?: string
   imageUrl?: string
-  image: any
+  image?: SanityImage
   bio?: any[]
   social?: {
+    email?: string
+    showEmail?: boolean
     twitter?: string
     linkedin?: string
     website?: string
   }
+  articles?: Post[]
 }
 
 export interface Category {
@@ -26,8 +47,9 @@ export interface Post {
   title: string
   slug: { current: string }
   excerpt?: string
+  excerptText?: string
   writer?: Writer
-  mainImage: any
+  mainImage?: SanityImage
   categories: Category[]
   tags?: string[]
   isFeatured?: boolean

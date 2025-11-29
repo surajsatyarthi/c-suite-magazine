@@ -7,11 +7,12 @@ import Footer from '@/components/Footer'
 import { client, urlFor } from '@/lib/sanity'
 import PortableBody from '@/components/PortableBody'
 import { sanitizeExcerpt } from '@/lib/text'
+import { Writer, Post } from '@/lib/types'
 
 // Enable ISR to avoid heavy full-build prerenders for writer pages
-export const revalidate = 0
+export const revalidate = 600
 
-async function getWriter(slug: string) {
+async function getWriter(slug: string): Promise<Writer | null> {
   const query = `*[_type == "writer" && slug.current == $slug][0] {
     _id,
     name,
@@ -60,7 +61,7 @@ export default async function WriterPage({ params }: { params: Promise<{ slug: s
                 <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden flex-shrink-0 border-4 border-white/20">
                   {writer.image || writer.imageUrl ? (
                     <OptimizedImage
-                      src={writer.image ? urlFor(writer.image).width(256).height(256).fit('crop').auto('format').url() : writer.imageUrl}
+                      src={writer.image ? urlFor(writer.image).width(256).height(256).fit('crop').auto('format').url() : (writer.imageUrl || '')}
                       alt={writer.name}
                       fill
                       className="object-cover"
@@ -143,11 +144,11 @@ export default async function WriterPage({ params }: { params: Promise<{ slug: s
                 Articles by {writer.name}
               </h2>
 
-              {writer.articles && writer.articles.filter((a: any) => a?.slug?.current).length > 0 ? (
+              {writer.articles && writer.articles.filter((a) => a?.slug?.current).length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {writer.articles
-                    .filter((article: any) => article?.slug?.current)
-                    .map((article: any) => {
+                    .filter((article) => article?.slug?.current)
+                    .map((article) => {
                       const excerptText = sanitizeExcerpt(article.excerptText || article.excerpt || '')
                       const categorySlug = article?.categories?.[0]?.slug?.current || 'leadership'
                       return (
