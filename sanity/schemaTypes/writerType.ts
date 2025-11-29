@@ -1,5 +1,5 @@
-import {UserIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { UserIcon } from '@sanity/icons'
+import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export const writerType = defineType({
   name: 'writer',
@@ -45,7 +45,7 @@ export const writerType = defineType({
       of: [
         defineArrayMember({
           type: 'block',
-          styles: [{title: 'Normal', value: 'normal'}],
+          styles: [{ title: 'Normal', value: 'normal' }],
           lists: [],
         }),
       ],
@@ -55,6 +55,20 @@ export const writerType = defineType({
       type: 'object',
       title: 'Social Media',
       fields: [
+        defineField({
+          name: 'email',
+          type: 'string',
+          title: 'Email Address',
+          description: 'Contact email for the writer (optional)',
+          validation: (Rule) => Rule.email(),
+        }),
+        defineField({
+          name: 'showEmail',
+          type: 'boolean',
+          title: 'Show Email Publicly?',
+          description: 'If enabled, the email will be displayed on the writer profile page',
+          initialValue: false,
+        }),
         defineField({
           name: 'twitter',
           type: 'url',
