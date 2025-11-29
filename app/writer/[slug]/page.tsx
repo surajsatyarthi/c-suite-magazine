@@ -9,7 +9,7 @@ import PortableBody from '@/components/PortableBody'
 import { sanitizeExcerpt } from '@/lib/text'
 
 // Enable ISR to avoid heavy full-build prerenders for writer pages
-export const revalidate = 600
+export const revalidate = 0
 
 async function getWriter(slug: string) {
   const query = `*[_type == "writer" && slug.current == $slug][0] {
