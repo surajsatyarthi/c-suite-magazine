@@ -1,14 +1,19 @@
+```javascript
 const fs = require('fs');
 const { google } = require('googleapis');
 const path = require('path');
 
-// OAuth Credentials (Hardcoded for verification, should be moved to secrets later)
-const CLIENT_ID = '1061868890550-u3oqjsmpfrf6ks5kmbsqpv9urc5s092l.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-const REFRESH_TOKEN = '1//0gyxIbfG0Q4qeCgYIARAAGBASNwF-L9IrvzOKBBjGQIAa1L_8k02iB7DVuFtCEe2d_gNNkzabIK6KGQcMRkuv-JqQJHyzjWXh18w';
+// OAuth Credentials
+const CLIENT_ID = process.env.GDRIVE_CLIENT_ID;
+const CLIENT_SECRET = process.env.GDRIVE_CLIENT_SECRET;
+const REFRESH_TOKEN = process.env.GDRIVE_REFRESH_TOKEN;
 
 async function uploadFile() {
     try {
+        if (!CLIENT_ID || !CLIENT_SECRET || !REFRESH_TOKEN) {
+            throw new Error('Missing OAuth credentials. Please set GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET, and GDRIVE_REFRESH_TOKEN.');
+        }
+
         // 1. Configure OAuth2 Client
         const oauth2Client = new google.auth.OAuth2(
             CLIENT_ID,
@@ -32,8 +37,8 @@ async function uploadFile() {
         }
 
         console.log(`Starting upload...`);
-        console.log(`File: ${FILE_PATH}`);
-        console.log(`Target Folder ID: ${FOLDER_ID}`);
+        console.log(`File: ${ FILE_PATH } `);
+        console.log(`Target Folder ID: ${ FOLDER_ID } `);
 
         // 3. Upload the file
         const fileMetadata = {
@@ -53,8 +58,8 @@ async function uploadFile() {
         });
 
         console.log('Upload successful!');
-        console.log(`File ID: ${response.data.id}`);
-        console.log(`View Link: ${response.data.webViewLink}`);
+        console.log(`File ID: ${ response.data.id } `);
+        console.log(`View Link: ${ response.data.webViewLink } `);
 
     } catch (error) {
         console.error('Upload failed:', error);

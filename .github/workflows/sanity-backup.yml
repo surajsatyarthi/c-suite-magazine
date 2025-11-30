@@ -45,6 +45,9 @@ jobs:
       - name: Upload to Google Drive
         env:
           GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+          GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
           BACKUP_PATH: ${{ env.BACKUP_PATH }}
           BACKUP_FILENAME: ${{ env.BACKUP_FILENAME }}
         run: node scripts/upload-to-drive.js
