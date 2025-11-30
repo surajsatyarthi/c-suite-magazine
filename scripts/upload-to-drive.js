@@ -2,27 +2,30 @@ const fs = require('fs');
 const { google } = require('googleapis');
 const path = require('path');
 
+// OAuth Credentials (Hardcoded for verification, should be moved to secrets later)
+const CLIENT_ID = '1061868890550-u3oqjsmpfrf6ks5kmbsqpv9urc5s092l.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
+const REFRESH_TOKEN = '1//0gyxIbfG0Q4qeCgYIARAAGBASNwF-L9IrvzOKBBjGQIAa1L_8k02iB7DVuFtCEe2d_gNNkzabIK6KGQcMRkuv-JqQJHyzjWXh18w';
+
 async function uploadFile() {
     try {
-        // 1. Load credentials
-        // The workflow will decode the Base64 secret to a file named 'service-account.json'
-        const KEY_FILE_PATH = path.join(process.cwd(), 'service-account.json');
+        // 1. Configure OAuth2 Client
+        const oauth2Client = new google.auth.OAuth2(
+            CLIENT_ID,
+            CLIENT_SECRET,
+            'https://developers.google.com/oauthplayground' // Redirect URI
+        );
 
-        if (!fs.existsSync(KEY_FILE_PATH)) {
-            throw new Error(`Service account key file not found at: ${KEY_FILE_PATH}`);
-        }
-
-        const auth = new google.auth.GoogleAuth({
-            keyFile: KEY_FILE_PATH,
-            scopes: ['https://www.googleapis.com/auth/drive.file'],
+        oauth2Client.setCredentials({
+            refresh_token: REFRESH_TOKEN
         });
 
-        const drive = google.drive({ version: 'v3', auth });
+        const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
         // 2. Get configuration from environment variables
         const FOLDER_ID = process.env.GDRIVE_FOLDER_ID;
-        const FILE_PATH = process.env.BACKUP_PATH; // e.g., 'backups/sanity-backup-2023-11-30.tar.gz'
-        const FILE_NAME = process.env.BACKUP_FILENAME; // e.g., 'sanity-backup-2023-11-30.tar.gz'
+        const FILE_PATH = process.env.BACKUP_PATH;
+        const FILE_NAME = process.env.BACKUP_FILENAME;
 
         if (!FOLDER_ID || !FILE_PATH || !FILE_NAME) {
             throw new Error('Missing required environment variables: GDRIVE_FOLDER_ID, BACKUP_PATH, or BACKUP_FILENAME');
@@ -35,7 +38,7 @@ async function uploadFile() {
         // 3. Upload the file
         const fileMetadata = {
             name: FILE_NAME,
-            parents: [FOLDER_ID], // Explicitly put it in the shared folder
+            parents: [FOLDER_ID],
         };
 
         const media = {
