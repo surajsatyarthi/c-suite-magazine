@@ -1,4 +1,4 @@
-name: Daily Sanity Backup
+name: Daily Sanity Backup (Google Drive)
 
 on:
   schedule:
@@ -36,14 +36,13 @@ jobs:
           sanity dataset export production "backups/$FILENAME" --project-id ${{ secrets.SANITY_PROJECT_ID }} --dataset production
 
           echo "BACKUP_FILENAME=$FILENAME" >> $GITHUB_ENV
+          echo "BACKUP_PATH=backups/$FILENAME" >> $GITHUB_ENV
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Upload to Google Drive
+        uses: adityak74/google-drive-upload-git-action@main
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Upload to S3
-        run: |
-          aws s3 cp "backups/${{ env.BACKUP_FILENAME }}" "s3://${{ secrets.AWS_BUCKET_NAME }}/sanity-backups/${{ env.BACKUP_FILENAME }}"
+          credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
+          filename: ${{ env.BACKUP_PATH }}
+          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
+          name: ${{ env.BACKUP_FILENAME }}
+          overwrite: "false"
