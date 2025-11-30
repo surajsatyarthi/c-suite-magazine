@@ -49,19 +49,19 @@ export default function AdInterstitialV2() {
                     </svg>
                 </button>
 
-                <div className="relative w-full aspect-[4/5] md:aspect-[3/4]">
+                <div className="relative w-full h-[60vh] md:h-[70vh] max-h-[600px]">
                     <Link
                         href={content.href || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block w-full h-full"
-                        onClick={closeAd} // Close on click? Or keep open? Usually close.
+                        onClick={closeAd}
                     >
                         <OptimizedImage
                             src={content.image}
                             alt={content.title || 'Advertisement'}
                             fill
-                            className="object-cover"
+                            className="object-contain"
                             sizes="(max-width: 768px) 100vw, 400px"
                             priority
                         />

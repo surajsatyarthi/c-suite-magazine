@@ -27,7 +27,7 @@ export default async function Ad({ placement, className }: AdProps) {
   const ad = await fetchAd(placement)
 
   // Force local vertical ad for article sidebar large if no CMS ad is configured
-  if (placement === 'article-sidebar-large' && !ad) {
+  if (placement === 'article-sidebar-large' && (!ad || !ad.image)) {
     const localFallbackUrl = '/vertical_ad.png'
     const target = 'https://www.brabus.com/en-int/cars/classics/C4S192C.html'
     const width = 300
@@ -56,7 +56,7 @@ export default async function Ad({ placement, className }: AdProps) {
   }
 
   // Fallback for in-article when CMS ad missing
-  if (!ad && placement === 'in-article') {
+  if ((!ad || !ad.image) && placement === 'in-article') {
     // Randomly select Patek or Gulfstream for popup reinforcement
     const randomAd = ADS[Math.floor(Math.random() * ADS.length)]
     const width = 728

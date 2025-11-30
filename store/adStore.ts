@@ -29,7 +29,8 @@ export const useAdStore = create<AdState>((set) => ({
         // Let's block it if currently open, but allow re-open if closed?
         // User requirement: "displayed when user sees the same ad". 
         // Usually this means "trigger once".
-        if (state.hasShown) return {}
+        // Allow re-triggering to support sequential ads (Patek -> Gulfstream)
+        // if (state.hasShown) return {}
 
         return {
             isOpen: true,
