@@ -1,6 +1,8 @@
 import OptimizedImage from '@/components/OptimizedImage'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
+import InArticleAd from '@/components/InArticleAd'
+import { ADS } from '@/lib/adInterstitial/constants'
 
 type AdProps = {
   placement: 'article-sidebar-large' | 'in-article'
@@ -55,30 +57,20 @@ export default async function Ad({ placement, className }: AdProps) {
 
   // Fallback for in-article when CMS ad missing
   if (!ad && placement === 'in-article') {
-    const localFallbackUrl = '/vertical_ad.png'
-    const target = 'https://www.brabus.com/en-int/cars/classics/C4S192C.html'
+    // Randomly select Patek or Gulfstream for popup reinforcement
+    const randomAd = ADS[Math.floor(Math.random() * ADS.length)]
     const width = 728
     const height = 90
-    const sizes = '(max-width: 1024px) 100vw, 728px'
 
     return (
-      <div className={className}>
-        <Link href={target} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
-          <div
-            className={`relative w-full max-w-[728px] mx-auto`}
-            style={{ aspectRatio: `${width}/${height}` }}
-          >
-            <OptimizedImage
-              src={localFallbackUrl}
-              alt={'Sponsored'}
-              fill
-              className="rounded object-contain"
-              sizes={sizes}
-              priority
-            />
-          </div>
-        </Link>
-      </div>
+      <InArticleAd
+        image={randomAd.imageUrl}
+        href={randomAd.targetUrl}
+        title={randomAd.alt || 'Sponsored'}
+        width={width}
+        height={height}
+        className={className}
+      />
     )
   }
 
@@ -92,6 +84,19 @@ export default async function Ad({ placement, className }: AdProps) {
   const sizes = isInArticle
     ? '(max-width: 1024px) 100vw, 728px'
     : '(max-width: 640px) 100vw, 300px'
+
+  if (isInArticle) {
+    return (
+      <InArticleAd
+        image={imageUrl}
+        href={ad.targetUrl}
+        title={ad.name || 'Sponsored'}
+        width={width}
+        height={height}
+        className={className}
+      />
+    )
+  }
 
   return (
     <div className={className}>

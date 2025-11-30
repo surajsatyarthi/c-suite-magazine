@@ -13,6 +13,8 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 // dynamic already imported above
 import Ad from '@/components/Ad'
+import InArticleAd from '@/components/InArticleAd'
+import ScrollTriggerAd from '@/components/ScrollTriggerAd'
 import SocialShare from '@/components/SocialShare'
 import PortableBody from '@/components/PortableBody'
 import PortableBodyV2 from '@/components/PortableBodyV2'
@@ -476,18 +478,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
               })),
             }}
           />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: (() => {
-                const kws = Array.isArray(post.adAnchorKeywords) ? post.adAnchorKeywords.filter((x) => !!x).map((x) => String(x)) : []
-                const target = post.popupAd?.targetUrl || ''
-                const img = post.popupAd?.image ? urlFor(post.popupAd.image).auto('format').url() : ''
-                const alt = post.popupAd?.alt || 'Sponsored'
-                const cfg = { keywords: kws, popup: { imageUrl: img, targetUrl: target, alt } }
-                return `window.__AD_CONFIG__=${JSON.stringify(cfg)}`
-              })()
-            }}
-          />
+
           <Breadcrumbs
             items={[
               { label: 'Home', href: '/' },
@@ -625,34 +616,44 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                     {/* Company Sponsored Inline Ads */}
                     {isCompanySponsored && (
                       <div className="mt-8 space-y-8">
-                        {/* Half page inline ad (300x600) */}
-                        <div className="relative w-full mx-auto" style={{ aspectRatio: '300/600' }}>
-                          <Link href={"https://www.brabus.com/en-int/cars/classics/C4S192C.html"} target="_blank" rel="noopener noreferrer" className="block">
-                            <OptimizedImage
-                              src={'/vertical_ad.png'}
-                              alt={'Sponsored'}
-                              fill
-                              className="object-contain rounded"
-                              sizes="(max-width: 1024px) 100vw, 300px"
-                              priority
-                            />
-                          </Link>
-                        </div>
-                        {/* Quarter page inline ad (300x250) */}
-                        <div className="relative w-full mx-auto" style={{ aspectRatio: '300/250' }}>
-                          <Link href={"https://www.brabus.com/en-int/cars/classics/C4S192C.html"} target="_blank" rel="noopener noreferrer" className="block">
-                            <OptimizedImage
-                              src={'/vertical_ad.png'}
-                              alt={'Sponsored'}
-                              fill
-                              className="object-contain rounded"
-                              sizes="(max-width: 1024px) 100vw, 300px"
-                              priority
-                            />
-                          </Link>
-                        </div>
+                        {/* Dynamic In-Article Ad (Triggers Popup) */}
+                        {(() => {
+                          const adImage = post.popupAd?.image
+                            ? urlFor(post.popupAd.image).width(300).height(600).auto('format').url()
+                            : '/vertical_ad.png'
+                          const adTarget = post.popupAd?.targetUrl || 'https://www.brabus.com/en-int/cars/classics/C4S192C.html'
+                          const adTitle = post.popupAd?.alt || 'Sponsored'
+
+                          return (
+                            <>
+                              {/* Half page inline ad (300x600) */}
+                              <InArticleAd
+                                image={adImage}
+                                href={adTarget}
+                                title={adTitle}
+                                width={300}
+                                height={600}
+                                className="mx-auto"
+                              />
+                              {/* Quarter page inline ad (300x250) - Optional second ad */}
+                              <div className="relative w-full mx-auto hidden md:block" style={{ aspectRatio: '300/250' }}>
+                                <InArticleAd
+                                  image={adImage}
+                                  href={adTarget}
+                                  title={adTitle}
+                                  width={300}
+                                  height={250}
+                                  className="mx-auto"
+                                />
+                              </div>
+                            </>
+                          )
+                        })()}
                       </div>
                     )}
+
+                    {/* Normal Articles: Trigger Popup on 50% Scroll */}
+                    {!isCompanySponsored && <ScrollTriggerAd />}
                   </div>
 
                   {/* Sidebar */}

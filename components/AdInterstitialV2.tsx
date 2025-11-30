@@ -3,95 +3,71 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
+import { useAdStore } from '@/store/adStore'
 import { usePathname } from 'next/navigation'
-import { AD_LINK, ADS } from '@/lib/adInterstitial/constants'
-import { useLocaleGate } from '@/lib/adInterstitial/useLocaleGate'
-import { useAdSession } from '@/lib/adInterstitial/useAdSession'
-import { useImagePreloader } from '@/lib/adInterstitial/useImagePreloader'
-import { useScrollDetection } from '@/lib/adInterstitial/useScrollDetection'
 
-/**
- * AdInterstitialV2 - Refactored version using custom hooks
- * 
- * Logic split into:
- * - useLocaleGate: Manages locale popup state
- * - useAdSession: Manages eligibility and interaction state
- * - useImagePreloader: Manages image loading and display state
- * - useScrollDetection: Manages scroll/mutation triggers
- */
+import { ADS } from '@/lib/adInterstitial/constants'
+
 export default function AdInterstitialV2() {
+    const { isOpen, content, closeAd, openAd, reset } = useAdStore()
     const pathname = usePathname()
-    const localeReady = useLocaleGate()
-    const { enabled, forceOpen, hasInteracted, shownRef } = useAdSession()
-    const { show, setShow, ad, adIndex, aspectRatio, loadAd } = useImagePreloader({
-        shownRef,
-        forceOpen,
-        pathname
-    })
 
-    // The following code block seems to be intended for a useEffect hook,
-    // likely related to the internal workings of useScrollDetection or a similar hook.
-    // As the variables (onScroll, reveal, getArticleEl, mo, attachImageListeners,
-    // setupSponsorTrigger, detach, mutationTimeout, scrollTimeout) are not defined
-    // in this component's scope, this insertion will cause ReferenceErrors.
-    // Assuming the user intends to add a custom trigger listener,
-    // and that the other parts of the provided snippet are placeholders or
-    // part of a larger refactoring not fully provided,
-    // I'm wrapping the provided code in a useEffect.
-    // For a functional implementation, these undefined variables would need to be
-    // properly defined or imported, or this logic should be integrated into an existing hook.
+    // Determine if CSA based on URL path (same logic as legacy)
+    const categoryFromPath = pathname?.split('/')[2] || ''
+    const isCompanySponsored = /^(company-sponsored)$/i.test(categoryFromPath)
+
+    // Reset store on route change to avoid stale ads
     useEffect(() => {
-        const onCustomTrigger = () => {
-            loadAd(0)
-        }
-        window.addEventListener('trigger-ad-interstitial', onCustomTrigger)
-        return () => {
-            window.removeEventListener('trigger-ad-interstitial', onCustomTrigger)
-        }
-    }, [loadAd])
+        reset()
+    }, [pathname, reset])
 
-    useScrollDetection({
-        enabled,
-        localeReady,
-        hasInteracted,
-        forceOpen,
-        shownRef,
-        onTrigger: () => loadAd(0)
-    })
+    const handleClose = () => {
+        // Sequential Logic: If Normal Article AND showing Patek (first ad), switch to Gulfstream
+        if (!isCompanySponsored && content?.href === ADS[0].targetUrl) {
+            openAd({
+                image: ADS[1].imageUrl,
+                href: ADS[1].targetUrl,
+                title: ADS[1].alt || 'Sponsored'
+            })
+            return
+        }
+        closeAd()
+    }
 
-    if (!enabled || !show) return null
+    if (!isOpen || !content) return null
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-            <div className="relative bg-black/40 text-white rounded-2xl backdrop-blur-sm shadow-2xl shadow-black/50 border border-white/10 max-w-4xl w-full mx-4 max-h-[90vh] overflow-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="relative bg-white/5 rounded-2xl shadow-2xl shadow-black/50 border border-white/10 max-w-md w-full mx-4 overflow-hidden transform transition-all scale-100">
                 <button
-                    onClick={() => {
-                        if (adIndex === 0) {
-                            // Switch to second ad instead of closing
-                            loadAd(1)
-                        } else {
-                            setShow(false)
-                        }
-                    }}
-                    className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors z-10"
+                    onClick={handleClose}
+                    className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-20 backdrop-blur-md"
                     aria-label="Close ad"
                 >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <div className="p-6">
-                    <Link href={ad?.targetUrl || AD_LINK} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
-                        <div className="relative w-full rounded-xl overflow-hidden min-h-[220px]" style={{ aspectRatio }}>
-                            <OptimizedImage
-                                src={ad?.imageUrl || ADS[0].imageUrl}
-                                alt={ad?.alt || 'Sponsored'}
-                                fill
-                                className="object-contain"
-                                sizes="(max-width: 1024px) 100vw, 970px"
-                                priority
-                                decoding="async"
-                            />
+
+                <div className="relative w-full aspect-[4/5] md:aspect-[3/4]">
+                    <Link
+                        href={content.href || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full h-full"
+                        onClick={closeAd} // Close on click? Or keep open? Usually close.
+                    >
+                        <OptimizedImage
+                            src={content.image}
+                            alt={content.title || 'Advertisement'}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 400px"
+                            priority
+                        />
+                        {/* Optional: "Sponsored" label */}
+                        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent text-white text-xs text-center opacity-70">
+                            Advertisement
                         </div>
                     </Link>
                 </div>

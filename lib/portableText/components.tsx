@@ -12,6 +12,7 @@ import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 import { slugify, extractTextFromChildren } from './textUtils'
 import AdTriggerMarker from '@/components/AdTriggerMarker'
+import InArticleAd from '@/components/InArticleAd'
 
 export const portableTextComponents: PortableTextComponents = {
     types: {
@@ -40,6 +41,27 @@ export const portableTextComponents: PortableTextComponents = {
             const alt = (value as any)?.alt || 'Image'
             const href = (value as any)?.href
             const caption = (value as any)?.caption
+            const triggersPopup = (value as any)?.triggersPopup
+
+            if (triggersPopup) {
+                return (
+                    <div className="my-8">
+                        <InArticleAd
+                            image={src}
+                            href={href || '#'}
+                            title={alt}
+                            width={800}
+                            height={500}
+                            className="w-full h-auto rounded-lg"
+                        />
+                        {caption && (
+                            <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
+                                {caption}
+                            </div>
+                        )}
+                    </div>
+                )
+            }
 
             const img = (
                 <div className="relative w-full my-8">

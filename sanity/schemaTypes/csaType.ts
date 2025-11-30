@@ -121,6 +121,7 @@ export const csaType = defineType({
             { name: 'alt', type: 'string', title: 'Alternative text' },
             { name: 'href', type: 'url', title: 'Link URL', description: 'Optional: Make this image clickable (e.g., for ads)' },
             { name: 'caption', type: 'string', title: 'Caption', description: 'Optional: Text to display below the image' },
+            { name: 'triggersPopup', type: 'boolean', title: 'Triggers Popup', description: 'If checked, this image will trigger the popup ad when viewed.' },
           ],
         }),
         defineArrayMember({ type: 'adTrigger' }),

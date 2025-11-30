@@ -8,7 +8,7 @@ export const apiVersion = apiVersionRaw || '2024-10-01'
 
 export const dataset = idRegex.test(String(datasetRaw || ''))
   ? String(datasetRaw)
-  : 'production-fixed'
+  : 'production'
 
 export const projectId = idRegex.test(String(projectIdRaw || ''))
   ? String(projectIdRaw)
