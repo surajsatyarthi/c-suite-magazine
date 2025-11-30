@@ -46,6 +46,6 @@ jobs:
         with:
           credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
           filename: ${{ env.BACKUP_PATH }}
-          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
+          folderId: "1X6Vh68Npjs2nfAc9vB4nWUBKN2wuOXVb"
           name: ${{ env.BACKUP_FILENAME }}
           overwrite: "false"
