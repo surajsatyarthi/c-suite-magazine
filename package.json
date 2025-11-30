@@ -58,6 +58,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.0",
     "eslint-config-next": "16.0.1",
+    "googleapis": "^128.0.0",
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",

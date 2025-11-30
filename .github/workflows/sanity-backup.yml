@@ -41,11 +41,15 @@ jobs:
           echo "BACKUP_FILENAME=$FILENAME" >> $GITHUB_ENV
           echo "BACKUP_PATH=backups/$FILENAME" >> $GITHUB_ENV
 
+      - name: Decode Google Credentials
+        env:
+          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
+        run: |
+          echo "$GDRIVE_CREDENTIALS" | base64 -d > service-account.json
+
       - name: Upload to Google Drive
-        uses: adityak74/google-drive-upload-git-action@main
-        with:
-          credentials: ${{ secrets.GDRIVE_CREDENTIALS }}
-          filename: ${{ env.BACKUP_PATH }}
-          folderId: "1X6Vh68Npjs2nfAc9vB4nWUBKN2wuOXVb"
-          name: ${{ env.BACKUP_FILENAME }}
-          overwrite: "false"
+        env:
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+          BACKUP_PATH: ${{ env.BACKUP_PATH }}
+          BACKUP_FILENAME: ${{ env.BACKUP_FILENAME }}
+        run: node scripts/upload-to-drive.js
