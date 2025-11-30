@@ -1,65 +1,49 @@
-name: Sanity Backup
+name: Daily Sanity Backup
 
 on:
   schedule:
-    - cron: '0 3 * * 1' # Every Monday at 03:00 UTC
-  workflow_dispatch:
+    # Run at 00:00 UTC every day
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   backup:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ceo-magazine
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '18'
 
-      - name: Export Sanity dataset (production)
-        id: export
+      - name: Install Sanity CLI
+        run: npm install -g @sanity/cli
+
+      - name: Export Sanity Dataset
         env:
-          SANITY_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
         run: |
-          FILE="exports/backups/$(date -u +'%Y-%m-%d-%H%M')-production.tar.gz"
-          mkdir -p exports/backups
-          npx --yes sanity@latest dataset export production "$FILE" --yes --token "$SANITY_TOKEN"
-          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+          # Create backups directory
+          mkdir -p backups
+          
+          # Generate filename with timestamp
+          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+          FILENAME="sanity-backup-$TIMESTAMP.tar.gz"
+          
+          # Export dataset (defaulting to 'production')
+          sanity dataset export production "backups/$FILENAME" --project-id ${{ secrets.SANITY_PROJECT_ID }} --dataset production
 
-      - name: Upload backup artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: sanity-backup-${{ github.run_id }}
-          path: ${{ steps.export.outputs.file }}
-          retention-days: 30
+          echo "BACKUP_FILENAME=$FILENAME" >> $GITHUB_ENV
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload backup to S3
-        id: s3upload
-        env:
-          S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      - name: Upload to S3
         run: |
-          DEST="s3://$S3_BUCKET/sanity-backups/$(basename \"${{ steps.export.outputs.file }}\")"
-          echo "Uploading to $DEST"
-          aws s3 cp "${{ steps.export.outputs.file }}" "$DEST" --sse AES256
-          echo "s3_url=$DEST" >> "$GITHUB_OUTPUT"
-
-      - name: Notify Slack (optional)
-        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          S3_URL: ${{ steps.s3upload.outputs.s3_url }}
-        run: |
-          MESSAGE="Sanity backup uploaded to S3: $S3_URL"
-          PAYLOAD=$(printf '{"text":"%s"}' "$MESSAGE")
-          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK_URL"
+          aws s3 cp "backups/${{ env.BACKUP_FILENAME }}" "s3://${{ secrets.AWS_BUCKET_NAME }}/sanity-backups/${{ env.BACKUP_FILENAME }}"
