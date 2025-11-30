@@ -1,4 +1,4 @@
-```javascript
+
 const fs = require('fs');
 const { google } = require('googleapis');
 const path = require('path');
@@ -37,8 +37,8 @@ async function uploadFile() {
         }
 
         console.log(`Starting upload...`);
-        console.log(`File: ${ FILE_PATH } `);
-        console.log(`Target Folder ID: ${ FOLDER_ID } `);
+        console.log(`File: ${FILE_PATH} `);
+        console.log(`Target Folder ID: ${FOLDER_ID} `);
 
         // 3. Upload the file
         const fileMetadata = {
@@ -58,8 +58,8 @@ async function uploadFile() {
         });
 
         console.log('Upload successful!');
-        console.log(`File ID: ${ response.data.id } `);
-        console.log(`View Link: ${ response.data.webViewLink } `);
+        console.log(`File ID: ${response.data.id} `);
+        console.log(`View Link: ${response.data.webViewLink} `);
 
     } catch (error) {
         console.error('Upload failed:', error);
