@@ -57,6 +57,14 @@ export interface Post {
   publishedAt: string
   views?: number
   body: any[]
+  contentPillar?: string
+  articleVariant?: string
+  adAnchorKeywords?: string[]
+  popupAd?: {
+    targetUrl?: string
+    image?: SanityImage
+    alt?: string
+  }
   seo?: {
     metaTitle?: string
     metaDescription?: string

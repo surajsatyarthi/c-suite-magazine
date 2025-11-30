@@ -21,7 +21,7 @@ import { client, urlFor, getClient } from '@/lib/sanity'
 import { draftMode } from 'next/headers'
 import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
-import { Post } from '@/lib/types'
+import { Post, SanityImage } from '@/lib/types'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
 import TagChips from '@/components/TagChips'
 import IncrementViews from '@/components/IncrementViews'
@@ -97,7 +97,7 @@ async function getPost(slug: string): Promise<Post | null> {
         const fallback = getDefaultWriterFromCsv()
         if (fallback) {
           const full = await fetchWriterBySlug(fallback.slug.current)
-            ; (p as any).writer = full || fallback
+            ; (p as Post).writer = full || fallback
         }
       }
       // Filter out potential null categories from broken references
@@ -106,7 +106,7 @@ async function getPost(slug: string): Promise<Post | null> {
         p.categories = p.categories.filter((c: any) => c !== null)
         console.log(`[getPost] Categories after filter:`, JSON.stringify(p.categories))
       }
-      return p
+      return p as Post
     } else {
       console.log(`[getPost] Article not found in Sanity: ${slug}`)
     }
@@ -255,7 +255,7 @@ async function getRelatedPosts(
 }
 
 
-async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' | 'views'>[]> {
+async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' | 'views' | 'categories'>[]> {
   // Requirement: strictly 5 most recent CXO interview articles
   const interviewQuery = `*[_type == "post" && isHidden != true && "cxo-interview" in categories[]->slug.current] | order(publishedAt desc)[0...5] {
     _id,
@@ -281,7 +281,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
   try {
     const params = await props.params
     const { slug: categorySlug, article } = params || { slug: '', article: '' }
-    let post: any = await getPost(article)
+    let post = await getPost(article)
 
     if (post) {
       // console.log(`[CategoryArticlePage] Post categories:`, JSON.stringify(post.categories))
@@ -290,11 +290,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     const isCXOInterview = String(categorySlug) === 'cxo-interview'
     const isCompanySponsored = String(categorySlug) === 'company-sponsored' || (
       Array.isArray(post?.categories)
-        ? post.categories.some((c: any) => String(c?.slug?.current || c?.slug || '').toLowerCase() === 'company-sponsored')
+        ? post.categories.some((c) => String(c?.slug?.current || c?.slug || '').toLowerCase() === 'company-sponsored')
         : false
     )
     const isSpotlight = Array.isArray(post?.categories)
-      ? post.categories.some((c: any) => /spotlight|cxo[-_ ]?spotlight/i.test(String(c?.slug?.current || '')) || /spotlight/i.test(String(c?.title || '')))
+      ? post.categories.some((c) => /spotlight|cxo[-_ ]?spotlight/i.test(String(c?.slug?.current || '')) || /spotlight/i.test(String(c?.title || '')))
       : false
 
     if (!post) {
@@ -302,19 +302,20 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       if (!stub) {
         notFound()
       }
-      post = stub as any
+      post = stub
     }
 
     let relatedPosts = await getRelatedPosts(
-      (post as any)._id,
-      (post as any)?.slug?.current || (post as any)?.slug,
-      Array.isArray((post as any).categories) && (post as any).categories.length > 0 ? (post as any).categories[0]?.slug?.current : undefined,
-      (post as any)?.contentPillar,
-      (post as any)?.tags || []
+      post._id,
+      post.slug.current,
+      post.categories && post.categories.length > 0 ? post.categories[0]?.slug?.current : undefined,
+      post.contentPillar,
+      post.tags || []
     )
     // Comprehensive validation: filter null, undefined, items with empty/missing categories, missing slug, missing title, missing mainImage
+    // Comprehensive validation: filter null, undefined, items with empty/missing categories, missing slug, missing title, missing mainImage
     if (Array.isArray(relatedPosts)) {
-      relatedPosts = relatedPosts.filter((p: any) =>
+      relatedPosts = relatedPosts.filter((p) =>
         p !== null &&
         p !== undefined &&
         p.title &&
@@ -334,7 +335,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     // Comprehensive validation: filter null, undefined, items with empty/missing categories, missing slug, missing title
     // Note: Trending posts don't require mainImage as they only show title
     if (Array.isArray(trendingPosts)) {
-      trendingPosts = trendingPosts.filter((p: any) =>
+      trendingPosts = trendingPosts.filter((p) =>
         p !== null &&
         p !== undefined &&
         p.title &&
@@ -343,7 +344,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     } else {
       trendingPosts = []
     }
-    const bodyText: string = typeof (post as any)?.body === 'string' ? (post as any).body : ''
+    const bodyText: string = typeof post.body === 'string' ? (post.body as string) : ''
 
     const sanitizeMarkdown = (raw?: string): string => {
       if (!raw) return ''
@@ -366,13 +367,13 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
 
     // Full headline display (no truncation per request)
 
-    const headings = Array.isArray((post as any)?.body)
-      ? ((post as any).body as any[])
+    const headings = Array.isArray(post.body)
+      ? (post.body as any[])
         .filter(b => ['h2', 'h3'].includes(b?.style))
         .map((b: any) => ({ text: String(b?.children?.[0]?.text || ''), id: slugify(String(b?.children?.[0]?.text || '')) }))
       : []
 
-    const wordCount = sanitizeMarkdown(bodyText || ((post as any)?.body?.[0]?.children?.[0]?.text || '')).split(/\s+/).filter(Boolean).length
+    const wordCount = sanitizeMarkdown(bodyText || ((post.body?.[0]?.children?.[0]?.text as string) || '')).split(/\s+/).filter(Boolean).length
     const readTime = Math.max(1, Math.round(wordCount / 200))
 
     // Only use Featured hero images for CXO interview articles
@@ -385,13 +386,13 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     }
 
     // Robust interview/Q&A detection, aligned with article/[slug]/page.tsx
-    const detectInterviewMode = (p: any): boolean => {
+    const detectInterviewMode = (p: Post): boolean => {
       try {
         const cats = (p?.categories || [])
-        const catTitles = cats.map((c: any) => String(c?.title || '').toLowerCase())
-        const catSlugs = cats.map((c: any) => String(c?.slug?.current || '').toLowerCase())
-        const categoryHint = catTitles.some((t: string) => /interview|q\s*&\s*a|q\s*and\s*a|conversation|fireside|in\s*conversation/.test(t))
-          || catSlugs.some((s: string) => /(interview|cxo[-_ ]?interview)/.test(s))
+        const catTitles = cats.map((c) => String(c?.title || '').toLowerCase())
+        const catSlugs = cats.map((c) => String(c?.slug?.current || '').toLowerCase())
+        const categoryHint = catTitles.some((t) => /interview|q\s*&\s*a|q\s*and\s*a|conversation|fireside|in\s*conversation/.test(t))
+          || catSlugs.some((s) => /(interview|cxo[-_ ]?interview)/.test(s))
         const blocks: any[] = Array.isArray(p?.body) ? (p.body as any[]) : []
         const sample = blocks
         const hasQAHeuristics = sample.some((b) => {
@@ -410,11 +411,11 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       }
     }
 
-    const interviewMode = String((post as any)?.articleVariant || '').toLowerCase() === 'interview' ? true : detectInterviewMode(post)
+    const interviewMode = String(post.articleVariant || '').toLowerCase() === 'interview' ? true : detectInterviewMode(post)
 
-    const firstBlockText = Array.isArray((post as any)?.body)
+    const firstBlockText = Array.isArray(post.body)
       ? (() => {
-        const b = ((post as any).body as any[]).find((blk: any) => blk?._type === 'block')
+        const b = (post.body as any[]).find((blk: any) => blk?._type === 'block')
         const text = Array.isArray(b?.children) ? b.children.map((c: any) => String(c?.text || '')).join(' ') : ''
         return text
       })()
@@ -424,9 +425,9 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     const safeExcerpt = excerptPrimary || (excerptFallback ? excerptFallback.substring(0, 200) : '')
 
     // Strip duplicate title at the start of body when present
-    const cleanedBody = Array.isArray((post as any)?.body)
+    const cleanedBody = Array.isArray(post.body)
       ? (() => {
-        const blocks = ((post as any).body as any[]).slice()
+        const blocks = (post.body as any[]).slice()
         const norm = (s: string) => String(s || '')
           .replace(/\s+/g, ' ')
           .replace(/[^\w\s]/g, '')
@@ -451,14 +452,14 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
         }
         return blocks
       })()
-      : (post as any)?.body
+      : post.body
 
     return (
       <>
         <Navigation />
 
         <main className="bg-white">
-          <IncrementViews slug={(post as any)?.slug?.current || (post as any)?.slug} />
+          <IncrementViews slug={post.slug.current} />
           <ArticleProgress />
           <script
             type="application/ld+json"
@@ -466,10 +467,10 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
               __html: JSON.stringify(generateStructuredData('article', {
                 title: post.title,
                 description: sanitizeExcerpt(post.excerpt || firstBlockText || bodyText || '')?.substring(0, 160) || undefined,
-                image: (post as any)?.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
+                image: post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
                 publishedTime: post.publishedAt,
-                writer: (post as any)?.writer?.name,
-                url: `https://csuitemagazine.global/category/${categorySlug}/${(post as any)?.slug?.current}`,
+                writer: post.writer?.name,
+                url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
                 wordCount,
                 readTime
               })),
@@ -478,10 +479,10 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
           <script
             dangerouslySetInnerHTML={{
               __html: (() => {
-                const kws = Array.isArray((post as any)?.adAnchorKeywords) ? (post as any).adAnchorKeywords.filter((x: any) => !!x).map((x: any) => String(x)) : []
-                const target = (post as any)?.popupAd?.targetUrl || ''
-                const img = (post as any)?.popupAd?.image ? urlFor((post as any).popupAd.image).auto('format').url() : ''
-                const alt = (post as any)?.popupAd?.alt || 'Sponsored'
+                const kws = Array.isArray(post.adAnchorKeywords) ? post.adAnchorKeywords.filter((x) => !!x).map((x) => String(x)) : []
+                const target = post.popupAd?.targetUrl || ''
+                const img = post.popupAd?.image ? urlFor(post.popupAd.image).auto('format').url() : ''
+                const alt = post.popupAd?.alt || 'Sponsored'
                 const cfg = { keywords: kws, popup: { imageUrl: img, targetUrl: target, alt } }
                 return `window.__AD_CONFIG__=${JSON.stringify(cfg)}`
               })()
@@ -507,10 +508,10 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       </h1>
                       {(() => {
                         const rawTags: string[] = Array.isArray(post.tags)
-                          ? (post.tags as any[]).map((x) => String(x || ''))
+                          ? (post.tags as string[]).map((x) => String(x || ''))
                           : []
                         const tagsFiltered = isCompanySponsored
-                          ? rawTags.filter((t: string) => t.toLowerCase() !== 'sponsored')
+                          ? rawTags.filter((t) => t.toLowerCase() !== 'sponsored')
                           : rawTags
                         return tagsFiltered.length > 0 ? (
                           <TagChips tags={tagsFiltered} className="mt-3" size="sm" variant="blue" />
@@ -520,9 +521,9 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       {post.writer && (
                         <div className="flex items-center gap-3 mt-3" aria-label={`By ${post.writer.name}`}>
                           <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
-                            {post.writer?.image ? (
+                            {post.writer.image || post.writer.imageUrl ? (
                               <OptimizedImage
-                                src={post.writer.imageUrl || urlFor(post.writer.image).width(128).height(128).auto('format').url()}
+                                src={post.writer.imageUrl || urlFor(post.writer.image!).width(128).height(128).auto('format').url()}
                                 alt={post.writer.name}
                                 fill
                                 className="object-cover"
@@ -530,7 +531,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                             ) : (
                               <div className="w-full h-full bg-[#082945] text-white flex items-center justify-center">
                                 <span className="text-xs font-semibold">
-                                  {String(post.writer?.name || '')
+                                  {String(post.writer.name || '')
                                     .split(' ')
                                     .map((n) => n[0])
                                     .slice(0, 2)
@@ -561,7 +562,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       </div>
 
                       <SocialShare
-                        url={`https://csuitemagazine.global/category/${categorySlug}/${(post as any)?.slug?.current}`}
+                        url={`https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`}
                         title={post.title}
                       />
                     </div>
@@ -572,7 +573,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                         className={'relative w-full rounded-lg overflow-hidden mb-10'}
                         style={(() => {
                           if (featuredHeroSrc) return { aspectRatio: featuredHeroAspect || 16 / 9 }
-                          const meta = (post as any)?.mainImage?.asset?.metadata?.dimensions?.aspectRatio
+                          const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
                           return { aspectRatio: meta || 16 / 9 }
                         })()}
                       >
@@ -580,15 +581,15 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                           src={
                             (() => {
                               if (featuredHeroSrc) return featuredHeroSrc
-                              return (post as any)?.mainImage?.asset?.url ||
-                                urlFor(post.mainImage)
+                              return post.mainImage?.asset?.url ||
+                                urlFor(post.mainImage!)
                                   .width(1600)
                                   .quality(95)
                                   .auto('format')
                                   .url()
                             })()
                           }
-                          alt={(post as any)?.mainImage?.alt || post.title}
+                          alt={post.mainImage?.alt || post.title}
                           fill
                           className={'object-cover object-center'}
                           quality={95}
@@ -662,9 +663,9 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                         <h3 className="font-serif text-base font-semibold text-gray-900 mb-4">Writer</h3>
                         <div className="flex items-center gap-3 mb-3">
                           <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
-                            {post.writer?.image ? (
+                            {post.writer.image || post.writer.imageUrl ? (
                               <OptimizedImage
-                                src={post.writer.imageUrl || urlFor(post.writer.image).width(256).height(256).auto('format').url()}
+                                src={post.writer.imageUrl || urlFor(post.writer.image!).width(256).height(256).auto('format').url()}
                                 alt={post.writer.name}
                                 fill
                                 className="object-cover"
@@ -672,7 +673,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                             ) : (
                               <div className="w-full h-full bg-[#082945] text-white flex items-center justify-center">
                                 <span className="text-sm font-semibold">
-                                  {String(post.writer?.name || '')
+                                  {String(post.writer.name || '')
                                     .split(' ')
                                     .map((n) => n[0])
                                     .slice(0, 2)
@@ -684,7 +685,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                           </div>
                           <div>
                             <div className="font-serif text-sm font-medium text-gray-900">{post.writer.name}</div>
-                            {post.writer?.position && (
+                            {post.writer.position && (
                               <div className="text-xs text-gray-500">{post.writer.position}</div>
                             )}
                           </div>
@@ -717,7 +718,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                           {relatedPosts.map((relatedPost) => (
                             <Link
                               key={relatedPost._id}
-                              href={`/category/${(relatedPost as any)?.categories?.[0]?.slug?.current}/${relatedPost.slug?.current || relatedPost.slug}`}
+                              href={`/category/${relatedPost.categories?.[0]?.slug?.current}/${relatedPost.slug?.current || relatedPost.slug}`}
                               prefetch
                               className="block group"
                             >
@@ -737,8 +738,8 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                               </h4>
                               <div className="flex items-center text-sm text-gray-500 font-sans">
                                 {(() => {
-                                  const slug = (relatedPost as any)?.slug?.current || (relatedPost as any)?.slug
-                                  const v = getViews(slug, (relatedPost as any)?.views)
+                                  const slug = relatedPost.slug?.current || (relatedPost.slug as any)
+                                  const v = getViews(slug, relatedPost.views)
                                   const formatted = formatViewsMillion(v)
                                   return formatted ? (
                                     <span className="flex items-center gap-1">
@@ -768,8 +769,8 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       <div className="space-y-4">
                         {trendingPosts && trendingPosts.length > 0 ? (
                           trendingPosts.map((tp, idx) => {
-                            const catSlug = String(((tp as any)?.categories?.[0]?.slug?.current ?? (tp as any)?.categories?.[0]?.slug ?? 'general'))
-                            const postSlug = String(((tp as any)?.slug?.current ?? (tp as any)?.slug ?? ''))
+                            const catSlug = String((tp.categories?.[0]?.slug?.current ?? tp.categories?.[0]?.slug ?? 'general'))
+                            const postSlug = String((tp.slug?.current ?? tp.slug ?? ''))
                             const href = `/category/${catSlug}/${postSlug}`
                             const content = (
                               <div className="flex gap-3">
