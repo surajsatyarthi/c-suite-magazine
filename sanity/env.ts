@@ -14,5 +14,5 @@ export const projectId = idRegex.test(String(projectIdRaw || ''))
   ? String(projectIdRaw)
   : '2f93fcy8'
 
-export const token = process.env.SANITY_API_READ_TOKEN
+export const token = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN
 

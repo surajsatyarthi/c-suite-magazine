@@ -33,7 +33,9 @@ export async function GET() {
       }
     }
     try {
-      const cats = await client.fetch(query)
+      // Force fresh data even for read client to avoid stale empty categories
+      const freshClient = client.withConfig({ useCdn: false })
+      const cats = await freshClient.fetch(query)
       const items = Array.isArray(cats) ? cats.filter((c: any) => c && typeof c.title === 'string') : []
       if (items.length) {
         const res = NextResponse.json({ categories: items })

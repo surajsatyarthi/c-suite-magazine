@@ -6,27 +6,25 @@ import { ADS } from '@/lib/adInterstitial/constants'
 
 export default function ScrollTriggerAd() {
     const { openAd, isOpen } = useAdStore()
-    const hasTriggered = useRef(false)
+    const hasTriggered = useRef<string[]>([])
 
     useEffect(() => {
         const handleScroll = () => {
-            if (hasTriggered.current || isOpen) return
+            if (isOpen) return
 
             const scrollTop = window.scrollY
             const docHeight = document.documentElement.scrollHeight
             const winHeight = window.innerHeight
             const scrollPercent = scrollTop / (docHeight - winHeight)
 
-            if (scrollPercent > 0.5) {
-                hasTriggered.current = true
-                // Always start with Patek (Index 0) for normal articles
-                const firstAd = ADS[0]
+            if (scrollPercent > 0.5 && !hasTriggered.current.includes('carousel')) {
+                hasTriggered.current.push('carousel')
 
-                openAd({
-                    image: firstAd.imageUrl,
-                    href: firstAd.targetUrl,
-                    title: firstAd.alt || 'Sponsored'
-                })
+                // Pass BOTH ads to the store to trigger the carousel
+                openAd([
+                    { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },
+                    { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || 'Sponsored' }
+                ])
             }
         }
 

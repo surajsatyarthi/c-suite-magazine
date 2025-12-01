@@ -65,8 +65,10 @@ async function fetchWriterBySlug(slug: string) {
 
 async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`)
-  const query = `*[_type in ["post","article","csa"] && (slug.current == $slug || slug == $slug) && isHidden != true][0] {
+  // Relaxed query to ensure CSA articles are found even if isHidden is somehow set or undefined logic is tricky
+  const query = `*[_type in ["post","article","csa"] && (slug.current == $slug || slug == $slug) && (_type == "csa" || isHidden != true)][0] {
     _id,
+    _type,
     title,
     slug,
     excerpt,
@@ -83,7 +85,16 @@ async function getPost(slug: string): Promise<Post | null> {
     contentPillar,
     articleVariant,
     views,
-    body,
+    views,
+    body[]{
+      ...,
+      _type == "image" => {
+        ...,
+        asset->,
+        targetUrl,
+        isPopupTrigger
+      }
+    },
     seo,
     adAnchorKeywords,
     popupAd{ targetUrl, image, alt }
@@ -157,6 +168,7 @@ async function getPostFromExports(slug: string): Promise<Post | null> {
 
     const assembled: any = {
       _id: data?._id || slug,
+      _type: data?._type || 'post',
       title: data?.title || slug,
       slug: { current: slug },
       excerpt: data?.excerpt || null,
@@ -198,6 +210,7 @@ async function getPostStub(slug: string, categorySlug?: string): Promise<Post | 
     const mainImage = { asset: { url: webp }, alt: name }
     const assembled: any = {
       _id: slug,
+      _type: 'post',
       title: name || slug,
       slug: { current: slug },
       excerpt: null,
@@ -290,7 +303,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     }
 
     const isCXOInterview = String(categorySlug) === 'cxo-interview'
-    const isCompanySponsored = String(categorySlug) === 'company-sponsored' || (
+    const isCompanySponsored = (post as any)?._type === 'csa' || String(categorySlug) === 'company-sponsored' || (
       Array.isArray(post?.categories)
         ? post.categories.some((c) => String(c?.slug?.current || c?.slug || '').toLowerCase() === 'company-sponsored')
         : false
@@ -456,8 +469,12 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       })()
       : post.body
 
+    // Legacy AD_CONFIG injection removed.
+    // AdInterstitialV2 uses Zustand store and does not rely on window.__AD_CONFIG__.
+
     return (
       <>
+
         <Navigation />
 
         <main className="bg-white">
@@ -617,38 +634,33 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                     {isCompanySponsored && (
                       <div className="mt-8 space-y-8">
                         {/* Dynamic In-Article Ad (Triggers Popup) */}
-                        {(() => {
-                          const adImage = post.popupAd?.image
-                            ? urlFor(post.popupAd.image).width(300).height(600).auto('format').url()
-                            : '/vertical_ad.png'
-                          const adTarget = post.popupAd?.targetUrl || 'https://www.brabus.com/en-int/cars/classics/C4S192C.html'
-                          const adTitle = post.popupAd?.alt || 'Sponsored'
+                        {post.popupAd?.image && (
+                          (() => {
+                            // Use fit=max to respect original aspect ratio while constraining dimensions
+                            const adImage = urlFor(post.popupAd.image)
+                              .width(600) // Increased width for better quality
+                              .fit('max')
+                              .auto('format')
+                              .url()
 
-                          return (
-                            <>
-                              {/* Half page inline ad (300x600) */}
-                              <InArticleAd
-                                image={adImage}
-                                href={adTarget}
-                                title={adTitle}
-                                width={300}
-                                height={600}
-                                className="mx-auto"
-                              />
-                              {/* Quarter page inline ad (300x250) - Optional second ad */}
-                              <div className="relative w-full mx-auto hidden md:block" style={{ aspectRatio: '300/250' }}>
+                            const adTarget = post.popupAd.targetUrl || '#'
+                            const adTitle = post.popupAd.alt || 'Sponsored'
+
+                            return (
+                              <div className="flex justify-center">
+                                {/* Single high-quality inline ad */}
                                 <InArticleAd
                                   image={adImage}
                                   href={adTarget}
                                   title={adTitle}
                                   width={300}
-                                  height={250}
+                                  height={600} // Default height, but image aspect ratio will be preserved by object-contain
                                   className="mx-auto"
                                 />
                               </div>
-                            </>
-                          )
-                        })()}
+                            )
+                          })()
+                        )}
                       </div>
                     )}
 
@@ -818,6 +830,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
     // resolveFeaturedHeroImage is already called inside getPostStub if applicable
     const featuredHeroSrc = stub?.mainImage?.asset?.url || null
     const featuredHeroAspect = featuredHeroSrc ? 16 / 9 : null
+
     return (
       <>
         <Navigation />
@@ -853,7 +866,8 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                           sizes={'(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'}
                         />
                       </div>
-                    )}
+                    )
+                    }
                     <div className="prose prose-lg max-w-none">
                       {process.env.NEXT_PUBLIC_USE_PORTABLE_V2 === 'true' ? (
                         <PortableBodyV2 value={[]} interviewMode={false} />
@@ -861,17 +875,17 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                         <PortableBody value={[]} interviewMode={false} />
                       )}
                     </div>
-                  </div>
+                  </div >
                   <div className="space-y-6">
                     <div className="bg-transparent border border-gray-200/30 rounded-lg p-3">
                       <Ad placement="article-sidebar-large" />
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        </main>
+                </div >
+              </div >
+            </div >
+          </article >
+        </main >
         <Footer />
       </>
     )

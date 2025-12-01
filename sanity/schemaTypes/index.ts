@@ -1,6 +1,6 @@
 import { type SchemaTypeDefinition } from 'sanity'
 
-import { adType } from './adType'
+
 import { blockContentType } from './blockContentType'
 import { categoryType } from './categoryType'
 import { csaType } from './csaType'
@@ -11,6 +11,8 @@ import { writerType } from './writerType'
 import { carouselType } from './carouselType'
 import { ctaType } from './ctaType'
 
+import { advertisementType } from './advertisementType'
+
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, categoryType, postType, csaType, writerType, adType, spotlightConfigType, videoType, carouselType, ctaType],
+  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType],
 }

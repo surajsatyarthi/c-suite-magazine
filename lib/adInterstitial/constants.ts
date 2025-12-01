@@ -14,7 +14,7 @@ export type PopupAd = {
 export const ADS: PopupAd[] = [
     // Use clean filename first; keep variant as secondary
     { imageUrl: '/popup-ad.png', targetUrl: AD_LINK, alt: 'Sponsored' },
-    { imageUrl: '/popup-ad%202.png', targetUrl: GULFSTREAM_LINK, alt: 'Sponsored' },
+    { imageUrl: '/popup-ad 2.png', targetUrl: GULFSTREAM_LINK, alt: 'Sponsored' },
 ]
 
 // Allow legacy/variant filenames with spaces or hyphens

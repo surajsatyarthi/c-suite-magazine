@@ -31,7 +31,7 @@ function extractTextFromChildren(children: any[]): string {
   }
 }
 
-import AdTriggerMarker from '@/components/AdTriggerMarker'
+
 import VideoPlayer from '@/components/VideoPlayer'
 import TableBlock from '@/components/TableBlock'
 import CarouselBlock from '@/components/CarouselBlock'
@@ -41,7 +41,7 @@ import CtaBlock from '@/components/CtaBlock'
 
 const components: PortableTextComponents = {
   types: {
-    adTrigger: () => <AdTriggerMarker />,
+
     video: ({ value }) => {
       const { url, caption } = value as any
       return <VideoPlayer url={url} caption={caption} />
@@ -57,7 +57,7 @@ const components: PortableTextComponents = {
       } else if (typeof (value as any)?.url === 'string') {
         src = (value as any).url
       } else if ((value as any)?.asset) {
-        src = urlFor(value).width(1200).height(800).auto('format').url()
+        src = urlFor(value).width(1200).fit('max').auto('format').url()
       } else if (typeof value === 'string') {
         const s = String(value).trim()
         if (s) src = s
@@ -77,7 +77,7 @@ const components: PortableTextComponents = {
               title={alt}
               width={800} // Default width for inline images
               height={500} // Default height
-              className="w-full h-auto rounded-lg"
+              className="w-full h-auto rounded-lg object-contain"
             />
             {caption && (
               <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
@@ -91,7 +91,7 @@ const components: PortableTextComponents = {
       const img = (
         <div className="relative w-full my-8">
           <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden">
-            <OptimizedImage src={src} alt={alt} fill className="object-cover" sizes="100vw" />
+            <OptimizedImage src={src} alt={alt} fill className="object-contain" sizes="100vw" />
           </div>
           {caption && (
             <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">

@@ -17,6 +17,8 @@ import { table } from '@sanity/table'
 import { schema } from './sanity/schemaTypes'
 import { structure } from './sanity/structure'
 
+import { map } from 'rxjs/operators'
+
 export default defineConfig({
   basePath: '/studio',
   projectId,
@@ -34,6 +36,48 @@ export default defineConfig({
         previewMode: {
           enable: '/api/draft',
         },
+      },
+      resolve: {
+        locations: (params, context) => {
+          const { id, type } = params
+          if (type === 'csa') {
+            return context.documentStore
+              .listenQuery(`*[_id == $id][0]{slug}`, { id }, { perspective: 'previewDrafts' })
+              .pipe(
+                map((doc: any) => {
+                  if (doc?.slug?.current) {
+                    return {
+                      locations: [
+                        {
+                          title: 'Preview',
+                          href: `/category/company-sponsored/${doc.slug.current}`,
+                        },
+                      ],
+                    }
+                  }
+                  return null
+                })
+              )
+          }
+          if (type === 'post') {
+            return context.documentStore
+              .listenQuery(`*[_id == $id][0]{slug, "category": categories[0]->slug.current}`, { id }, { perspective: 'previewDrafts' })
+              .pipe(
+                map((doc: any) => {
+                  if (doc?.slug?.current) {
+                    const cat = doc.category || 'general'
+                    return {
+                      locations: [
+                        { title: 'Preview', href: `/category/${cat}/${doc.slug.current}` }
+                      ]
+                    }
+                  }
+                  return null
+                })
+              )
+          }
+          return null
+        }
       },
     }),
     dashboardTool({

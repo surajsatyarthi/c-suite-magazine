@@ -26,52 +26,48 @@ async function fetchAd(placement: string) {
 export default async function Ad({ placement, className }: AdProps) {
   const ad = await fetchAd(placement)
 
-  // Force local vertical ad for article sidebar large if no CMS ad is configured
+  // Fallback: Brabus Ad for Sidebar (if no Sanity ad found)
   if (placement === 'article-sidebar-large' && (!ad || !ad.image)) {
-    const localFallbackUrl = '/vertical_ad.png'
-    const target = 'https://www.brabus.com/en-int/cars/classics/C4S192C.html'
-    const width = 300
-    const height = 600
-    const sizes = '(max-width: 1024px) 100vw, 300px'
+    // Explicitly fetch the Brabus ad by ID to ensure it shows as the fallback
+    const BRABUS_AD_ID = 'clNGIHR7teKIrj4L6FqRKA'
+    const fallbackAd = await client.fetch(`*[_id == $id][0]{
+      name,
+      image,
+      targetUrl,
+      dimensions
+    }`, { id: BRABUS_AD_ID })
 
-    return (
-      <div className={className}>
-        <Link href={target} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
-          <div
-            className={`relative w-full lg:max-w-[300px] mx-auto`}
-            style={{ aspectRatio: `${width}/${height}` }}
-          >
-            <OptimizedImage
-              src={localFallbackUrl}
-              alt={'Sponsored'}
-              fill
-              className="rounded object-contain"
-              sizes={sizes}
-              priority
-            />
-          </div>
-        </Link>
-      </div>
-    )
+    if (fallbackAd && fallbackAd.image) {
+      const width = fallbackAd.dimensions?.width || 300
+      const height = fallbackAd.dimensions?.height || 600
+      const imageUrl = urlFor(fallbackAd.image).width(width).height(height).auto('format').url()
+      const sizes = '(max-width: 1024px) 100vw, 300px'
+
+      return (
+        <div className={className}>
+          <Link href={fallbackAd.targetUrl || '#'} target="_blank" rel="noopener noreferrer" className="block focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2">
+            <div
+              className={`relative w-full lg:max-w-[300px] mx-auto`}
+              style={{ aspectRatio: `${width}/${height}` }}
+            >
+              <OptimizedImage
+                src={imageUrl}
+                alt={fallbackAd.name || 'Sponsored'}
+                fill
+                className="rounded object-contain"
+                sizes={sizes}
+                priority
+              />
+            </div>
+          </Link>
+        </div>
+      )
+    }
   }
 
-  // Fallback for in-article when CMS ad missing
-  if ((!ad || !ad.image) && placement === 'in-article') {
-    // Randomly select Patek or Gulfstream for popup reinforcement
-    const randomAd = ADS[Math.floor(Math.random() * ADS.length)]
-    const width = 728
-    const height = 90
-
-    return (
-      <InArticleAd
-        image={randomAd.imageUrl}
-        href={randomAd.targetUrl}
-        title={randomAd.alt || 'Sponsored'}
-        width={width}
-        height={height}
-        className={className}
-      />
-    )
+  // Return null if no ad is found (for in-article or if fallback fails)
+  if (!ad || !ad.image) {
+    return null
   }
 
   const width = ad?.dimensions?.width || (placement === 'in-article' ? 728 : 300)

@@ -89,6 +89,18 @@ export const structure: StructureResolver = (S) =>
             .filter('_type == "csa"')
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
         ),
+
+      // Advertisements Management
+      S.listItem()
+        .id('advertisements')
+        .title('Advertisements')
+        .child(
+          S.documentList()
+            .title('Advertisements')
+            .filter('_type == "advertisement"')
+            .defaultOrdering([{ field: 'priority', direction: 'desc' }])
+        ),
+
       S.documentTypeListItem('post').title('Posts'),
       S.documentTypeListItem('category').title('Categories'),
       S.documentTypeListItem('writer').title('Writers'),
@@ -102,6 +114,6 @@ export const structure: StructureResolver = (S) =>
         ),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'writer', 'spotlightConfig', 'csa'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'writer', 'spotlightConfig', 'csa', 'advertisement'].includes(item.getId()!),
       ),
     ])

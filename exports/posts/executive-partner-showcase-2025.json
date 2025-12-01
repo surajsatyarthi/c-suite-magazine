@@ -6,7 +6,7 @@
   "excerpt": "A sponsored feature on executive-led innovation shaping the future of enterprise.",
   "writer": { "name": "C-Suite Editorial", "slug": { "current": "c-suite-editorial" } },
   "mainImage": {
-    "asset": { "url": "/Featured section/sample-featured.webp" },
+    "asset": { "url": "/hero-image.webp" },
     "alt": "Company executives unveiling a new product"
   },
   "categories": [

@@ -28,7 +28,7 @@ A premium, high-end magazine blog targeting global CXOs built with Next.js 14, S
 - Gold/Yellow: `#c8ab3d`
 - White: `#ffffff`
 
-See `DESIGN_REFERENCE.md` for complete design system documentation.
+See `docs/reference/design.md` for complete design system documentation.
 
 ## Getting Started
 
@@ -151,7 +151,11 @@ ceo-magazine/
 │   ├── schemaTypes/       # Content schemas
 │   └── env.ts             # Sanity environment config
 ├── public/                # Static assets
-└── DESIGN_REFERENCE.md    # Design system documentation
+├── public/                # Static assets
+└── docs/                  # Project documentation
+    ├── rules/             # Business & Operational rules
+    ├── reference/         # Design & Category references
+    └── guides/            # Runbooks & Overviews
 ```
 
 ## Development Tips
@@ -200,10 +204,11 @@ Edit fonts in `app/layout.tsx`
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
 ### Project Docs
-- `STANDARDS.md` — Coding standards, image/hero policy, terminology (Writer-only)
-- `OPERATIONAL_RULES.md` — Ops rules, cookies (`user-country`), routing conventions
-- `PROJECT_DOCUMENTATION.md` — Architecture overview, data flow, terminology & policies
-- `OPERATIONS_RUNBOOK.md` — Deployment runbook and operational procedures
+### Project Docs
+- `docs/rules/standards.md` — Coding standards, image/hero policy, terminology (Writer-only)
+- `docs/rules/operational.md` — Ops rules, cookies (`user-country`), routing conventions
+- `docs/guides/project-overview.md` — Architecture overview, data flow, terminology & policies
+- `docs/guides/runbook.md` — Deployment runbook and operational procedures
 
 ---
 

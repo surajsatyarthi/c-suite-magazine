@@ -124,7 +124,7 @@ export const csaType = defineType({
             { name: 'triggersPopup', type: 'boolean', title: 'Triggers Popup', description: 'If checked, this image will trigger the popup ad when viewed.' },
           ],
         }),
-        defineArrayMember({ type: 'adTrigger' }),
+
         defineArrayMember({ type: 'video' }),
         defineArrayMember({ type: 'table' }),
         defineArrayMember({ type: 'carousel' }),
