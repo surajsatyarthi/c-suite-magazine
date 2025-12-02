@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import Hero from '@/components/Hero'
 import MagazineGallery from '@/components/MagazineGallery'
+import GuestAuthors from '@/components/GuestAuthors'
 import LatestInsights from '@/components/LatestInsights'
 import { client, urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
@@ -26,7 +27,7 @@ async function fetchWithTimeout<T>(promise: Promise<T>, ms = 1800, onTimeout?: (
   return await Promise.race([
     promise,
     new Promise<null>((resolve) => setTimeout(() => {
-      try { onTimeout?.() } catch {}
+      try { onTimeout?.() } catch { }
       resolve(null)
     }, ms))
   ])
@@ -48,27 +49,27 @@ async function getLatestPosts(): Promise<Post[]> {
       client.fetch(query, { excludeSlugs }, { next: { revalidate: 600 } }),
       1500
     )
-    
+
     if (!Array.isArray(allResults)) return []
-    
+
     // Select articles ensuring different categories
     const selectedPosts: Post[] = []
     const usedCategories = new Set<string>()
-    
+
     for (const post of allResults) {
       const categories = (post as any)?.categories || []
       const primaryCategory = categories[0]?.title || 'Uncategorized'
-      
+
       // Skip if we already have an article from this category
       if (usedCategories.has(primaryCategory)) continue
-      
+
       selectedPosts.push(post as Post)
       usedCategories.add(primaryCategory)
-      
+
       // Stop once we have 6 articles from different categories
       if (selectedPosts.length >= 6) break
     }
-    
+
     return selectedPosts
   } catch (e) {
     console.error('Error fetching latest posts:', e)
@@ -110,7 +111,7 @@ export default async function Home() {
   return (
     <>
       <Navigation />
-      
+
       {/* Enhanced Structured Data */}
       <script
         type="application/ld+json"
@@ -123,13 +124,16 @@ export default async function Home() {
           })),
         }}
       />
-      
+
       <main>
         {/* Hero Section with Parallax */}
         <Hero />
 
         {/* Magazine Gallery */}
         <MagazineGallery />
+
+        {/* Guest Authors */}
+        <GuestAuthors />
 
         {/* Latest Insights */}
         <LatestInsights articles={latestArticles} />
