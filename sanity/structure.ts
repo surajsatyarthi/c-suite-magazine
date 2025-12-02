@@ -103,7 +103,15 @@ export const structure: StructureResolver = (S) =>
 
       S.documentTypeListItem('post').title('Posts'),
       S.documentTypeListItem('category').title('Categories'),
-      S.documentTypeListItem('writer').title('Writers'),
+      S.documentTypeListItem('writer').title('All Writers'),
+      S.listItem()
+        .title('Guest Writers')
+        .child(
+          S.documentList()
+            .title('Guest Writers')
+            .filter('_type == "writer" && writerType == "guest"')
+            .defaultOrdering([{ field: 'name', direction: 'asc' }])
+        ),
       S.listItem()
         .id('spotlight-config-singleton')
         .title('Spotlight Config')

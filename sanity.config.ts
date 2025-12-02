@@ -19,13 +19,48 @@ import { structure } from './sanity/structure'
 
 import { map } from 'rxjs/operators'
 
+import { CopyLinkAction } from './sanity/actions'
+
 export default defineConfig({
   basePath: '/studio',
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
-  document: {},
+  document: {
+    actions: (prev, context) => {
+      // Only add to relevant types
+      if (['post', 'csa'].includes(context.schemaType)) {
+        return [...prev, CopyLinkAction]
+      }
+      return prev
+    },
+    productionUrl: async (prev, context) => {
+      const { getClient, document } = context
+      const client = getClient({ apiVersion })
+
+      if (document._type === 'post') {
+        const slug = (document.slug as any)?.current
+        if (!slug) return prev
+        const params = { id: document._id }
+        // Fetch category to build correct URL
+        const result = await client.fetch(
+          `*[_id == $id][0]{ "category": categories[0]->slug.current }`,
+          params
+        )
+        const category = result?.category || 'general'
+        return `https://csuitemagazine.global/category/${category}/${slug}`
+      }
+
+      if (document._type === 'csa') {
+        const slug = (document.slug as any)?.current
+        if (!slug) return prev
+        return `https://csuitemagazine.global/category/company-sponsored/${slug}`
+      }
+
+      return prev
+    },
+  },
   plugins: [
     structureTool({ structure }),
     table(),

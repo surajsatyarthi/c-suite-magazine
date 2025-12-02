@@ -30,6 +30,21 @@ export const writerType = defineType({
       description: 'e.g., Executive Editor, Contributing Writer',
     }),
     defineField({
+      name: 'writerType',
+      type: 'string',
+      title: 'Writer Type',
+      description: 'Classify the writer (Staff, Guest, Contributor)',
+      options: {
+        list: [
+          { title: 'Staff', value: 'staff' },
+          { title: 'Guest Author', value: 'guest' },
+          { title: 'Contributor', value: 'contributor' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'staff',
+    }),
+    defineField({
       name: 'image',
       type: 'image',
       title: 'Profile Photo',

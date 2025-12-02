@@ -137,6 +137,7 @@ export const postType = defineType({
       name: 'articleType',
       type: 'string',
       title: 'Article Type',
+      description: 'System field. Enter "spotlight" to prevent auto-image generation. Leave blank for standard articles.',
       group: 'meta',
     }),
     defineField({
@@ -221,14 +222,6 @@ export const postType = defineType({
           validation: (Rule) => Rule.max(160),
         }),
       ],
-    }),
-    defineField({
-      name: 'adAnchorKeywords',
-      type: 'array',
-      title: 'Ad Anchor Keywords',
-      description: 'Words or phrases that should trigger the popup on scroll.',
-      of: [defineArrayMember({ type: 'string' })],
-      group: 'meta',
     }),
     defineField({
       name: 'popupAd',
