@@ -1,9 +1,12 @@
 import { create } from 'zustand'
 
 export interface AdContent {
+    /** The URL of the ad image to display */
     image: string
-    href?: string
-    title?: string
+    /** The target URL when the ad is clicked */
+    href: string
+    /** Accessibility text and title attribute */
+    title: string
 }
 
 interface AdState {

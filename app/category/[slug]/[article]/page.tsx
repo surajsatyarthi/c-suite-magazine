@@ -13,7 +13,6 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 // dynamic already imported above
 import Ad from '@/components/Ad'
-import InArticleAd from '@/components/InArticleAd'
 import ScrollTriggerAd from '@/components/ScrollTriggerAd'
 import SocialShare from '@/components/SocialShare'
 import PortableBody from '@/components/PortableBody'
@@ -630,39 +629,8 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
                       )}
                     </div>
 
-                    {/* Company Sponsored Inline Ads */}
-                    {isCompanySponsored && (
-                      <div className="mt-8 space-y-8">
-                        {/* Dynamic In-Article Ad (Triggers Popup) */}
-                        {post.popupAd?.image && (
-                          (() => {
-                            // Use fit=max to respect original aspect ratio while constraining dimensions
-                            const adImage = urlFor(post.popupAd.image)
-                              .width(600) // Increased width for better quality
-                              .fit('max')
-                              .auto('format')
-                              .url()
-
-                            const adTarget = post.popupAd.targetUrl || '#'
-                            const adTitle = post.popupAd.alt || 'Sponsored'
-
-                            return (
-                              <div className="flex justify-center">
-                                {/* Single high-quality inline ad */}
-                                <InArticleAd
-                                  image={adImage}
-                                  href={adTarget}
-                                  title={adTitle}
-                                  width={300}
-                                  height={600} // Default height, but image aspect ratio will be preserved by object-contain
-                                  className="mx-auto"
-                                />
-                              </div>
-                            )
-                          })()
-                        )}
-                      </div>
-                    )}
+                    {/* Company Sponsored Inline Ads - REMOVED per user request (no bottom ad) */}
+                    {/* Ads are strictly inline within the body content via PortableBody */}
 
                     {/* Normal Articles: Trigger Popup on 50% Scroll */}
                     {!isCompanySponsored && <ScrollTriggerAd />}

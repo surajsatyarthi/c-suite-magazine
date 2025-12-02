@@ -5,6 +5,9 @@
 export const AD_LINK = 'https://www.patek.com/en/collection/aquanaut/5968r-001'
 export const GULFSTREAM_LINK = 'https://www.gulfstream.com/en/aircraft/gulfstream-g700/'
 
+export const CAROUSEL_INTERVAL = 5000 // 5 seconds
+export const SCROLL_THRESHOLD = 0.5 // 50% scroll depth
+
 export type PopupAd = {
     imageUrl: string
     targetUrl: string

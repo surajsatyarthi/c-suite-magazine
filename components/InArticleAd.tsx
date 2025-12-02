@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
-import { useAdStore } from '@/store/adStore'
+import { useAdTrigger } from '@/hooks/useAdTrigger'
 
 interface InArticleAdProps {
     image: string
@@ -12,24 +12,25 @@ interface InArticleAdProps {
     width?: number
     height?: number
     className?: string
+    disablePopup?: boolean
 }
 
-export default function InArticleAd({ image, href, title, width = 728, height = 90, className }: InArticleAdProps) {
-    const { openAd } = useAdStore()
+export default function InArticleAd({ image, href, title, width = 728, height = 90, className, disablePopup = false }: InArticleAdProps) {
+    const { triggerAd } = useAdTrigger()
     const ref = useRef<HTMLDivElement>(null)
-    const hasTriggered = useRef(false)
 
     useEffect(() => {
+        if (disablePopup) return
+
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting && !hasTriggered.current) {
+                    if (entry.isIntersecting) {
                         // Trigger popup when ad is 50% visible
-                        hasTriggered.current = true
-                        openAd({
+                        triggerAd({
                             image,
                             href,
-                            title
+                            title: title || 'Sponsored'
                         })
                     }
                 })
@@ -45,7 +46,7 @@ export default function InArticleAd({ image, href, title, width = 728, height = 
         }
 
         return () => observer.disconnect()
-    }, [image, href, title, openAd])
+    }, [image, href, title, triggerAd, disablePopup])
 
     return (
         <div ref={ref} className={className}>
