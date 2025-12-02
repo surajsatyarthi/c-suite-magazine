@@ -7,6 +7,7 @@ import fs from 'fs'
 import path from 'path'
 import dynamic from 'next/dynamic'
 const ArticleProgress = dynamic(() => import('@/components/ArticleProgress'))
+import ReadMoreArticles from '@/components/ReadMoreArticles'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -95,7 +96,6 @@ async function getPost(slug: string): Promise<Post | null> {
       }
     },
     seo,
-    adAnchorKeywords,
     popupAd{ targetUrl, image, alt }
   }`
   try {
@@ -785,6 +785,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
           </article>
         </main>
 
+        <ReadMoreArticles currentPostId={post._id} />
         <Footer />
       </>
     )
