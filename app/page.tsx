@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import Hero from '@/components/Hero'
 import MagazineGallery from '@/components/MagazineGallery'
+import IndustryJuggernauts from '@/components/IndustryJuggernauts'
 import GuestAuthors from '@/components/GuestAuthors'
 import LatestInsights from '@/components/LatestInsights'
 import { client, urlFor } from '@/lib/sanity'
@@ -105,8 +106,12 @@ function formatDate(dateString: string) {
   })
 }
 
+import { getSpotlightItems, processSpotlightItems } from '@/lib/spotlight'
+
 export default async function Home() {
   const latestArticles = await getLatestPosts()
+  const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
+  const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
 
   return (
     <>
@@ -130,7 +135,10 @@ export default async function Home() {
         <Hero />
 
         {/* Magazine Gallery */}
-        <MagazineGallery />
+        <MagazineGallery items={spotlightItems} />
+
+        {/* Industry Juggernauts */}
+        <IndustryJuggernauts items={spotlightItems} />
 
         {/* Guest Authors */}
         <GuestAuthors />

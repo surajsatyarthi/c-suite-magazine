@@ -142,7 +142,6 @@ export const csaType = defineType({
         defineField({ name: 'metaDescription', type: 'text', title: 'Meta Description', rows: 3 }),
       ],
     }),
-    // Removed adAnchorKeywords (replaced by adTrigger block)
     defineField({
       name: 'popupAd',
       type: 'object',

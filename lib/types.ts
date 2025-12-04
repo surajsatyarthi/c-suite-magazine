@@ -59,7 +59,6 @@ export interface Post {
   body: any[]
   contentPillar?: string
   articleVariant?: string
-  adAnchorKeywords?: string[]
   popupAd?: {
     targetUrl?: string
     image?: SanityImage

@@ -120,8 +120,16 @@ export const structure: StructureResolver = (S) =>
             .schemaType('spotlightConfig')
             .documentId('spotlightConfig')
         ),
+      S.listItem()
+        .id('industry-juggernaut-config')
+        .title('Industry Juggernauts Config')
+        .child(
+          S.document()
+            .schemaType('industryJuggernautConfig')
+            .documentId('industryJuggernautConfig')
+        ),
       S.divider(),
       ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'writer', 'spotlightConfig', 'csa', 'advertisement'].includes(item.getId()!),
+        (item) => item.getId() && !['post', 'category', 'writer', 'spotlightConfig', 'industryJuggernautConfig', 'csa', 'advertisement'].includes(item.getId()!),
       ),
     ])

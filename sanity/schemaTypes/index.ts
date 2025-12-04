@@ -10,9 +10,12 @@ import { videoType } from './videoType'
 import { writerType } from './writerType'
 import { carouselType } from './carouselType'
 import { ctaType } from './ctaType'
+import { executiveInFocusType } from './executiveInFocusType'
 
 import { advertisementType } from './advertisementType'
 
+import { industryJuggernautConfigType } from './industryJuggernautConfigType'
+
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType],
+  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType, executiveInFocusType, industryJuggernautConfigType],
 }

@@ -92,7 +92,7 @@ const nextConfig: NextConfig = {
   },
   compiler: {
     // Strip console.* in production builds to reduce bundle noise
-    removeConsole: false, // process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   turbopack: {},
 };
