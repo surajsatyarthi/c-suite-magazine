@@ -57,14 +57,15 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
               className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 card-hover-scale"
             >
               <div className="relative aspect-[2/3] overflow-hidden bg-gray-200">
-                src={item.image}
-                alt={item.title || 'Industry Leader'}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-                quality={80}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                priority={index < 3}
-                loading={index < 3 ? 'eager' : 'lazy'}
+                <OptimizedImage
+                  src={item.image}
+                  alt={item.title || 'Industry Leader'}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  quality={80}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  priority={index < 3}
+                  loading={index < 3 ? 'eager' : 'lazy'}
                 />
 
 
