@@ -79,11 +79,11 @@ fi
 # 3. Check Content Integrity (Duplicates & Juggernauts)
 echo ""
 echo "3️⃣  Checking content integrity..."
-# Explicitly export env vars from .env.local to ensure token availability
+# Explicitly export env vars from .env.local to ensure token availability. Uses -f2- to handle potential '=' in token.
 if [ -f .env.local ]; then
-  export SANITY_WRITE_TOKEN=$(grep SANITY_WRITE_TOKEN .env.local | cut -d '=' -f2 | tr -d '\n' | tr -d '\r')
-  export NEXT_PUBLIC_SANITY_PROJECT_ID=$(grep NEXT_PUBLIC_SANITY_PROJECT_ID .env.local | cut -d '=' -f2 | tr -d '\n' | tr -d '\r')
-  export NEXT_PUBLIC_SANITY_DATASET=$(grep NEXT_PUBLIC_SANITY_DATASET .env.local | cut -d '=' -f2 | tr -d '\n' | tr -d '\r')
+  export SANITY_WRITE_TOKEN=$(grep "^SANITY_WRITE_TOKEN=" .env.local | cut -d '=' -f2- | tr -d '\n' | tr -d '\r')
+  export NEXT_PUBLIC_SANITY_PROJECT_ID=$(grep "^NEXT_PUBLIC_SANITY_PROJECT_ID=" .env.local | cut -d '=' -f2- | tr -d '\n' | tr -d '\r')
+  export NEXT_PUBLIC_SANITY_DATASET=$(grep "^NEXT_PUBLIC_SANITY_DATASET=" .env.local | cut -d '=' -f2- | tr -d '\n' | tr -d '\r')
 fi
 
 if npx tsx scripts/verify-content-integrity.ts; then
