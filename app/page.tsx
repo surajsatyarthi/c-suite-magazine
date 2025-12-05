@@ -45,7 +45,10 @@ async function getLatestPosts(): Promise<Post[]> {
     tags, publishedAt, views
   }`
   try {
-    const excludeSlugs = await getSpotlightExcludeSlugs()
+    const spotlightSlugs = await getSpotlightExcludeSlugs()
+    const juggernautSlugs = await getJuggernautExcludeSlugs()
+    const excludeSlugs = [...new Set([...spotlightSlugs, ...juggernautSlugs])]
+
     const allResults = await fetchWithTimeout(
       client.fetch(query, { excludeSlugs }, { next: { revalidate: 600 } }),
       1500
@@ -95,6 +98,33 @@ async function getSpotlightExcludeSlugs(): Promise<string[]> {
   } catch (e) {
     console.warn('Failed to read spotlight.json; proceeding with minimal guard:', e)
     return ['stoyana-natseva']
+  }
+}
+
+async function getJuggernautExcludeSlugs(): Promise<string[]> {
+  try {
+    // Fetch links from the config singleton
+    const config = await client.fetch(
+      `*[_type == "industryJuggernautConfig"][0].items[].link`,
+      {},
+      { next: { revalidate: 600 } }
+    )
+
+    if (!Array.isArray(config)) return []
+
+    // Extract slugs from links (assuming format /category/cat/slug or just /slug)
+    const slugs = config
+      .map((link: string) => {
+        if (!link) return ''
+        const parts = link.split('/').filter(Boolean)
+        return parts.length > 0 ? parts[parts.length - 1] : ''
+      })
+      .filter(Boolean)
+
+    return slugs
+  } catch (e) {
+    console.warn('Failed to fetch juggernaut slugs:', e)
+    return []
   }
 }
 
