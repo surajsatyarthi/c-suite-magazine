@@ -79,7 +79,13 @@ fi
 # 3. Check Content Integrity (Duplicates & Juggernauts)
 echo ""
 echo "3️⃣  Checking content integrity..."
-# Use Next.js env loading implicitly or via dotenv inside the script
+# Explicitly export env vars from .env.local to ensure token availability
+if [ -f .env.local ]; then
+  set -a
+  source .env.local
+  set +a
+fi
+
 if npx tsx scripts/verify-content-integrity.ts; then
   echo "   ✅ Content integrity verified"
 else
