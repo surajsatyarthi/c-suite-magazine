@@ -76,6 +76,17 @@ else
   VERIFICATION_FAILED=1
 fi
 
+# 3. Check Content Integrity (Duplicates & Juggernauts)
+echo ""
+echo "3️⃣  Checking content integrity..."
+# Use Next.js env loading implicitly or via dotenv inside the script
+if npx tsx scripts/verify-content-integrity.ts; then
+  echo "   ✅ Content integrity verified"
+else
+  echo "   ❌ CRITICAL: Content integrity check failed"
+  VERIFICATION_FAILED=1
+fi
+
 # Exit if verification failed
 if [ $VERIFICATION_FAILED -eq 1 ]; then
   echo ""

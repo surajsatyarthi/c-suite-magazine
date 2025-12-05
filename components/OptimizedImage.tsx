@@ -24,7 +24,7 @@ type Props = Omit<ImageProps, 'loader'> & {
 
 const OptimizedImage = memo(function OptimizedImage({
   alt,
-  quality = 85,
+  quality = 75,
   sizes,
   placeholder,
   blurDataURL,
