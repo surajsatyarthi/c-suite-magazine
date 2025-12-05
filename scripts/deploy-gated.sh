@@ -81,9 +81,9 @@ echo ""
 echo "3️⃣  Checking content integrity..."
 # Explicitly export env vars from .env.local to ensure token availability
 if [ -f .env.local ]; then
-  set -a
-  source .env.local
-  set +a
+  export SANITY_WRITE_TOKEN=$(grep SANITY_WRITE_TOKEN .env.local | cut -d '=' -f2 | tr -d '\n' | tr -d '\r')
+  export NEXT_PUBLIC_SANITY_PROJECT_ID=$(grep NEXT_PUBLIC_SANITY_PROJECT_ID .env.local | cut -d '=' -f2 | tr -d '\n' | tr -d '\r')
+  export NEXT_PUBLIC_SANITY_DATASET=$(grep NEXT_PUBLIC_SANITY_DATASET .env.local | cut -d '=' -f2 | tr -d '\n' | tr -d '\r')
 fi
 
 if npx tsx scripts/verify-content-integrity.ts; then
