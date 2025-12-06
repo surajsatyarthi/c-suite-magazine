@@ -6,7 +6,19 @@ export default function Footer() {
 
   return (
     <footer className="dark-section bg-[#082945] text-white mt-20 border-t-[3px] border-[#0a3350] relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-4 relative z-10">
+      {/* Strategic Partner Bar - Top of Footer */}
+      <div className="bg-[#c8ab3d] text-[#082945] py-3 text-center text-xs sm:text-sm font-bold tracking-wide uppercase px-4 cursor-pointer hover:bg-[#d6b745] transition-colors relative z-20">
+        <a
+          href="https://www.csuitebrand.agency"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full h-full focus:outline-none"
+        >
+          Elevate Your Executive Presence: Professional LinkedIn Management by C-Suite Brand Agency &rarr;
+        </a>
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-4 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Brand Column: force to rightmost column on lg, right column on md */}
           <div className="lg:col-span-1 lg:col-start-3 md:col-start-2 flex flex-col items-end">
@@ -42,7 +54,6 @@ export default function Footer() {
           <div className="text-center">
             {/* Increase specificity and adjust size + line-height by ~30% */}
             <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400">© {currentYear} C-Suite Magazine. All Rights Reserved.</p>
-            <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-500 mt-2">Invictus International Consulting Services</p>
             <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400 mt-1">v{pkg.version}</p>
           </div>
         </div>

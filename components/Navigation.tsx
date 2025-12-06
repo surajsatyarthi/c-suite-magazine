@@ -110,16 +110,16 @@ export default function Navigation() {
     const startScrolling = () => {
       scrollInterval = setInterval(() => {
         if (!container) return
-        
+
         const maxScroll = container.scrollWidth - container.clientWidth
         const currentScroll = container.scrollLeft
-        
+
         if (currentScroll >= maxScroll) {
           scrollDirection = -1
         } else if (currentScroll <= 0) {
           scrollDirection = 1
         }
-        
+
         container.scrollLeft += scrollDirection * 0.5
       }, 50)
     }
@@ -130,11 +130,11 @@ export default function Navigation() {
 
     // Start scrolling after 2 seconds
     const startDelay = setTimeout(startScrolling, 2000)
-    
+
     // Stop scrolling on user interaction
     container.addEventListener('mouseenter', stopScrolling)
     container.addEventListener('touchstart', stopScrolling)
-    
+
     // Resume scrolling when user leaves
     container.addEventListener('mouseleave', startScrolling)
     container.addEventListener('touchend', startScrolling)
@@ -167,7 +167,7 @@ export default function Navigation() {
       {/* Skip link removed per request to hide from top */}
 
       {/* Main Navigation */}
-      <nav 
+      <nav
         className="dark-section relative overflow-hidden bg-[#082945] text-white border-b-[3px] border-[#c8ab3d]"
         role="navigation"
         aria-label="Main navigation"
@@ -175,10 +175,10 @@ export default function Navigation() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
           {/* Removed header background glow for a cleaner, non-shiny header */}
           <div className="flex justify-center items-center py-3 relative z-10">
-            
+
             {/* Site Logo (Bodoni FLF + Playfair Display) */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               prefetch
               className="block w-full mx-auto md:mx-0 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945] rounded-sm"
               aria-label="C-Suite Magazine - Home"
@@ -218,44 +218,43 @@ export default function Navigation() {
             </p>
           </div>
         </div>
-      
 
-      
 
-      {/* Horizontal Category Menu - Clean Minimal Design */}
-      <div className="border-b border-gray-200 bg-white">
-        <div className="category-scroll-wrapper-minimal">
-          <nav 
-            ref={scrollContainerRef}
-            className="category-scroll-container-minimal"
-            role="navigation"
-            aria-label="Article categories"
-          >
-            <div className="category-scroll-content-minimal">
-              {allCategories.filter((c: any) => typeof c?.slug === 'string' && c.slug.length > 0).map((category) => {
-                const categoryPath = `/category/${encodeURIComponent(category.slug)}`
-                const isActive = pathname === categoryPath
-                return (
-                  <Link
-                    key={category.slug}
-                    href={categoryPath}
-                    prefetch
-                    className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${
-                      isActive 
-                        ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]' 
+
+
+        {/* Horizontal Category Menu - Clean Minimal Design */}
+        <div className="border-b border-gray-200 bg-white">
+          <div className="category-scroll-wrapper-minimal">
+            <nav
+              ref={scrollContainerRef}
+              className="category-scroll-container-minimal"
+              role="navigation"
+              aria-label="Article categories"
+            >
+              <div className="category-scroll-content-minimal">
+                {allCategories.filter((c: any) => typeof c?.slug === 'string' && c.slug.length > 0).map((category) => {
+                  const categoryPath = `/category/${encodeURIComponent(category.slug)}`
+                  const isActive = pathname === categoryPath
+                  return (
+                    <Link
+                      key={category.slug}
+                      href={categoryPath}
+                      prefetch
+                      className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${isActive
+                        ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]'
                         : 'text-[#082945] hover:text-[#c8ab3d]'
-                    }`}
-                    aria-label={`View ${category.title} articles`}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
-                    {category.title}
-                  </Link>
-                )
-              })}
-            </div>
-          </nav>
+                        }`}
+                      aria-label={`View ${category.title} articles`}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {category.title}
+                    </Link>
+                  )
+                })}
+              </div>
+            </nav>
+          </div>
         </div>
-      </div>
       </nav>
     </>
   )
