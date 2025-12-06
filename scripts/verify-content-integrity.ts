@@ -1,17 +1,22 @@
-
 import { createClient } from '@sanity/client'
-import * as dotenv from 'dotenv'
+import fs from 'fs'
 import path from 'path'
 
-// Load environment variables
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
+// Manually parse .env.local to avoid environment issues
+const envPath = path.resolve(process.cwd(), '.env.local')
+const envContent = fs.readFileSync(envPath, 'utf-8')
+
+function getEnvValue(key: string): string | undefined {
+    const match = envContent.match(new RegExp(`^${key}=(.*)$`, 'm'))
+    return match ? match[1].trim() : undefined
+}
 
 const client = createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    projectId: getEnvValue('NEXT_PUBLIC_SANITY_PROJECT_ID'),
+    dataset: getEnvValue('NEXT_PUBLIC_SANITY_DATASET'),
     apiVersion: '2024-01-01',
-    token: process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN,
-    useCdn: false, // Always use fresh data for verification
+    token: getEnvValue('SANITY_WRITE_TOKEN'),
+    useCdn: false,
 })
 
 async function verifyContent() {
