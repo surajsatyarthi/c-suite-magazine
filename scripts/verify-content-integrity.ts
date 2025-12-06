@@ -2,20 +2,33 @@ import { createClient } from '@sanity/client'
 import fs from 'fs'
 import path from 'path'
 
-// Manually parse .env.local to avoid environment issues
-const envPath = path.resolve(process.cwd(), '.env.local')
-const envContent = fs.readFileSync(envPath, 'utf-8')
+// Robust environment loading
+let projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+let dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
+let token = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN
 
-function getEnvValue(key: string): string | undefined {
-    const match = envContent.match(new RegExp(`^${key}=(.*)$`, 'm'))
-    return match ? match[1].trim() : undefined
+// If vars are missing (local dev), try reading .env.local manually
+try {
+    const envPath = path.resolve(process.cwd(), '.env.local')
+    if (fs.existsSync(envPath)) {
+        const envContent = fs.readFileSync(envPath, 'utf-8')
+        const parse = (key: string) => {
+            const match = envContent.match(new RegExp(`^${key}=(.*)$`, 'm'))
+            return match ? match[1].trim() : undefined
+        }
+        if (!projectId) projectId = parse('NEXT_PUBLIC_SANITY_PROJECT_ID')
+        if (!dataset) dataset = parse('NEXT_PUBLIC_SANITY_DATASET')
+        if (!token) token = parse('SANITY_WRITE_TOKEN') || parse('SANITY_API_TOKEN')
+    }
+} catch (e) {
+    // Ignore
 }
 
 const client = createClient({
-    projectId: getEnvValue('NEXT_PUBLIC_SANITY_PROJECT_ID'),
-    dataset: getEnvValue('NEXT_PUBLIC_SANITY_DATASET'),
+    projectId,
+    dataset,
     apiVersion: '2024-01-01',
-    token: getEnvValue('SANITY_WRITE_TOKEN'),
+    token,
     useCdn: false,
 })
 
