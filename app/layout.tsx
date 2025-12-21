@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import LazyEntryLocale from "@/components/LazyEntryLocale";
 
 const AdInterstitialV2 = dynamic(() => import("@/components/AdInterstitialV2"));
+const GoogleAnalytics = dynamic(() => import("@/components/GoogleAnalytics"));
 import { generateMetadata, generateStructuredData } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -79,6 +80,7 @@ export default function RootLayout({
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>
+        <GoogleAnalytics />
         {process.env.NEXT_PUBLIC_ENABLE_INSIGHTS === '1' ? <Analytics /> : null}
       </body>
     </html>

@@ -1,18 +1,12 @@
-const idRegex = /^[a-z0-9-]+$/
+import { config } from './config'
 
-const apiVersionRaw = process.env.NEXT_PUBLIC_SANITY_API_VERSION
-const datasetRaw = process.env.NEXT_PUBLIC_SANITY_DATASET
-const projectIdRaw = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+export const apiVersion = config.apiVersion
+export const dataset = config.dataset
+export const projectId = config.projectId
 
-export const apiVersion = apiVersionRaw || '2024-10-01'
+// Safe token retrieval (checking multiple common names to be robust)
+export const token = process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_READ_TOKEN
 
-export const dataset = idRegex.test(String(datasetRaw || ''))
-  ? String(datasetRaw)
-  : 'production'
+export const useCdn = false
 
-export const projectId = idRegex.test(String(projectIdRaw || ''))
-  ? String(projectIdRaw)
-  : '2f93fcy8'
-
-export const token = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN
 

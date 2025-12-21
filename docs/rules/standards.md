@@ -141,6 +141,18 @@ const posts = await client.fetch(query)
 - Align the `sizes` prop to the actual layout (do not default to `100vw` if the container is narrower).
 - Sanity image builder: request exact dimensions used by the layout and avoid upscaling (e.g., `urlFor(image).width(1200).height(800).auto('format')`).
 
+## Image Policy (NON-NEGOTIABLE)
+
+1. **Uniqueness Rule**: No two articles may share the same image.
+   - **Main/Hero Images**: Must be unique across the entire site.
+   - **Inline Images**: Must not duplicate the hero image of the same article (see Content Sanitation).
+2. **Sourcing**:
+   - **CSA/Spotlight/Juggernaut**: Use provided custom matching images (e.g., from `public/Featured hero`).
+   - **Standard Articles**: Must use unique, high-quality stock images (e.g., Unsplash) via API or manual selection. **Repetition of stock images is strictly prohibited.**
+3. **Enforcement**:
+   - Automated audit scripts must run periodically to detect and report duplicates.
+   - Duplicate images on the homepage are unacceptable.
+
 ## Cookies & Localization
 - Country cookie key is `user-country`.
 - Client components and API must use `user-country` consistently.

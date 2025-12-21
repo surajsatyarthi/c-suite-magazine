@@ -46,21 +46,15 @@ node scripts/smoke-check.js || {
 # 1. Check for duplicate images
 echo ""
 echo "1️⃣  Checking for duplicate images..."
-if [ -f scripts/comprehensive-duplicate-verification.js ]; then
-  if node scripts/comprehensive-duplicate-verification.js > /tmp/dup-verify.log 2>&1; then
-    DUPLICATES=$(grep "Duplicate image groups:" /tmp/dup-verify.log | awk '{print $NF}')
-    if [ "$DUPLICATES" = "0" ]; then
-      echo "   ✅ Zero duplicates confirmed"
-    else
-      echo "   ❌ CRITICAL: $DUPLICATES duplicate image groups found"
-      echo "   Run: node scripts/comprehensive-duplicate-verification.js"
-      VERIFICATION_FAILED=1
-    fi
-  else
-    echo "   ⚠️  WARNING: Duplicate verification script errored; proceeding cautiously"
-  fi
+# 1. Check for duplicate images
+echo ""
+echo "1️⃣  Checking for duplicate images..."
+if npx tsx scripts/audit-image-uniqueness.ts; then
+  echo "   ✅ Image uniqueness verification passed"
 else
-  echo "   ⚠️  WARNING: Duplicate verification script missing; skipping this check"
+  echo "   ❌ CRITICAL: Duplicate images detected."
+  echo "   Run: npx tsx scripts/audit-image-uniqueness.ts"
+  VERIFICATION_FAILED=1
 fi
 
 # 2. Check for missing images
@@ -79,12 +73,8 @@ fi
 # 3. Check Content Integrity (Duplicates & Juggernauts)
 echo ""
 echo "3️⃣  Checking content integrity..."
-# Explicitly export env vars from .env.local to ensure token availability. Uses -f2- to handle potential '=' in token.
-if [ -f .env.local ]; then
-  export SANITY_WRITE_TOKEN=$(grep "^SANITY_WRITE_TOKEN=" .env.local | cut -d '=' -f2- | tr -d '\n' | tr -d '\r')
-  export NEXT_PUBLIC_SANITY_PROJECT_ID=$(grep "^NEXT_PUBLIC_SANITY_PROJECT_ID=" .env.local | cut -d '=' -f2- | tr -d '\n' | tr -d '\r')
-  export NEXT_PUBLIC_SANITY_DATASET=$(grep "^NEXT_PUBLIC_SANITY_DATASET=" .env.local | cut -d '=' -f2- | tr -d '\n' | tr -d '\r')
-fi
+# Environment variables are seamlessly handled by scripts/lib/env.ts
+# No manual grep required.
 
 if npx tsx scripts/verify-content-integrity.ts; then
   echo "   ✅ Content integrity verified"
@@ -148,7 +138,8 @@ else
   echo "$PROD_OUTPUT"
   
   # Extract production URL
-  PROD_URL=$(echo "$PROD_OUTPUT" | grep -E "Production:|https://ceo-magazine.*vercel\.app" | grep "https://" | awk '{print $NF}' | head -1)
+  # Extract production URL (Robust regex to avoid capturing timing info like '[44s]')
+  PROD_URL=$(echo "$PROD_OUTPUT" | grep -Eo 'https://ceo-magazine[-a-zA-Z0-9]+\.vercel\.app' | head -1)
   
   echo ""
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -157,10 +148,13 @@ else
   if [ -n "$PROD_URL" ]; then
     echo "Production URL: $PROD_URL"
     echo ""
-    echo "Next steps:"
-    echo "  1. Set alias: npx vercel alias set $PROD_URL csuitemagazine.global --scope suraj-satyarthis-projects"
-    echo "  2. Verify: curl -I https://csuitemagazine.global"
-    echo "  3. Final check: node scripts/triple-verification.js"
+    echo "4️⃣  Auto-aliasing to custom domains..."
+    npx vercel alias set "$PROD_URL" csuitemagazine.global --scope suraj-satyarthis-projects
+    npx vercel alias set "$PROD_URL" www.csuitemagazine.global --scope suraj-satyarthis-projects
+    
+    echo ""
+    echo "   ✅ Verified: curl -I https://csuitemagazine.global"
+    echo "   ✅ Final check: node scripts/triple-verification.js"
   fi
   echo ""
 fi

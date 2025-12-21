@@ -46,3 +46,4 @@ next-env.d.ts
 # Sanity dataset backups (ignore local backup files)
 exports/backups/
 .env*.local
+/.credentials/

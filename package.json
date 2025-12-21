@@ -28,6 +28,7 @@
   },
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
+    "@google-analytics/data": "^5.2.1",
     "@portabletext/react": "^4.0.3",
     "@sanity/client": "^7.12.1",
     "@sanity/icons": "^3.7.4",
@@ -42,6 +43,7 @@
     "mammoth": "^1.6.0",
     "next": "16.0.1",
     "next-sanity": "^11.6.5",
+    "nodemailer": "^7.0.11",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-player": "^2.16.0",
