@@ -15,6 +15,12 @@ try {
     process.exit(0)
   }
 
+  // Skip on CI environments (GitHub Actions, etc.) - no Vercel credentials available
+  if (process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true') {
+    log('Running in CI environment; skipping Vercel link verification.')
+    process.exit(0)
+  }
+
   const vercelDir = path.join(process.cwd(), '.vercel')
   const projectJson = path.join(vercelDir, 'project.json')
 
