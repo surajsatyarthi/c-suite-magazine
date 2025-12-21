@@ -25,6 +25,47 @@ import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { Post, SanityImage } from '@/lib/types'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
+
+// Temporary noindex for problematic articles while team creates replacements
+// These will be removed once new content is ready
+const NOINDEX_ARTICLES = [
+  'one-sentence-rule-pitch-idea-stick',
+  'asynchronous-enterprise-meetings-enemy-scale',
+  'zero-based-budgeting-growth-fire-previous-year-pnl',
+  'cloud-sovereignty-data-strategy-geopolitical-strategy',
+  'scalable-startup-mindset-enterprises-innovate-day-one',
+  'marketing-age-of-skepticism-trust-conversion-metric',
+  'cash-flow-trap-profitable-companies-die-books',
+  'internal-comms-strategy-nervous-system-failing',
+  'closing-innovation-gap-diversity-stem-ceo-priority',
+  'wellness-retention-strategy-top-talent-burned-out',
+  'founder-brand-paradox-step-forward-back',
+  'crisis-proof-building-brand-equity',
+  'cmo-dilemma-awareness-vanity-metric',
+  'stop-hiring-for-busy-difference-activity-impact',
+  'no-code-c-suite-agility-without-engineering',
+  'decoupling-growth-from-headcount-new-unit-economics',
+  'automatable-enterprise-workforce-robot-work',
+  'data-without-soul-fatal-flaw-executive-presentations',
+  'three-act-structure-persuasion-selling-innovation',
+  'narrative-gap-why-strategy-fails-to-land',
+  'ceos-dilemma-balancing-hyper-growth-human-centric-leadership',
+  'cultural-moat-psychological-safety-competitive-advantage',
+  'leading-through-crisis-case-trauma-informed-management',
+  'silent-sabotage-3-habits-killing-your-leadership-influence',
+  'new-liability-ai-redefines-corporate-accountability',
+  'work-smarter-not-longer-5-tactics-reclaim-time',
+  'public-renegade-5-pr-rules-elon-musk',
+  'blueprints-for-billions-5-entrepreneurial-lessons-jeff-bezos',
+  'beyond-resume-5-core-traits-true-entrepreneurship',
+  'reclaiming-drivers-seat-managing-difficult-employee-archetypes',
+  'scaling-up-without-burning-out-guide-growth',
+  'myth-of-happy-entrepreneur-fact-or-fiction',
+];
+
+function shouldNoIndex(slug: string): boolean {
+  return NOINDEX_ARTICLES.includes(slug);
+}
 import TagChips from '@/components/TagChips'
 import IncrementViews from '@/components/IncrementViews'
 import { getHeroAspectRatio } from '@/lib/heroAspects'
@@ -906,6 +947,7 @@ export async function generateMetadata(
     publishedTime: post.publishedAt,
     writer: (post as any)?.writer?.name,
     section: post.categories?.[0]?.title,
+    noIndex: shouldNoIndex(article), // Temporarily hide problematic articles from search engines
   })
 }
 
