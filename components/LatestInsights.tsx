@@ -43,7 +43,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
               const displayCategory = nonCxoCategory || categories[0]
               const categoryTitle = displayCategory?.title || null
               const viewsNum = getViews(slug, (post as any)?.views)
-              const displayViews = formatViewsMillion(viewsNum)
+              const displayViews = formatViewsMillion(viewsNum, slug)
 
               const ArticleCard = (
                 <article
