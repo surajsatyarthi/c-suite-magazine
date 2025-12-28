@@ -12,6 +12,7 @@ export default function AdInterstitialV2() {
     const { isOpen, content, closeAd, reset } = useAdStore()
     const pathname = usePathname()
     const [currentIndex, setCurrentIndex] = useState(0)
+    const [isPaused, setIsPaused] = useState(false)
 
     // Reset store on route change to avoid stale ads
     useEffect(() => {
@@ -21,14 +22,14 @@ export default function AdInterstitialV2() {
 
     // Auto-advance carousel if multiple ads
     useEffect(() => {
-        if (!isOpen || !content || content.length <= 1) return
+        if (!isOpen || !content || content.length <= 1 || isPaused) return
 
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % content.length)
         }, CAROUSEL_INTERVAL) // Rotate every 5 seconds
 
         return () => clearInterval(timer)
-    }, [isOpen, content])
+    }, [isOpen, content, isPaused])
 
     // Lock body scroll when ad is open
     useEffect(() => {
@@ -88,6 +89,8 @@ export default function AdInterstitialV2() {
             <div
                 className="relative bg-white/5 rounded-2xl shadow-2xl shadow-black/50 border border-white/10 max-w-4xl w-auto mx-4 overflow-hidden transform transition-all scale-100 flex flex-col cursor-default"
                 onClick={(e) => e.stopPropagation()}
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
             >
                 <button
                     onClick={handleClose}

@@ -9,33 +9,40 @@ type AdProps = {
   className?: string
 }
 
+const FALLBACK_AD_ID = process.env.NEXT_PUBLIC_FALLBACK_AD_ID || 'clNGIHR7teKIrj4L6FqRKA'
+
 async function fetchAd(placement: string) {
-  const query = `*[_type == "advertisement" && placement == $placement && isActive == true && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())] | order(priority desc)[0] {
-    _id,
-    name,
-    image,
-    targetUrl,
-    placement,
-    dimensions,
-    isActive,
-    priority
-  }`
-  return client.fetch(query, { placement })
+  const query = `
+    coalesce(
+      *[_type == "advertisement" && placement == $placement && isActive == true && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())] | order(priority desc)[0],
+      *[_id == $fallbackId][0]
+    ) {
+      _id,
+      name,
+      image,
+      targetUrl,
+      placement,
+      dimensions,
+      isActive,
+      priority
+    }
+  `
+  return client.fetch(
+    query,
+    { 
+      placement, 
+      fallbackId: placement === 'article-sidebar-large' ? FALLBACK_AD_ID : null 
+    },
+    { next: { revalidate: 3600 } }
+  )
 }
 
 export default async function Ad({ placement, className }: AdProps) {
   const ad = await fetchAd(placement)
 
-  // Fallback: Brabus Ad for Sidebar (if no Sanity ad found)
-  if (placement === 'article-sidebar-large' && (!ad || !ad.image)) {
-    // Explicitly fetch the Brabus ad by ID to ensure it shows as the fallback
-    const BRABUS_AD_ID = 'clNGIHR7teKIrj4L6FqRKA'
-    const fallbackAd = await client.fetch(`*[_id == $id][0]{
-      name,
-      image,
-      targetUrl,
-      dimensions
-    }`, { id: BRABUS_AD_ID })
+  // No need for separate fallback fetch - now handled by coalesce in query
+  if (placement === 'article-sidebar-large' && ad && ad.image) {
+    const fallbackAd = ad
 
     if (fallbackAd && fallbackAd.image) {
       const width = fallbackAd.dimensions?.width || 300
