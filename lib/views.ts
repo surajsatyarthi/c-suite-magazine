@@ -10,12 +10,11 @@ export function getViews(slug?: string, fallback?: number | null): number | null
 
 /**
  * Format view counts in millions.
+ * • Always shows minimum of "5M+" for all articles
  * • If count >= 5,000,000 → "5M+"
- * • If no views available → "5M+" (default)
- * • Otherwise show one decimal place followed by " M"
+ * • If count < 5,000,000 → "5M+"
  */
 export function formatViewsMillion(n?: number | null): string {
-  if (typeof n !== 'number' || !isFinite(n) || n <= 0) return '5M+'
-  if (n >= 5000000) return '5M+'
-  return `${(n / 1000000).toFixed(1)} M`
+  // Always show 5M+ minimum
+  return '5M+'
 }
