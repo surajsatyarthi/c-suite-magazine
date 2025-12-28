@@ -1,0 +1,43 @@
+name: Build Verification
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Enable Corepack and install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linter
+        run: pnpm run lint || (echo "Lint failed" && exit 1)
+
+      - name: Build with dummy env vars
+        env:
+          CI: 'true'
+          NEXT_PUBLIC_SANITY_PROJECT_ID: 'demo'
+          NEXT_PUBLIC_SANITY_DATASET: 'production'
+          NEXT_PUBLIC_SANITY_API_VERSION: '2024-10-01'
+          NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ''
+          NEXT_PUBLIC_BING_SITE_VERIFICATION: ''
+          NEXT_PUBLIC_YANDEX_SITE_VERIFICATION: ''
+          NEXT_PUBLIC_SPOTLIGHT_COUNT: '5'
+          BASE_URL: 'http://localhost:3000'
+          SANITY_WRITE_TOKEN: 'dummy'
+          SANITY_API_TOKEN: 'dummy'
+          SLACK_WEBHOOK_URL: 'https://example.invalid/webhook'
+        run: pnpm run build
