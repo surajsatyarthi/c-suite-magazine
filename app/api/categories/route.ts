@@ -30,6 +30,7 @@ export async function GET() {
         }
       } catch (e) {
         // Fall back to read client if write client fails (eg. missing/invalid token)
+        console.warn('[api/categories] Write client failed, falling back to read client:', e)
       }
     }
     try {
@@ -44,6 +45,7 @@ export async function GET() {
       }
     } catch (e) {
       // Ignore and fall through to fallback
+      console.warn('[api/categories] Read client failed, using fallback:', e)
     }
   } catch (err) {
     console.error('[api/categories] Failed to fetch categories:', err)

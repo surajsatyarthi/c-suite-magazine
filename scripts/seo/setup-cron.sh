@@ -17,8 +17,8 @@ NC='\033[0m' # No Color
 echo "🔧 Setting up SEO Automation Cron Jobs..."
 echo
 
-# Get the project directory
-PROJECT_DIR="/Users/surajsatyarthi/Desktop/Magazine/ceo-magazine"
+# Get the project directory (use script's actual location)
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # Create logs directory
 mkdir -p "$PROJECT_DIR/logs"

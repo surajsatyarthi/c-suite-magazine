@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, assetId: asset._id, image: imageField })
   } catch (e) {
+    console.error('[api/images] Image upload failed:', e)
     const msg = (e as any)?.message || 'Image upload failed'
     return NextResponse.json({ ok: false, error: msg }, { status: 500 })
   }

@@ -938,9 +938,10 @@ export async function generateMetadata(
     })
   }
 
+  const description = post.excerpt || post.body?.[0]?.children?.[0]?.text?.substring(0, 160) || ''
   return generateSEOMetadata({
     title: (post as any)?.seo?.metaTitle || post.title,
-    description: post.excerpt || (post.body?.[0]?.children?.[0]?.text?.substring(0, 160) || '') + '...',
+    description: description ? (description.length > 160 ? description : description + '...') : '',
     keywords: post.tags || [],
     image: (post as any)?.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
     type: 'article',

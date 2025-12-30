@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, views: newViews, updated: result })
   } catch (e) {
+    console.error('[api/views] Failed to update views:', e)
     return NextResponse.json({ ok: false, error: 'Failed to update views' }, { status: 500 })
   }
 }

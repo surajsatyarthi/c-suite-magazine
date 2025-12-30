@@ -46,13 +46,6 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <head>
         {/* Performance: resource hints for critical origins */}
-        {/* Google Search Console Verification */}
-        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
-          <meta
-            name="google-site-verification"
-            content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}
-          />
-        )}
         <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="" />
         <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="" />

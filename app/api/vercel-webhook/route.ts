@@ -9,7 +9,8 @@ function verifySignature(rawBody: string, signature: string | null, secret: stri
     const hmac = crypto.createHmac('sha256', secret)
     const digest = 'sha256=' + hmac.update(rawBody).digest('hex')
     return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature))
-  } catch {
+  } catch (error) {
+    console.error('[verifySignature] Signature verification failed:', error)
     return false
   }
 }
@@ -46,18 +47,23 @@ export async function POST(req: NextRequest) {
   const error = body?.error?.message || body?.error || undefined
 
   // Decide notification
-  if (String(state).toUpperCase() === 'ERROR' || type.includes('error')) {
-    await notifySlack(
-      formatDeployMessage({ status: 'FAILED', url, project, createdAt, region, error })
-    )
-  } else if (String(state).toUpperCase() === 'READY' || type.includes('ready')) {
-    await notifySlack(
-      formatDeployMessage({ status: 'READY', url, project, createdAt, region })
-    )
-  } else if (String(state).toUpperCase() === 'BUILDING' || type.includes('created')) {
-    await notifySlack(
-      formatDeployMessage({ status: 'BUILDING', url, project, createdAt, region })
-    )
+  try {
+    if (String(state).toUpperCase() === 'ERROR' || type.includes('error')) {
+      await notifySlack(
+        formatDeployMessage({ status: 'FAILED', url, project, createdAt, region, error })
+      )
+    } else if (String(state).toUpperCase() === 'READY' || type.includes('ready')) {
+      await notifySlack(
+        formatDeployMessage({ status: 'READY', url, project, createdAt, region })
+      )
+    } else if (String(state).toUpperCase() === 'BUILDING' || type.includes('created')) {
+      await notifySlack(
+        formatDeployMessage({ status: 'BUILDING', url, project, createdAt, region })
+      )
+    }
+  } catch (error) {
+    console.error('[api/vercel-webhook] Failed to send Slack notification:', error)
+    // Don't fail the webhook response if Slack notification fails
   }
 
   return NextResponse.json({ ok: true })

@@ -8,32 +8,33 @@ function escape(str: string) {
 }
 
 export async function GET() {
-  const siteUrl = 'https://csuitemagazine.global'
+  try {
+    const siteUrl = 'https://csuitemagazine.global'
 
-  // Fetch latest published articles (limit to 50 for feed)
-  const posts = await client.fetch(`*[_type == "post" && defined(slug.current) && count(categories) > 0 && isHidden != true] | order(publishedAt desc)[0...50] {
-    title,
-    excerpt,
-    "slug": slug.current,
-    publishedAt,
-    _updatedAt,
-    "categories": categories[]->{ slug }
-  }`)
+    // Fetch latest published articles (limit to 50 for feed)
+    const posts = await client.fetch(`*[_type == "post" && defined(slug.current) && count(categories) > 0 && isHidden != true] | order(publishedAt desc)[0...50] {
+      title,
+      excerpt,
+      "slug": slug.current,
+      publishedAt,
+      _updatedAt,
+      "categories": categories[]->{ slug }
+    }`)
 
-  const items = (posts || []).map((p: any) => {
-    const primaryCat = p?.categories?.[0]?.slug?.current
-    const url = `${siteUrl}/category/${primaryCat}/${p.slug}`
-    const pubDate = p.publishedAt ? new Date(p.publishedAt).toUTCString() : new Date().toUTCString()
-    return `\n    <item>
-      <title>${escape(p.title)}</title>
-      <link>${url}</link>
-      <guid>${url}</guid>
-      <pubDate>${pubDate}</pubDate>
-      <description>${escape(p.excerpt || '')}</description>
-    </item>`
-  }).join('')
+    const items = (posts || []).map((p: any) => {
+      const primaryCat = p?.categories?.[0]?.slug?.current
+      const url = `${siteUrl}/category/${primaryCat}/${p.slug}`
+      const pubDate = p.publishedAt ? new Date(p.publishedAt).toUTCString() : new Date().toUTCString()
+      return `\n    <item>
+        <title>${escape(p.title)}</title>
+        <link>${url}</link>
+        <guid>${url}</guid>
+        <pubDate>${pubDate}</pubDate>
+        <description>${escape(p.excerpt || '')}</description>
+      </item>`
+    }).join('')
 
-  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+    const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <title>C-Suite Magazine</title>
@@ -44,10 +45,19 @@ export async function GET() {
   </channel>
 </rss>`
 
-  return new Response(rss, {
-    headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=600',
-    },
-  })
+    return new Response(rss, {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=600',
+      },
+    })
+  } catch (error) {
+    console.error('[rss.xml] Failed to generate RSS feed:', error)
+    return new Response('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>Error</title></channel></rss>', {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+      },
+    })
+  }
 }

@@ -128,6 +128,7 @@ export async function POST(request: NextRequest) {
     const result = await upsertArticle(payload)
     return NextResponse.json({ ok: true, ...result })
   } catch (e) {
+    console.error('[api/articles POST] Failed to upsert article:', e)
     return NextResponse.json({ ok: false, error: 'Failed to upsert article' }, { status: 500 })
   }
 }
@@ -150,6 +151,7 @@ export async function PUT(request: NextRequest) {
     const result = await upsertArticle(payload)
     return NextResponse.json({ ok: true, ...result })
   } catch (e) {
+    console.error('[api/articles PUT] Failed to update article:', e)
     return NextResponse.json({ ok: false, error: 'Failed to update article' }, { status: 500 })
   }
 }
@@ -164,6 +166,7 @@ export async function GET() {
     }`)
     return NextResponse.json({ ok: true, count: (articles || []).length, articles })
   } catch (e) {
+    console.error('[api/articles GET] Failed to fetch articles:', e)
     return NextResponse.json({ ok: false, error: 'Failed to fetch articles' }, { status: 500 })
   }
 }
