@@ -112,12 +112,42 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
 
   // Calculate compensation component percentages for visual hierarchy
   const compensationComponents = [
-    { label: 'Base Salary', amount: latestComp.base_salary },
-    { label: 'Bonus', amount: latestComp.bonus },
-    { label: 'Stock Awards', amount: latestComp.stock_awards, description: 'Fair value of restricted stock units (RSUs) granted' },
-    { label: 'Option Awards', amount: latestComp.option_awards, description: 'Fair value of stock options granted' },
-    { label: 'Non-Equity Incentive', amount: latestComp.non_equity_incentive },
-    { label: 'Other Compensation', amount: latestComp.all_other_compensation }
+    {
+      label: 'Base Salary',
+      amount: latestComp.base_salary,
+      description: 'Fixed annual cash compensation',
+      purpose: 'Guaranteed salary regardless of company performance. Typically a smaller portion of total executive compensation to align pay with company results.'
+    },
+    {
+      label: 'Bonus',
+      amount: latestComp.bonus,
+      description: 'Performance-based cash bonus',
+      purpose: 'Annual cash bonus tied to short-term performance metrics like revenue growth, profitability targets, or strategic objectives set by the board.'
+    },
+    {
+      label: 'Stock Awards',
+      amount: latestComp.stock_awards,
+      description: 'Restricted stock units (RSUs)',
+      purpose: 'Company stock that vests over time (typically 3-4 years). Aligns executive interests with shareholders by tying wealth to stock price performance.'
+    },
+    {
+      label: 'Option Awards',
+      amount: latestComp.option_awards,
+      description: 'Stock options',
+      purpose: 'Right to buy company stock at a set price. Only valuable if stock price rises, incentivizing executives to increase shareholder value.'
+    },
+    {
+      label: 'Non-Equity Incentive',
+      amount: latestComp.non_equity_incentive,
+      description: 'Cash-based incentive plan',
+      purpose: 'Performance-based cash payments tied to specific financial or operational targets (different from discretionary bonuses).'
+    },
+    {
+      label: 'Other Compensation',
+      amount: latestComp.all_other_compensation,
+      description: 'Perks and benefits',
+      purpose: 'Includes retirement contributions, insurance, personal use of company aircraft, security services, relocation expenses, and other benefits.'
+    }
   ].filter(comp => comp.amount > 0)
     .sort((a, b) => b.amount - a.amount) // Sort by amount descending
 
@@ -251,16 +281,25 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                     <div className={`text-3xl font-bold mb-2 ${isTopComponent ? 'text-[#b8941f]' : 'text-gray-900'}`}>
                       {formatCurrency(component.amount)}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mb-3">
                       <div className="text-sm font-semibold text-gray-700">
                         {component.percentage.toFixed(1)}% of total
                       </div>
                     </div>
-                    {component.description && (
-                      <div className="text-xs text-gray-500 mt-2">
-                        {component.description}
-                      </div>
-                    )}
+
+                    {/* Component description and purpose */}
+                    <div className="space-y-2 pt-3 border-t border-gray-200">
+                      {component.description && (
+                        <div className="text-xs text-gray-600 font-medium">
+                          {component.description}
+                        </div>
+                      )}
+                      {component.purpose && (
+                        <div className="text-xs text-gray-500 leading-relaxed">
+                          {component.purpose}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )
               })}
