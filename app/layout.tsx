@@ -10,7 +10,7 @@ import LazyEntryLocale from "@/components/LazyEntryLocale";
 
 const AdInterstitialV2 = dynamic(() => import("@/components/AdInterstitialV2"));
 const GoogleAnalytics = dynamic(() => import("@/components/GoogleAnalytics"));
-import { generateMetadata, generateStructuredData } from "@/lib/seo";
+import { generateMetadata, generateStructuredData, generateViewport } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 
 const playfair = Playfair_Display({
@@ -34,6 +34,8 @@ export const metadata: Metadata = generateMetadata({
   url: "https://csuitemagazine.global",
   type: "website"
 });
+
+export const viewport = generateViewport();
 
 export default function RootLayout({
   children,

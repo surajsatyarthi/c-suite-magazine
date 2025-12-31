@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 
 export interface SEOProps {
   title?: string
@@ -107,6 +107,14 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
       // Enforce writer-only terminology for Open Graph extensions
       'article:writer': writer || 'C-Suite Magazine Editorial Team',
     }
+  }
+}
+
+export function generateViewport(): Viewport {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    themeColor: '#082945',
   }
 }
 
