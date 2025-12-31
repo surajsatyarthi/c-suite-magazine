@@ -110,42 +110,92 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
     }).format(amount)
   }
 
+  // Calculate compensation component percentages for visual hierarchy
+  const compensationComponents = [
+    { label: 'Base Salary', amount: latestComp.base_salary },
+    { label: 'Bonus', amount: latestComp.bonus },
+    { label: 'Stock Awards', amount: latestComp.stock_awards, description: 'Fair value of restricted stock units (RSUs) granted' },
+    { label: 'Option Awards', amount: latestComp.option_awards, description: 'Fair value of stock options granted' },
+    { label: 'Non-Equity Incentive', amount: latestComp.non_equity_incentive },
+    { label: 'Other Compensation', amount: latestComp.all_other_compensation }
+  ].filter(comp => comp.amount > 0)
+    .sort((a, b) => b.amount - a.amount) // Sort by amount descending
+
+  // Calculate percentage of total for each component
+  const componentsWithPercentage = compensationComponents.map(comp => ({
+    ...comp,
+    percentage: (comp.amount / latestComp.total_compensation) * 100
+  }))
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#082945] to-[#020f1a] text-white py-16 md:py-24">
+      <section className="bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Breadcrumb */}
             <nav className="text-sm mb-6">
-              <a href="/" className="text-gray-400 hover:text-white">Home</a>
-              <span className="mx-2 text-gray-500">/</span>
-              <a href="/executives" className="text-gray-400 hover:text-white">Executives</a>
-              <span className="mx-2 text-gray-500">/</span>
-              <span className="text-white">{executive.full_name}</span>
+              <a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a>
+              <span className="mx-2 text-gray-400">/</span>
+              <a href="/executives" className="text-gray-300 hover:text-white transition-colors">Executives</a>
+              <span className="mx-2 text-gray-400">/</span>
+              <span className="text-white font-medium">{executive.full_name}</span>
             </nav>
 
-            {/* Executive Name & Title */}
-            <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4">
-              {executive.full_name}
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-8">
-              {executive.current_title} at {companyName}
-              {ticker && <span className="ml-2 text-[#c8ab3d]">({ticker})</span>}
-            </p>
+            {/* Executive Name & Title with Photo */}
+            <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
+              {/* Executive Photo */}
+              {executive.profile_image_url ? (
+                <img
+                  src={executive.profile_image_url}
+                  alt={executive.full_name}
+                  className="w-32 h-32 rounded-full border-4 border-white/20 shadow-xl object-cover"
+                />
+              ) : executive.companies?.logo_url ? (
+                <div className="w-32 h-32 rounded-full border-4 border-white/20 shadow-xl bg-white/10 backdrop-blur-sm flex items-center justify-center p-4">
+                  <img
+                    src={executive.companies.logo_url}
+                    alt={companyName}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-32 h-32 rounded-full border-4 border-white/20 shadow-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                  <span className="text-5xl font-bold text-white/50">
+                    {executive.full_name.charAt(0)}
+                  </span>
+                </div>
+              )}
+
+              {/* Name & Title */}
+              <div>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-2 leading-tight">
+                  {executive.full_name}
+                </h1>
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-300 leading-relaxed">
+                  {executive.current_title} at {companyName}
+                  {ticker && <span className="ml-2 text-[#c8ab3d]">({ticker})</span>}
+                </p>
+              </div>
+            </div>
 
             {/* Latest Compensation - Hero Metric */}
-            <div className="bg-black/20 backdrop-blur-sm rounded-xl border border-white/10 p-8">
-              <div className="text-sm uppercase tracking-wider text-gray-400 mb-2">
-                Total Compensation ({latestComp.fiscal_year})
+            <div className="bg-black/30 backdrop-blur-md rounded-2xl border border-white/20 p-6 sm:p-8 shadow-2xl">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3">
+                <div className="text-xs sm:text-sm uppercase tracking-wider text-gray-300 font-semibold">
+                  Total Compensation ({latestComp.fiscal_year})
+                </div>
+                <span className="px-2 sm:px-3 py-1 bg-blue-500/20 border border-blue-400/30 rounded-full text-xs text-blue-200 font-medium w-fit">
+                  Latest Available Data
+                </span>
               </div>
-              <div className="text-5xl md:text-7xl font-bold text-[#c8ab3d] mb-4">
+              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#d4af37] mb-4 tracking-tight break-all sm:break-normal">
                 {formatCurrency(latestComp.total_compensation)}
               </div>
               {yoyChange !== null && (
-                <div className={`text-lg ${yoyChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                  {yoyChange >= 0 ? '↑' : '↓'} {Math.abs(yoyChange).toFixed(1)}% from {previousComp.fiscal_year}
-                  <span className="ml-2 text-gray-400">
+                <div className={`text-base sm:text-lg font-medium ${yoyChange >= 0 ? 'text-green-300' : 'text-red-300'} flex flex-wrap items-center gap-2`}>
+                  <span>{yoyChange >= 0 ? '↑' : '↓'} {Math.abs(yoyChange).toFixed(1)}% from {previousComp.fiscal_year}</span>
+                  <span className="text-gray-300 text-sm sm:text-base">
                     ({formatCurrency(latestComp.total_compensation - previousComp.total_compensation)})
                   </span>
                 </div>
@@ -164,114 +214,123 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Base Salary */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <div className="text-sm text-gray-600 mb-2">Base Salary</div>
-                <div className="text-3xl font-bold text-gray-900">
-                  {formatCurrency(latestComp.base_salary)}
-                </div>
-              </div>
+              {componentsWithPercentage.map((component, index) => {
+                // Determine card styling based on percentage
+                const isTopComponent = index === 0
+                const isSignificant = component.percentage > 10
+                const borderColor = isTopComponent
+                  ? 'border-[#d4af37]'
+                  : isSignificant
+                    ? 'border-blue-300'
+                    : 'border-gray-200'
+                const bgColor = isTopComponent
+                  ? 'bg-gradient-to-br from-amber-50 to-yellow-50'
+                  : 'bg-white'
 
-              {/* Bonus */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <div className="text-sm text-gray-600 mb-2">Bonus</div>
-                <div className="text-3xl font-bold text-gray-900">
-                  {formatCurrency(latestComp.bonus)}
-                </div>
-              </div>
+                return (
+                  <div
+                    key={component.label}
+                    className={`${bgColor} rounded-lg shadow-sm p-6 border-2 ${borderColor} transition-all hover:shadow-md relative overflow-hidden`}
+                  >
+                    {/* Percentage indicator bar */}
+                    <div
+                      className={`absolute bottom-0 left-0 h-1 ${isTopComponent ? 'bg-[#d4af37]' : 'bg-blue-400'}`}
+                      style={{ width: `${Math.min(component.percentage, 100)}%` }}
+                    />
 
-              {/* Stock Awards */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <div className="text-sm text-gray-600 mb-2">Stock Awards</div>
-                <div className="text-3xl font-bold text-gray-900">
-                  {formatCurrency(latestComp.stock_awards)}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  Fair value of restricted stock units (RSUs) granted
-                </div>
-              </div>
+                    {/* Top Component Badge */}
+                    {isTopComponent && (
+                      <div className="absolute top-3 right-3">
+                        <span className="px-2 py-1 bg-[#d4af37] text-white text-xs font-bold rounded">
+                          LARGEST
+                        </span>
+                      </div>
+                    )}
 
-              {/* Option Awards */}
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                <div className="text-sm text-gray-600 mb-2">Option Awards</div>
-                <div className="text-3xl font-bold text-gray-900">
-                  {formatCurrency(latestComp.option_awards)}
-                </div>
-                <div className="text-xs text-gray-500 mt-1">
-                  Fair value of stock options granted
-                </div>
-              </div>
-
-              {/* Non-Equity Incentive */}
-              {latestComp.non_equity_incentive > 0 && (
-                <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                  <div className="text-sm text-gray-600 mb-2">Non-Equity Incentive</div>
-                  <div className="text-3xl font-bold text-gray-900">
-                    {formatCurrency(latestComp.non_equity_incentive)}
+                    <div className="text-sm text-gray-600 mb-2 font-medium">{component.label}</div>
+                    <div className={`text-3xl font-bold mb-2 ${isTopComponent ? 'text-[#b8941f]' : 'text-gray-900'}`}>
+                      {formatCurrency(component.amount)}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm font-semibold text-gray-700">
+                        {component.percentage.toFixed(1)}% of total
+                      </div>
+                    </div>
+                    {component.description && (
+                      <div className="text-xs text-gray-500 mt-2">
+                        {component.description}
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-
-              {/* All Other Compensation */}
-              {latestComp.all_other_compensation > 0 && (
-                <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-                  <div className="text-sm text-gray-600 mb-2">Other Compensation</div>
-                  <div className="text-3xl font-bold text-gray-900">
-                    {formatCurrency(latestComp.all_other_compensation)}
-                  </div>
-                </div>
-              )}
+                )
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5-Year Compensation History */}
+      {/* Compensation History */}
       {executive.compensation.length > 1 && (
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl font-serif font-bold mb-8 text-gray-900">
-                5-Year Compensation History
+                Compensation History ({executive.compensation.length} {executive.compensation.length === 1 ? 'Year' : 'Years'})
               </h2>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Year
+                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                        Fiscal Year
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Total Compensation
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Change
+                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                        Year-over-Year Change
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-gray-100">
                     {executive.compensation.slice(0, 5).map((comp, index) => {
                       const prevComp = executive.compensation[index + 1]
                       const change = prevComp
                         ? ((comp.total_compensation - prevComp.total_compensation) / prevComp.total_compensation * 100)
                         : null
+                      const isLatest = index === 0
 
                       return (
-                        <tr key={comp.id}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {comp.fiscal_year}
+                        <tr key={comp.id} className={`hover:bg-gray-50 transition-colors ${isLatest ? 'bg-blue-50/30' : ''}`}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-bold text-gray-900">{comp.fiscal_year}</span>
+                              {isLatest && (
+                                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
+                                  Latest
+                                </span>
+                              )}
+                            </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
-                            {formatCurrency(comp.total_compensation)}
+                          <td className="px-6 py-4 whitespace-nowrap text-right">
+                            <span className="text-sm font-semibold text-gray-900">
+                              {formatCurrency(comp.total_compensation)}
+                            </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
+                          <td className="px-6 py-4 whitespace-nowrap text-right">
                             {change !== null ? (
-                              <span className={change >= 0 ? 'text-green-600' : 'text-red-600'}>
-                                {change >= 0 ? '+' : ''}{change.toFixed(1)}%
-                              </span>
+                              <div className="flex items-center justify-end gap-2">
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold ${
+                                  change >= 0
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-red-100 text-red-700'
+                                }`}>
+                                  {change >= 0 ? '↑' : '↓'} {Math.abs(change).toFixed(1)}%
+                                </span>
+                              </div>
                             ) : (
-                              <span className="text-gray-400">—</span>
+                              <span className="text-gray-400 text-sm">—</span>
                             )}
                           </td>
                         </tr>
@@ -290,18 +349,23 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold mb-4 text-gray-900">Data Source</h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">Data Source & Freshness</h3>
+              <p className="text-sm text-gray-600 mb-3">
                 Compensation data sourced from SEC EDGAR proxy statements (DEF 14A filings).
                 All data is publicly available information required to be disclosed by U.S. public companies.
+              </p>
+              <p className="text-sm text-gray-600 mb-4">
+                <strong>Note:</strong> Executive compensation data is reported with a 1-year lag.
+                Companies file compensation for fiscal year {latestComp.fiscal_year} in calendar year {latestComp.fiscal_year + 1}.
+                This is the most recent data available from official SEC filings.
               </p>
               <a
                 href={latestComp.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium"
               >
-                View SEC Filing →
+                View SEC Filing (DEF 14A) →
               </a>
             </div>
           </div>
