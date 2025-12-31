@@ -1,0 +1,114 @@
+name: Preview Deployment Verification
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Wait for Vercel Preview Deployment
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: wait-for-preview
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+
+      - name: Smoke Test - Homepage
+        run: |
+          curl -f "${{ steps.wait-for-preview.outputs.url }}" || exit 1
+          echo "✅ Homepage loads successfully"
+
+      - name: Smoke Test - Article Page
+        run: |
+          # Get first article from homepage
+          ARTICLE_URL=$(curl -s "${{ steps.wait-for-preview.outputs.url }}" | grep -o 'href="/category/[^"]*"' | head -1 | sed 's/href="//;s/"$//')
+          if [ -n "$ARTICLE_URL" ]; then
+            curl -f "${{ steps.wait-for-preview.outputs.url }}${ARTICLE_URL}" || exit 1
+            echo "✅ Article page loads successfully"
+          else
+            echo "⚠️ No article links found, skipping article test"
+          fi
+
+      - name: Smoke Test - Search API
+        run: |
+          RESPONSE=$(curl -s -w "%{http_code}" "${{ steps.wait-for-preview.outputs.url }}/api/search?q=ceo")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n 1)
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ Search API failed with HTTP $HTTP_CODE"
+            exit 1
+          fi
+          echo "✅ Search API responds successfully"
+
+      - name: Smoke Test - RSS Feed
+        run: |
+          RESPONSE=$(curl -s "${{ steps.wait-for-preview.outputs.url }}/rss.xml")
+          if ! echo "$RESPONSE" | grep -q '<?xml version="1.0"'; then
+            echo "❌ RSS feed is not valid XML"
+            exit 1
+          fi
+          echo "✅ RSS feed generates valid XML"
+
+      - name: Verify Google Analytics Tag (if GA_MEASUREMENT_ID is set)
+        run: |
+          HTML=$(curl -s "${{ steps.wait-for-preview.outputs.url }}")
+          if echo "$HTML" | grep -q "googletagmanager.com/gtag/js"; then
+            echo "✅ Google Analytics tag detected"
+            if echo "$HTML" | grep -q "G-P58LP0EZLL"; then
+              echo "✅ Correct measurement ID found"
+            else
+              echo "⚠️ GA tag found but measurement ID may be incorrect"
+            fi
+          else
+            echo "⚠️ No Google Analytics tag detected (may be intentional)"
+          fi
+
+      - name: Check for Console Errors (Basic)
+        run: |
+          # Check if there are obvious JavaScript errors in the HTML
+          HTML=$(curl -s "${{ steps.wait-for-preview.outputs.url }}")
+          if echo "$HTML" | grep -qi "error\|exception\|failed to"; then
+            echo "⚠️ Potential errors detected in HTML, manual review recommended"
+          else
+            echo "✅ No obvious errors in HTML output"
+          fi
+
+      - name: Comment Preview URL on PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const previewUrl = '${{ steps.wait-for-preview.outputs.url }}';
+            const body = `## 🔍 Preview Deployment Ready
+
+            **Preview URL:** ${previewUrl}
+
+            ### ✅ Automated Checks Passed
+            - Homepage loads successfully
+            - Search API responds
+            - RSS feed generates valid XML
+            - Google Analytics tag verification complete
+
+            ### 📋 Manual Verification Required
+            Before merging to production, please verify:
+            1. [ ] Visit preview URL and test the specific fix/feature
+            2. [ ] Check browser DevTools console for JavaScript errors
+            3. [ ] Test on mobile device (responsive design)
+            4. [ ] Verify no broken links or images
+            5. [ ] Check Core Web Vitals in Lighthouse
+            6. [ ] If env vars changed: verify they work correctly
+
+            **Only merge after manual verification is complete.**
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
