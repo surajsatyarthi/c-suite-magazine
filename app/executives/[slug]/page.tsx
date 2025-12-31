@@ -19,10 +19,18 @@ async function getExecutiveData(slug: string): Promise<ExecutiveWithCompensation
 /**
  * Generate static params for pre-rendering top executives
  * Phase 1 MVP: Pre-generate top 100 executives, rest generated on-demand
+ *
+ * Gracefully handles database connection failures during build
  */
 export async function generateStaticParams() {
-  const slugs = await getExecutiveSlugs(100)
-  return slugs.map((slug) => ({ slug }))
+  try {
+    const slugs = await getExecutiveSlugs(100)
+    return slugs.map((slug) => ({ slug }))
+  } catch (error) {
+    console.warn('[generateStaticParams] Database unavailable during build, skipping pre-generation:', error)
+    // Return empty array - pages will be generated on-demand with ISR
+    return []
+  }
 }
 
 // Enable ISR with 24-hour revalidation
