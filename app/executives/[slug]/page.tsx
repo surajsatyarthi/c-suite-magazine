@@ -4,9 +4,9 @@ import { generateMetadata as generateSEOMetadata, generateViewport } from '@/lib
 import type { Metadata } from 'next'
 
 interface ExecutivePageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 /**
@@ -33,7 +33,8 @@ export const dynamicParams = true // Generate others on-demand
  * Generate metadata for SEO
  */
 export async function generateMetadata({ params }: ExecutivePageProps): Promise<Metadata> {
-  const executive = await getExecutiveData(params.slug)
+  const { slug } = await params
+  const executive = await getExecutiveData(slug)
 
   if (!executive || !executive.compensation?.[0]) {
     return generateSEOMetadata({
@@ -63,7 +64,7 @@ export async function generateMetadata({ params }: ExecutivePageProps): Promise<
       'executive compensation',
       'SEC filings'
     ],
-    url: `https://csuitemagazine.global/executives/${params.slug}`,
+    url: `https://csuitemagazine.global/executives/${slug}`,
     type: 'article'
   })
 }
@@ -74,7 +75,8 @@ export const viewport = generateViewport()
  * Executive Salary Intelligence Page
  */
 export default async function ExecutivePage({ params }: ExecutivePageProps) {
-  const executive = await getExecutiveData(params.slug)
+  const { slug } = await params
+  const executive = await getExecutiveData(slug)
 
   if (!executive || !executive.compensation || executive.compensation.length === 0) {
     notFound()
