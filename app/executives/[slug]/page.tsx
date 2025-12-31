@@ -308,6 +308,193 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
         </div>
       </section>
 
+      {/* Performance Metrics & Targets */}
+      {latestComp.performance_metrics && (
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-serif font-bold mb-4 text-gray-900">
+                Performance Metrics & Targets ({latestComp.fiscal_year})
+              </h2>
+              <p className="text-sm text-gray-600 mb-8">
+                How {executive.full_name}'s compensation was tied to company performance and strategic objectives
+              </p>
+
+              {/* Company Performance Overview */}
+              {latestComp.performance_metrics.company_performance && (
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 mb-8 border border-blue-200">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">📈</span>
+                    Company Performance
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <div>
+                      <div className="text-xs text-gray-600 mb-1">Revenue</div>
+                      <div className="text-lg font-bold text-gray-900">
+                        {formatCurrency(latestComp.performance_metrics.company_performance.revenue)}
+                      </div>
+                      <div className={`text-sm font-semibold ${latestComp.performance_metrics.company_performance.revenue_change_pct >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {latestComp.performance_metrics.company_performance.revenue_change_pct >= 0 ? '↑' : '↓'} {Math.abs(latestComp.performance_metrics.company_performance.revenue_change_pct)}% YoY
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-600 mb-1">Operating Income</div>
+                      <div className="text-lg font-bold text-gray-900">
+                        {formatCurrency(latestComp.performance_metrics.company_performance.operating_income)}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-600 mb-1">Net Income</div>
+                      <div className="text-lg font-bold text-gray-900">
+                        {formatCurrency(latestComp.performance_metrics.company_performance.net_income)}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-600 mb-1">Stock Return (1yr)</div>
+                      <div className={`text-lg font-bold ${latestComp.performance_metrics.company_performance.total_shareholder_return_1yr >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {latestComp.performance_metrics.company_performance.total_shareholder_return_1yr >= 0 ? '+' : ''}{latestComp.performance_metrics.company_performance.total_shareholder_return_1yr}%
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-white/60 rounded-lg p-4 text-sm text-gray-700 leading-relaxed">
+                    <strong>Context:</strong> {latestComp.performance_metrics.company_performance.context}
+                  </div>
+                </div>
+              )}
+
+              {/* Annual Cash Incentive */}
+              {latestComp.performance_metrics.annual_cash_incentive && (
+                <div className="bg-white rounded-xl border-2 border-gray-200 p-6 mb-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">🎯</span>
+                    Annual Cash Incentive
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-xs text-gray-600 mb-1">Target Amount</div>
+                      <div className="text-2xl font-bold text-gray-900">
+                        {formatCurrency(latestComp.performance_metrics.annual_cash_incentive.target_amount)}
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-xs text-gray-600 mb-1">Actual Payout</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        {formatCurrency(latestComp.performance_metrics.annual_cash_incentive.actual_payout)}
+                      </div>
+                    </div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-xs text-gray-600 mb-1">Achievement</div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        {latestComp.performance_metrics.annual_cash_incentive.payout_percentage}%
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 className="font-bold text-gray-900 mb-3">Performance Metrics:</h4>
+                  <div className="space-y-3">
+                    {latestComp.performance_metrics.annual_cash_incentive.metrics.map((metric, idx) => (
+                      <div key={idx} className="border-l-4 border-blue-500 pl-4 py-2">
+                        <div className="flex justify-between items-start mb-1">
+                          <div className="font-semibold text-gray-900">{metric.category}</div>
+                          <div className="text-sm font-bold text-blue-600">{metric.weight_percentage}% weight</div>
+                        </div>
+                        <div className="text-sm text-gray-600 mb-1">{metric.description}</div>
+                        <div className="text-sm text-gray-700">
+                          <strong>Achievement:</strong> {metric.actual_achievement}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {latestComp.performance_metrics.annual_cash_incentive.board_discretion && (
+                    <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                      <div className="text-sm font-semibold text-amber-900 mb-1">Board Decision:</div>
+                      <div className="text-sm text-amber-800">
+                        {latestComp.performance_metrics.annual_cash_incentive.board_discretion}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Stock Awards Details */}
+              {latestComp.performance_metrics.stock_awards && (
+                <div className="bg-white rounded-xl border-2 border-gray-200 p-6 mb-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">📊</span>
+                    Stock Awards (RSUs)
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <div className="text-sm text-gray-600 mb-2">Grant Date</div>
+                      <div className="text-lg font-semibold text-gray-900">
+                        {new Date(latestComp.performance_metrics.stock_awards.grant_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-600 mb-2">Grant Value</div>
+                      <div className="text-lg font-semibold text-gray-900">
+                        {formatCurrency(latestComp.performance_metrics.stock_awards.grant_value)}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <div className="text-sm text-gray-600 mb-2">Vesting Schedule</div>
+                    <div className="text-base font-medium text-gray-900">
+                      {latestComp.performance_metrics.stock_awards.vesting_schedule}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-600 mb-2">Vesting Conditions</div>
+                    <ul className="list-disc list-inside space-y-1">
+                      {latestComp.performance_metrics.stock_awards.vesting_conditions.map((condition, idx) => (
+                        <li key={idx} className="text-sm text-gray-700">{condition}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* Strategic Objectives */}
+              {latestComp.performance_metrics.strategic_objectives && latestComp.performance_metrics.strategic_objectives.length > 0 && (
+                <div className="bg-white rounded-xl border-2 border-gray-200 p-6 mb-6 shadow-sm">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">🎯</span>
+                    Strategic Objectives Achieved
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {latestComp.performance_metrics.strategic_objectives.map((objective, idx) => (
+                      <div key={idx} className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-start gap-2 mb-2">
+                          <span className="text-green-600 text-xl">✓</span>
+                          <div>
+                            <div className="font-bold text-gray-900 mb-1">{objective.objective}</div>
+                            <div className="text-sm text-gray-600 mb-2">{objective.description}</div>
+                            <div className="text-sm text-green-700">
+                              <strong>Result:</strong> {objective.achievement}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Board Rationale */}
+              {latestComp.performance_metrics.board_rationale && (
+                <div className="bg-gray-50 rounded-xl border border-gray-300 p-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">Compensation Committee Rationale</h3>
+                  <p className="text-sm text-gray-700 leading-relaxed italic">
+                    "{latestComp.performance_metrics.board_rationale}"
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Compensation History */}
       {executive.compensation.length > 1 && (
         <section className="py-16 bg-white">

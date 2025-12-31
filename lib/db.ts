@@ -39,6 +39,45 @@ export interface Company {
   updated_at: string
 }
 
+export interface PerformanceMetrics {
+  fiscal_year: number
+  performance_period: string
+  annual_cash_incentive?: {
+    target_amount: number
+    actual_payout: number
+    payout_percentage: number
+    metrics: Array<{
+      category: string
+      description: string
+      weight_percentage: number
+      actual_achievement: string
+      payout_modifier: number
+    }>
+    board_discretion?: string
+  }
+  stock_awards?: {
+    grant_date: string
+    grant_value: number
+    vesting_schedule: string
+    vesting_conditions: string[]
+  }
+  strategic_objectives?: Array<{
+    objective: string
+    description: string
+    achievement: string
+  }>
+  company_performance?: {
+    revenue: number
+    revenue_change_pct: number
+    operating_income: number
+    net_income: number
+    stock_price_return: number
+    total_shareholder_return_1yr: number
+    context: string
+  }
+  board_rationale?: string
+}
+
 export interface Compensation {
   id: string
   executive_id: string
@@ -52,6 +91,7 @@ export interface Compensation {
   change_in_pension: number
   all_other_compensation: number
   total_compensation: number
+  performance_metrics?: PerformanceMetrics | null
   source_url: string
   filing_date: string | null
   created_at: string
