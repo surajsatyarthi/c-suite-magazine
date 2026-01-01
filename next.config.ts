@@ -92,6 +92,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'upload.wikimedia.org',
       },
+      {
+        protocol: 'https',
+        hostname: 'logo.clearbit.com',
+      },
     ],
   },
   compiler: {
