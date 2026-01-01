@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { getExecutiveBySlug, getExecutiveSlugs, type ExecutiveWithCompensation } from '@/lib/db'
 import { generateMetadata as generateSEOMetadata, generateViewport } from '@/lib/seo'
 import type { Metadata } from 'next'
+import Navigation from '@/components/Navigation'
+import Footer from '@/components/Footer'
 
 interface ExecutivePageProps {
   params: Promise<{
@@ -158,9 +160,12 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
   }))
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
+    <>
+      <Navigation />
+
+      <div className="min-h-screen bg-white">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Breadcrumb */}
@@ -596,6 +601,9 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+
+      <Footer />
+    </>
   )
 }
