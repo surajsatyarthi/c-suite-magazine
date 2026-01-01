@@ -171,7 +171,7 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section - CRITICAL: Text must be white for readability! */}
-        <section className="dark-section bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
+        <section className="bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
 
@@ -202,13 +202,13 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
 
               {/* Name & Title - White text for readability on dark background */}
               <div>
-                <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-3 leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-3 leading-tight" style={{ color: '#ffffff' }}>
                   {executive.full_name}
                 </h1>
-                <p className="text-white text-lg sm:text-xl md:text-2xl font-medium leading-relaxed mb-2">
+                <p className="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed mb-2" style={{ color: '#ffffff' }}>
                   {executive.current_title}
                 </p>
-                <p className="text-white text-base sm:text-lg">
+                <p className="text-base sm:text-lg" style={{ color: '#ffffff' }}>
                   {companyName}
                   {ticker && <span className="ml-2 text-[#d4af37] font-semibold">({ticker})</span>}
                   <span className="mx-2 text-gray-300">•</span>
