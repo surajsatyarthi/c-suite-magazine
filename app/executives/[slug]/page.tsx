@@ -202,19 +202,19 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                 </div>
               )}
 
-              {/* Name & Title */}
+              {/* Name & Title - White text for readability on dark background */}
               <div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-3 leading-tight text-white">
+                <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-3 leading-tight">
                   {executive.full_name}
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-white font-medium leading-relaxed mb-2">
+                <p className="text-white text-lg sm:text-xl md:text-2xl font-medium leading-relaxed mb-2">
                   {executive.current_title}
                 </p>
-                <p className="text-base sm:text-lg text-gray-300">
+                <p className="text-white text-base sm:text-lg">
                   {companyName}
                   {ticker && <span className="ml-2 text-[#d4af37] font-semibold">({ticker})</span>}
-                  <span className="mx-2">•</span>
-                  <span className="text-gray-400">CEO since 2011</span>
+                  <span className="mx-2 text-gray-300">•</span>
+                  <span className="text-gray-300">CEO since 2011</span>
                 </p>
               </div>
             </div>
