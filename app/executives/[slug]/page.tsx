@@ -4,6 +4,7 @@ import { generateMetadata as generateSEOMetadata, generateViewport } from '@/lib
 import type { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 interface ExecutivePageProps {
   params: Promise<{
@@ -162,20 +163,17 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
   return (
     <>
       <Navigation />
+      <Breadcrumbs items={[
+        { label: 'Home', href: '/' },
+        { label: 'Executives', href: '/executives' },
+        { label: executive.full_name }
+      ]} />
 
       <div className="min-h-screen bg-white">
-        {/* Hero Section */}
+        {/* Hero Section - CRITICAL: Text must be white for readability! */}
         <section className="bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            {/* Breadcrumb */}
-            <nav className="text-sm mb-6">
-              <a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a>
-              <span className="mx-2 text-gray-400">/</span>
-              <a href="/executives" className="text-gray-300 hover:text-white transition-colors">Executives</a>
-              <span className="mx-2 text-gray-400">/</span>
-              <span className="text-white font-medium">{executive.full_name}</span>
-            </nav>
 
             {/* Executive Name & Title with Photo */}
             <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
