@@ -579,23 +579,19 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
       )}
 
       {/* Data Source */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-6 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-              <p className="text-sm text-gray-600">
-                Data from SEC{' '}
-                <a
-                  href={latestComp.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline font-medium"
-                >
-                  DEF 14A filing
-                </a>
-                {' '}for fiscal year {latestComp.fiscal_year}.
-              </p>
-            </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-xs text-gray-500">
+              <a
+                href={latestComp.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-gray-700 underline"
+              >
+                Source
+              </a>
+            </p>
           </div>
         </div>
       </section>
