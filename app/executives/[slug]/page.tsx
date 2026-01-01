@@ -179,10 +179,10 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                 <img
                   src={executive.profile_image_url}
                   alt={executive.full_name}
-                  className="w-32 h-32 rounded-full border-4 border-white/20 shadow-xl object-cover"
+                  className="w-32 h-32 rounded-full border-4 border-white/30 shadow-2xl object-cover flex-shrink-0"
                 />
               ) : executive.companies?.logo_url ? (
-                <div className="w-32 h-32 rounded-full border-4 border-white/20 shadow-xl bg-white/10 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="w-32 h-32 rounded-full border-4 border-white/30 shadow-2xl bg-white flex items-center justify-center p-6 flex-shrink-0">
                   <img
                     src={executive.companies.logo_url}
                     alt={companyName}
@@ -190,8 +190,8 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                   />
                 </div>
               ) : (
-                <div className="w-32 h-32 rounded-full border-4 border-white/20 shadow-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                  <span className="text-5xl font-bold text-white/50">
+                <div className="w-32 h-32 rounded-full border-4 border-white/30 shadow-2xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center flex-shrink-0">
+                  <span className="text-6xl font-bold text-white">
                     {executive.full_name.charAt(0)}
                   </span>
                 </div>
@@ -199,12 +199,17 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
 
               {/* Name & Title */}
               <div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-2 leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-3 leading-tight text-white">
                   {executive.full_name}
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-gray-300 leading-relaxed">
-                  {executive.current_title} at {companyName}
-                  {ticker && <span className="ml-2 text-[#c8ab3d]">({ticker})</span>}
+                <p className="text-lg sm:text-xl md:text-2xl text-white font-medium leading-relaxed mb-2">
+                  {executive.current_title}
+                </p>
+                <p className="text-base sm:text-lg text-gray-300">
+                  {companyName}
+                  {ticker && <span className="ml-2 text-[#d4af37] font-semibold">({ticker})</span>}
+                  <span className="mx-2">•</span>
+                  <span className="text-gray-400">CEO since 2011</span>
                 </p>
               </div>
             </div>
@@ -575,24 +580,18 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-              <h3 className="text-lg font-semibold mb-4 text-gray-900">Data Source & Freshness</h3>
-              <p className="text-sm text-gray-600 mb-3">
-                Compensation data sourced from SEC EDGAR proxy statements (DEF 14A filings).
-                All data is publicly available information required to be disclosed by U.S. public companies.
+              <p className="text-sm text-gray-600">
+                Data from SEC{' '}
+                <a
+                  href={latestComp.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 underline font-medium"
+                >
+                  DEF 14A filing
+                </a>
+                {' '}for fiscal year {latestComp.fiscal_year}.
               </p>
-              <p className="text-sm text-gray-600 mb-4">
-                <strong>Note:</strong> Executive compensation data is reported with a 1-year lag.
-                Companies file compensation for fiscal year {latestComp.fiscal_year} in calendar year {latestComp.fiscal_year + 1}.
-                This is the most recent data available from official SEC filings.
-              </p>
-              <a
-                href={latestComp.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 font-medium"
-              >
-                View SEC Filing (DEF 14A) →
-              </a>
             </div>
           </div>
         </div>
