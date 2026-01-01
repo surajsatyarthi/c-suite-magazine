@@ -229,7 +229,7 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                   Latest Available Data
                 </span>
               </div>
-              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#d4af37] mb-4 tracking-tight break-all sm:break-normal">
+              <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#d4af37] mb-4 tracking-tight">
                 {formatCurrency(latestComp.total_compensation)}
               </div>
               {yoyChange !== null && (
