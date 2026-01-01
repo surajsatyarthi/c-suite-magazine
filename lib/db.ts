@@ -255,5 +255,66 @@ export async function getCompensationRecords(limit: number = 5): Promise<Partial
   }
 }
 
+/**
+ * Get all executives with their latest compensation for the hub page
+ * Used for the /executives listing page with sortable table
+ */
+export interface ExecutiveForHub {
+  id: string
+  full_name: string
+  slug: string
+  current_title: string | null
+  company_name: string | null
+  ticker_symbol: string | null
+  latest_fiscal_year: number | null
+  total_compensation: number | null
+  previous_year_compensation: number | null
+  yoy_change_percent: number | null
+}
+
+export async function getAllExecutivesWithCompensation(): Promise<ExecutiveForHub[]> {
+  try {
+    const result = await sql`
+      SELECT
+        e.id,
+        e.full_name,
+        e.slug,
+        e.current_title,
+        c.name as company_name,
+        c.ticker_symbol,
+        latest.fiscal_year as latest_fiscal_year,
+        latest.total_compensation,
+        previous.total_compensation as previous_year_compensation,
+        CASE
+          WHEN previous.total_compensation IS NOT NULL AND previous.total_compensation > 0
+          THEN ROUND(((latest.total_compensation - previous.total_compensation) * 100.0 / previous.total_compensation)::numeric, 1)
+          ELSE NULL
+        END as yoy_change_percent
+      FROM executives e
+      LEFT JOIN companies c ON e.company_id = c.id
+      LEFT JOIN LATERAL (
+        SELECT fiscal_year, total_compensation
+        FROM compensation
+        WHERE executive_id = e.id
+        ORDER BY fiscal_year DESC
+        LIMIT 1
+      ) latest ON true
+      LEFT JOIN LATERAL (
+        SELECT total_compensation
+        FROM compensation
+        WHERE executive_id = e.id
+          AND fiscal_year = (latest.fiscal_year - 1)
+        LIMIT 1
+      ) previous ON true
+      WHERE latest.total_compensation IS NOT NULL
+      ORDER BY latest.total_compensation DESC NULLS LAST
+    `
+    return result.rows as ExecutiveForHub[]
+  } catch (error) {
+    console.error('[db] Failed to fetch executives with compensation:', error)
+    return []
+  }
+}
+
 // Export sql for direct queries if needed
 export { sql }

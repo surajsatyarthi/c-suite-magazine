@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { client } from '@/lib/sanity'
+import { getExecutiveSlugs } from '@/lib/db'
 
 export async function GET() {
   const baseUrl = 'https://csuitemagazine.global'
@@ -25,6 +26,14 @@ export async function GET() {
       _updatedAt
     }
   `)
+
+  // Get all executive salary pages
+  let executiveSlugs: string[] = []
+  try {
+    executiveSlugs = await getExecutiveSlugs()
+  } catch (error) {
+    console.warn('[sitemap] Failed to fetch executive slugs:', error)
+  }
 
   const sitemap: MetadataRoute.Sitemap = [
     // Static pages
@@ -58,12 +67,26 @@ export async function GET() {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
+    // Executive hub page - high priority for SEO
+    {
+      url: `${baseUrl}/executives`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.95,
+    },
     // Category pages
     ...categories.map((category: any) => ({
       url: `${baseUrl}/category/${category.slug.current}`,
       lastModified: new Date(category._updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
+    })),
+    // Executive salary pages - high priority for SEO
+    ...executiveSlugs.map((slug) => ({
+      url: `${baseUrl}/executives/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.9,
     })),
     // Article pages (category + title only)
     ...posts.map((post: any) => ({

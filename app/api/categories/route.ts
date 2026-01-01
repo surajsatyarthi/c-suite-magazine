@@ -14,7 +14,7 @@ export async function GET() {
   // Business rule: Never expose article counts publicly
   // Public API should return only categories that have at least one article,
   // without leaking the actual counts.
-  const query = `*[_type == "category" && defined(slug.current) && count(*[_type == "post" && isHidden != true && references(^._id)]) > 0] | order(title asc) {
+  const query = `*[_type == "category" && defined(slug.current) && count(*[_type in ["post", "csa"] && isHidden != true && references(^._id)]) > 0] | order(title asc) {
     title,
     "slug": slug.current
   }`

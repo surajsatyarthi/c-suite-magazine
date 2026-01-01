@@ -74,7 +74,6 @@ export default function Navigation() {
   }, [])
 
   const [allCategories, setAllCategories] = useState<Array<{ title: string, slug: string }>>([])
-  const REMOVED_CATEGORIES = new Set<string>(['Business', 'Events', 'Retail', 'Cover Story'])
   const scrollContainerRef = React.useRef<HTMLElement>(null)
 
   // Fetch categories with articles (server-side via API)
@@ -85,10 +84,7 @@ export default function Navigation() {
         const data = await res.json()
         const cats = Array.isArray(data?.categories) ? data.categories : []
         if (cats.length) {
-          setAllCategories(
-            cats
-              .filter((c: any) => !REMOVED_CATEGORIES.has(String(c?.title || '')))
-          )
+          setAllCategories(cats)
           return
         }
       } catch (error) {
@@ -148,12 +144,6 @@ export default function Navigation() {
       container.removeEventListener('touchend', startScrolling)
     }
   }, [allCategories.length])
-
-  const categories = [
-    'Leadership', 'Business', 'Innovation', 'Money & Finance', 'Startups',
-    'Entrepreneurs', 'Technology', 'Healthcare', 'Sustainability',
-    'CEO Woman', 'Changemakers'
-  ]
 
   const navLinks = [
     { href: '/', label: 'Home' },

@@ -11,7 +11,7 @@ export async function GET() {
   const query = `*[_type == "category" && defined(slug.current)] | order(title asc) {
     title,
     "slug": slug.current,
-    "count": count(*[_type == "post" && isHidden != true && references(^._id)])
+    "count": count(*[_type in ["post", "csa"] && isHidden != true && references(^._id)])
   }`
   
   try {

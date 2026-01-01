@@ -36,8 +36,7 @@ export async function generateStaticParams() {
   }
 }
 
-// TEMPORARY: Disable cache to test UI fixes - will restore to 86400 after verification
-export const revalidate = 0 // Force fresh build every request (TEMPORARY FOR TESTING)
+export const revalidate = 86400 // Revalidate once per day (24 hours)
 export const dynamicParams = true // Generate others on-demand
 
 /**
@@ -503,43 +502,51 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
         </section>
       )}
 
-      {/* Compensation History */}
-      {executive.compensation.length > 1 && (
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-serif font-bold mb-8 text-gray-900">
-                Compensation History ({executive.compensation.length} {executive.compensation.length === 1 ? 'Year' : 'Years'})
-              </h2>
+      {/* Compensation History - Always show 5 years (2024-2020) */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-serif font-bold mb-8 text-gray-900">
+              5 Year Compensation History
+            </h2>
 
-              <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                        Fiscal Year
-                      </th>
-                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
-                        Total Compensation
-                      </th>
-                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
-                        Year-over-Year Change
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-100">
-                    {executive.compensation.slice(0, 5).map((comp, index) => {
-                      const prevComp = executive.compensation[index + 1]
-                      const change = prevComp
-                        ? ((comp.total_compensation - prevComp.total_compensation) / prevComp.total_compensation * 100)
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Fiscal Year
+                    </th>
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Total Compensation
+                    </th>
+                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      Year-over-Year Change
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-100">
+                  {(() => {
+                    // Create 5-year array (2024-2020) and map to compensation data
+                    const fiscalYears = [2024, 2023, 2022, 2021, 2020]
+                    const compensationRows = fiscalYears.map(year => {
+                      const record = executive.compensation.find(c => c.fiscal_year === year)
+                      return { year, data: record || null }
+                    })
+
+                    return compensationRows.map((row, index) => {
+                      // Find previous year's data for YoY calculation
+                      const prevRow = compensationRows[index + 1]
+                      const change = row.data && prevRow?.data
+                        ? ((row.data.total_compensation - prevRow.data.total_compensation) / prevRow.data.total_compensation * 100)
                         : null
-                      const isLatest = index === 0
+                      const isLatest = index === 0 && row.data !== null
 
                       return (
-                        <tr key={comp.id} className={`hover:bg-gray-50 transition-colors ${isLatest ? 'bg-blue-50/30' : ''}`}>
+                        <tr key={row.year} className={`hover:bg-gray-50 transition-colors ${isLatest ? 'bg-blue-50/30' : ''}`}>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-bold text-gray-900">{comp.fiscal_year}</span>
+                              <span className="text-sm font-bold text-gray-900">{row.year}</span>
                               {isLatest && (
                                 <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
                                   Latest
@@ -548,9 +555,13 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right">
-                            <span className="text-sm font-semibold text-gray-900">
-                              {formatCurrency(comp.total_compensation)}
-                            </span>
+                            {row.data ? (
+                              <span className="text-sm font-semibold text-gray-900">
+                                {formatCurrency(row.data.total_compensation)}
+                              </span>
+                            ) : (
+                              <span className="text-sm text-gray-400">N/A</span>
+                            )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right">
                             {change !== null ? (
@@ -569,14 +580,14 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                           </td>
                         </tr>
                       )
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                    })
+                  })()}
+                </tbody>
+              </table>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Data Source */}
       <section className="py-6 bg-white">
