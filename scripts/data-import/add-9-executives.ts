@@ -338,8 +338,8 @@ const executivesData = [
   {
     // 9. Bob Iger - Disney
     executive: {
-      full_name: 'Robert A. Iger',
-      slug: 'robert-iger',
+      full_name: 'Bob Iger',
+      slug: 'bob-iger',
       current_title: 'Chief Executive Officer',
       wikidata_id: 'Q557590',
     },
