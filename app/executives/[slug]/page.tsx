@@ -36,8 +36,8 @@ export async function generateStaticParams() {
   }
 }
 
-// Enable ISR with 24-hour revalidation
-export const revalidate = 86400 // 24 hours
+// TEMPORARY: Disable cache to test UI fixes - will restore to 86400 after verification
+export const revalidate = 0 // Force fresh build every request (TEMPORARY FOR TESTING)
 export const dynamicParams = true // Generate others on-demand
 
 /**
@@ -171,7 +171,7 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section - CRITICAL: Text must be white for readability! */}
-        <section className="bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
+        <section className="dark-section bg-gradient-to-br from-[#0a3a5c] to-[#041d30] text-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
 
