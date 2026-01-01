@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Logo Fallback Sample</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: linear-gradient(to bottom right, #0a3a5c, #041d30);
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 50px;
+      font-size: 32px;
+    }
+    .logos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .logo-item {
+      text-align: center;
+    }
+    .logo-circle {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      border: 4px solid rgb(255, 255, 255);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .logo-letter {
+      font-size: 64px;
+      font-weight: bold;
+      background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f6e9a8 18%,
+        #c8ab3d 42%,
+        #b39935 68%,
+        #ffffff 100%
+      );
+      background-size: 260% 260%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: metallic-shimmer 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 2px 8px rgba(200, 171, 61, 0.45));
+    }
+    @keyframes metallic-shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .company-name {
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .executive-name {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+    .note {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Company Logo Fallback - Letter Style</h1>
+
+    <div class="logos">
+      <div class="logo-item">
+        <div class="logo-circle">
+          <span class="logo-letter">A</span>
+        </div>
+        <div class="company-name">Apple Inc.</div>
+        <div class="executive-name">Tim Cook</div>
+      </div>
+
+      <div class="logo-item">
+        <div class="logo-circle">
+          <span class="logo-letter">M</span>
+        </div>
+        <div class="company-name">Microsoft</div>
+        <div class="executive-name">Satya Nadella</div>
+      </div>
+
+      <div class="logo-item">
+        <div class="logo-circle">
+          <span class="logo-letter">G</span>
+        </div>
+        <div class="company-name">Google</div>
+        <div class="executive-name">Sundar Pichai</div>
+      </div>
+
+      <div class="logo-item">
+        <div class="logo-circle">
+          <span class="logo-letter">T</span>
+        </div>
+        <div class="company-name">Tesla</div>
+        <div class="executive-name">Elon Musk</div>
+      </div>
+
+      <div class="logo-item">
+        <div class="logo-circle">
+          <span class="logo-letter">N</span>
+        </div>
+        <div class="company-name">NVIDIA</div>
+        <div class="executive-name">Jensen Huang</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>✓ Clean & Professional</strong><br>
+      No external dependencies • Zero broken images • Works for all 1000+ companies • Minimalist design
+    </div>
+  </div>
+</body>
+</html>

@@ -193,8 +193,8 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
                   />
                 </div>
               ) : (
-                <div className="w-32 h-32 rounded-full border-4 border-white/30 shadow-2xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center flex-shrink-0">
-                  <span className="text-6xl font-bold text-white">
+                <div className="w-32 h-32 rounded-full border-4 border-white shadow-2xl bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center flex-shrink-0">
+                  <span className="text-6xl font-bold metallic-sheen-strong">
                     {executive.full_name.charAt(0)}
                   </span>
                 </div>
