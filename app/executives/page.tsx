@@ -79,13 +79,13 @@ export default async function ExecutivesPage() {
         <section className="bg-gradient-to-br from-[#082945] to-[#0a3d5c] text-white py-16 border-b-4 border-[#c8ab3d]">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+              <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 !text-white">
                 Highest Paid CEOs & Executives
               </h1>
-              <p className="text-xl text-gray-200 mb-2">
+              <p className="text-xl !text-gray-200 mb-2">
                 Comprehensive executive compensation data for {executives.length} top leaders
               </p>
-              <p className="text-sm text-gray-300">
+              <p className="text-sm !text-gray-300">
                 Updated with FY 2024 data from SEC filings
               </p>
             </div>
