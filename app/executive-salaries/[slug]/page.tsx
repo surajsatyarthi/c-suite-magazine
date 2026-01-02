@@ -589,6 +589,55 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
         </div>
       </section>
 
+      {/* Compensation Formula Explainer */}
+      <section className="py-12 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gradient-to-br from-[#082945] to-[#0a3d5c] rounded-lg border-2 border-[#c8ab3d] p-8">
+              <h3 className="text-xl font-bold mb-6 text-center text-white">
+                Understanding Total Compensation
+              </h3>
+              <div className="flex flex-wrap items-center justify-center gap-2 text-sm md:text-base mb-6">
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Base Salary
+                </div>
+                <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Bonus
+                </div>
+                <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Stock Awards
+                </div>
+                <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Option Awards
+                </div>
+                <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Non-Equity Incentive
+                </div>
+                <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Pension Change
+                </div>
+                <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                  Other
+                </div>
+                <span className="text-[#c8ab3d] text-2xl font-bold mx-2">=</span>
+                <div className="px-4 py-2 bg-[#c8ab3d] rounded text-[#082945] font-bold border-2 border-white">
+                  Total Compensation
+                </div>
+              </div>
+              <p className="text-sm text-gray-300 text-center max-w-2xl mx-auto">
+                Executive compensation consists of multiple components. Total compensation provides the most comprehensive view of executive earnings.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Data Source */}
       <section className="py-6 bg-white">
         <div className="container mx-auto px-4">
