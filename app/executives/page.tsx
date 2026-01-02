@@ -76,9 +76,9 @@ export default async function ExecutivesPage() {
 
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-[#082945] to-[#0a3d5c] text-white py-16 border-b-4 border-[#c8ab3d]">
+        <section className="dark-section bg-gradient-to-br from-[#082945] to-[#0a3d5c] text-white py-16 border-b-4 border-[#c8ab3d]">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center [&_h1]:text-white [&_p]:text-gray-200">
+            <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
                 Highest Paid CEOs & Executives
               </h1>

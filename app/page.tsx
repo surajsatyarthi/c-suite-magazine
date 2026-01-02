@@ -175,6 +175,88 @@ export default async function Home() {
 
         {/* Latest Insights */}
         <LatestInsights articles={latestArticles} />
+
+        {/* Executive Compensation Featured Section - DEMO */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-serif font-bold text-gray-900 mb-4">
+                  Executive Compensation Data
+                </h2>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                  Explore detailed salary breakdowns, stock awards, and total compensation packages for America's top executives
+                </p>
+              </div>
+
+              {/* Feature Card */}
+              <div className="dark-section bg-gradient-to-br from-[#082945] to-[#0a3d5c] rounded-xl shadow-2xl overflow-hidden border-2 border-[#c8ab3d]">
+                <div className="p-8 md:p-12">
+                  <div className="grid md:grid-cols-2 gap-8 items-center">
+                    {/* Left: Content */}
+                    <div className="text-white">
+                      <h3 className="text-3xl font-bold mb-4 text-white">
+                        Highest Paid CEOs 2024
+                      </h3>
+                      <p className="text-gray-200 mb-6 leading-relaxed">
+                        Access comprehensive compensation data for top executives including base salary, bonuses, stock awards, and total pay packages. Compare year-over-year changes and understand executive pay structures.
+                      </p>
+                      <ul className="space-y-3 mb-8">
+                        <li className="flex items-center text-gray-200">
+                          <span className="text-[#c8ab3d] mr-2">✓</span>
+                          Detailed 5-year compensation history
+                        </li>
+                        <li className="flex items-center text-gray-200">
+                          <span className="text-[#c8ab3d] mr-2">✓</span>
+                          Complete salary breakdown by component
+                        </li>
+                        <li className="flex items-center text-gray-200">
+                          <span className="text-[#c8ab3d] mr-2">✓</span>
+                          Year-over-year trend analysis
+                        </li>
+                      </ul>
+                      <Link
+                        href="/executives"
+                        className="inline-block px-8 py-4 bg-[#c8ab3d] text-[#082945] font-bold rounded-lg hover:bg-[#d6b745] transition-colors shadow-lg"
+                      >
+                        Explore Executive Salaries →
+                      </Link>
+                    </div>
+
+                    {/* Right: Preview Stats */}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <h4 className="text-white font-semibold mb-4">Top 3 Executives by Total Compensation</h4>
+                      <div className="space-y-4">
+                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-[#c8ab3d] font-bold text-2xl">🏆 #1</span>
+                            <span className="text-white font-bold">$848M</span>
+                          </div>
+                          <div className="text-gray-200 text-sm">Elon Musk, Tesla</div>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-300 font-bold text-xl">🥈 #2</span>
+                            <span className="text-white font-bold">$226M</span>
+                          </div>
+                          <div className="text-gray-200 text-sm">Tim Cook, Apple</div>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-gray-300 font-bold text-xl">🥉 #3</span>
+                            <span className="text-white font-bold">$220M</span>
+                          </div>
+                          <div className="text-gray-200 text-sm">Sundar Pichai, Alphabet</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
