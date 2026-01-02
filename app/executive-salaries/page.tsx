@@ -85,9 +85,6 @@ export default async function ExecutivesPage() {
               <p className="text-xl mb-2">
                 Comprehensive executive compensation data for {executives.length} top leaders
               </p>
-              <p className="text-sm text-gray-300">
-                Updated with FY 2024 data from SEC filings
-              </p>
             </div>
           </div>
         </section>
