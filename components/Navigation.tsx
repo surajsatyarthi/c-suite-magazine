@@ -104,6 +104,7 @@ export default function Navigation() {
     let scrollInterval: NodeJS.Timeout
 
     const startScrolling = () => {
+      clearInterval(scrollInterval) // Clear any existing interval before creating new one
       scrollInterval = setInterval(() => {
         if (!container) return
 

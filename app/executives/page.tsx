@@ -13,7 +13,7 @@ export const revalidate = 86400 // Revalidate once per day
  */
 export async function generateMetadata(): Promise<Metadata> {
   return generateSEOMetadata({
-    title: 'Highest Paid CEOs 2024 | Executive Compensation Rankings',
+    title: 'Executive Salaries 2024 | Highest Paid CEOs & Compensation Rankings',
     description: 'Explore detailed compensation data for top executives including Tim Cook, Satya Nadella, and more. Compare CEO salaries, stock awards, and total pay packages for 2024.',
     keywords: [
       'highest paid CEOs',
@@ -325,13 +325,6 @@ export default async function ExecutivesPage() {
                   })}
                 </div>
               </div>
-
-              {/* Data Source Note */}
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600">
-                  Data sourced from SEC DEF 14A proxy filings. Compensation figures represent total compensation for the most recent fiscal year.
-                </p>
-              </div>
             </div>
           </div>
         </section>
@@ -344,9 +337,50 @@ export default async function ExecutivesPage() {
                 <h2 className="text-2xl font-serif font-bold text-gray-900 mb-4">
                   Understanding Executive Compensation
                 </h2>
-                <p className="text-gray-700 leading-relaxed mb-4">
+                <p className="text-gray-700 leading-relaxed mb-6">
                   Executive compensation packages typically consist of multiple components including base salary, annual bonuses, stock awards, stock options, non-equity incentive plans, and other benefits. Total compensation provides the most comprehensive view of what executives earn, combining all these elements into a single figure.
                 </p>
+
+                {/* Compensation Formula */}
+                <div className="my-8 p-6 bg-gradient-to-br from-[#082945] to-[#0a3d5c] rounded-lg border-2 border-[#c8ab3d] [&_h3]:text-white">
+                  <h3 className="text-lg font-semibold mb-4 text-center">
+                    Total Compensation Formula
+                  </h3>
+                  <div className="flex flex-wrap items-center justify-center gap-2 text-sm md:text-base">
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Base Salary
+                    </div>
+                    <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Bonus
+                    </div>
+                    <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Stock Awards
+                    </div>
+                    <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Option Awards
+                    </div>
+                    <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Non-Equity Incentive
+                    </div>
+                    <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Pension Change
+                    </div>
+                    <span className="text-[#c8ab3d] text-xl font-bold">+</span>
+                    <div className="px-3 py-2 bg-white/10 rounded text-white font-medium border border-white/20">
+                      Other Compensation
+                    </div>
+                    <span className="text-[#c8ab3d] text-2xl font-bold mx-2">=</span>
+                    <div className="px-4 py-2 bg-[#c8ab3d] rounded text-[#082945] font-bold border-2 border-white">
+                      Total Compensation
+                    </div>
+                  </div>
+                </div>
+
                 <p className="text-gray-700 leading-relaxed">
                   Year-over-year changes in CEO pay reflect company performance, board decisions, and market conditions. Our rankings help investors, analysts, and the public understand how executive pay aligns with corporate results.
                 </p>
