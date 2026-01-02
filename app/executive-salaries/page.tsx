@@ -340,7 +340,7 @@ export default async function ExecutivesPage() {
 
                 {/* Compensation Formula */}
                 <div className="my-8 p-6 bg-gradient-to-br from-[#082945] to-[#0a3d5c] rounded-lg border-2 border-[#c8ab3d] [&_h3]:text-white">
-                  <h3 className="text-lg font-semibold mb-4 text-center">
+                  <h3 className="text-lg font-semibold mb-4 text-center text-white">
                     Total Compensation Formula
                   </h3>
                   <div className="flex flex-wrap items-center justify-center gap-2 text-sm md:text-base">
