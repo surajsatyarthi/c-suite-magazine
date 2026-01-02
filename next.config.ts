@@ -27,6 +27,17 @@ const nextConfig: NextConfig = {
         destination: '/category/:cat/from-vision-to-market-victory-the-blueprint-for-concept-commercialization',
         permanent: true,
       },
+      // Executive salaries URL rename (SEO alignment)
+      {
+        source: '/executives',
+        destination: '/executive-salaries',
+        permanent: true,
+      },
+      {
+        source: '/executives/:slug',
+        destination: '/executive-salaries/:slug',
+        permanent: true,
+      },
     ]
   },
   async headers() {

@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
       'top paid executives',
       'CEO compensation data'
     ],
-    url: 'https://csuitemagazine.global/executives',
+    url: 'https://csuitemagazine.global/executive-salaries',
     type: 'website'
   })
 }
@@ -66,7 +66,7 @@ export default async function ExecutivesPage() {
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Executive Salaries', href: '/executives' },
+    { label: 'Executive Salaries', href: '/executive-salaries' },
   ]
 
   return (
@@ -171,7 +171,7 @@ export default async function ExecutivesPage() {
                             <td className="px-6 py-4">
                               <div className="flex flex-col">
                                 <Link
-                                  href={`/executives/${exec.slug}`}
+                                  href={`/executive-salaries/${exec.slug}`}
                                   className="text-base font-semibold text-[#082945] hover:text-[#c8ab3d] transition-colors"
                                 >
                                   {exec.full_name}
@@ -232,7 +232,7 @@ export default async function ExecutivesPage() {
                             {/* View Details Button */}
                             <td className="px-6 py-4 whitespace-nowrap text-center">
                               <Link
-                                href={`/executives/${exec.slug}`}
+                                href={`/executive-salaries/${exec.slug}`}
                                 className="inline-flex items-center px-4 py-2 border border-[#c8ab3d] text-sm font-medium rounded-md text-[#082945] bg-white hover:bg-[#c8ab3d] hover:text-white transition-colors"
                               >
                                 View Details
@@ -280,7 +280,7 @@ export default async function ExecutivesPage() {
                         {/* Executive Info */}
                         <div className="mb-4">
                           <Link
-                            href={`/executives/${exec.slug}`}
+                            href={`/executive-salaries/${exec.slug}`}
                             className="text-lg font-semibold text-[#082945] hover:text-[#c8ab3d] transition-colors block mb-1"
                           >
                             {exec.full_name}
@@ -315,7 +315,7 @@ export default async function ExecutivesPage() {
 
                         {/* View Details Button */}
                         <Link
-                          href={`/executives/${exec.slug}`}
+                          href={`/executive-salaries/${exec.slug}`}
                           className="block w-full text-center px-4 py-2 border border-[#c8ab3d] text-sm font-medium rounded-md text-[#082945] bg-white hover:bg-[#c8ab3d] hover:text-white transition-colors"
                         >
                           View Full Details

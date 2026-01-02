@@ -69,7 +69,7 @@ export async function GET() {
     },
     // Executive hub page - high priority for SEO
     {
-      url: `${baseUrl}/executives`,
+      url: `${baseUrl}/executive-salaries`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.95,
@@ -83,7 +83,7 @@ export async function GET() {
     })),
     // Executive salary pages - high priority for SEO
     ...executiveSlugs.map((slug) => ({
-      url: `${baseUrl}/executives/${slug}`,
+      url: `${baseUrl}/executive-salaries/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.9,

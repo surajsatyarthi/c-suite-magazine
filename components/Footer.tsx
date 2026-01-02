@@ -42,6 +42,7 @@ export default function Footer() {
                 <li><Link href="/about" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">About Us</Link></li>
                 <li><Link href="/contact" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Contact Us</Link></li>
                 <li><Link href="/archive" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Magazine Archive</Link></li>
+                <li><Link href="/executive-salaries" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Executive Salaries</Link></li>
                 <li><Link href="/privacy" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline">Terms & Conditions</Link></li>
               </ul>

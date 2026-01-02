@@ -217,7 +217,7 @@ export default async function Home() {
                         </li>
                       </ul>
                       <Link
-                        href="/executives"
+                        href="/executive-salaries"
                         className="inline-block px-8 py-4 bg-[#c8ab3d] text-[#082945] font-bold rounded-lg hover:bg-[#d6b745] transition-colors shadow-lg"
                       >
                         Explore Executive Salaries →

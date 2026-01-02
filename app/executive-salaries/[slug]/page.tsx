@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: ExecutivePageProps): Promise<
       'executive compensation',
       'SEC filings'
     ],
-    url: `https://csuitemagazine.global/executives/${slug}`,
+    url: `https://csuitemagazine.global/executive-salaries/${slug}`,
     type: 'article'
   })
 }
@@ -164,7 +164,7 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
       <Navigation />
       <Breadcrumbs items={[
         { label: 'Home', href: '/' },
-        { label: 'Executives', href: '/executives' },
+        { label: 'Executive Salaries', href: '/executive-salaries' },
         { label: executive.full_name }
       ]} />
 
