@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import pkg from '@/package.json'
-
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -12,7 +11,7 @@ export default function Footer() {
           href="https://www.csuitebrand.agency"
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full h-full focus:outline-none"
+          className="block w-full h-full focus:outline-none focus:ring-2 focus:ring-[#082945] focus:ring-offset-2 focus:ring-offset-[#c8ab3d]"
         >
           Elevate Your Executive Presence: Professional LinkedIn Management by C-Suite Brand Agency &rarr;
         </a>
@@ -39,12 +38,12 @@ export default function Footer() {
           <div className="lg:col-span-3 lg:col-start-1 md:col-span-2 md:col-start-1 w-full">
             <nav aria-label="Footer links">
               <ul className="flex items-center justify-center gap-x-5 text-sm flex-wrap md:flex-nowrap lg:flex-nowrap">
-                <li><Link href="/about" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">About Us</Link></li>
-                <li><Link href="/contact" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Contact Us</Link></li>
-                <li><Link href="/archive" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Magazine Archive</Link></li>
-                <li><Link href="/executive-salaries" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Executive Salaries</Link></li>
-                <li><Link href="/privacy" prefetch className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-300 hover:text-[#c8ab3d] transition-colors premium-underline">Terms & Conditions</Link></li>
+                <li><Link href="/about" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">About Us</Link></li>
+                <li><Link href="/contact" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Contact Us</Link></li>
+                <li><Link href="/archive" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Magazine Archive</Link></li>
+                <li><Link href="/executive-salaries" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Executive Salaries</Link></li>
+                <li><Link href="/privacy" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline">Terms & Conditions</Link></li>
               </ul>
             </nav>
           </div>

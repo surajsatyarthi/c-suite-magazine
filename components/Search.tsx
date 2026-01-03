@@ -67,7 +67,7 @@ export default function Search() {
             {/* Search Icon / Toggle */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 text-white hover:text-[#c8ab3d] transition-colors focus:outline-none"
+                className="p-2 text-white hover:text-[#f4d875] active:text-[#ffffff] transition-colors focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945] rounded-sm"
                 aria-label="Search"
             >
                 <svg

@@ -64,7 +64,7 @@ export default function CountrySelector({
       {/* Flag Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-1.5 py-1 text-white hover:text-[#c8ab3d] transition-colors focus:outline-none"
+        className="px-1.5 py-1 text-white hover:text-[#f4d875] active:text-[#ffffff] transition-colors focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945] rounded-sm"
         title={`Current location: ${currentCountryName} (Click to change)`}
         aria-label={`Current location: ${currentCountryName}. Click to change location.`}
       >

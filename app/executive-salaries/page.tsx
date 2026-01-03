@@ -169,7 +169,7 @@ export default async function ExecutivesPage() {
                               <div className="flex flex-col">
                                 <Link
                                   href={`/executive-salaries/${exec.slug}`}
-                                  className="text-base font-semibold text-[#082945] hover:text-[#c8ab3d] transition-colors"
+                                  className="text-base font-semibold text-[#082945] hover:text-[#9d7e2a] active:text-[#7a6420] transition-colors"
                                 >
                                   {exec.full_name}
                                 </Link>
@@ -230,7 +230,7 @@ export default async function ExecutivesPage() {
                             <td className="px-6 py-4 whitespace-nowrap text-center">
                               <Link
                                 href={`/executive-salaries/${exec.slug}`}
-                                className="inline-flex items-center px-4 py-2 border border-[#c8ab3d] text-sm font-medium rounded-md text-[#082945] bg-white hover:bg-[#c8ab3d] hover:text-white transition-colors"
+                                className="inline-flex items-center px-4 py-2 border border-[#c8ab3d] text-sm font-medium rounded-md text-[#082945] bg-white hover:bg-[#c8ab3d] hover:text-[#082945] transition-colors"
                               >
                                 View Details
                               </Link>
@@ -278,7 +278,7 @@ export default async function ExecutivesPage() {
                         <div className="mb-4">
                           <Link
                             href={`/executive-salaries/${exec.slug}`}
-                            className="text-lg font-semibold text-[#082945] hover:text-[#c8ab3d] transition-colors block mb-1"
+                            className="text-lg font-semibold text-[#082945] hover:text-[#9d7e2a] active:text-[#7a6420] transition-colors block mb-1"
                           >
                             {exec.full_name}
                           </Link>
@@ -313,7 +313,7 @@ export default async function ExecutivesPage() {
                         {/* View Details Button */}
                         <Link
                           href={`/executive-salaries/${exec.slug}`}
-                          className="block w-full text-center px-4 py-2 border border-[#c8ab3d] text-sm font-medium rounded-md text-[#082945] bg-white hover:bg-[#c8ab3d] hover:text-white transition-colors"
+                          className="block w-full text-center px-4 py-2 border border-[#c8ab3d] text-sm font-medium rounded-md text-[#082945] bg-white hover:bg-[#c8ab3d] hover:text-[#082945] transition-colors"
                         >
                           View Full Details
                         </Link>
