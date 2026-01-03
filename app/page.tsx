@@ -12,6 +12,7 @@ import type { Metadata } from 'next'
 import { generateMetadata, generateStructuredData } from '@/lib/seo'
 import path from 'path'
 import fs from 'fs/promises'
+import { getAllExecutivesWithCompensation } from '@/lib/db'
 
 export const metadata: Metadata = generateMetadata({
   title: 'C-Suite Magazine - Leadership, Innovation & Executive Insights',
@@ -143,6 +144,10 @@ export default async function Home() {
   const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
   const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
 
+  // Fetch top 3 executives by compensation from database
+  const allExecutives = await getAllExecutivesWithCompensation()
+  const topExecutives = allExecutives.slice(0, 3)
+
   return (
     <>
       <Navigation />
@@ -182,7 +187,7 @@ export default async function Home() {
             <div className="max-w-6xl mx-auto">
               {/* Header */}
               <div className="text-center mb-12">
-                <h2 className="text-4xl font-serif font-bold text-gray-900 mb-4">
+                <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
                   Executive Compensation Data
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -203,22 +208,22 @@ export default async function Home() {
                         Access comprehensive compensation data for top executives including base salary, bonuses, stock awards, and total pay packages. Compare year-over-year changes and understand executive pay structures.
                       </p>
                       <ul className="space-y-3 mb-8">
-                        <li className="flex items-center text-gray-200">
+                        <li className="flex items-center text-white">
                           <span className="text-[#c8ab3d] mr-2">✓</span>
                           Detailed 5-year compensation history
                         </li>
-                        <li className="flex items-center text-gray-200">
+                        <li className="flex items-center text-white">
                           <span className="text-[#c8ab3d] mr-2">✓</span>
                           Complete salary breakdown by component
                         </li>
-                        <li className="flex items-center text-gray-200">
+                        <li className="flex items-center text-white">
                           <span className="text-[#c8ab3d] mr-2">✓</span>
                           Year-over-year trend analysis
                         </li>
                       </ul>
                       <Link
                         href="/executive-salaries"
-                        className="inline-block px-8 py-4 bg-[#c8ab3d] text-[#082945] font-bold rounded-lg hover:bg-[#d6b745] transition-colors shadow-lg"
+                        className="inline-block px-8 py-4 bg-[#c8ab3d] text-white font-bold rounded-lg hover:bg-[#d6b745] transition-colors shadow-lg"
                       >
                         Explore Executive Salaries →
                       </Link>
@@ -226,29 +231,27 @@ export default async function Home() {
 
                     {/* Right: Preview Stats */}
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                      <h4 className="text-white font-semibold mb-4">Top 3 Executives by Total Compensation</h4>
+                      <h4 className="text-white font-bold mb-4 text-lg">Top 3 Executives by Total Compensation</h4>
                       <div className="space-y-4">
-                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-[#c8ab3d] font-bold text-2xl">🏆 #1</span>
-                            <span className="text-white font-bold">$848M</span>
-                          </div>
-                          <div className="text-gray-200 text-sm">Elon Musk, Tesla</div>
-                        </div>
-                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-gray-300 font-bold text-xl">🥈 #2</span>
-                            <span className="text-white font-bold">$226M</span>
-                          </div>
-                          <div className="text-gray-200 text-sm">Tim Cook, Apple</div>
-                        </div>
-                        <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-gray-300 font-bold text-xl">🥉 #3</span>
-                            <span className="text-white font-bold">$220M</span>
-                          </div>
-                          <div className="text-gray-200 text-sm">Sundar Pichai, Alphabet</div>
-                        </div>
+                        {topExecutives.map((exec, index) => {
+                          const medals = ['🏆', '🥈', '🥉']
+                          const ranks = ['#1', '#2', '#3']
+                          const compensationM = exec.total_compensation ? (exec.total_compensation / 1000000).toFixed(1) : '0.0'
+
+                          return (
+                            <div key={exec.id} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className={`text-[#c8ab3d] font-bold ${index === 0 ? 'text-2xl' : 'text-xl'}`}>
+                                  {medals[index]} {ranks[index]}
+                                </span>
+                                <span className="text-white font-bold">${compensationM}M</span>
+                              </div>
+                              <div className="text-white text-sm font-medium">
+                                {exec.full_name}, {exec.company_name}
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>

@@ -40,7 +40,7 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
     <section className="py-20 bg-gradient-to-br from-[#2b6cb0] to-[#020f1a] text-white dark-section">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-none">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-serif font-black !text-white mb-4 heading-premium">
+          <h2 className="text-4xl md:text-5xl font-serif font-black text-white mb-4 heading-premium">
             Industry Juggernauts
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">

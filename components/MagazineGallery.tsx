@@ -75,7 +75,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-none">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
-              C-suite spotlight
+              C-Suite Spotlight
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Browse our collection of exclusive issues featuring the world&apos;s top executives

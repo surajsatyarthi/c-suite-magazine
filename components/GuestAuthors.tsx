@@ -29,9 +29,11 @@ export default async function GuestAuthors() {
 
     return (
         <section className="w-full max-w-[1400px] mx-auto px-4 md:px-8 py-12 md:py-16">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#111827] mb-8 md:mb-12 uppercase">
-                Guest Writers
-            </h2>
+            <div className="text-center mb-12">
+                <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
+                    Guest Writers
+                </h2>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
                 {authors.map((author: any) => (

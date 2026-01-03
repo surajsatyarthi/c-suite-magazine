@@ -19,9 +19,11 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
   return (
     <section className="py-16" aria-labelledby="latest-insights-heading">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-none">
-        <h3 id="latest-insights-heading" className="text-4xl font-serif font-black text-gray-900 mb-10">
-          Latest Insights
-        </h3>
+        <div className="text-center mb-12">
+          <h2 id="latest-insights-heading" className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
+            Latest Insights
+          </h2>
+        </div>
 
         {visibleArticles.length > 0 ? (
           <div
