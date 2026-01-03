@@ -77,16 +77,12 @@ Add executive compensation hub page + individual salary pages for SEO traffic ta
 **Should be:** `text-white`
 **Status:** ❌ NOT FIXED
 
-### #4 Executive Page - Compensation Formula Missing
+### #4 Executive Page - Compensation Formula ✅ COMPLETE
 **Issue:** Formula was created but got reverted
-**File:** `app/executives/page.tsx` (Understanding section)
-**Should add:** Visual formula showing:
-```
-Base Salary + Bonus + Stock Awards + Option Awards +
-Non-Equity Incentive + Pension Change + Other = Total Compensation
-```
+**File:** `app/executive-salaries/page.tsx` (Understanding section)
+**Added:** Visual formula showing all components with dark-section pattern
 **Design:** Dark blue card with gold border, white text
-**Status:** ❌ LOST IN REVERTS
+**Status:** ✅ COMPLETE (Added to hub + individual pages)
 
 ### #5 Discoverability Strategy
 **Question:** How should users discover executive salary pages?
@@ -106,10 +102,32 @@ Non-Equity Incentive + Pension Change + Other = Total Compensation
 **Issue:** Component not rendering in local demo
 **Status:** ❌ NEEDS INVESTIGATION
 
-### #7 Demo - Limited Categories (5/13 showing)
-**Issue:** Category scroller shows only: Leadership, Innovation, Money & Finance, Startups, Healthcare
-**Expected:** All 13 categories from Sanity
-**Status:** ❌ NEEDS INVESTIGATION
+### #9 Button Hover States Contrast
+**Issue:** Multiple buttons with `text-[#082945]` may have contrast issues
+**Files:** Executive salaries table buttons, Archive filters
+**Status:** ❌ NOT FIXED
+
+### #10 Accessibility - Link Contrast
+**Issue:** `text-[#082945]` links on white/light backgrounds may fail WCAG AA
+**Files:** Multiple article pages, category pages
+**Status:** ❌ NEEDS AUDIT
+
+### #11 Mobile Responsiveness
+**Issues:**
+- Formula component wrapping on small screens
+- Executive table horizontal scroll UX
+- Homepage widget card stacking
+**Status:** ❌ NEEDS TESTING
+
+### #12 Focus States for Accessibility
+**Issue:** Keyboard navigation focus rings may be invisible on dark backgrounds
+**Impact:** Accessibility WCAG 2.1 compliance
+**Status:** ❌ NEEDS AUDIT
+
+### #13 Loading States Missing
+**Issue:** No skeleton loaders for async data (executives, categories)
+**Impact:** Poor perceived performance, CLS issues
+**Status:** ❌ NOT IMPLEMENTED
 
 ### #8 Footer Link Update ✅ COMPLETE
 **Was:** Links to `/executives`

@@ -292,6 +292,38 @@ import Ad from '@/components/Ad'
    - Solution: `.dark-section p { color: inherit }` allows parent's `text-white` to work
    - Lesson: Always investigate WHY a style isn't applying, don't assume or make excuses
 
+5. **Prevention Strategies - Dark Section Pattern Enforcement**
+
+   **Documentation:**
+   - Document `.dark-section` usage in `app/globals.css` with inline comments
+   - Add examples showing correct pattern: `<div className="dark-section bg-[#082945] text-white">`
+   - Reference this standards.md file in code comments
+
+   **Component Library:**
+   - Extract reusable `<DarkCard>` component that automatically includes `dark-section` class
+   - TypeScript props enforce `variant="dark"` triggers `dark-section` class
+   - Location: `components/ui/DarkCard.tsx`
+
+   **Automated Checks:**
+   - ESLint custom rule to flag `bg-[#082945]` or `bg-gradient.*082945` without `dark-section`
+   - Pre-commit hook runs linter before allowing commits
+   - CI/CD pipeline fails if pattern violations detected
+
+   **Code Review:**
+   - PR checklist requires verification of dark-section on all dark backgrounds
+   - Review comment template: "Missing dark-section class on line X"
+   - Block merge until pattern compliance verified
+
+   **Pattern Discovery:**
+   - Before coding new dark sections: `rg "bg-gradient.*082945" app/ components/`
+   - Copy existing working pattern instead of creating new implementation
+   - Reference files: `components/Footer.tsx`, `components/Hero.tsx`, `app/executive-salaries/page.tsx`
+
+   **Visual Documentation:**
+   - Storybook stories showing correct vs incorrect dark section usage
+   - Live examples with side-by-side comparison
+   - Interactive playground for testing dark-section combinations
+
 ### Display Conventions (CRITICAL)
 
 1. **View Counts Format**
