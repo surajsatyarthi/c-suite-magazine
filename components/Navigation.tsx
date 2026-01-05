@@ -190,7 +190,7 @@ export default function Navigation() {
               {!isLoading && (
                 <button
                   onClick={() => document.dispatchEvent(new Event('csuite:open-locale-popup'))}
-                  className="px-3 py-2 min-w-[44px] min-h-[44px] text-white hover:text-[#c8ab3d] transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]"
+                  className="px-3 py-2 min-w-[44px] min-h-[44px] text-white hover:text-[#f4d875] active:text-[#ffffff] transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]"
                   title="Change country"
                   aria-label="Change country"
                   aria-haspopup="dialog"
@@ -233,7 +233,7 @@ export default function Navigation() {
                       prefetch
                       className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${isActive
                         ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]'
-                        : 'text-[#082945] hover:text-[#c8ab3d]'
+                        : 'text-[#082945] hover:text-[#9d7e2a] active:text-[#7a6420]'
                         }`}
                       aria-label={`View ${category.title} articles`}
                       aria-current={isActive ? 'page' : undefined}

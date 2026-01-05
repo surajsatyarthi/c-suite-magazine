@@ -47,3 +47,4 @@ next-env.d.ts
 exports/backups/
 .env*.local
 /.credentials/
+gsc-credentials.json
