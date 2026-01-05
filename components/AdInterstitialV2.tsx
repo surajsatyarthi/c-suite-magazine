@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { useAdStore } from '@/store/adStore'
 import { usePathname } from 'next/navigation'
+import { trackPopupView, trackAdClick, trackPopupClose } from '@/lib/analytics'
 
 import { ADS, CAROUSEL_INTERVAL } from '@/lib/adInterstitial/constants'
 
@@ -13,12 +14,27 @@ export default function AdInterstitialV2() {
     const pathname = usePathname()
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
+    const hasTrackedView = useRef(false)
 
     // Reset store on route change to avoid stale ads
     useEffect(() => {
         reset()
         setCurrentIndex(0)
+        hasTrackedView.current = false
     }, [pathname, reset])
+
+    // Track popup view when it opens
+    useEffect(() => {
+        if (isOpen && content && content.length > 0 && !hasTrackedView.current) {
+            const currentAd = content[0]
+            trackPopupView({
+                ad_name: currentAd.title || 'Popup Ad',
+                ad_placement: 'popup',
+                ad_url: currentAd.href,
+            })
+            hasTrackedView.current = true
+        }
+    }, [isOpen, content])
 
     // Auto-advance carousel if multiple ads
     useEffect(() => {
@@ -57,8 +73,29 @@ export default function AdInterstitialV2() {
     }, [isOpen])
 
     const handleClose = () => {
+        // Track popup close (user dismissed without clicking)
+        if (content && content.length > 0) {
+            const currentAd = content[currentIndex]
+            trackPopupClose({
+                ad_name: currentAd.title || 'Popup Ad',
+                ad_placement: 'popup',
+            })
+        }
         closeAd()
         setCurrentIndex(0)
+    }
+
+    const handleAdClick = () => {
+        // Track popup click
+        if (content && content.length > 0) {
+            const currentAd = content[currentIndex]
+            trackAdClick({
+                ad_name: currentAd.title || 'Popup Ad',
+                ad_placement: 'popup',
+                ad_url: currentAd.href,
+            })
+        }
+        closeAd()
     }
 
     const handleNext = (e: React.MouseEvent) => {
@@ -112,7 +149,7 @@ export default function AdInterstitialV2() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block w-full h-full"
-                        onClick={closeAd}
+                        onClick={handleAdClick}
                         title={`Open ${currentAd.title || 'advertisement'} in new tab`}
                     >
                         {/* Use standard img for intrinsic sizing to avoid fixed aspect ratio constraints */}
