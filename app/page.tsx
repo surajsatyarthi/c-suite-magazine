@@ -231,7 +231,7 @@ export default async function Home() {
 
                     {/* Right: Preview Stats */}
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                      <h4 className="text-white font-black mb-4 text-xl tracking-tight">Top 3 Executives by Total Compensation</h4>
+                      <h4 className="font-black mb-4 text-xl tracking-tight" style={{ color: 'white' }}>Top 3 Executives by Total Compensation</h4>
                       <div className="space-y-4">
                         {topExecutives.map((exec, index) => {
                           const medals = ['🏆', '🥈', '🥉']
