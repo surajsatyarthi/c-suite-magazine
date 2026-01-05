@@ -6,7 +6,8 @@ import { ADS, SCROLL_THRESHOLD } from '@/lib/adInterstitial/constants'
 import { getPopupVariant, trackVariant } from '@/lib/ab-testing'
 
 export default function ScrollTriggerAd() {
-    const { triggerAd, hasTriggered } = useAdTrigger()
+    // Skip session check for articles - only use 1-hour localStorage cooldown
+    const { triggerAd, hasTriggered } = useAdTrigger(true)
     const hasCheckedVariant = useRef(false)
 
     useEffect(() => {
