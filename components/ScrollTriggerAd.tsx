@@ -1,13 +1,26 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useAdTrigger } from '@/hooks/useAdTrigger'
 import { ADS, SCROLL_THRESHOLD } from '@/lib/adInterstitial/constants'
+import { getPopupVariant, trackVariant } from '@/lib/ab-testing'
 
 export default function ScrollTriggerAd() {
     const { triggerAd, hasTriggered } = useAdTrigger()
+    const hasCheckedVariant = useRef(false)
 
     useEffect(() => {
+        // Only proceed if user is in the 'article' variant
+        if (!hasCheckedVariant.current) {
+            const variant = getPopupVariant()
+            hasCheckedVariant.current = true
+
+            if (variant !== 'article') {
+                // User is in homepage variant, don't trigger on article pages
+                return
+            }
+        }
+
         // Add a small delay to allow content to load and layout to settle
         const timer = setTimeout(() => {
             const handleScroll = () => {
@@ -23,6 +36,9 @@ export default function ScrollTriggerAd() {
                 const scrollPercent = scrollTop / (docHeight - winHeight)
 
                 if (scrollPercent > SCROLL_THRESHOLD) {
+                    // Track that this is the article variant
+                    trackVariant('article')
+
                     // Pass BOTH ads to the store to trigger the carousel
                     triggerAd([
                         { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },

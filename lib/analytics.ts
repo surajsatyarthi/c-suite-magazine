@@ -20,6 +20,7 @@ type AdEventParams = {
     ad_placement: 'sidebar' | 'in-article' | 'popup' | 'scroll-trigger'
     ad_url?: string
     article_path?: string
+    ab_variant?: 'homepage' | 'article' // A/B test variant for popup placement
 }
 
 /**
@@ -34,6 +35,7 @@ export function trackAdImpression(params: AdEventParams): void {
         ad_placement: params.ad_placement,
         ad_url: params.ad_url,
         page_path: params.article_path || window.location.pathname,
+        ab_variant: params.ab_variant,
     })
 }
 
@@ -49,6 +51,7 @@ export function trackAdClick(params: AdEventParams): void {
         ad_placement: params.ad_placement,
         ad_url: params.ad_url,
         page_path: params.article_path || window.location.pathname,
+        ab_variant: params.ab_variant,
     })
 }
 
@@ -64,6 +67,7 @@ export function trackPopupView(params: AdEventParams): void {
         ad_placement: params.ad_placement,
         ad_url: params.ad_url,
         page_path: params.article_path || window.location.pathname,
+        ab_variant: params.ab_variant,
     })
 }
 
@@ -78,5 +82,6 @@ export function trackPopupClose(params: Omit<AdEventParams, 'ad_url'>): void {
         ad_name: params.ad_name,
         ad_placement: params.ad_placement,
         page_path: params.article_path || window.location.pathname,
+        ab_variant: params.ab_variant,
     })
 }

@@ -13,6 +13,7 @@ import { generateMetadata, generateStructuredData } from '@/lib/seo'
 import path from 'path'
 import fs from 'fs/promises'
 import { getAllExecutivesWithCompensation } from '@/lib/db'
+import HomepageAdTrigger from '@/components/HomepageAdTrigger'
 
 export const metadata: Metadata = generateMetadata({
   title: 'C-Suite Magazine - Leadership, Innovation & Executive Insights',
@@ -171,6 +172,9 @@ export default async function Home() {
 
         {/* Magazine Gallery */}
         <MagazineGallery items={spotlightItems} />
+
+        {/* Homepage Popup Ad Trigger (A/B Test Variant) */}
+        <HomepageAdTrigger />
 
         {/* Industry Juggernauts */}
         <IndustryJuggernauts items={spotlightItems} />

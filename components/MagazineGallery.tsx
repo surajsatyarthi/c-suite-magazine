@@ -71,7 +71,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
         />
       )}
 
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white" id="csuite-spotlight">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-none">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
