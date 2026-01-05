@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 const TIMESTAMP_KEY = 'popup-ad-last-shown'
-const COOLDOWN_HOURS = 2 // Show popup again after 2 hours
+const COOLDOWN_HOURS = 1 // Show popup again after 1 hour
 
 export interface AdContent {
     /** The URL of the ad image to display */
@@ -59,7 +59,7 @@ export const useAdStore = create<AdState>((set) => ({
         if (typeof window !== 'undefined') {
             try {
                 localStorage.setItem(TIMESTAMP_KEY, Date.now().toString())
-            } catch {}
+            } catch { }
         }
 
         const newContent = Array.isArray(content) ? content : [content]
