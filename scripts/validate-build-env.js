@@ -7,6 +7,9 @@
  * Fails fast with clear error messages rather than producing a broken build.
  */
 
+// Load environment variables from .env.local
+require('dotenv').config({ path: '.env.local' })
+
 const REQUIRED_ENV_VARS = [
     'NEXT_PUBLIC_SANITY_PROJECT_ID',
     'NEXT_PUBLIC_SANITY_DATASET',

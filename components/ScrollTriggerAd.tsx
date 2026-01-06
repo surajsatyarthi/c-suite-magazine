@@ -1,27 +1,25 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useAdTrigger } from '@/hooks/useAdTrigger'
 import { ADS, SCROLL_THRESHOLD } from '@/lib/adInterstitial/constants'
-import { getPopupVariant, trackVariant } from '@/lib/ab-testing'
+import { localeReady } from '@/lib/localeGate'
 
 export default function ScrollTriggerAd() {
     // Skip session check for articles - only use 1-hour localStorage cooldown
     const { triggerAd, hasTriggered } = useAdTrigger(true)
-    const hasCheckedVariant = useRef(false)
+
+    // Fail-safe wrapper for localeReady check
+    const isLocaleReady = () => {
+        try {
+            return localeReady()
+        } catch (error) {
+            console.warn('localeReady check failed, defaulting to true:', error)
+            return true // Fail-safe: show ad if check fails
+        }
+    }
 
     useEffect(() => {
-        // Only proceed if user is in the 'article' variant
-        if (!hasCheckedVariant.current) {
-            const variant = getPopupVariant()
-            hasCheckedVariant.current = true
-
-            if (variant !== 'article') {
-                // User is in homepage variant, don't trigger on article pages
-                return
-            }
-        }
-
         // Add a small delay to allow content to load and layout to settle
         const timer = setTimeout(() => {
             const handleScroll = () => {
@@ -36,10 +34,8 @@ export default function ScrollTriggerAd() {
 
                 const scrollPercent = scrollTop / (docHeight - winHeight)
 
-                if (scrollPercent > SCROLL_THRESHOLD) {
-                    // Track that this is the article variant
-                    trackVariant('article')
-
+                // Only show ad if locale popup has been dismissed
+                if (scrollPercent > SCROLL_THRESHOLD && isLocaleReady()) {
                     // Pass BOTH ads to the store to trigger the carousel
                     triggerAd([
                         { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },

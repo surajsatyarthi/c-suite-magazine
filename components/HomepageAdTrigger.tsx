@@ -3,89 +3,45 @@
 import { useEffect, useRef } from 'react'
 import { useAdTrigger } from '@/hooks/useAdTrigger'
 import { ADS } from '@/lib/adInterstitial/constants'
-import { getPopupVariant, trackVariant } from '@/lib/ab-testing'
+import { localeReady } from '@/lib/localeGate'
 
-const FALLBACK_DELAY = 20000 // 20 seconds
-const VISIBILITY_THRESHOLD = 0.5 // 50% of section must be visible
+const POPUP_DELAY = 10000 // 10 seconds
 
 export default function HomepageAdTrigger() {
     const { triggerAd, hasTriggered } = useAdTrigger()
-    const fallbackTimerRef = useRef<NodeJS.Timeout | null>(null)
-    const hasCheckedVariant = useRef(false)
+    const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+    // Fail-safe wrapper for localeReady check
+    const isLocaleReady = () => {
+        try {
+            return localeReady()
+        } catch (error) {
+            console.warn('localeReady check failed, defaulting to true:', error)
+            return true // Fail-safe: show ad if check fails
+        }
+    }
 
     useEffect(() => {
-        // Only proceed if user is in the 'homepage' variant
-        if (!hasCheckedVariant.current) {
-            const variant = getPopupVariant()
-            hasCheckedVariant.current = true
-
-            if (variant !== 'homepage') {
-                // User is in article variant, don't trigger on homepage
-                return
-            }
-        }
-
         if (hasTriggered) return
 
-        const targetSection = document.getElementById('csuite-spotlight')
-
-        // Fallback: Show popup after 20 seconds if user hasn't scrolled to Spotlight
-        fallbackTimerRef.current = setTimeout(() => {
-            if (!hasTriggered) {
-                triggerPopup()
+        // Show popup after 10 seconds of user staying on homepage
+        timerRef.current = setTimeout(() => {
+            // Only show ad if locale popup has been dismissed
+            if (!hasTriggered && isLocaleReady()) {
+                // Trigger the popup with both ads
+                triggerAd([
+                    { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },
+                    { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || 'Sponsored' }
+                ])
             }
-        }, FALLBACK_DELAY)
-
-        // Primary trigger: Intersection Observer for Spotlight section
-        if (targetSection) {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting && entry.intersectionRatio >= VISIBILITY_THRESHOLD) {
-                            if (!hasTriggered) {
-                                triggerPopup()
-                            }
-                        }
-                    })
-                },
-                {
-                    threshold: VISIBILITY_THRESHOLD,
-                    rootMargin: '0px',
-                }
-            )
-
-            observer.observe(targetSection)
-
-            return () => {
-                observer.disconnect()
-                if (fallbackTimerRef.current) {
-                    clearTimeout(fallbackTimerRef.current)
-                }
-            }
-        }
+        }, POPUP_DELAY)
 
         return () => {
-            if (fallbackTimerRef.current) {
-                clearTimeout(fallbackTimerRef.current)
+            if (timerRef.current) {
+                clearTimeout(timerRef.current)
             }
         }
     }, [hasTriggered, triggerAd])
-
-    const triggerPopup = () => {
-        // Clear fallback timer if scroll trigger fired first
-        if (fallbackTimerRef.current) {
-            clearTimeout(fallbackTimerRef.current)
-        }
-
-        // Track that this is the homepage variant
-        trackVariant('homepage')
-
-        // Trigger the popup with both ads
-        triggerAd([
-            { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },
-            { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || 'Sponsored' }
-        ])
-    }
 
     return null
 }
