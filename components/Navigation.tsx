@@ -75,6 +75,8 @@ export default function Navigation() {
 
   const [allCategories, setAllCategories] = useState<Array<{ title: string, slug: string }>>([])
   const scrollContainerRef = React.useRef<HTMLElement>(null)
+  const scrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null)
+  const scrollDirectionRef = React.useRef<number>(1)
 
   // Fetch categories with articles (server-side via API)
   useEffect(() => {
@@ -100,29 +102,34 @@ export default function Navigation() {
     const container = scrollContainerRef.current
     if (!container || allCategories.length === 0) return
 
-    let scrollDirection = 1
-    let scrollInterval: NodeJS.Timeout
-
     const startScrolling = () => {
-      clearInterval(scrollInterval) // Clear any existing interval before creating new one
-      scrollInterval = setInterval(() => {
+      // Clear any existing interval safely
+      if (scrollIntervalRef.current !== null) {
+        clearInterval(scrollIntervalRef.current)
+      }
+
+      scrollIntervalRef.current = setInterval(() => {
+        const container = scrollContainerRef.current
         if (!container) return
 
         const maxScroll = container.scrollWidth - container.clientWidth
         const currentScroll = container.scrollLeft
 
         if (currentScroll >= maxScroll) {
-          scrollDirection = -1
+          scrollDirectionRef.current = -1
         } else if (currentScroll <= 0) {
-          scrollDirection = 1
+          scrollDirectionRef.current = 1
         }
 
-        container.scrollLeft += scrollDirection * 0.5
+        container.scrollLeft += scrollDirectionRef.current * 0.5
       }, 50)
     }
 
     const stopScrolling = () => {
-      clearInterval(scrollInterval)
+      if (scrollIntervalRef.current !== null) {
+        clearInterval(scrollIntervalRef.current)
+        scrollIntervalRef.current = null
+      }
     }
 
     // Start scrolling after 2 seconds
@@ -130,19 +137,24 @@ export default function Navigation() {
 
     // Stop scrolling on user interaction
     container.addEventListener('mouseenter', stopScrolling)
-    container.addEventListener('touchstart', stopScrolling)
+    container.addEventListener('touchstart', stopScrolling, { passive: true })
 
     // Resume scrolling when user leaves
     container.addEventListener('mouseleave', startScrolling)
-    container.addEventListener('touchend', startScrolling)
+    container.addEventListener('touchend', startScrolling, { passive: true })
 
     return () => {
       clearTimeout(startDelay)
-      clearInterval(scrollInterval)
-      container.removeEventListener('mouseenter', stopScrolling)
-      container.removeEventListener('touchstart', stopScrolling)
-      container.removeEventListener('mouseleave', startScrolling)
-      container.removeEventListener('touchend', startScrolling)
+      if (scrollIntervalRef.current !== null) {
+        clearInterval(scrollIntervalRef.current)
+        scrollIntervalRef.current = null
+      }
+      if (container) {
+        container.removeEventListener('mouseenter', stopScrolling)
+        container.removeEventListener('touchstart', stopScrolling)
+        container.removeEventListener('mouseleave', startScrolling)
+        container.removeEventListener('touchend', startScrolling)
+      }
     }
   }, [allCategories.length])
 

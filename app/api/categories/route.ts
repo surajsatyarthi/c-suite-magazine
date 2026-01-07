@@ -23,8 +23,10 @@ export async function GET() {
       try {
         const cats = await writeClient.fetch(query)
         const items = Array.isArray(cats) ? cats.filter((c: any) => c && typeof c.title === 'string') : []
-        if (items.length) {
-          const res = NextResponse.json({ categories: items })
+        // Filter out internal categories from public display
+        const publicCategories = items.filter((c: any) => c.slug !== 'company-sponsored')
+        if (publicCategories.length) {
+          const res = NextResponse.json({ categories: publicCategories })
           res.headers.set('Cache-Control', 's-maxage=600, stale-while-revalidate=86400')
           return res
         }
@@ -38,8 +40,10 @@ export async function GET() {
       const freshClient = client.withConfig({ useCdn: false })
       const cats = await freshClient.fetch(query)
       const items = Array.isArray(cats) ? cats.filter((c: any) => c && typeof c.title === 'string') : []
-      if (items.length) {
-        const res = NextResponse.json({ categories: items })
+      // Filter out internal categories from public display
+      const publicCategories = items.filter((c: any) => c.slug !== 'company-sponsored')
+      if (publicCategories.length) {
+        const res = NextResponse.json({ categories: publicCategories })
         res.headers.set('Cache-Control', 's-maxage=600, stale-while-revalidate=86400')
         return res
       }

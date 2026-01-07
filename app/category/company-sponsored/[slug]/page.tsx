@@ -533,12 +533,12 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
             }}
           />
 
+          {/* Breadcrumbs - Show "CXO Interview" for CSA articles, not "Company Sponsored" */}
           <Breadcrumbs
             items={[
               { label: 'Home', href: '/' },
-              ...(post.categories && post.categories.length > 0 && post.categories[0]
-                ? [{ label: post.categories[0].title, href: `/category/${post.categories[0].slug.current}` }]
-                : []),
+              { label: 'CXO Interview', href: '/category/cxo-interview' },
+              { label: sanitizeTitle(post.title) }
             ]}
           />
 
@@ -902,14 +902,14 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
 }
 
 export async function generateMetadata(
-  props: { params: Promise<{ slug: string, article: string }> }
+  props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const params = await props.params
-  const { article } = params || { article: '' }
-  const post = await getPost(article)
+  const { slug } = params || { slug: '' }
+  const post = await getPost(slug)
 
   if (!post) {
-    const fallback = (await getPostFromExports(article)) || (await getPostStub(article))
+    const fallback = (await getPostFromExports(slug)) || (await getPostStub(slug))
     if (!fallback) {
       return {
         title: 'Article not found — C-Suite Magazine',
@@ -945,7 +945,7 @@ export async function generateMetadata(
     publishedTime: post.publishedAt,
     writer: (post as any)?.writer?.name,
     section: post.categories?.[0]?.title,
-    noIndex: shouldNoIndex(article), // Temporarily hide problematic articles from search engines
+    noIndex: shouldNoIndex(slug), // Temporarily hide problematic articles from search engines
   })
 }
 

@@ -536,12 +536,21 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
             }}
           />
 
+          {/* Breadcrumbs - Map "Company Sponsored" to "CXO Interview" for public display */}
           <Breadcrumbs
             items={[
               { label: 'Home', href: '/' },
-              ...(post.categories && post.categories.length > 0 && post.categories[0]
-                ? [{ label: post.categories[0].title, href: `/category/${post.categories[0].slug.current}` }]
-                : []),
+              ...(() => {
+                // For CSA articles, show "CXO Interview" instead of "Company Sponsored"
+                const displayCategory = isCompanySponsored
+                  ? { title: 'CXO Interview', slug: { current: 'cxo-interview' } }
+                  : (post.categories && post.categories.length > 0 ? post.categories[0] : null)
+
+                return displayCategory
+                  ? [{ label: displayCategory.title, href: `/category/${displayCategory.slug.current}` }]
+                  : []
+              })(),
+              { label: sanitizeTitle(post.title) }
             ]}
           />
 
