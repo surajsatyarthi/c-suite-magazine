@@ -6,8 +6,8 @@ import { ADS, SCROLL_THRESHOLD } from '@/lib/adInterstitial/constants'
 import { localeReady } from '@/lib/localeGate'
 
 export default function ScrollTriggerAd() {
-    // Skip session check for articles - only use 1-hour localStorage cooldown
-    const { triggerAd, hasTriggered } = useAdTrigger(true)
+    // Regular article popup: Once per browser session (until tab closes)
+    const { triggerAd, hasTriggered } = useAdTrigger(false) // Use sessionStorage
 
     // Fail-safe wrapper for localeReady check
     const isLocaleReady = () => {

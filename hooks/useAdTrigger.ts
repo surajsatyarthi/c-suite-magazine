@@ -22,7 +22,8 @@ export function useAdTrigger(skipSessionCheck = false) {
         }
 
         hasTriggered.current = true
-        openAd(content)
+        // CSA sponsors paid for popup - skip cooldown
+        openAd(content, skipSessionCheck) // skipSessionCheck = skipCooldown for consistency
     }, [isOpen, openAd, skipSessionCheck])
 
     return { triggerAd, hasTriggered: hasTriggered.current }

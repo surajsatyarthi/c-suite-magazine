@@ -17,7 +17,8 @@ interface InArticleAdProps {
 }
 
 export default function InArticleAd({ image, href, title, width = 728, height = 90, className, disablePopup = false }: InArticleAdProps) {
-    const { triggerAd } = useAdTrigger()
+    // CSA sponsors paid for popup ad - show EVERY visit (no cooldown)
+    const { triggerAd } = useAdTrigger(true) // skipSessionCheck = true
     const ref = useRef<HTMLDivElement>(null)
     const hasTrackedImpression = useRef(false)
 

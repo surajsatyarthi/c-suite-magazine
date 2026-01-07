@@ -333,11 +333,11 @@ export const revalidate = 600
 
 const heroAspectCache = new Map<string, number>()
 
-export default async function CategoryArticlePage(props: { params: Promise<{ slug: string, article: string }> }) {
+export default async function CategoryArticlePage(props: { params: Promise<{ categorySlug: string, slug: string }> }) {
   try {
     const params = await props.params
-    const { slug: categorySlug, article } = params || { slug: '', article: '' }
-    let post = await getPost(article)
+    const { categorySlug, slug } = params || { categorySlug: '', slug: '' }
+    let post = await getPost(slug)
 
     if (post) {
       // console.log(`[CategoryArticlePage] Post categories:`, JSON.stringify(post.categories))
@@ -354,7 +354,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
       : false
 
     if (!post) {
-      const stub = await getPostStub(article, categorySlug)
+      const stub = await getPostStub(slug, categorySlug)
       if (!stub) {
         notFound()
       }
@@ -905,14 +905,14 @@ export default async function CategoryArticlePage(props: { params: Promise<{ slu
 }
 
 export async function generateMetadata(
-  props: { params: Promise<{ slug: string, article: string }> }
+  props: { params: Promise<{ categorySlug: string, slug: string }> }
 ): Promise<Metadata> {
   const params = await props.params
-  const { article } = params || { article: '' }
-  const post = await getPost(article)
+  const { slug } = params || { slug: '' }
+  const post = await getPost(slug)
 
   if (!post) {
-    const fallback = (await getPostFromExports(article)) || (await getPostStub(article))
+    const fallback = (await getPostFromExports(slug)) || (await getPostStub(slug))
     if (!fallback) {
       return {
         title: 'Article not found — C-Suite Magazine',
@@ -948,7 +948,7 @@ export async function generateMetadata(
     publishedTime: post.publishedAt,
     writer: (post as any)?.writer?.name,
     section: post.categories?.[0]?.title,
-    noIndex: shouldNoIndex(article), // Temporarily hide problematic articles from search engines
+    noIndex: shouldNoIndex(slug), // Temporarily hide problematic articles from search engines
   })
 }
 

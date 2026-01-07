@@ -66,11 +66,12 @@ export async function generateStaticParams() {
   ])
 
   const canonical = all.filter((slug) => !removed.has(slug) && !merged.has(slug))
-  return canonical.map((slug) => ({ slug }))
+  return canonical.map((slug) => ({ categorySlug: slug }))
 }
 
-export async function generateMetadata({ params }: { params: { slug?: string } }): Promise<Metadata> {
-  const slug = typeof params?.slug === 'string' ? params.slug : ''
+export async function generateMetadata({ params }: { params: Promise<{ categorySlug: string }> }): Promise<Metadata> {
+  const resolvedParams = await params
+  const slug = typeof resolvedParams?.categorySlug === 'string' ? resolvedParams.categorySlug : ''
   const title = slug ? slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Category'
   const description = slug ? `Explore articles about ${slug.replace(/-/g, ' ')}` : 'Explore curated articles by category'
   const url = `https://csuitemagazine.global/category/${slug}`
@@ -87,9 +88,10 @@ export async function generateMetadata({ params }: { params: { slug?: string } }
 export default async function CategoryPage({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ categorySlug: string }>
 }) {
-  const { slug = 'general' } = await params
+  const resolvedParams = await params
+  const slug = resolvedParams?.categorySlug || 'general'
   // Redirect merged categories and 404 removed ones
   const MERGE_MAP: Record<string, string> = {
     'engineering': 'science-technology',

@@ -8,7 +8,8 @@ import { localeReady } from '@/lib/localeGate'
 const POPUP_DELAY = 10000 // 10 seconds
 
 export default function HomepageAdTrigger() {
-    const { triggerAd, hasTriggered } = useAdTrigger()
+    // Homepage popup: Show up to 6 times per day (every 2 hours)
+    const { triggerAd, hasTriggered } = useAdTrigger(false) // Use localStorage 2-hour cooldown
     const timerRef = useRef<NodeJS.Timeout | null>(null)
 
     // Fail-safe wrapper for localeReady check

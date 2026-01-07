@@ -22,7 +22,6 @@ function setCookie(name: string, value: string, days = 365) {
 
 export default function EntryLocalePopup() {
   // Show locale popup on all pages (global gatekeeper)
-  // if (pathname && pathname !== '/') { return null }
   const [isOpen, setIsOpen] = useState(false)
   const [country, setCountry] = useState<string>('US')
   const dialogRef = useRef<HTMLDivElement>(null)

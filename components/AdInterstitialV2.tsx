@@ -6,7 +6,6 @@ import OptimizedImage from '@/components/OptimizedImage'
 import { useAdStore } from '@/store/adStore'
 import { usePathname } from 'next/navigation'
 import { trackPopupView, trackAdClick, trackPopupClose } from '@/lib/analytics'
-import { getPopupVariant } from '@/lib/ab-testing'
 
 import { ADS, CAROUSEL_INTERVAL } from '@/lib/adInterstitial/constants'
 
@@ -26,16 +25,16 @@ export default function AdInterstitialV2() {
 
     // Track popup view when it opens
     useEffect(() => {
-        if (isOpen && content && content.length > 0 && !hasTrackedView.current) {
-            const currentAd = content[0]
-            const variant = getPopupVariant()
-            trackPopupView({
-                ad_name: currentAd.title || 'Popup Ad',
-                ad_placement: 'popup',
-                ad_url: currentAd.href,
-                ab_variant: variant,
-            })
-            hasTrackedView.current = true
+        if (isOpen && content && content.length > 0) {
+            if (!hasTrackedView.current) {
+                const currentAd = content[0]
+                trackPopupView({
+                    ad_name: currentAd.title || 'Popup Ad',
+                    ad_placement: 'popup',
+                    ad_url: currentAd.href,
+                })
+                hasTrackedView.current = true
+            }
         }
     }, [isOpen, content])
 
@@ -79,11 +78,9 @@ export default function AdInterstitialV2() {
         // Track popup close (user dismissed without clicking)
         if (content && content.length > 0) {
             const currentAd = content[currentIndex]
-            const variant = getPopupVariant()
             trackPopupClose({
                 ad_name: currentAd.title || 'Popup Ad',
                 ad_placement: 'popup',
-                ab_variant: variant,
             })
         }
         closeAd()
@@ -94,12 +91,10 @@ export default function AdInterstitialV2() {
         // Track popup click
         if (content && content.length > 0) {
             const currentAd = content[currentIndex]
-            const variant = getPopupVariant()
             trackAdClick({
                 ad_name: currentAd.title || 'Popup Ad',
                 ad_placement: 'popup',
                 ad_url: currentAd.href,
-                ab_variant: variant,
             })
         }
         closeAd()
@@ -125,6 +120,7 @@ export default function AdInterstitialV2() {
 
     return (
         <div
+            data-ad-popup
             className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-300 cursor-pointer"
             onClick={handleClose}
             aria-modal="true"

@@ -39,16 +39,16 @@ export const portableTextComponents: PortableTextComponents = {
             }
             if (!src) return null
             const alt = (value as any)?.alt || 'Image'
-            const href = (value as any)?.href
+            const targetUrl = (value as any)?.targetUrl
             const caption = (value as any)?.caption
-            const triggersPopup = (value as any)?.triggersPopup
+            const isPopupTrigger = (value as any)?.isPopupTrigger
 
-            if (triggersPopup) {
+            if (isPopupTrigger) {
                 return (
                     <div className="my-8">
                         <InArticleAd
                             image={src}
-                            href={href || '#'}
+                            href={targetUrl || '#'}
                             title={alt}
                             width={800}
                             height={500}
@@ -82,9 +82,9 @@ export const portableTextComponents: PortableTextComponents = {
                 </div>
             )
 
-            if (href) {
+            if (targetUrl) {
                 return (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
+                    <a href={targetUrl} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
                         {img}
                     </a>
                 )

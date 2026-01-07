@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 const TIMESTAMP_KEY = 'popup-ad-last-shown'
-const COOLDOWN_HOURS = 1 // Show popup again after 1 hour
+const COOLDOWN_HOURS = 2 // Show popup 6 times per day (every 2 hours)
 
 export interface AdContent {
     /** The URL of the ad image to display */
@@ -18,7 +18,7 @@ interface AdState {
     content: AdContent[] | null
 
     // Actions
-    openAd: (content: AdContent | AdContent[]) => void
+    openAd: (content: AdContent | AdContent[], skipCooldown?: boolean) => void
     closeAd: () => void
     reset: () => void
     canShowAd: () => boolean
@@ -49,14 +49,14 @@ export const useAdStore = create<AdState>((set) => ({
 
     canShowAd: () => canShowPopup(),
 
-    openAd: (content) => set((state) => {
-        // Only open if cooldown period has passed
-        if (!canShowPopup()) {
+    openAd: (content, skipCooldown = false) => set((state) => {
+        // CSA sponsors paid for popup - skip cooldown for them
+        if (!skipCooldown && !canShowPopup()) {
             return state // Don't open, return current state
         }
 
-        // Mark timestamp in localStorage
-        if (typeof window !== 'undefined') {
+        // Mark timestamp in localStorage (only if using cooldown)
+        if (!skipCooldown && typeof window !== 'undefined') {
             try {
                 localStorage.setItem(TIMESTAMP_KEY, Date.now().toString())
             } catch { }
