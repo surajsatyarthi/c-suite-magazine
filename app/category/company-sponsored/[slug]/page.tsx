@@ -127,7 +127,7 @@ async function getPost(slug: string): Promise<Post | null> {
     contentPillar,
     articleVariant,
     views,
-    views,
+    readTime,
     body[]{
       ...,
       _type == "image" => {
@@ -427,7 +427,7 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
       : []
 
     const wordCount = sanitizeMarkdown(bodyText || ((post.body?.[0]?.children?.[0]?.text as string) || '')).split(/\s+/).filter(Boolean).length
-    const readTime = Math.max(1, Math.round(wordCount / 200))
+    const readTime = post.readTime || Math.max(1, Math.round(wordCount / 200))
 
     // Only use Featured hero images for CXO interview articles
     const featuredHeroSrc = isCompanySponsored
@@ -538,7 +538,6 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
             items={[
               { label: 'Home', href: '/' },
               { label: 'CXO Interview', href: '/category/cxo-interview' },
-              { label: sanitizeTitle(post.title) }
             ]}
           />
 

@@ -550,7 +550,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                   ? [{ label: displayCategory.title, href: `/category/${displayCategory.slug.current}` }]
                   : []
               })(),
-              { label: sanitizeTitle(post.title) }
             ]}
           />
 
