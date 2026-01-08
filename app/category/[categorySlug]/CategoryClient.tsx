@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import Pagination from '@/components/Pagination'
@@ -20,7 +20,45 @@ interface CategoryClientProps {
 
 export default function CategoryClient({ posts, category }: CategoryClientProps) {
     const [currentPage, setCurrentPage] = useState(1)
-    const ITEMS_PER_PAGE = 20
+    const ITEMS_PER_PAGE = 21  // 3x7 grid layout
+
+    // Industry Juggernaut slugs (high-value content, rarely changes)
+    const juggernautSlugs = [
+        'elon-musk-building-future-civilization-scale',
+        'ratan-tata-legacy-ethical-leadership',
+        'bhavesh-aggarwal-india-electric-ai-maverick',
+        'ritesh-agarwal-billion-dollar-hostel-kid-rewrote-global-hospitality',
+        'amin-nasser-steady-hand-guiding-energy-next-chapter',
+        'chamath-palihapitiya-spac-king-climate-tech-rebel',
+        'yi-he-village-roots-co-ceo-crypto-global-gateway',
+        'mohamed-alabbar-dubai-master-builder-urban-innovation',
+        'murray-auchincloss-pragmatic-reset-steering-bp-value'
+    ]
+
+    // Prioritize juggernauts on CXO Interview category
+    const sortedPosts = useMemo(() => {
+        try {
+            // Only sort for CXO Interview category
+            if (category.slug.current !== 'cxo-interview') {
+                return posts
+            }
+
+            // Filter juggernauts and others with safety checks
+            const juggernauts = posts.filter(p =>
+                p?.slug?.current &&
+                juggernautSlugs.includes(p.slug.current)
+            )
+            const others = posts.filter(p =>
+                p?.slug?.current &&
+                !juggernautSlugs.includes(p.slug.current)
+            )
+
+            return [...juggernauts, ...others]
+        } catch (error) {
+            console.error('Juggernaut sorting failed, using original order:', error)
+            return posts  // Fallback to original
+        }
+    }, [posts, category.slug.current])
 
     // Read initial page from URL hash
     useEffect(() => {
@@ -29,15 +67,15 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
             const match = hash.match(/page=(\d+)/)
             if (match) {
                 const page = parseInt(match[1], 10)
-                if (page >= 1 && page <= Math.ceil(posts.length / ITEMS_PER_PAGE)) {
+                if (page >= 1 && page <= Math.ceil(sortedPosts.length / ITEMS_PER_PAGE)) {
                     setCurrentPage(page)
                 }
             }
         }
-    }, [posts.length])
+    }, [sortedPosts.length])
 
     // Calculate paginated posts
-    const paginatedPosts = posts.slice(
+    const paginatedPosts = sortedPosts.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     )
@@ -46,7 +84,7 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
         <>
             {/* Articles Grid */}
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                {posts.length === 0 ? (
+                {sortedPosts.length === 0 ? (
                     <div className="text-center py-16">
                         <svg
                             className="w-24 h-24 mx-auto text-gray-300 mb-4"
@@ -140,7 +178,7 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
 
                         {/* Pagination */}
                         <Pagination
-                            totalItems={posts.length}
+                            totalItems={sortedPosts.length}
                             itemsPerPage={ITEMS_PER_PAGE}
                             currentPage={currentPage}
                             onPageChange={setCurrentPage}
