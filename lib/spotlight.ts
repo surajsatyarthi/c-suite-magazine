@@ -64,19 +64,9 @@ export function processSpotlightItems(items: SpotlightItem[], desiredCount: numb
     // Filter out the featured item from the grid items
     const gridItems = items.filter(item => item.title !== featuredName)
 
-    // Custom homepage order for first 12 cards: 1,8,2,7,3,9,4,10,5,11,6,12
-    // Map from original zero-based indices
-    const orderMap = [0, 7, 1, 6, 2, 8, 3, 9, 4, 10, 5, 11]
-    const itemsWithIndex = gridItems.map((it, i) => ({ ...it, __idx: i + 1 }))
-    const reorderedFirst12 = orderMap
-        .filter((i) => i >= 0 && i < itemsWithIndex.length)
-        .map((i) => itemsWithIndex[i])
-    const remaining = itemsWithIndex.slice(12)
-    const orderedItems = [...reorderedFirst12, ...remaining]
-
-    // Render up to desired count (env → Sanity config → default 12)
+    // Respect the order from spotlight.json - no custom reordering
     const maxCount = typeof desiredCount === 'number' ? desiredCount : 12
-    const initialCount = Math.min(orderedItems.length, maxCount)
+    const initialCount = Math.min(gridItems.length, maxCount)
 
-    return orderedItems.slice(0, initialCount)
+    return gridItems.slice(0, initialCount)
 }
