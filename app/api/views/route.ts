@@ -5,13 +5,14 @@ import { validateWriteRequest } from '@/lib/security'
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting for view updates (more lenient than write operations)
-    const validationError = await validateWriteRequest(request, {
+    // validateContent is false, so we need to read the body manually
+    const { isValid, error } = await validateWriteRequest(request, {
       requireReferer: false, // Allow direct requests for view counting
       validateContent: false,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (!isValid) return error!
     
     const body = await request.json()
     const { slug } = body || {}
@@ -35,4 +36,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: 'Failed to update views' }, { status: 500 })
   }
 }
-
