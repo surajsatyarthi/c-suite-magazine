@@ -141,6 +141,17 @@ async function getPost(slug: string): Promise<Post | null> {
         asset->,
         targetUrl,
         isPopupTrigger
+      },
+      _type == "partnerQuotes" => {
+        ...,
+        quotes[]{
+          _key,
+          _type,
+          company,
+          name,
+          title,
+          quote
+        }
       }
     },
     seo,
