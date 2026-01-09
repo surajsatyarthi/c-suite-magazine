@@ -25,6 +25,12 @@ import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { Post, SanityImage } from '@/lib/types'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
+// Magazine design enhancements
+import InFocusBadge from '@/components/InFocusBadge'
+import HeroOverlay from '@/components/HeroOverlay'
+import PhotoCredits from '@/components/PhotoCredits'
+import SpotlightsWidget from '@/components/SpotlightsWidget'
+import { getHeroTagline, getArticleType } from '@/lib/articleHelpers'
 
 // Temporary noindex for problematic articles while team creates replacements
 // These will be removed once new content is ready
@@ -612,6 +618,9 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                     </div>
 
 
+                    {/* IN FOCUS Badge */}
+                    <InFocusBadge articleType={getArticleType(post)} />
+
                     {(featuredHeroSrc || post.mainImage) && (
                       <div
                         className={'relative w-full rounded-lg overflow-hidden mb-10'}
@@ -645,8 +654,13 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                               : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
                           })()}
                         />
+                        {/* Hero Overlay with Tagline */}
+                        <HeroOverlay tagline={getHeroTagline(post)} show={isCompanySponsored || isCXOInterview || isJuggernaut || isSpotlight} />
                       </div>
                     )}
+
+                    {/* Photo Credits */}
+                    <PhotoCredits author={(post as any).photoCredits?.author} photographer={(post as any).photoCredits?.photographer} />
 
                     {/* Writer name suppressed below main image to avoid duplication */}
 
@@ -777,6 +791,9 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                         </div>
                       </div>
                     )}
+
+                    {/* Spotlights on Leaders */}
+                    <SpotlightsWidget />
 
                     {/* Trending Now */}
                     <div className="bg-white border border-gray-200 rounded-lg p-6">

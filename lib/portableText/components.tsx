@@ -114,9 +114,12 @@ export const portableTextComponents: PortableTextComponents = {
             const text = extractTextFromChildren(value?.children || [])
             const id = slugify(text)
             return (
-                <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">
-                    {children}
-                </h2>
+                <div className="mt-12 mb-6">
+                    <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 text-center mb-3">
+                        {children}
+                    </h2>
+                    <div className="w-16 h-0.5 bg-[#c8ab3d] mx-auto"></div>
+                </div>
             )
         },
 
@@ -186,16 +189,10 @@ export const portableTextComponents: PortableTextComponents = {
         },
 
         blockquote: ({ children }) => (
-            <blockquote className="my-12 relative">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl text-[#c8ab3d] opacity-20 font-serif">
-                    &ldquo;
-                </div>
-                <div className="relative z-10 text-center px-8 md:px-16">
-                    <p className="text-2xl md:text-3xl font-serif italic text-gray-800 leading-relaxed">
-                        {children}
-                    </p>
-                    <div className="mt-6 w-16 h-1 bg-[#c8ab3d] mx-auto opacity-60"></div>
-                </div>
+            <blockquote className="my-12">
+                <p className="text-2xl font-serif italic text-[#082945] text-center leading-relaxed max-w-4xl mx-auto px-4">
+                    {children}
+                </p>
             </blockquote>
         ),
     },
