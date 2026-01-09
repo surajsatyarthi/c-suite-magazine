@@ -301,7 +301,9 @@ function sanitizeBlocks(blocks: any[]): any[] {
       .map((b) => {
         // Allow only known safe types
         if (!b) return null
-        if (b._type && b._type !== 'block' && b._type !== 'image') return null
+        // Allow custom block types: partnerQuotes, video, table, carousel, cta
+        const allowedCustomTypes = ['block', 'image', 'partnerQuotes', 'video', 'table', 'carousel', 'cta']
+        if (b._type && !allowedCustomTypes.includes(b._type)) return null
         if (b._type !== 'block') return b
 
         const children = Array.isArray(b.children) ? b.children : []
