@@ -1,3 +1,5 @@
+'use client'
+
 import ReactPlayer from 'react-player/lazy'
 
 interface VideoPlayerProps {
