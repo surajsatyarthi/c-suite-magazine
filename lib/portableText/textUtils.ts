@@ -19,10 +19,11 @@ export function slugify(text: string): string {
  * Extract plain text from Portable Text children array
  * Handles nested structures and type safety
  */
-export function extractTextFromChildren(children: any[]): string {
+export function extractTextFromChildren(children: any): string {
     try {
-        return (children || [])
-            .map((c: any) => String(c?.text || ''))
+        const childArray = Array.isArray(children) ? children : [children]
+        return childArray
+            .map((c: any) => String(c?.text || c?.props?.children || ''))
             .join(' ')
             .trim()
     } catch {

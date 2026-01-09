@@ -53,8 +53,8 @@ export const portableTextComponents: PortableTextComponents = {
                     <div className="my-8">
                         <InArticleAd
                             image={src}
-                            targetUrl={targetUrl}
-                            caption={caption || alt}
+                            href={targetUrl || '#'}
+                            title={caption || alt}
                         />
                     </div>
                 )
