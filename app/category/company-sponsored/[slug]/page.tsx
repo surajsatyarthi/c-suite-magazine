@@ -318,8 +318,10 @@ async function getRelatedPosts(
 
 
 async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' | 'views' | 'categories'>[]> {
-  // Requirement: strictly 5 most recent CXO interview articles
-  const interviewQuery = `*[_type == "post" && isHidden != true && "cxo-interview" in categories[]->slug.current] | order(publishedAt desc)[0...5] {
+  // Show actual trending articles (most viewed) instead of recent interviews
+  // This differentiates from Spotlights widget which shows recent interview leaders
+  const trendingQuery = `*[_type == "post" && isHidden != true && defined(views) && views > 0] 
+    | order(views desc)[0...5] {
     _id,
     title,
     slug,
@@ -328,8 +330,8 @@ async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' |
   }`
 
   try {
-    const interviews = await client.fetch(interviewQuery)
-    return Array.isArray(interviews) ? interviews : []
+    const trending = await client.fetch(trendingQuery)
+    return Array.isArray(trending) ? trending : []
   } catch (e) {
     return []
   }
