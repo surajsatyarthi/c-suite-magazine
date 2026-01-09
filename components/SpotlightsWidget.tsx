@@ -12,23 +12,38 @@ interface SpotlightLeader {
 }
 
 async function getSpotlightLeaders(): Promise<SpotlightLeader[]> {
+  // Get recent Interview articles and show the SUBJECT of the interview (from title or mainImage)
   const query = `*[_type == "post" 
     && "cxo-interview" in categories[]->slug.current
-    && defined(writer)
-    && defined(writer->image)
+    && defined(mainImage)
   ] | order(publishedAt desc)[0...5] {
-    "name": writer->name,
-    "position": writer->position,
-    "company": coalesce(writer->company, ""),
-    "image": writer->image,
-    "achievement": coalesce(excerpt[0...80], title[0...80]),
-    "profileUrl": "/writer/" + writer->slug.current,
+    title,
+    mainImage,
+    excerpt,
+    slug,
     publishedAt
   }`
 
   try {
-    const leaders = await client.fetch(query, {}, { next: { revalidate: 600 } })
-    return leaders || []
+    const articles = await client.fetch(query, {}, { next: { revalidate: 600 } })
+    
+    // Extract leader info from article metadata
+    const leaders: SpotlightLeader[] = articles.map((article: any) => {
+      // Extract name from title (usually "Name: Position/Company" format)
+      const titleMatch = article.title.match(/^([^:]+)/)
+      const name = titleMatch ? titleMatch[1].trim() : article.title.substring(0, 50)
+      
+      return {
+        name: name,
+        position: '', // Position is usually in the title after ':'
+        company: '',
+        achievement: article.excerpt ? article.excerpt.substring(0, 80) : '',
+        image: article.mainImage,
+        profileUrl: `/category/cxo-interview/${article.slug.current}`
+      }
+    })
+    
+    return leaders
   } catch (error) {
     console.error('Error fetching spotlight leaders:', error)
     return []
@@ -74,11 +89,6 @@ export default async function SpotlightsWidget() {
                 <h4 className="font-sans text-sm font-bold text-gray-900 group-hover:text-[#082945] transition-colors">
                   {leader.name}
                 </h4>
-                {(leader.position || leader.company) && (
-                  <p className="text-xs text-gray-600 mt-0.5">
-                    {[leader.position, leader.company].filter(Boolean).join(', ')}
-                  </p>
-                )}
                 <p className="text-xs text-gray-500 mt-1 line-clamp-2">
                   {leader.achievement}
                 </p>

@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens"
+    ],
+    "unwantedRecommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-vscode.vscode-typescript-next",
+        "ms-azuretools.vscode-azureresourcegroups",
+        "ritwickdey.LiveServer"
+    ]
+}
