@@ -36,6 +36,7 @@ import VideoPlayer from '@/components/VideoPlayer'
 import TableBlock from '@/components/TableBlock'
 import CarouselBlock from '@/components/CarouselBlock'
 import CtaBlock from '@/components/CtaBlock'
+import PartnerQuotes from '@/components/PartnerQuotes'
 
 // ... imports
 
@@ -49,6 +50,10 @@ const components: PortableTextComponents = {
     table: TableBlock,
     carousel: CarouselBlock,
     cta: CtaBlock,
+    partnerQuotes: ({ value }) => {
+      const quotes = (value as any)?.quotes || []
+      return <PartnerQuotes quotes={quotes} />
+    },
     image: ({ value }) => {
       let src: string | undefined
       const asset: any = (value as any)?.asset
@@ -160,17 +165,24 @@ const components: PortableTextComponents = {
       )
     },
     blockquote: ({ children }) => (
-      <blockquote className="my-12 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl text-[#c8ab3d] opacity-20 font-serif">
-          &ldquo;
-        </div>
-        <div className="relative z-10 text-center px-8 md:px-16">
-          <p className="text-2xl md:text-3xl font-serif italic text-gray-800 leading-relaxed">
-            {children}
-          </p>
-          <div className="mt-6 w-16 h-1 bg-[#c8ab3d] mx-auto opacity-60"></div>
-        </div>
-      </blockquote>
+      <div className="my-16 px-4 md:px-16">
+        <blockquote className="relative border-none">
+          {/* Decorative quote mark */}
+          <div className="absolute -top-6 left-0 text-8xl text-[#c8ab3d]/20 font-serif leading-none">&ldquo;</div>
+          
+          {/* Quote content */}
+          <div className="relative bg-gradient-to-br from-[#082945]/5 to-[#082945]/10 border-l-4 border-[#c8ab3d] rounded-r-lg p-8 md:p-12">
+            <p className="text-[#082945] font-serif italic text-2xl md:text-3xl leading-relaxed text-center">
+              {children}
+            </p>
+          </div>
+          
+          {/* Bottom decorative line */}
+          <div className="mt-6 flex justify-center">
+            <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#c8ab3d] to-transparent"></div>
+          </div>
+        </blockquote>
+      </div>
     ),
   },
   list: {
