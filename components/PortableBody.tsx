@@ -51,7 +51,9 @@ const components: PortableTextComponents = {
     carousel: CarouselBlock,
     cta: CtaBlock,
     partnerQuotes: ({ value }) => {
+      console.log('🔥 partnerQuotes handler called!', value)
       const quotes = (value as any)?.quotes || []
+      console.log('🔥 Quotes array length:', quotes.length)
       return <PartnerQuotes quotes={quotes} />
     },
     image: ({ value }) => {
