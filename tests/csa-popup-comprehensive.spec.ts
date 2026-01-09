@@ -80,7 +80,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
 
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -90,7 +90,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await scrollToPercent(page, 50)
 
             // Should show again (NO COOLDOWN)
-            let popup2 = await waitForPopup(page)
+            const popup2 = await waitForPopup(page)
             expect(popup2).toBe(true)
         })
 
@@ -100,7 +100,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
 
             // First scroll
             await scrollToPercent(page, 50)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -110,7 +110,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
 
             // Scroll down again
             await scrollToPercent(page, 60)
-            let popup2 = await waitForPopup(page)
+            const popup2 = await waitForPopup(page)
             expect(popup2).toBe(true)
         })
 
@@ -120,7 +120,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
 
-            let popup = await waitForPopup(page)
+            const popup = await waitForPopup(page)
             expect(popup).toBe(true)
 
             // Verify it's Brkaert (not Bufflow)
@@ -133,7 +133,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(STELLA_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -141,7 +141,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(RICH_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let popup2 = await waitForPopup(page)
+            const popup2 = await waitForPopup(page)
             expect(popup2).toBe(true)
         })
     })
@@ -153,7 +153,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
 
-            let popup = await waitForPopup(page)
+            const popup = await waitForPopup(page)
             expect(popup).toBe(true)
         })
 
@@ -162,7 +162,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(NORMAL_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -172,7 +172,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await scrollToPercent(page, 50)
 
             // Should NOT show (session-based cooldown)
-            let popup2 = await waitForPopup(page, 3000)
+            const popup2 = await waitForPopup(page, 3000)
             expect(popup2).toBe(false)
         })
 
@@ -180,7 +180,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(NORMAL_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -190,7 +190,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await scrollToPercent(page, 50)
 
             // Should NOT show (same session)
-            let popup2 = await waitForPopup(page, 3000)
+            const popup2 = await waitForPopup(page, 3000)
             expect(popup2).toBe(false)
         })
 
@@ -199,7 +199,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(NORMAL_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -212,7 +212,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await scrollToPercent(page, 50)
 
             // Should show again (new session)
-            let popup2 = await waitForPopup(page)
+            const popup2 = await waitForPopup(page)
             expect(popup2).toBe(true)
         })
     })
@@ -224,14 +224,14 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.waitForLoadState('networkidle')
 
             // Should NOT show immediately
-            let immediate = await waitForPopup(page, 2000)
+            const immediate = await waitForPopup(page, 2000)
             expect(immediate).toBe(false)
 
             // Wait for 10 second delay
             await page.waitForTimeout(10000)
 
             // Should show now
-            let delayed = await waitForPopup(page, 2000)
+            const delayed = await waitForPopup(page, 2000)
             expect(delayed).toBe(true)
         })
 
@@ -240,7 +240,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(HOMEPAGE)
             await page.waitForLoadState('networkidle')
             await page.waitForTimeout(10000)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -254,7 +254,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.waitForTimeout(10000)
 
             // Should NOT show (within 2-hour cooldown)
-            let popup2 = await waitForPopup(page, 2000)
+            const popup2 = await waitForPopup(page, 2000)
             expect(popup2).toBe(false)
         })
 
@@ -263,7 +263,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(HOMEPAGE)
             await page.waitForLoadState('networkidle')
             await page.waitForTimeout(10000)
-            let popup1 = await waitForPopup(page)
+            const popup1 = await waitForPopup(page)
             expect(popup1).toBe(true)
             await closePopup(page)
 
@@ -279,7 +279,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.waitForTimeout(10000)
 
             // Should show again (2+ hours passed)
-            let popup2 = await waitForPopup(page)
+            const popup2 = await waitForPopup(page)
             expect(popup2).toBe(true)
         })
     })
@@ -291,7 +291,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(HOMEPAGE)
             await page.waitForLoadState('networkidle')
             await page.waitForTimeout(10000)
-            let homepagePopup = await waitForPopup(page)
+            const homepagePopup = await waitForPopup(page)
             expect(homepagePopup).toBe(true)
             await closePopup(page)
 
@@ -299,7 +299,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(NORMAL_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let articlePopup = await waitForPopup(page)
+            const articlePopup = await waitForPopup(page)
             expect(articlePopup).toBe(true)
             await closePopup(page)
 
@@ -307,7 +307,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(STELLA_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let csaPopup = await waitForPopup(page)
+            const csaPopup = await waitForPopup(page)
             expect(csaPopup).toBe(true)
         })
 
@@ -316,7 +316,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(STELLA_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let csaPopup = await waitForPopup(page)
+            const csaPopup = await waitForPopup(page)
             expect(csaPopup).toBe(true)
             await closePopup(page)
 
@@ -324,7 +324,7 @@ test.describe('CSA Popup System - Comprehensive Tests', () => {
             await page.goto(NORMAL_ARTICLE)
             await page.waitForLoadState('networkidle')
             await scrollToPercent(page, 50)
-            let articlePopup = await waitForPopup(page)
+            const articlePopup = await waitForPopup(page)
             expect(articlePopup).toBe(true)
         })
     })

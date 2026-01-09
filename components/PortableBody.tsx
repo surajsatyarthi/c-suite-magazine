@@ -384,7 +384,7 @@ function sanitizeBlocks(blocks: any[]): any[] {
           return spans.length ? spans : [{ _type: 'span', text: input, marks: [] }]
         }
 
-        let filteredChildren = children
+        const filteredChildren = children
           .filter((c: any) => !isImagePathText(String(c?.text || '')))
           .flatMap((c: any) => parseInlineMdToSpans(String(c?.text || '')))
           // remove empty or whitespace-only spans to avoid odd gaps

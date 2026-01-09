@@ -17,6 +17,7 @@ const eslintConfig = defineConfig([
     "scripts/**",
     "tmp/**",
     "tmp-*.js",
+    "dist/**",
   ]),
 ]);
 

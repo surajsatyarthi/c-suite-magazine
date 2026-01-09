@@ -26,7 +26,7 @@ export function getWriteClient(): SanityClient | null {
   }
 
   // Require here to avoid evaluating the module during build when envs are missing
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   const { createClient } = require('@sanity/client') as typeof import('@sanity/client')
   cachedClient = createClient({ projectId, dataset, apiVersion, token, useCdn: false })
   return cachedClient
