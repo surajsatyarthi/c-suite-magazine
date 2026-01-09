@@ -625,9 +625,14 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                       <div
                         className={'relative w-full rounded-lg overflow-hidden mb-10'}
                         style={(() => {
-                          if (featuredHeroSrc) return { aspectRatio: featuredHeroAspect || 16 / 9 }
+                          // Reduce height by 20% - multiply aspect ratio by 1.25 (makes it more landscape)
+                          if (featuredHeroSrc) {
+                            const originalAspect = featuredHeroAspect || 16 / 9
+                            return { aspectRatio: originalAspect * 1.25 }
+                          }
                           const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
-                          return { aspectRatio: meta || 16 / 9 }
+                          const originalAspect = meta || 16 / 9
+                          return { aspectRatio: originalAspect * 1.25 }
                         })()}
                       >
                         <CXOOptimizedImage
