@@ -589,7 +589,7 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                                 src={post.writer.imageUrl || urlFor(post.writer.image!).width(128).height(128).auto('format').url()}
                                 alt={post.writer.name}
                                 fill
-                                className="object-cover"
+                                className="object-contain"
                               />
                             ) : (
                               <div className="w-full h-full bg-[#082945] text-white flex items-center justify-center">
