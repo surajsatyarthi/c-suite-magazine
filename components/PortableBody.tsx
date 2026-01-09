@@ -497,6 +497,15 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
         : []
 
   if (!blocks || blocks.length === 0) return null
+  
+  // DEBUG: Log what blocks we receive
+  console.log('PortableBody received blocks:', blocks.length)
+  console.log('Block types:', blocks.map((b: any) => b._type))
+  const partnerQuotesBlocks = blocks.filter((b: any) => b._type === 'partnerQuotes')
+  console.log('Partner quotes blocks found:', partnerQuotesBlocks.length)
+  if (partnerQuotesBlocks.length > 0) {
+    console.log('Partner quotes data:', partnerQuotesBlocks[0])
+  }
   // Sanitize blocks to remove stray image file names/paths and HR markers
   const sanitized = sanitizeBlocks(blocks)
   // Fallback: upgrade heading-like paragraphs when content lacks explicit h2/h3 styles
