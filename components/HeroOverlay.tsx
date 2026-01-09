@@ -11,16 +11,14 @@ export default function HeroOverlay({ tagline, show = true}: HeroOverlayProps) {
   return (
     <div className="absolute bottom-0 left-0 right-0 z-10 pointer-events-none">
       <div
-        className="w-full py-6 px-4 text-center"
+        className="w-full py-8 px-8 text-center"
         style={{
-          background: 'linear-gradient(to top, rgba(0, 51, 102, 0.85) 0%, rgba(0, 51, 102, 0.7) 50%, transparent 100%)',
+          background: 'linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 40%, rgba(255, 255, 255, 0.4) 70%, transparent 100%)',
         }}
       >
-        <div className="inline-block bg-white/95 backdrop-blur-sm px-8 py-3 rounded-sm shadow-lg">
-          <h2 className="text-[#082945] font-bold text-lg md:text-2xl uppercase tracking-[2px] md:tracking-[3px]">
-            {tagline}
-          </h2>
-        </div>
+        <h2 className="text-[#082945] font-serif text-xl md:text-3xl uppercase tracking-[3px] md:tracking-[5px] font-light">
+          {tagline}
+        </h2>
       </div>
     </div>
   )
