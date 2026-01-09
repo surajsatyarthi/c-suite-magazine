@@ -662,7 +662,7 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                           }
                           alt={post.mainImage?.alt || post.title}
                           fill
-                          className={'object-cover object-center'}
+                          className={'object-contain object-center'}
                           quality={95}
                           hero={true}
                           priority={true}
