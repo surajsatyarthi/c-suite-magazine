@@ -1,0 +1,55 @@
+{
+  "cxoCategoryId": "CLZyEnOmHFQ0HoyBtIU3xy",
+  "articles": [
+    {
+      "_id": "l1PaX4hS53uLi0tV4V3Bog",
+      "title": "Shrikant Madhav Vaidya: Leading India's Energy Transition at IndianOil",
+      "currentCategory": null
+    },
+    {
+      "_id": "6LHIUa7X7StJKVVM1XBGmG",
+      "title": "Elon Musk: Building the Future at Civilization Scale",
+      "currentCategory": "Innovation"
+    },
+    {
+      "_id": "R4nh1tgtHdOlPpvIYzWE0k",
+      "title": "Ratan Tata: A Legacy of Ethical Leadership and Enduring Impact",
+      "currentCategory": "Leadership"
+    },
+    {
+      "_id": "c7UYOegSzEupZNl9sN7KPs",
+      "title": "Bhavesh Aggarwal: India’s Electric + AI Maverick",
+      "currentCategory": "Innovation"
+    },
+    {
+      "_id": "R4nh1tgtHdOlPpvIZ09PGm",
+      "title": "Ritesh Agarwal: The Billion-Dollar Hostel Kid Who Rewrote Global Hospitality",
+      "currentCategory": "Innovation"
+    },
+    {
+      "_id": "6LHIUa7X7StJKVVM1bKFxX",
+      "title": "Amin H. Nasser: The Steady Hand Guiding Energy's Next Chapter",
+      "currentCategory": "Leadership"
+    },
+    {
+      "_id": "R4nh1tgtHdOlPpvIZ09N0a",
+      "title": "Chamath Palihapitiya: The SPAC King Turned Climate Tech Rebel",
+      "currentCategory": "Innovation"
+    },
+    {
+      "_id": "6LHIUa7X7StJKVVM1biINI",
+      "title": "Yi He: From Village Roots to Co-CEO of Crypto's Global Gateway",
+      "currentCategory": "Innovation"
+    },
+    {
+      "_id": "R4nh1tgtHdOlPpvIZ0FI0g",
+      "title": "Mohamed Alabbar: Dubai's Master Builder and the Next Frontier of Urban Innovation",
+      "currentCategory": "Leadership"
+    },
+    {
+      "_id": "c7UYOegSzEupZNl9sNKPNI",
+      "title": "Murray Auchincloss: The Pragmatic Reset Steering BP Back to Value",
+      "currentCategory": "Leadership"
+    }
+  ]
+}

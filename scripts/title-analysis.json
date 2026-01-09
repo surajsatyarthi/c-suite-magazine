@@ -1,0 +1,135 @@
+{
+  "csaArticles": [
+    {
+      "_id": "l1PaX4hS53uLi0tV4V3Bog",
+      "inSpotlight": false,
+      "slug": {
+        "_type": "slug",
+        "current": "shrikant-vaidya-chairman-indianoil"
+      },
+      "title": "Leading India's Energy Transition: IndianOil Chairman Shrikant Madhav Vaidya on Building a Sustainable Future"
+    },
+    {
+      "_id": "fd64f6d9-e720-4c33-826b-7903a806a525",
+      "inSpotlight": true,
+      "slug": {
+        "_type": "slug",
+        "current": "rich-stinson-ceo-southwire"
+      },
+      "title": "Rich Stinson: Visionary Leader Powering America’s Electrification Future"
+    },
+    {
+      "_id": "c79a5d71-febd-4fe1-8dc1-e153c5be57b1",
+      "inSpotlight": true,
+      "slug": {
+        "_type": "slug",
+        "current": "stella-ambrose-deputy-ceo-sawit-kinabalu"
+      },
+      "title": "Stella Ambrose: Visionary Trailblazer in Sustainable Palm Oil Leadership"
+    }
+  ],
+  "spotlightArticles": [
+    {
+      "_id": "W0r3Dco17y9seUgyVZMhnz",
+      "_type": "post",
+      "slug": {
+        "_type": "slug",
+        "current": "bill-faruki"
+      },
+      "title": "Bill Faruki: Visionary Architect of Adaptive AI at DV8 Infosystems"
+    },
+    {
+      "_id": "iVn352lnQzrBdeP67CLroJ",
+      "_type": "post",
+      "slug": {
+        "current": "stoyana-natseva"
+      },
+      "title": "Stoyana Natseva: Awakening Conscious Leaders for a Transformed World"
+    },
+    {
+      "_id": "IFlZ6j0SZoLgDsNeTvXImK",
+      "_type": "post",
+      "slug": {
+        "_type": "slug",
+        "current": "brianne-howey"
+      },
+      "title": "Brianne Howey: Visionary Actress Redefining Authentic Storytelling"
+    },
+    {
+      "_id": "6FGiNia5tWM9A0y146SyqV",
+      "_type": "post",
+      "slug": {
+        "current": "dr-basma-ghandourah"
+      },
+      "title": "Dr. Basma Ghandourah: Visionary Leader in Global Healthcare Collaboration"
+    },
+    {
+      "_id": "W0r3Dco17y9seUgyVZMgs9",
+      "_type": "post",
+      "slug": {
+        "_type": "slug",
+        "current": "erin-krueger"
+      },
+      "title": "The Culture Code: How Erin Krueger Turns Teams Into Powerhouses"
+    },
+    {
+      "_id": "KGEAgIEt6gkQLdV5lSZFvP",
+      "_type": "post",
+      "slug": {
+        "current": "pankaj-bansal"
+      },
+      "title": "Pankaj Bansal: M3M India: Revolutionizing Real Estate, Crafting Memorable Experiences"
+    },
+    {
+      "_id": "KGEAgIEt6gkQLdV5lSZKOC",
+      "_type": "post",
+      "slug": {
+        "current": "supreet-nagi"
+      },
+      "title": "Supreet Nagi's Tri-Stage Data Encryption Model"
+    },
+    {
+      "_id": "KGEAgIEt6gkQLdV5lSZJMo",
+      "_type": "post",
+      "slug": {
+        "current": "swami-aniruddha"
+      },
+      "title": "Swami Aniruddha: Principles for Modern Bhakti Marga"
+    },
+    {
+      "_id": "6FGiNia5tWM9A0y142DNeH",
+      "_type": "post",
+      "slug": {
+        "current": "bryce-tully"
+      },
+      "title": "Forget Traditional Surveys: Bryce Tully's Vision for AI-Driven Organizational Insights"
+    },
+    {
+      "_id": "W0r3Dco17y9seUgyVZMnk3",
+      "_type": "post",
+      "slug": {
+        "_type": "slug",
+        "current": "cal-riley"
+      },
+      "title": "Cal Riley: Visionary Leader Transforming Combat Lessons into Compassionate Business Strategies"
+    },
+    {
+      "_id": "IFlZ6j0SZoLgDsNeTvXiGa",
+      "_type": "post",
+      "slug": {
+        "_type": "slug",
+        "current": "dean-fealk"
+      },
+      "title": "Dean Fealk: Visionary Pioneer in Global Business Law Integration"
+    }
+  ],
+  "needsImprovement": [
+    {
+      "_id": "6FGiNia5tWM9A0y146SyqV",
+      "_type": "post",
+      "currentTitle": "Dr. Basma Ghandourah: Visionary Leader in Global Healthcare Collaboration",
+      "slug": "dr-basma-ghandourah",
+      "suggestedName": "Dr Basma"
+    }
+  ]
+}

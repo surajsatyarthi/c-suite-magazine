@@ -1,23 +1,30 @@
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
-  timeout: 60_000, // Increased from 30s for CI environments
-  retries: process.env.CI ? 2 : 0, // 2 retries in CI, 0 locally
-  reporter: 'list',
-  webServer: {
-    command: 'pnpm start',
-    port: 3000,
-    timeout: 120_000,
-    reuseExistingServer: !process.env.CI, // Always fresh server in CI
-  },
+  testDir: './tests/e2e',
+  fullyParallel: false,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: 'html',
+
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
-    headless: true,
-    trace: 'off',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
+
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-safari', use: { ...devices['iPhone 13'], isMobile: true } },
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
   ],
-})
+
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120000,
+  },
+});

@@ -35,7 +35,14 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
         'murray-auchincloss-pragmatic-reset-steering-bp-value'
     ]
 
-    // Prioritize juggernauts on CXO Interview category
+    // CSA article slugs (paid content, must be visible)
+    const csaSlugs = [
+        'rich-stinson-ceo-southwire',
+        'stella-ambrose-deputy-ceo-sawit-kinabalu',
+        'shrikant-vaidya-chairman-indianoil'
+    ]
+
+    // Prioritize juggernauts and CSAs on CXO Interview category
     const sortedPosts = useMemo(() => {
         try {
             // Only sort for CXO Interview category
@@ -43,19 +50,37 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
                 return posts
             }
 
-            // Filter juggernauts and others with safety checks
+            // Filter into priority groups
             const juggernauts = posts.filter(p =>
                 p?.slug?.current &&
                 juggernautSlugs.includes(p.slug.current)
             )
+            const csas = posts.filter(p =>
+                p?.slug?.current &&
+                csaSlugs.includes(p.slug.current)
+            )
             const others = posts.filter(p =>
                 p?.slug?.current &&
-                !juggernautSlugs.includes(p.slug.current)
+                !juggernautSlugs.includes(p.slug.current) &&
+                !csaSlugs.includes(p.slug.current)
             )
 
-            return [...juggernauts, ...others]
+            const sorted = [...juggernauts, ...csas, ...others]
+
+            // Debug logging
+            console.log('CategoryClient Debug:', {
+                totalPosts: posts.length,
+                sortedPosts: sorted.length,
+                juggernauts: juggernauts.length,
+                csas: csas.length,
+                others: others.length,
+                itemsPerPage: ITEMS_PER_PAGE,
+                totalPages: Math.ceil(sorted.length / ITEMS_PER_PAGE)
+            })
+
+            return sorted
         } catch (error) {
-            console.error('Juggernaut sorting failed, using original order:', error)
+            console.error('Sorting failed, using original order:', error)
             return posts  // Fallback to original
         }
     }, [posts, category.slug.current])

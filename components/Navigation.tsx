@@ -97,38 +97,71 @@ export default function Navigation() {
     fetchCategories()
   }, [])
 
-  // Auto-scroll functionality
+  // Auto-scroll functionality (optimized to prevent overheating)
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container || allCategories.length === 0) return
 
-    const startScrolling = () => {
-      // Clear any existing interval safely
-      if (scrollIntervalRef.current !== null) {
-        clearInterval(scrollIntervalRef.current)
+    let isScrolling = false
+    let animationFrameId: number | null = null
+    let lastTimestamp = 0
+    const scrollSpeed = 15 // pixels per second (much smoother and less CPU intensive)
+
+    const animate = (timestamp: number) => {
+      if (!isScrolling || !container) return
+
+      // Calculate delta time in seconds
+      const deltaTime = lastTimestamp ? (timestamp - lastTimestamp) / 1000 : 0
+      lastTimestamp = timestamp
+
+      const maxScroll = container.scrollWidth - container.clientWidth
+      const currentScroll = container.scrollLeft
+
+      // Calculate next position based on time (smoother than fixed increments)
+      const increment = scrollSpeed * deltaTime
+      const nextScroll = currentScroll + (scrollDirectionRef.current * increment)
+
+      // Check if we'll hit a boundary with the next increment
+      if (nextScroll >= maxScroll && scrollDirectionRef.current === 1) {
+        scrollDirectionRef.current = -1
+      } else if (nextScroll <= 0 && scrollDirectionRef.current === -1) {
+        scrollDirectionRef.current = 1
       }
 
-      scrollIntervalRef.current = setInterval(() => {
-        const container = scrollContainerRef.current
-        if (!container) return
+      // Apply the scroll with the (potentially updated) direction
+      container.scrollLeft += scrollDirectionRef.current * increment
 
-        const maxScroll = container.scrollWidth - container.clientWidth
-        const currentScroll = container.scrollLeft
+      // Continue animation
+      if (isScrolling) {
+        animationFrameId = requestAnimationFrame(animate)
+      }
+    }
 
-        if (currentScroll >= maxScroll) {
-          scrollDirectionRef.current = -1
-        } else if (currentScroll <= 0) {
-          scrollDirectionRef.current = 1
-        }
-
-        container.scrollLeft += scrollDirectionRef.current * 0.5
-      }, 50)
+    const startScrolling = () => {
+      if (isScrolling) return
+      isScrolling = true
+      lastTimestamp = 0
+      animationFrameId = requestAnimationFrame(animate)
     }
 
     const stopScrolling = () => {
-      if (scrollIntervalRef.current !== null) {
-        clearInterval(scrollIntervalRef.current)
-        scrollIntervalRef.current = null
+      isScrolling = false
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+        animationFrameId = null
+      }
+    }
+
+    // Stop scrolling when page is hidden (saves massive CPU)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopScrolling()
+      } else {
+        // Resume scrolling when page becomes visible again
+        const wasHovering = container.matches(':hover')
+        if (!wasHovering) {
+          startScrolling()
+        }
       }
     }
 
@@ -143,18 +176,19 @@ export default function Navigation() {
     container.addEventListener('mouseleave', startScrolling)
     container.addEventListener('touchend', startScrolling, { passive: true })
 
+    // Pause when page is hidden (critical for performance!)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     return () => {
       clearTimeout(startDelay)
-      if (scrollIntervalRef.current !== null) {
-        clearInterval(scrollIntervalRef.current)
-        scrollIntervalRef.current = null
-      }
+      stopScrolling()
       if (container) {
         container.removeEventListener('mouseenter', stopScrolling)
         container.removeEventListener('touchstart', stopScrolling)
         container.removeEventListener('mouseleave', startScrolling)
         container.removeEventListener('touchend', startScrolling)
       }
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [allCategories.length])
 
