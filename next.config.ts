@@ -40,17 +40,17 @@ const nextConfig: NextConfig = {
       },
       // CSA URL Structure Optimization - Old long slugs to new short slugs
       {
-        source: '/category/company-sponsored/rich-stinson-visionary-leader-powering-america-s-electrification-future',
+        source: '/csa/rich-stinson-visionary-leader-powering-america-s-electrification-future',
         destination: '/csa/rich-stinson-ceo-southwire',
         permanent: true,
       },
       {
-        source: '/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership',
+        source: '/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership',
         destination: '/csa/stella-ambrose-deputy-ceo-sawit-kinabalu',
         permanent: true,
       },
       {
-        source: '/category/company-sponsored/leading-indias-energy-transition-indianoil-chairman-shrikant-madhav-vaidya-on-building-a-sustainable-future',
+        source: '/csa/leading-indias-energy-transition-indianoil-chairman-shrikant-madhav-vaidya-on-building-a-sustainable-future',
         destination: '/csa/shrikant-vaidya-chairman-indianoil',
         permanent: true,
       },

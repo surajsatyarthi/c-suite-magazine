@@ -3,22 +3,22 @@ import { test, expect } from '@playwright/test'
 const scenarios = [
     {
         name: 'Rich Stinson - Production',
-        url: 'https://csuitemagazine.global/category/company-sponsored/rich-stinson-visionary-leader-powering-america-s-electrification-future',
+        url: 'https://csuitemagazine.global/csa/rich-stinson-visionary-leader-powering-america-s-electrification-future',
         sponsor: 'Brkaert'
     },
     {
         name: 'Stella Ambrose - Production',
-        url: 'https://csuitemagazine.global/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership',
+        url: 'https://csuitemagazine.global/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership',
         sponsor: 'Bufflow'
     },
     {
         name: 'Rich Stinson - Localhost',
-        url: 'http://localhost:3000/category/company-sponsored/rich-stinson-visionary-leader-powering-america-s-electrification-future',
+        url: 'http://localhost:3000/csa/rich-stinson-visionary-leader-powering-america-s-electrification-future',
         sponsor: 'Brkaert'
     },
     {
         name: 'Stella Ambrose - Localhost',
-        url: 'http://localhost:3000/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership',
+        url: 'http://localhost:3000/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership',
         sponsor: 'Bufflow'
     }
 ]

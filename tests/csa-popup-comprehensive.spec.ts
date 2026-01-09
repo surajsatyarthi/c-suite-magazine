@@ -7,8 +7,8 @@ import { test, expect, Page } from '@playwright/test'
 
 // Test configuration
 const LOCALHOST = 'http://localhost:3000'
-const STELLA_ARTICLE = `${LOCALHOST}/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership`
-const RICH_ARTICLE = `${LOCALHOST}/category/company-sponsored/rich-stinson-visionary-leader-powering-america-s-electrification-future`
+const STELLA_ARTICLE = `${LOCALHOST}/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership`
+const RICH_ARTICLE = `${LOCALHOST}/csa/rich-stinson-visionary-leader-powering-america-s-electrification-future`
 const NORMAL_ARTICLE = `${LOCALHOST}/category/leadership/cultural-moat-psychological-safety-competitive-advantage`
 const HOMEPAGE = LOCALHOST
 

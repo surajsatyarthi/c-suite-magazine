@@ -34,7 +34,7 @@ export const CopyLinkAction: DocumentActionComponent = (props) => {
                         toast.push({ status: 'warning', title: 'Missing slug' })
                         return
                     }
-                    url = `https://csuitemagazine.global/category/company-sponsored/${slug}`
+                    url = `https://csuitemagazine.global/csa/${slug}`
                 } else {
                     return
                 }

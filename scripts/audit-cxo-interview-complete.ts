@@ -48,7 +48,7 @@ async function auditCXOInterviewCategory() {
 
     console.log(`Total CSA articles: ${csaArticles.length}\n`);
     csaArticles.forEach((article: any, i: number) => {
-        const url = `https://csuitemagazine.global/category/company-sponsored/${article.slug?.current || 'MISSING_SLUG'}`;
+        const url = `https://csuitemagazine.global/csa/${article.slug?.current || 'MISSING_SLUG'}`;
         console.log(`${i + 1}. ${article.title}`);
         console.log(`   URL: ${url}`);
         console.log(`   Display Category: ${article.categoryRef || 'Not set'}`);
@@ -77,7 +77,7 @@ async function auditCXOInterviewCategory() {
     spotlightItems.forEach((article: any, i: number) => {
         const categorySlug = article.categorySlugs?.[0] || 'unknown';
         const url = article._type === 'csa'
-            ? `https://csuitemagazine.global/category/company-sponsored/${article.slug?.current || 'MISSING_SLUG'}`
+            ? `https://csuitemagazine.global/csa/${article.slug?.current || 'MISSING_SLUG'}`
             : `https://csuitemagazine.global/category/${categorySlug}/${article.slug?.current || 'MISSING_SLUG'}`;
 
         console.log(`${i + 1}. ${article.title}`);

@@ -9,7 +9,7 @@ import { test, expect } from '@playwright/test'
  */
 
 test.describe('CSA Popup Ads', () => {
-    const CSA_ARTICLE_URL = '/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership'
+    const CSA_ARTICLE_URL = '/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership'
 
     test.beforeEach(async ({ page }) => {
         // Clear any previous popup state

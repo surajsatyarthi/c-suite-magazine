@@ -53,7 +53,7 @@ export default defineConfig({
       if (document._type === 'csa') {
         const slug = (document.slug as any)?.current
         if (!slug) return prev
-        return `https://csuitemagazine.global/category/company-sponsored/${slug}`
+        return `https://csuitemagazine.global/csa/${slug}`
       }
 
       return prev
@@ -83,7 +83,7 @@ export default defineConfig({
                       locations: [
                         {
                           title: 'Preview',
-                          href: `/category/company-sponsored/${doc.slug.current}`,
+                          href: `/csa/${doc.slug.current}`,
                         },
                       ],
                     }

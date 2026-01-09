@@ -9,6 +9,7 @@ import TableBlock from '@/components/TableBlock'
 import CarouselBlock from '@/components/CarouselBlock'
 import CtaBlock from '@/components/CtaBlock'
 import OptimizedImage from '@/components/OptimizedImage'
+import PartnerQuotes from '@/components/PartnerQuotes'
 import { urlFor } from '@/lib/sanity'
 import { slugify, extractTextFromChildren } from './textUtils'
 
@@ -24,6 +25,10 @@ export const portableTextComponents: PortableTextComponents = {
         table: TableBlock,
         carousel: CarouselBlock,
         cta: CtaBlock,
+        partnerQuotes: ({ value }) => {
+            const quotes = (value as any)?.quotes || []
+            return <PartnerQuotes quotes={quotes} />
+        },
         image: ({ value }) => {
             let src: string | undefined
             const asset: any = (value as any)?.asset
@@ -48,152 +53,165 @@ export const portableTextComponents: PortableTextComponents = {
                     <div className="my-8">
                         <InArticleAd
                             image={src}
-                            href={targetUrl || '#'}
-                            title={alt}
-                            width={800}
-                            height={500}
-                            className="w-full h-auto rounded-lg object-contain"
+                            targetUrl={targetUrl}
+                            caption={caption || alt}
                         />
-                        {caption && (
-                            <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
-                                {caption}
-                            </div>
-                        )}
                     </div>
                 )
             }
 
-            const img = (
-                <div className="relative w-full my-8">
-                    <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden">
-                        <OptimizedImage
-                            src={src}
-                            alt={alt}
-                            fill
-                            className="object-contain"
-                            sizes="100vw"
-                        />
+            return (
+                <figure className="my-8">
+                    <div className="relative w-full h-auto overflow-hidden rounded-lg">
+                        <OptimizedImage src={src} alt={alt} width={1200} height={675} className="w-full h-auto" />
                     </div>
                     {caption && (
-                        <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
+                        <figcaption className="mt-2 text-sm text-gray-600 text-center italic">
                             {caption}
-                        </div>
+                        </figcaption>
                     )}
-                </div>
+                </figure>
             )
-
-            if (targetUrl) {
-                return (
-                    <a href={targetUrl} target="_blank" rel="noopener noreferrer" className="block transition-opacity hover:opacity-90">
-                        {img}
-                    </a>
-                )
-            }
-
-            return img
         },
     },
 
     marks: {
-        underline: ({ children }) => <span className="underline">{children}</span>,
+        strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
+        em: ({ children }) => <em className="italic">{children}</em>,
+        link: ({ value, children }) => {
+            const target = (value?.href || '').startsWith('http') ? '_blank' : undefined
+            return (
+                <a
+                    href={value?.href}
+                    target={target}
+                    rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+                    className="text-blue-600 hover:text-blue-800 underline transition-colors"
+                >
+                    {children}
+                </a>
+            )
+        },
     },
 
     block: {
-        h1: ({ children, value }: any) => {
-            const text = extractTextFromChildren(value?.children || [])
+        h1: ({ children }) => {
+            const text = extractTextFromChildren(children)
             const id = slugify(text)
-            // Downlevel in-body h1 to visual h2 to avoid heading overuse
             return (
-                <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">
+                <h1 id={id} className="scroll-mt-20 text-4xl font-bold text-gray-900 mb-6 mt-10">
                     {children}
-                </h2>
+                </h1>
             )
         },
 
-        h2: ({ children, value }: any) => {
-            const text = extractTextFromChildren(value?.children || [])
+        h2: ({ children }) => {
+            const text = extractTextFromChildren(children)
             const id = slugify(text)
             return (
-                <div className="mt-12 mb-6">
-                    <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 text-center mb-3">
+                <div className="my-12">
+                    <h2 id={id} className="scroll-mt-20 text-center text-3xl font-bold text-gray-900 mb-4">
                         {children}
                     </h2>
-                    <div className="w-16 h-0.5 bg-[#c8ab3d] mx-auto"></div>
+                    <div className="flex justify-center">
+                        <div className="w-24 h-0.5 bg-[#c8ab3d]"></div>
+                    </div>
                 </div>
             )
         },
 
-        h3: ({ children, value }: any) => {
-            const text = extractTextFromChildren(value?.children || [])
+        h3: ({ children }) => {
+            const text = extractTextFromChildren(children)
             const id = slugify(text)
-            const isQ = (value as any)?.__qa === 'Q'
             return (
-                <h3
-                    id={id}
-                    className={(isQ ? '!font-bold ' : '') + 'text-2xl font-serif font-normal text-gray-900 mt-8 mb-4'}
-                >
+                <h3 id={id} className="scroll-mt-20 text-2xl font-bold text-gray-900 mb-3 mt-8">
                     {children}
                 </h3>
             )
         },
 
-        h4: ({ children, value }: any) => {
-            const text = extractTextFromChildren(value?.children || [])
+        h4: ({ children }) => {
+            const text = extractTextFromChildren(children)
             const id = slugify(text)
-            const isQ = (value as any)?.__qa === 'Q'
             return (
-                <h4
-                    id={id}
-                    className={(isQ ? '!font-bold ' : '') + 'text-xl font-serif font-normal text-gray-900 mt-6 mb-3'}
-                >
+                <h4 id={id} className="scroll-mt-20 text-xl font-semibold text-gray-900 mb-2 mt-6">
                     {children}
                 </h4>
             )
         },
 
-        h5: ({ children, value }: any) => {
-            const text = extractTextFromChildren(value?.children || [])
+        h5: ({ children }) => {
+            const text = extractTextFromChildren(children)
             const id = slugify(text)
-            const isQ = (value as any)?.__qa === 'Q'
             return (
-                <h5
-                    id={id}
-                    className={(isQ ? '!font-bold ' : '') + 'text-lg font-serif font-normal text-gray-900 mt-5 mb-2'}
-                >
+                <h5 id={id} className="scroll-mt-20 text-lg font-semibold text-gray-900 mb-2 mt-4">
                     {children}
                 </h5>
             )
         },
 
-        h6: ({ children, value }: any) => {
-            const text = extractTextFromChildren(value?.children || [])
+        h6: ({ children }) => {
+            const text = extractTextFromChildren(children)
             const id = slugify(text)
-            const isQ = (value as any)?.__qa === 'Q'
             return (
-                <h6
-                    id={id}
-                    className={(isQ ? '!font-bold ' : '') + 'text-base font-serif font-normal text-gray-900 mt-4 mb-2'}
-                >
+                <h6 id={id} className="scroll-mt-20 text-base font-semibold text-gray-900 mb-2 mt-4">
                     {children}
                 </h6>
             )
         },
 
-        normal: ({ children, value }: any) => {
-            const isQ = (value as any)?.__qa === 'Q'
+        normal: ({ children, value }) => {
+            if (!children || (Array.isArray(children) && children.length === 0 && !(value as any)?.text)) {
+                return null
+            }
+
+            const actualValue = value as any
+            const isQ = actualValue?.__qa === 'Q'
+            const isA = actualValue?.__qa === 'A'
+
+            if (isQ) {
+                const text = extractTextFromChildren(children)
+                const id = slugify(text)
+                return (
+                    <p id={id} className="font-bold mt-8 mb-2 text-gray-900 text-lg scroll-mt-20">
+                        {children}
+                    </p>
+                )
+            }
+
+           if (isA) {
+                return (
+                    <p className="text-gray-700 leading-relaxed mb-4 italic pl-4 border-l-2 border-gray-300">
+                        {children}
+                    </p>
+                )
+            }
+
             return (
-                <p className={(isQ ? '!font-bold mt-6 mb-2 ' : '') + 'text-gray-700 leading-relaxed'}>
+                <p className="text-gray-700 leading-relaxed mb-4">
                     {children}
                 </p>
             )
         },
 
         blockquote: ({ children }) => (
-            <blockquote className="my-12">
-                <p className="text-2xl font-serif italic text-[#082945] text-center leading-relaxed max-w-4xl mx-auto px-4">
-                    {children}
-                </p>
-            </blockquote>
+            <div className="my-16 px-4 md:px-16">
+                <blockquote className="relative border-none">
+                    {/* Decorative quote mark */}
+                    <div className="absolute -top-6 left-0 text-8xl text-[#c8ab3d]/20 font-serif leading-none">"</div>
+                    
+                    {/* Quote content */}
+                    <div className="relative bg-gradient-to-br from-[#082945]/5 to-[#082945]/10 border-l-4 border-[#c8ab3d] rounded-r-lg p-8 md:p-12">
+                        <p className="text-[#082945] font-serif italic text-2xl md:text-3xl leading-relaxed text-center">
+                            {children}
+                        </p>
+                    </div>
+                    
+                    {/* Bottom decorative line */}
+                    <div className="mt-6 flex justify-center">
+                        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#c8ab3d] to-transparent"></div>
+                    </div>
+                </blockquote>
+            </div>
         ),
     },
 

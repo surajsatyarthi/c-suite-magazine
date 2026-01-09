@@ -64,7 +64,7 @@ async function publishIndianOilArticle() {
         console.log('📊 Published Article Details:');
         console.log(`   Title: ${(published as any).title}`);
         console.log(`   Slug: ${(published as any).slug?.current}`);
-        console.log(`   URL: https://csuitemagazine.global/category/company-sponsored/${(published as any).slug?.current}`);
+        console.log(`   URL: https://csuitemagazine.global/csa/${(published as any).slug?.current}`);
         console.log('\n🎉 Indian Oil CSA article is now live!');
 
     } catch (error) {

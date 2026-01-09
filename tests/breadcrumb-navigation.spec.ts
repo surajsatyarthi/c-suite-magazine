@@ -19,7 +19,7 @@ test.describe('Breadcrumb Navigation', () => {
 
     test('CSA article shows "CXO Interview" not "Company Sponsored"', async ({ page }) => {
         // Test CSA article (Stella Ambrose)
-        await page.goto('/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership')
+        await page.goto('/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership')
 
         const breadcrumbs = page.locator('nav[aria-label="Breadcrumb"]')
         await expect(breadcrumbs).toContainText('Home')
@@ -92,7 +92,7 @@ test.describe('Schema.org Breadcrumb Structured Data', () => {
     })
 
     test('CSA article JSON-LD shows "CXO Interview"', async ({ page }) => {
-        await page.goto('/category/company-sponsored/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership')
+        await page.goto('/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership')
 
         const jsonLdScript = await page.locator('script[type="application/ld+json"]').first().textContent()
         const data = JSON.parse(jsonLdScript || '{}')
