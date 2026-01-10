@@ -29,9 +29,23 @@ async function getSpotlightLeaders(): Promise<SpotlightLeader[]> {
     
     // Extract leader info from article metadata
     const leaders: SpotlightLeader[] = articles.map((article: any) => {
-      // Extract name from title (usually "Name: Position/Company" format)
-      const titleMatch = article.title.match(/^([^:]+)/)
-      const name = titleMatch ? titleMatch[1].trim() : article.title.substring(0, 50)
+      // Extract name from title - handle multiple formats:
+      // 1. "Name: Position/Company" - extract before colon
+      // 2. "Name's Something" - extract before apostrophe
+      // 3. "Full Title" - extract first 2-3 words (likely the name)
+      let name = article.title
+      
+      if (article.title.includes(':')) {
+        // Format: "Erin Krueger: CEO of Company"
+        name = article.title.split(':')[0].trim()
+      } else if (article.title.includes("'s ")) {
+        // Format: "Supreet Nagi's Tri-Stage Model"
+        name = article.title.split("'s ")[0].trim()
+      } else {
+        // Fallback: Take first 2-3 words (likely the person's name)
+        const words = article.title.split(' ')
+        name = words.slice(0, Math.min(3, words.length)).join(' ')
+      }
       
       return {
         name: name,
