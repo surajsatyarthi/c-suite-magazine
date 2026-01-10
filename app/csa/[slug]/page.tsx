@@ -635,45 +635,53 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                     <InFocusBadge articleType={getArticleType(post)} />
 
                     {(featuredHeroSrc || post.mainImage) && (
-                      <div
-                        className={'relative w-full rounded-lg overflow-hidden mb-10'}
-                        style={(() => {
-                          // Reduce height by 20% - multiply aspect ratio by 1.25 (makes it more landscape)
-                          if (featuredHeroSrc) {
-                            const originalAspect = featuredHeroAspect || 16 / 9
-                            return { aspectRatio: originalAspect * 1.25 }
-                          }
-                          const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
-                          const originalAspect = meta || 16 / 9
-                          return { aspectRatio: originalAspect * 1.25 }
-                        })()}
-                      >
-                        <CXOOptimizedImage
-                          src={
-                            (() => {
-                              if (featuredHeroSrc) return featuredHeroSrc
-                              return post.mainImage?.asset?.url ||
-                                urlFor(post.mainImage!)
-                                  .width(1600)
-                                  .quality(95)
-                                  .auto('format')
-                                  .url()
-                            })()
-                          }
-                          alt={post.mainImage?.alt || post.title}
-                          fill
-                          className={'object-contain object-center'}
-                          quality={95}
-                          hero={true}
-                          priority={true}
-                          sizes={(() => {
-                            return featuredHeroSrc
-                              ? '(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'
-                              : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
+                      <div className="mb-10">
+                        {/* CEO Hero Image Container with Professional Styling */}
+                        <div
+                          className="relative w-full rounded-2xl overflow-hidden shadow-xl border border-gray-200"
+                          style={(() => {
+                            // Better aspect ratio for portrait CEO photos (more vertical space)
+                            if (featuredHeroSrc) {
+                              const originalAspect = featuredHeroAspect || 16 / 9
+                              return { aspectRatio: originalAspect * 0.85 } // Less landscape, more portrait
+                            }
+                            const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
+                            const originalAspect = meta || 16 / 9
+                            return { aspectRatio: originalAspect * 0.85 }
                           })()}
-                        />
-                        {/* Hero Overlay with Tagline */}
-                        <HeroOverlay tagline={getHeroTagline(post)} show={isCompanySponsored || isCXOInterview || isJuggernaut || isSpotlight} />
+                        >
+                          <CXOOptimizedImage
+                            src={
+                              (() => {
+                                if (featuredHeroSrc) return featuredHeroSrc
+                                return post.mainImage?.asset?.url ||
+                                  urlFor(post.mainImage!)
+                                    .width(1600)
+                                    .quality(95)
+                                    .auto('format')
+                                    .url()
+                              })()
+                            }
+                            alt={post.mainImage?.alt || post.title}
+                            fill
+                            className="object-contain object-center bg-gradient-to-br from-gray-50 to-white"
+                            quality={95}
+                            hero={true}
+                            priority={true}
+                            sizes={(() => {
+                              return featuredHeroSrc
+                                ? '(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'
+                                : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
+                            })()}
+                          />
+                          
+                          {/* Caption Bar at Bottom - CEO Name & Title */}
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-[#082945] to-[#0a3350] py-4 px-6">
+                            <h2 className="text-white font-serif text-xl md:text-2xl font-bold text-center">
+                              {post.title}
+                            </h2>
+                          </div>
+                        </div>
                       </div>
                     )}
 
