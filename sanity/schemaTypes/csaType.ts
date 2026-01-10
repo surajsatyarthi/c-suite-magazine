@@ -178,6 +178,15 @@ export const csaType = defineType({
       to: { type: 'category' },
       group: 'meta',
     }),
+    defineField({
+      name: 'content',
+      type: 'array',
+      title: 'Legacy Content',
+      description: 'Legacy field for imported content',
+      of: [defineArrayMember({ type: 'block' })],
+      group: 'content',
+      hidden: true,
+    }),
   ],
   preview: {
     select: { title: 'title', media: 'mainImage', writer: 'writer.name' },
