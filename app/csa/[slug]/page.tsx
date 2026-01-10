@@ -635,45 +635,44 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                     <InFocusBadge articleType={getArticleType(post)} />
 
                     {(featuredHeroSrc || post.mainImage) && (
-                      <div className="-mt-6 mb-8">
-                        {/* CEO Hero Image Container - Clean & Professional */}
-                        <div
-                          className="relative w-full rounded-2xl overflow-hidden shadow-xl border border-gray-200"
-                          style={(() => {
-                            // Reduced image area by 20% - more compact
-                            if (featuredHeroSrc) {
-                              const originalAspect = featuredHeroAspect || 16 / 9
-                              return { aspectRatio: originalAspect * 1.05 } // Reduced from 0.85 to 1.05
-                            }
-                            const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
-                            const originalAspect = meta || 16 / 9
-                            return { aspectRatio: originalAspect * 1.05 }
-                          })()}
-                        >
-                          <CXOOptimizedImage
-                            src={
-                              (() => {
-                                if (featuredHeroSrc) return featuredHeroSrc
-                                return post.mainImage?.asset?.url ||
-                                  urlFor(post.mainImage!)
-                                    .width(1600)
-                                    .quality(95)
-                                    .auto('format')
-                                    .url()
+                      <div className="mt-8 mb-8">
+                        {/* CEO Hero Image - Reduced by 20%, Rounded Corners, No Background */}
+                        <div className="flex justify-center">
+                          <div
+                            className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-200"
+                            style={{
+                              maxWidth: '80%', // Reduced by 20%
+                              width: '100%',
+                              aspectRatio: (() => {
+                                if (featuredHeroSrc) {
+                                  return featuredHeroAspect || 16 / 9
+                                }
+                                const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
+                                return meta || 16 / 9
                               })()
-                            }
-                            alt={post.mainImage?.alt || post.title}
-                            fill
-                            className="object-contain object-center bg-gradient-to-br from-gray-50 to-white"
-                            quality={95}
-                            hero={true}
-                            priority={true}
-                            sizes={(() => {
-                              return featuredHeroSrc
-                                ? '(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'
-                                : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
-                            })()}
-                          />
+                            }}
+                          >
+                            <CXOOptimizedImage
+                              src={
+                                (() => {
+                                  if (featuredHeroSrc) return featuredHeroSrc
+                                  return post.mainImage?.asset?.url ||
+                                    urlFor(post.mainImage!)
+                                      .width(1600)
+                                      .quality(95)
+                                      .auto('format')
+                                      .url()
+                                })()
+                              }
+                              alt={post.mainImage?.alt || post.title}
+                              fill
+                              className="object-contain object-center"
+                              quality={95}
+                              hero={true}
+                              priority={true}
+                              sizes="(max-width: 768px) 80vw, (max-width: 1024px) 70vw, 800px"
+                            />
+                          </div>
                         </div>
                       </div>
                     )}
