@@ -551,8 +551,8 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
 
   // Long article: render full content without inline ads (ads only in sidebar)
   const midIndex = Math.floor(blockCount / 2)
-  const firstHalf = normalized.slice(0, midIndex)
-  const secondHalf = normalized.slice(midIndex)
+  const firstHalf = withLeadParagraph.slice(0, midIndex)
+  const secondHalf = withLeadParagraph.slice(midIndex)
 
   return (
     <div className="prose prose-lg max-w-3xl mx-auto">
