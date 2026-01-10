@@ -635,19 +635,19 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                     <InFocusBadge articleType={getArticleType(post)} />
 
                     {(featuredHeroSrc || post.mainImage) && (
-                      <div className="mb-10">
-                        {/* CEO Hero Image Container with Professional Styling */}
+                      <div className="-mt-6 mb-8">
+                        {/* CEO Hero Image Container - Clean & Professional */}
                         <div
                           className="relative w-full rounded-2xl overflow-hidden shadow-xl border border-gray-200"
                           style={(() => {
-                            // Better aspect ratio for portrait CEO photos (more vertical space)
+                            // Reduced image area by 20% - more compact
                             if (featuredHeroSrc) {
                               const originalAspect = featuredHeroAspect || 16 / 9
-                              return { aspectRatio: originalAspect * 0.85 } // Less landscape, more portrait
+                              return { aspectRatio: originalAspect * 1.05 } // Reduced from 0.85 to 1.05
                             }
                             const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
                             const originalAspect = meta || 16 / 9
-                            return { aspectRatio: originalAspect * 0.85 }
+                            return { aspectRatio: originalAspect * 1.05 }
                           })()}
                         >
                           <CXOOptimizedImage
@@ -674,13 +674,6 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                                 : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
                             })()}
                           />
-                          
-                          {/* Caption Bar at Bottom - CEO Name & Title */}
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-[#082945] to-[#0a3350] py-4 px-6">
-                            <h2 className="text-white font-serif text-xl md:text-2xl font-bold text-center">
-                              {post.title}
-                            </h2>
-                          </div>
                         </div>
                       </div>
                     )}
