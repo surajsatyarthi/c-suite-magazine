@@ -23,12 +23,12 @@ async function fetchImageStream(url: string): Promise<{ stream: Readable; conten
 export async function POST(request: NextRequest) {
   try {
     // Basic security validation for image uploads
-    const validationError = await validateWriteRequest(request, {
+    const { isValid, errorResponse } = await validateWriteRequest(request, {
       requireReferer: true,
       allowedContentTypes: ['multipart/form-data', 'application/json']
     })
     
-    if (validationError) return validationError
+    if (!isValid) return errorResponse!
     
     const contentTypeHeader = request.headers.get('content-type') || ''
     // Multipart form-data upload path (preferred when sending files)

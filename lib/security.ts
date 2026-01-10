@@ -82,6 +82,12 @@ function sanitizePayload(payload: any): { valid: boolean; error?: string } {
   return { valid: true }
 }
 
+export type ValidationResult = {
+  isValid: boolean
+  errorResponse?: NextResponse
+  payload?: any
+}
+
 export async function validateWriteRequest(
   request: NextRequest, 
   options: {
@@ -89,32 +95,41 @@ export async function validateWriteRequest(
     validateContent?: boolean
     allowedContentTypes?: string[]
   } = {}
-): Promise<NextResponse | null> {
+): Promise<ValidationResult> {
   const ip = getClientIP(request)
   
   // Rate limiting check
   if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { ok: false, error: 'Rate limit exceeded. Please try again later.' },
-      { status: 429 }
-    )
+    return {
+      isValid: false,
+      errorResponse: NextResponse.json(
+        { ok: false, error: 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      )
+    }
   }
   
   // Referer validation (optional but recommended)
   if (options.requireReferer && !isValidReferer(request)) {
-    return NextResponse.json(
-      { ok: false, error: 'Invalid request origin' },
-      { status: 403 }
-    )
+    return {
+      isValid: false,
+      errorResponse: NextResponse.json(
+        { ok: false, error: 'Invalid request origin' },
+        { status: 403 }
+      )
+    }
   }
   
   // Content type validation
   if (options.allowedContentTypes?.length) {
     if (!validateContentType(request, options.allowedContentTypes)) {
-      return NextResponse.json(
-        { ok: false, error: 'Invalid content type' },
-        { status: 400 }
-      )
+      return {
+        isValid: false,
+        errorResponse: NextResponse.json(
+          { ok: false, error: 'Invalid content type' },
+          { status: 400 }
+        )
+      }
     }
   }
   
@@ -125,26 +140,28 @@ export async function validateWriteRequest(
       const validation = sanitizePayload(payload)
       
       if (!validation.valid) {
-        return NextResponse.json(
-          { ok: false, error: validation.error },
+        return {
+          isValid: false,
+          errorResponse: NextResponse.json(
+            { ok: false, error: validation.error },
+            { status: 400 }
+          )
+        }
+      }
+      
+      return { isValid: true, payload }
+    } catch (e) {
+      return {
+        isValid: false,
+        errorResponse: NextResponse.json(
+          { ok: false, error: 'Invalid JSON payload' },
           { status: 400 }
         )
       }
-      
-      // Clone request with validated payload
-      const newRequest = new NextRequest(request, {
-        body: JSON.stringify(payload)
-      })
-      return null // Continue with validated request
-    } catch (e) {
-      return NextResponse.json(
-        { ok: false, error: 'Invalid JSON payload' },
-        { status: 400 }
-      )
     }
   }
   
-  return null // Continue with original request
+  return { isValid: true }
 }
 
 export function validateImageUpload(file: File): { valid: boolean; error?: string } {
