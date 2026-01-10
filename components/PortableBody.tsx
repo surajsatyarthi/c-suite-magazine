@@ -158,6 +158,17 @@ const components: PortableTextComponents = {
     },
     normal: ({ children, value }: any) => {
       const isQ = (value as any)?.__qa === 'Q'
+      const isFirstParagraph = (value as any)?.__isFirstParagraph === true
+      
+      // Lead paragraph styling (first paragraph after title)
+      if (isFirstParagraph) {
+        return (
+          <p className="text-gray-900 leading-relaxed text-xl md:text-2xl font-semibold mb-6">
+            {children}
+          </p>
+        )
+      }
+      
       return (
         <p className={(isQ ? '!font-bold mt-6 mb-2 ' : '') + 'text-gray-700 leading-relaxed'}>
           {children}
@@ -503,11 +514,13 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
   const sanitized = sanitizeBlocks(blocks)
   // Fallback: upgrade heading-like paragraphs when content lacks explicit h2/h3 styles
   const normalized = normalizeBulletLists(normalizeBlocksForHeadings(sanitized))
+  // Mark first paragraph for lead styling
+  const withLeadParagraph = markFirstParagraph(normalized)
   // Determine if interview formatting should be applied via an env flag as a safeguard
   const envEnabled = String(process.env.NEXT_PUBLIC_INTERVIEW_QA_FORMATTER || '').toLowerCase() === 'true'
   const interviewModeResolved = typeof interviewMode === 'boolean' ? interviewMode : envEnabled
-  const finalBlocks = interviewModeResolved ? formatInterviewQA(normalized) : normalized
-  const blockCount = normalized.length
+  const finalBlocks = interviewModeResolved ? formatInterviewQA(withLeadParagraph) : withLeadParagraph
+  const blockCount = withLeadParagraph.length
   const minBlocksForMidAd = 6
   const adsEnabled = !!ads
 
