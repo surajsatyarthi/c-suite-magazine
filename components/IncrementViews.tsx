@@ -9,6 +9,13 @@ export default function IncrementViews({ slug }: Props) {
     const s = String(slug || '').trim()
     if (!s) return
 
+    // Filter out localhost/development traffic
+    const isLocalhost = typeof window !== 'undefined' && 
+      (window.location.hostname === 'localhost' || 
+       window.location.hostname === '127.0.0.1' ||
+       window.location.hostname.includes('localhost'))
+    if (isLocalhost) return
+
     // Basic bot/user-agent guard
     const ua = (typeof navigator !== 'undefined' ? navigator.userAgent : '') || ''
     const isBot = /bot|crawler|spider|prerender|fetch|preview/i.test(ua)
