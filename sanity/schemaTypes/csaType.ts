@@ -129,6 +129,7 @@ export const csaType = defineType({
         defineArrayMember({ type: 'table' }),
         defineArrayMember({ type: 'carousel' }),
         defineArrayMember({ type: 'cta' }),
+        defineArrayMember({ type: 'partnerQuotes' }),
       ],
       validation: (Rule) => Rule.required(),
     }),
