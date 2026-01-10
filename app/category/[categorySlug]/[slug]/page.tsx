@@ -626,39 +626,84 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
 
 
                     {(featuredHeroSrc || post.mainImage) && (
-                      <div
-                        className={'relative w-full rounded-lg overflow-hidden mb-10'}
-                        style={(() => {
-                          if (featuredHeroSrc) return { aspectRatio: featuredHeroAspect || 16 / 9 }
-                          const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
-                          return { aspectRatio: meta || 16 / 9 }
-                        })()}
-                      >
-                        <CXOOptimizedImage
-                          src={
-                            (() => {
-                              if (featuredHeroSrc) return featuredHeroSrc
-                              return post.mainImage?.asset?.url ||
-                                urlFor(post.mainImage!)
-                                  .width(1600)
-                                  .quality(95)
-                                  .auto('format')
-                                  .url()
-                            })()
-                          }
-                          alt={post.mainImage?.alt || post.title}
-                          fill
-                          className={'object-cover object-center'}
-                          quality={95}
-                          hero={true}
-                          priority={true}
-                          sizes={(() => {
-                            return featuredHeroSrc
-                              ? '(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'
-                              : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
+                      // CEO Image Styling for CSA, CXO Interview, Spotlight articles
+                      (isCompanySponsored || isCXOInterview || isSpotlight) ? (
+                        <div className="mt-8 mb-8">
+                          {/* CEO Hero Image - Reduced by 20%, Rounded Corners, No Background */}
+                          <div className="flex justify-center">
+                            <div
+                              className="relative rounded-2xl overflow-hidden shadow-xl border border-gray-200"
+                              style={{
+                                maxWidth: '80%', // Reduced by 20%
+                                width: '100%',
+                                aspectRatio: (() => {
+                                  if (featuredHeroSrc) {
+                                    return featuredHeroAspect || 16 / 9
+                                  }
+                                  const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
+                                  return meta || 16 / 9
+                                })()
+                              }}
+                            >
+                              <CXOOptimizedImage
+                                src={
+                                  (() => {
+                                    if (featuredHeroSrc) return featuredHeroSrc
+                                    return post.mainImage?.asset?.url ||
+                                      urlFor(post.mainImage!)
+                                        .width(1600)
+                                        .quality(95)
+                                        .auto('format')
+                                        .url()
+                                  })()
+                                }
+                                alt={post.mainImage?.alt || post.title}
+                                fill
+                                className="object-contain object-center"
+                                quality={95}
+                                hero={true}
+                                priority={true}
+                                sizes="(max-width: 768px) 80vw, (max-width: 1024px) 70vw, 800px"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        // Standard image styling for regular articles
+                        <div
+                          className={'relative w-full rounded-lg overflow-hidden mb-10'}
+                          style={(() => {
+                            if (featuredHeroSrc) return { aspectRatio: featuredHeroAspect || 16 / 9 }
+                            const meta = post.mainImage?.asset?.metadata?.dimensions?.aspectRatio
+                            return { aspectRatio: meta || 16 / 9 }
                           })()}
-                        />
-                      </div>
+                        >
+                          <CXOOptimizedImage
+                            src={
+                              (() => {
+                                if (featuredHeroSrc) return featuredHeroSrc
+                                return post.mainImage?.asset?.url ||
+                                  urlFor(post.mainImage!)
+                                    .width(1600)
+                                    .quality(95)
+                                    .auto('format')
+                                    .url()
+                              })()
+                            }
+                            alt={post.mainImage?.alt || post.title}
+                            fill
+                            className={'object-cover object-center'}
+                            quality={95}
+                            hero={true}
+                            priority={true}
+                            sizes={(() => {
+                              return featuredHeroSrc
+                                ? '(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'
+                                : '(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 1280px'
+                            })()}
+                          />
+                        </div>
+                      )
                     )}
 
                     {/* Writer name suppressed below main image to avoid duplication */}
