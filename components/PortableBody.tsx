@@ -499,6 +499,22 @@ function formatInterviewQA(blocks: any[]): any[] {
   }
 }
 
+function markFirstParagraph(blocks: any[]): any[] {
+  try {
+    let foundFirst = false
+    return blocks.map((b) => {
+      // Mark the first normal paragraph (not heading, not image, etc.)
+      if (!foundFirst && b._type === 'block' && b.style === 'normal') {
+        foundFirst = true
+        return { ...b, __isFirstParagraph: true }
+      }
+      return b
+    })
+  } catch {
+    return blocks
+  }
+}
+
 export default function PortableBody({ value, ads = true, interviewMode }: PortableBodyProps) {
   // Normalize incoming value to an array of blocks to avoid React child errors
   const blocks = Array.isArray(value)
