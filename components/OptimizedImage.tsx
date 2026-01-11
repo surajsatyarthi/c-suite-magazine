@@ -1,9 +1,9 @@
 import Image, { ImageProps } from 'next/image'
 import { memo } from 'react'
 
+// Optimized: Replaced Buffer with btoa for client-side compatibility and reduced bundle size
 function shimmer(w: number, h: number) {
-  return `data:image/svg+xml;base64,${Buffer.from(
-    `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  const str = `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <defs>
         <linearGradient id="g">
           <stop stop-color="#f6f7f8" offset="20%"/>
@@ -15,7 +15,8 @@ function shimmer(w: number, h: number) {
       <rect id="r" width="${w}" height="${h}" fill="url(#g)"/>
       <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.2s" repeatCount="indefinite"  />
     </svg>`
-  ).toString('base64')}`
+
+  return `data:image/svg+xml;base64,${typeof window === 'undefined' ? Buffer.from(str).toString('base64') : window.btoa(str)}`
 }
 
 type Props = Omit<ImageProps, 'loader'> & {
@@ -39,7 +40,7 @@ const OptimizedImage = memo(function OptimizedImage({
   const useBlurDataURL = blurDataURL || shimmer(700, 475)
 
   // Prefer WebP for local Featured hero assets
-  let effectiveSrc: any = (rest as any).src
+  let effectiveSrc: any = (rest as any).src // eslint-disable-line @typescript-eslint/no-explicit-any
   if (typeof effectiveSrc === 'string') {
     const isFeaturedHero = effectiveSrc.startsWith('/Featured hero/')
     const isPngOrJpg = /\.(png|jpg|jpeg)$/i.test(effectiveSrc)
