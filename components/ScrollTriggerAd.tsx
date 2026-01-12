@@ -20,9 +20,15 @@ export default function ScrollTriggerAd() {
     }
 
     useEffect(() => {
+        if (hasTriggered) return
+
+        let cleanupListener: (() => void) | undefined
+        let throttleTimer: ReturnType<typeof setTimeout> | null = null
+
         // Add a small delay to allow content to load and layout to settle
         const timer = setTimeout(() => {
-            const handleScroll = () => {
+            const checkScroll = () => {
+                throttleTimer = null
                 if (hasTriggered) return
 
                 const scrollTop = window.scrollY
@@ -36,7 +42,6 @@ export default function ScrollTriggerAd() {
 
                 // Only show ad if locale popup has been dismissed
                 if (scrollPercent > SCROLL_THRESHOLD && isLocaleReady()) {
-                    // Pass BOTH ads to the store to trigger the carousel
                     triggerAd([
                         { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },
                         { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || 'Sponsored' }
@@ -44,15 +49,26 @@ export default function ScrollTriggerAd() {
                 }
             }
 
+            const handleScroll = () => {
+                if (!throttleTimer) {
+                    throttleTimer = setTimeout(checkScroll, 200)
+                }
+            }
+
             window.addEventListener('scroll', handleScroll, { passive: true })
+            cleanupListener = () => {
+                window.removeEventListener('scroll', handleScroll)
+                if (throttleTimer) clearTimeout(throttleTimer)
+            }
 
             // Initial check in case we are already scrolled (e.g. reload)
-            handleScroll()
-
-            return () => window.removeEventListener('scroll', handleScroll)
+            checkScroll()
         }, 1000) // 1 second delay
 
-        return () => clearTimeout(timer)
+        return () => {
+            clearTimeout(timer)
+            if (cleanupListener) cleanupListener()
+        }
     }, [triggerAd, hasTriggered])
 
     return null
