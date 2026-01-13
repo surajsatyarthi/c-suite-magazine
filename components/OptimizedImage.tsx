@@ -2,7 +2,10 @@ import Image, { ImageProps } from 'next/image'
 import { memo } from 'react'
 
 function shimmer(w: number, h: number) {
-  return `data:image/svg+xml;base64,${Buffer.from(
+  // Use btoa instead of Buffer to avoid adding Node.js polyfills to client bundle
+  // btoa is available in both modern browsers and Node.js (>=16)
+  const toBase64 = typeof window === 'undefined' ? (str: string) => Buffer.from(str).toString('base64') : (str: string) => window.btoa(str);
+  return `data:image/svg+xml;base64,${toBase64(
     `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <defs>
         <linearGradient id="g">
@@ -15,7 +18,7 @@ function shimmer(w: number, h: number) {
       <rect id="r" width="${w}" height="${h}" fill="url(#g)"/>
       <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.2s" repeatCount="indefinite"  />
     </svg>`
-  ).toString('base64')}`
+  )}`
 }
 
 type Props = Omit<ImageProps, 'loader'> & {
@@ -39,7 +42,7 @@ const OptimizedImage = memo(function OptimizedImage({
   const useBlurDataURL = blurDataURL || shimmer(700, 475)
 
   // Prefer WebP for local Featured hero assets
-  let effectiveSrc: any = (rest as any).src
+  let effectiveSrc: any = (rest as any).src // eslint-disable-line @typescript-eslint/no-explicit-any
   if (typeof effectiveSrc === 'string') {
     const isFeaturedHero = effectiveSrc.startsWith('/Featured hero/')
     const isPngOrJpg = /\.(png|jpg|jpeg)$/i.test(effectiveSrc)
