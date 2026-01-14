@@ -272,7 +272,7 @@ export interface ExecutiveForHub {
   yoy_change_percent: number | null
 }
 
-export async function getAllExecutivesWithCompensation(): Promise<ExecutiveForHub[]> {
+export async function getAllExecutivesWithCompensation(limit?: number): Promise<ExecutiveForHub[]> {
   try {
     const result = await sql`
       SELECT
@@ -308,6 +308,7 @@ export async function getAllExecutivesWithCompensation(): Promise<ExecutiveForHu
       ) previous ON true
       WHERE latest.total_compensation IS NOT NULL
       ORDER BY latest.total_compensation DESC NULLS LAST
+      LIMIT ${limit ?? null}
     `
     return result.rows as ExecutiveForHub[]
   } catch (error) {
