@@ -7,7 +7,7 @@ type WriterPayload = {
   name?: string
   slug?: string
   position?: string
-  bio?: any
+  bio?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   imageAssetId?: string
   twitter?: string
   linkedin?: string
@@ -24,6 +24,7 @@ function buildImage(payload: WriterPayload) {
 
 async function upsertWriter(payload: WriterPayload) {
   const image = buildImage(payload)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const baseDoc: any = {
     _type: 'writer',
     ...(payload.name ? { name: payload.name } : {}),
@@ -68,15 +69,15 @@ async function upsertWriter(payload: WriterPayload) {
 export async function POST(request: NextRequest) {
   try {
     // Validate request with security checks
-    const validationError = await validateWriteRequest(request, {
+    const { valid, error, payload: validatedPayload } = await validateWriteRequest(request, {
       requireReferer: true,
       validateContent: true,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (!valid && error) return error
     
-    const payload = (await request.json()) as WriterPayload
+    const payload = validatedPayload as WriterPayload
     if (!payload || (!payload.name && !payload.slug && !payload.id)) {
       return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 })
     }
@@ -94,15 +95,15 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Validate request with security checks
-    const validationError = await validateWriteRequest(request, {
+    const { valid, error, payload: validatedPayload } = await validateWriteRequest(request, {
       requireReferer: true,
       validateContent: true,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (!valid && error) return error
     
-    const payload = (await request.json()) as WriterPayload
+    const payload = validatedPayload as WriterPayload
     if (!payload || (!payload.id && !payload.slug)) {
       return NextResponse.json({ ok: false, error: 'Provide id or slug for update' }, { status: 400 })
     }

@@ -23,12 +23,12 @@ async function fetchImageStream(url: string): Promise<{ stream: Readable; conten
 export async function POST(request: NextRequest) {
   try {
     // Basic security validation for image uploads
-    const validationError = await validateWriteRequest(request, {
+    const { valid, error } = await validateWriteRequest(request, {
       requireReferer: true,
       allowedContentTypes: ['multipart/form-data', 'application/json']
     })
     
-    if (validationError) return validationError
+    if (!valid && error) return error
     
     const contentTypeHeader = request.headers.get('content-type') || ''
     // Multipart form-data upload path (preferred when sending files)
@@ -91,6 +91,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, assetId: asset._id, image: imageField })
   } catch (e) {
     console.error('[api/images] Image upload failed:', e)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const msg = (e as any)?.message || 'Image upload failed'
     return NextResponse.json({ ok: false, error: msg }, { status: 500 })
   }

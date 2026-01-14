@@ -16,7 +16,7 @@ type ArticlePayload = {
   mainImageAlt?: string
   mainImageCaption?: string
   isFeatured?: boolean
-  body?: any
+  body?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   seo?: { metaTitle?: string; metaDescription?: string }
   readTime?: number
   publishedAt?: string
@@ -42,6 +42,7 @@ async function resolveCategoryRefs(payload: ArticlePayload) {
       `*[_type == "category" && slug.current in $slugs]{ _id, slug }`,
       { slugs: payload.categorySlugs }
     )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (cats || []).map((c: any) => ({ _type: 'reference', _ref: c._id }))
   }
   return undefined
@@ -62,6 +63,7 @@ async function upsertArticle(payload: ArticlePayload) {
   const categoryRefs = await resolveCategoryRefs(payload)
   const mainImage = buildMainImage(payload)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const baseDoc: any = {
     _type: 'post',
     ...(payload.title ? { title: payload.title } : {}),
@@ -113,15 +115,15 @@ async function upsertArticle(payload: ArticlePayload) {
 export async function POST(request: NextRequest) {
   try {
     // Validate request with security checks
-    const validationError = await validateWriteRequest(request, {
+    const { valid, error, payload: validatedPayload } = await validateWriteRequest(request, {
       requireReferer: true,
       validateContent: true,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (!valid && error) return error
     
-    const payload = (await request.json()) as ArticlePayload
+    const payload = validatedPayload as ArticlePayload
     if (!payload || (!payload.title && !payload.slug && !payload.id)) {
       return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 })
     }
@@ -136,15 +138,15 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Validate request with security checks
-    const validationError = await validateWriteRequest(request, {
+    const { valid, error, payload: validatedPayload } = await validateWriteRequest(request, {
       requireReferer: true,
       validateContent: true,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (!valid && error) return error
     
-    const payload = (await request.json()) as ArticlePayload
+    const payload = validatedPayload as ArticlePayload
     if (!payload || (!payload.id && !payload.slug)) {
       return NextResponse.json({ ok: false, error: 'Provide id or slug for update' }, { status: 400 })
     }
