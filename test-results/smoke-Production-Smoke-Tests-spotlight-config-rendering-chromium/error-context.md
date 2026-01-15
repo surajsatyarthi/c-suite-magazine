@@ -1,0 +1,694 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - dialog "Welcome to C-Suite Magazine" [ref=e2]:
+    - generic [ref=e4]:
+      - heading "Welcome to C-Suite Magazine" [level=2] [ref=e5]
+      - paragraph [ref=e6]: Select your country.
+      - generic [ref=e8]:
+        - generic [ref=e9]: Country
+        - generic [ref=e10]:
+          - combobox "Select country" [active] [ref=e11]:
+            - option "🇦🇫 Afghanistan"
+            - option "🇦🇽 Åland Islands"
+            - option "🇦🇱 Albania"
+            - option "🇩🇿 Algeria"
+            - option "🇦🇸 American Samoa"
+            - option "🇦🇩 Andorra"
+            - option "🇦🇴 Angola"
+            - option "🇦🇮 Anguilla"
+            - option "🇦🇶 Antarctica"
+            - option "🇦🇬 Antigua & Barbuda"
+            - option "🇦🇷 Argentina"
+            - option "🇦🇲 Armenia"
+            - option "🇦🇼 Aruba"
+            - option "🇦🇺 Australia"
+            - option "🇦🇹 Austria"
+            - option "🇦🇿 Azerbaijan"
+            - option "🇧🇸 Bahamas"
+            - option "🇧🇭 Bahrain"
+            - option "🇧🇩 Bangladesh"
+            - option "🇧🇧 Barbados"
+            - option "🇧🇾 Belarus"
+            - option "🇧🇪 Belgium"
+            - option "🇧🇿 Belize"
+            - option "🇧🇯 Benin"
+            - option "🇧🇲 Bermuda"
+            - option "🇧🇹 Bhutan"
+            - option "🇧🇴 Bolivia"
+            - option "🇧🇶 Caribbean Netherlands"
+            - option "🇧🇦 Bosnia & Herzegovina"
+            - option "🇧🇼 Botswana"
+            - option "🇧🇻 Bouvet Island"
+            - option "🇧🇷 Brazil"
+            - option "🇮🇴 British Indian Ocean Territory"
+            - option "🇧🇳 Brunei"
+            - option "🇧🇬 Bulgaria"
+            - option "🇧🇫 Burkina Faso"
+            - option "🇧🇮 Burundi"
+            - option "🇨🇻 Cape Verde"
+            - option "🇰🇭 Cambodia"
+            - option "🇨🇲 Cameroon"
+            - option "🇨🇦 Canada"
+            - option "🇰🇾 Cayman Islands"
+            - option "🇨🇫 Central African Republic"
+            - option "🇹🇩 Chad"
+            - option "🇨🇱 Chile"
+            - option "🇨🇳 China"
+            - option "🇨🇽 Christmas Island"
+            - option "🇨🇨 Cocos (Keeling) Islands"
+            - option "🇨🇴 Colombia"
+            - option "🇰🇲 Comoros"
+            - option "🇨🇩 Congo - Kinshasa"
+            - option "🇨🇬 Congo - Brazzaville"
+            - option "🇨🇰 Cook Islands"
+            - option "🇨🇷 Costa Rica"
+            - option "🇨🇮 Côte d’Ivoire"
+            - option "🇭🇷 Croatia"
+            - option "🇨🇺 Cuba"
+            - option "🇨🇼 Curaçao"
+            - option "🇨🇾 Cyprus"
+            - option "🇨🇿 Czechia"
+            - option "🇩🇰 Denmark"
+            - option "🇩🇯 Djibouti"
+            - option "🇩🇲 Dominica"
+            - option "🇩🇴 Dominican Republic"
+            - option "🇪🇨 Ecuador"
+            - option "🇪🇬 Egypt"
+            - option "🇸🇻 El Salvador"
+            - option "🇬🇶 Equatorial Guinea"
+            - option "🇪🇷 Eritrea"
+            - option "🇪🇪 Estonia"
+            - option "🇪🇹 Ethiopia"
+            - option "🇫🇰 Falkland Islands (Islas Malvinas)"
+            - option "🇫🇴 Faroe Islands"
+            - option "🇫🇯 Fiji"
+            - option "🇫🇮 Finland"
+            - option "🇫🇷 France"
+            - option "🇬🇫 French Guiana"
+            - option "🇵🇫 French Polynesia"
+            - option "🇹🇫 French Southern Territories"
+            - option "🇬🇦 Gabon"
+            - option "🇬🇲 Gambia"
+            - option "🇬🇪 Georgia"
+            - option "🇩🇪 Germany"
+            - option "🇬🇭 Ghana"
+            - option "🇬🇮 Gibraltar"
+            - option "🇬🇷 Greece"
+            - option "🇬🇱 Greenland"
+            - option "🇬🇩 Grenada"
+            - option "🇬🇵 Guadeloupe"
+            - option "🇬🇺 Guam"
+            - option "🇬🇹 Guatemala"
+            - option "🇬🇬 Guernsey"
+            - option "🇬🇳 Guinea"
+            - option "🇬🇼 Guinea-Bissau"
+            - option "🇬🇾 Guyana"
+            - option "🇭🇹 Haiti"
+            - option "🇭🇲 Heard & McDonald Islands"
+            - option "🇻🇦 Vatican City"
+            - option "🇭🇳 Honduras"
+            - option "🇭🇰 Hong Kong"
+            - option "🇭🇺 Hungary"
+            - option "🇮🇸 Iceland"
+            - option "🇮🇳 India"
+            - option "🇮🇩 Indonesia"
+            - option "🇮🇷 Iran"
+            - option "🇮🇶 Iraq"
+            - option "🇮🇪 Ireland"
+            - option "🇮🇲 Isle of Man"
+            - option "🇮🇱 Israel"
+            - option "🇮🇹 Italy"
+            - option "🇯🇲 Jamaica"
+            - option "🇯🇵 Japan"
+            - option "🇯🇪 Jersey"
+            - option "🇯🇴 Jordan"
+            - option "🇰🇿 Kazakhstan"
+            - option "🇰🇪 Kenya"
+            - option "🇰🇮 Kiribati"
+            - option "🇰🇵 North Korea"
+            - option "🇰🇷 South Korea"
+            - option "🇰🇼 Kuwait"
+            - option "🇰🇬 Kyrgyzstan"
+            - option "🇱🇦 Laos"
+            - option "🇱🇻 Latvia"
+            - option "🇱🇧 Lebanon"
+            - option "🇱🇸 Lesotho"
+            - option "🇱🇷 Liberia"
+            - option "🇱🇾 Libya"
+            - option "🇱🇮 Liechtenstein"
+            - option "🇱🇹 Lithuania"
+            - option "🇱🇺 Luxembourg"
+            - option "🇲🇴 Macao"
+            - option "🇲🇬 Madagascar"
+            - option "🇲🇼 Malawi"
+            - option "🇲🇾 Malaysia"
+            - option "🇲🇻 Maldives"
+            - option "🇲🇱 Mali"
+            - option "🇲🇹 Malta"
+            - option "🇲🇭 Marshall Islands"
+            - option "🇲🇶 Martinique"
+            - option "🇲🇷 Mauritania"
+            - option "🇲🇺 Mauritius"
+            - option "🇾🇹 Mayotte"
+            - option "🇲🇽 Mexico"
+            - option "🇫🇲 Micronesia"
+            - option "🇲🇩 Moldova"
+            - option "🇲🇨 Monaco"
+            - option "🇲🇳 Mongolia"
+            - option "🇲🇪 Montenegro"
+            - option "🇲🇸 Montserrat"
+            - option "🇲🇦 Morocco"
+            - option "🇲🇿 Mozambique"
+            - option "🇲🇲 Myanmar (Burma)"
+            - option "🇳🇦 Namibia"
+            - option "🇳🇷 Nauru"
+            - option "🇳🇵 Nepal"
+            - option "🇳🇱 Netherlands"
+            - option "🇳🇨 New Caledonia"
+            - option "🇳🇿 New Zealand"
+            - option "🇳🇮 Nicaragua"
+            - option "🇳🇪 Niger"
+            - option "🇳🇬 Nigeria"
+            - option "🇳🇺 Niue"
+            - option "🇳🇫 Norfolk Island"
+            - option "🇲🇰 North Macedonia"
+            - option "🇲🇵 Northern Mariana Islands"
+            - option "🇳🇴 Norway"
+            - option "🇴🇲 Oman"
+            - option "🇵🇰 Pakistan"
+            - option "🇵🇼 Palau"
+            - option "🇵🇸 Palestine"
+            - option "🇵🇦 Panama"
+            - option "🇵🇬 Papua New Guinea"
+            - option "🇵🇾 Paraguay"
+            - option "🇵🇪 Peru"
+            - option "🇵🇭 Philippines"
+            - option "🇵🇳 Pitcairn Islands"
+            - option "🇵🇱 Poland"
+            - option "🇵🇹 Portugal"
+            - option "🇵🇷 Puerto Rico"
+            - option "🇶🇦 Qatar"
+            - option "🇷🇪 Réunion"
+            - option "🇷🇴 Romania"
+            - option "🇷🇺 Russia"
+            - option "🇷🇼 Rwanda"
+            - option "🇧🇱 St. Barthélemy"
+            - option "🇸🇭 St. Helena"
+            - option "🇰🇳 St. Kitts & Nevis"
+            - option "🇱🇨 St. Lucia"
+            - option "🇲🇫 St. Martin"
+            - option "🇵🇲 St. Pierre & Miquelon"
+            - option "🇻🇨 St. Vincent & Grenadines"
+            - option "🇼🇸 Samoa"
+            - option "🇸🇲 San Marino"
+            - option "🇸🇹 São Tomé & Príncipe"
+            - option "🇸🇦 Saudi Arabia"
+            - option "🇸🇳 Senegal"
+            - option "🇷🇸 Serbia"
+            - option "🇸🇨 Seychelles"
+            - option "🇸🇱 Sierra Leone"
+            - option "🇸🇬 Singapore"
+            - option "🇸🇽 Sint Maarten"
+            - option "🇸🇰 Slovakia"
+            - option "🇸🇮 Slovenia"
+            - option "🇸🇧 Solomon Islands"
+            - option "🇸🇴 Somalia"
+            - option "🇿🇦 South Africa"
+            - option "🇬🇸 South Georgia & South Sandwich Islands"
+            - option "🇸🇸 South Sudan"
+            - option "🇪🇸 Spain"
+            - option "🇱🇰 Sri Lanka"
+            - option "🇸🇩 Sudan"
+            - option "🇸🇷 Suriname"
+            - option "🇸🇯 Svalbard & Jan Mayen"
+            - option "🇸🇪 Sweden"
+            - option "🇨🇭 Switzerland"
+            - option "🇸🇾 Syria"
+            - option "🇹🇼 Taiwan"
+            - option "🇹🇯 Tajikistan"
+            - option "🇹🇿 Tanzania"
+            - option "🇹🇭 Thailand"
+            - option "🇹🇱 Timor-Leste"
+            - option "🇹🇬 Togo"
+            - option "🇹🇰 Tokelau"
+            - option "🇹🇴 Tonga"
+            - option "🇹🇹 Trinidad & Tobago"
+            - option "🇹🇳 Tunisia"
+            - option "🇹🇷 Türkiye"
+            - option "🇹🇲 Turkmenistan"
+            - option "🇹🇨 Turks & Caicos Islands"
+            - option "🇹🇻 Tuvalu"
+            - option "🇺🇬 Uganda"
+            - option "🇺🇦 Ukraine"
+            - option "🇦🇪 United Arab Emirates"
+            - option "🇬🇧 United Kingdom"
+            - option "🇺🇸 United States" [selected]
+            - option "🇺🇲 U.S. Outlying Islands"
+            - option "🇺🇾 Uruguay"
+            - option "🇺🇿 Uzbekistan"
+            - option "🇻🇺 Vanuatu"
+            - option "🇻🇪 Venezuela"
+            - option "🇻🇳 Vietnam"
+            - option "🇻🇬 British Virgin Islands"
+            - option "🇻🇮 U.S. Virgin Islands"
+            - option "🇼🇫 Wallis & Futuna"
+            - option "🇪🇭 Western Sahara"
+            - option "🇾🇪 Yemen"
+            - option "🇿🇲 Zambia"
+            - option "🇿🇼 Zimbabwe"
+          - generic: ▾
+      - generic [ref=e12]:
+        - button "Not now" [ref=e13]
+        - button "Continue" [ref=e14]
+      - paragraph [ref=e15]: You can change this anytime from the header.
+  - main [ref=e16]:
+    - navigation "Main navigation" [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - link "C-Suite Magazine - Home" [ref=e20] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e22]:
+              - generic [ref=e23]:
+                - text: C
+                - generic [ref=e24]: "-"
+                - text: SUITE
+              - text: MAGAZINE
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - button "Search" [ref=e27]:
+                - img [ref=e28]
+              - generic:
+                - generic:
+                  - textbox "Search articles..."
+            - button "Change country" [ref=e31]: 🇺🇸
+        - paragraph [ref=e33]: YOUR LEGACY GOES GLOBAL
+      - navigation "Article categories" [ref=e36]:
+        - generic [ref=e37]:
+          - link "View Automotive And Logistics articles" [ref=e38] [cursor=pointer]:
+            - /url: /category/automotive-and-logistics
+            - text: Automotive And Logistics
+          - link "View CXO Interview articles" [ref=e39] [cursor=pointer]:
+            - /url: /category/cxo-interview
+            - text: CXO Interview
+          - link "View Changemakers And Sustainability articles" [ref=e40] [cursor=pointer]:
+            - /url: /category/changemakers-and-sustainability
+            - text: Changemakers And Sustainability
+          - link "View Construction And Mining articles" [ref=e41] [cursor=pointer]:
+            - /url: /category/construction-and-mining
+            - text: Construction And Mining
+          - link "View Education articles" [ref=e42] [cursor=pointer]:
+            - /url: /category/education
+            - text: Education
+          - link "View Healthcare articles" [ref=e43] [cursor=pointer]:
+            - /url: /category/healthcare
+            - text: Healthcare
+          - link "View Innovation articles" [ref=e44] [cursor=pointer]:
+            - /url: /category/innovation
+            - text: Innovation
+          - link "View Leadership articles" [ref=e45] [cursor=pointer]:
+            - /url: /category/leadership
+            - text: Leadership
+          - link "View Money And Finance articles" [ref=e46] [cursor=pointer]:
+            - /url: /category/money-and-finance
+            - text: Money And Finance
+          - link "View Opinion articles" [ref=e47] [cursor=pointer]:
+            - /url: /category/opinion
+            - text: Opinion
+          - link "View Professional Services articles" [ref=e48] [cursor=pointer]:
+            - /url: /category/professional-services
+            - text: Professional Services
+          - link "View Science & Technology articles" [ref=e49] [cursor=pointer]:
+            - /url: /category/science-technology
+            - text: Science & Technology
+          - link "View Startups articles" [ref=e50] [cursor=pointer]:
+            - /url: /category/startups
+            - text: Startups
+    - main [ref=e51]:
+      - generic [ref=e52]:
+        - img "CEO Magazine Hero Image" [ref=e54]
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - img [ref=e60]
+            - text: Leading Global C-Suite Magazine
+          - generic [ref=e62]:
+            - heading "Leadership Innovation Excellence" [level=1] [ref=e63]:
+              - text: Leadership
+              - text: Innovation
+              - text: Excellence
+            - paragraph [ref=e64]: Exclusive insights and strategies for global executives and business leaders
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]: 4M+
+              - generic [ref=e69]: Monthly Readers
+            - generic [ref=e70]:
+              - generic [ref=e71]: 100+
+              - generic [ref=e72]: Fortune 500 CEOs
+            - generic [ref=e73]:
+              - generic [ref=e74]: 40+
+              - generic [ref=e75]: Media Partners
+            - generic [ref=e76]:
+              - generic [ref=e77]: 120+
+              - generic [ref=e78]: Countries
+        - img [ref=e80]
+      - generic [ref=e83]:
+        - heading "Executive in Focus" [level=2] [ref=e85]
+        - generic [ref=e86]:
+          - img "Rich Stinson" [ref=e88]
+          - generic [ref=e89]:
+            - heading "Rich Stinson" [level=3] [ref=e90]
+            - paragraph [ref=e91]: President & CEO, Southwire Company
+            - paragraph [ref=e92]: Visionary Leader Powering America’s Electrification Future
+            - link "Read Exclusive Interview" [ref=e93] [cursor=pointer]:
+              - /url: https://csuitemagazine.global/category/cxo-interview/rich-stinson-visionary-leader-powering-america-s-electrification-future
+              - text: Read Exclusive Interview
+              - img [ref=e94]
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - heading "C-Suite Spotlight" [level=2] [ref=e99]
+          - paragraph [ref=e100]: Browse our collection of exclusive issues featuring the world's top executives
+        - generic [ref=e101]:
+          - 'link "Stella Ambrose: Visionary Trailblazer in Sustainable Palm Oil Leadership View issue →" [ref=e102] [cursor=pointer]':
+            - /url: /category/cxo-interview/stella-ambrose-deputy-ceo-sawit-kinabalu
+            - generic [ref=e103]:
+              - 'img "Stella Ambrose: Visionary Trailblazer in Sustainable Palm Oil Leadership" [ref=e104]'
+              - paragraph [ref=e107]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e108] [cursor=pointer]:
+            - /url: /category/cxo-interview/bill-faruki
+            - generic [ref=e109]:
+              - img "C‑Suite Magazine" [ref=e110]
+              - paragraph [ref=e113]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e114] [cursor=pointer]:
+            - /url: /category/cxo-interview/stoyana-natseva
+            - generic [ref=e115]:
+              - img "C‑Suite Magazine" [ref=e116]
+              - paragraph [ref=e119]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e120] [cursor=pointer]:
+            - /url: /category/cxo-interview/brianne-howey
+            - generic [ref=e121]:
+              - img "C‑Suite Magazine" [ref=e122]
+              - paragraph [ref=e125]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e126] [cursor=pointer]:
+            - /url: /category/cxo-interview/dr-basma-ghandourah
+            - generic [ref=e127]:
+              - img "C‑Suite Magazine" [ref=e128]
+              - paragraph [ref=e131]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e132] [cursor=pointer]:
+            - /url: /category/cxo-interview/erin-krueger
+            - generic [ref=e133]:
+              - img "C‑Suite Magazine" [ref=e134]
+              - paragraph [ref=e137]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e138] [cursor=pointer]:
+            - /url: /category/cxo-interview/pankaj-bansal
+            - generic [ref=e139]:
+              - img "C‑Suite Magazine" [ref=e140]
+              - paragraph [ref=e143]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e144] [cursor=pointer]:
+            - /url: /category/cxo-interview/john-zangardi
+            - generic [ref=e145]:
+              - img "C‑Suite Magazine" [ref=e146]
+              - paragraph [ref=e149]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e150] [cursor=pointer]:
+            - /url: /category/cxo-interview/swami-aniruddha
+            - generic [ref=e151]:
+              - img "C‑Suite Magazine" [ref=e152]
+              - paragraph [ref=e155]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e156] [cursor=pointer]:
+            - /url: /category/cxo-interview/bryce-tully
+            - generic [ref=e157]:
+              - img "C‑Suite Magazine" [ref=e158]
+              - paragraph [ref=e161]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e162] [cursor=pointer]:
+            - /url: /category/cxo-interview/cal-riley
+            - generic [ref=e163]:
+              - img "C‑Suite Magazine" [ref=e164]
+              - paragraph [ref=e167]: View issue →
+          - link "C‑Suite Magazine View issue →" [ref=e168] [cursor=pointer]:
+            - /url: /category/cxo-interview/dean-fealk
+            - generic [ref=e169]:
+              - img "C‑Suite Magazine" [ref=e170]
+              - paragraph [ref=e173]: View issue →
+      - generic [ref=e175]:
+        - generic [ref=e176]:
+          - heading "Industry Juggernauts" [level=2] [ref=e177]
+          - paragraph [ref=e178]: Leading the charge in global business transformation
+        - generic [ref=e179]:
+          - link "Elon Musk View issue →" [ref=e180] [cursor=pointer]:
+            - /url: /category/innovation/elon-musk-building-future-civilization-scale
+            - generic [ref=e181]:
+              - img "Elon Musk" [ref=e182]
+              - paragraph [ref=e185]: View issue →
+          - link "Ratan Tata View issue →" [ref=e186] [cursor=pointer]:
+            - /url: /category/leadership/ratan-tata-legacy-ethical-leadership
+            - generic [ref=e187]:
+              - img "Ratan Tata" [ref=e188]
+              - paragraph [ref=e191]: View issue →
+          - link "Bhavesh Aggarwal View issue →" [ref=e192] [cursor=pointer]:
+            - /url: /category/innovation/bhavesh-aggarwal-india-electric-ai-maverick
+            - generic [ref=e193]:
+              - img "Bhavesh Aggarwal" [ref=e194]
+              - paragraph [ref=e197]: View issue →
+          - link "Ritesh Agarwal View issue →" [ref=e198] [cursor=pointer]:
+            - /url: /category/innovation/ritesh-agarwal-billion-dollar-hostel-kid-rewrote-global-hospitality
+            - generic [ref=e199]:
+              - img "Ritesh Agarwal" [ref=e200]
+              - paragraph [ref=e203]: View issue →
+          - link "Amin H. Nasser View issue →" [ref=e204] [cursor=pointer]:
+            - /url: /category/leadership/amin-nasser-steady-hand-guiding-energy-next-chapter
+            - generic [ref=e205]:
+              - img "Amin H. Nasser" [ref=e206]
+              - paragraph [ref=e209]: View issue →
+          - link "Chamath Palihapitiya View issue →" [ref=e210] [cursor=pointer]:
+            - /url: /category/innovation/chamath-palihapitiya-spac-king-climate-tech-rebel
+            - generic [ref=e211]:
+              - img "Chamath Palihapitiya" [ref=e212]
+              - paragraph [ref=e215]: View issue →
+          - link "Yi He View issue →" [ref=e216] [cursor=pointer]:
+            - /url: /category/innovation/yi-he-village-roots-co-ceo-crypto-global-gateway
+            - generic [ref=e217]:
+              - img "Yi He" [ref=e218]
+              - paragraph [ref=e221]: View issue →
+          - link "Mohamed Alabbar View issue →" [ref=e222] [cursor=pointer]:
+            - /url: /category/leadership/mohamed-alabbar-dubai-master-builder-urban-innovation
+            - generic [ref=e223]:
+              - img "Mohamed Alabbar" [ref=e224]
+              - paragraph [ref=e227]: View issue →
+          - link "Murray Auchincloss View issue →" [ref=e228] [cursor=pointer]:
+            - /url: /category/leadership/murray-auchincloss-pragmatic-reset-steering-bp-value
+            - generic [ref=e229]:
+              - img "Murray Auchincloss" [ref=e230]
+              - paragraph [ref=e233]: View issue →
+      - generic [ref=e234]:
+        - heading "Guest Writers" [level=2] [ref=e236]
+        - generic [ref=e237]:
+          - link "Carmine Gallo Carmine Gallo Keynote Speaker, Bestselling Author, Communication Coach at Gallo Communications Group" [ref=e238] [cursor=pointer]:
+            - /url: /author/carmine-gallo
+            - generic [ref=e239]:
+              - img "Carmine Gallo" [ref=e241]
+              - heading "Carmine Gallo" [level=3] [ref=e242]
+              - paragraph [ref=e243]: Keynote Speaker, Bestselling Author, Communication Coach at Gallo Communications Group
+          - link "Mario Armstong Mario Armstong Motivator. Entrepreneur. Contributor, 'NBC TODAY Show.' Emmy Award-Winning Host, 'Never Settle Show'" [ref=e244] [cursor=pointer]:
+            - /url: /author/mario-armstong
+            - generic [ref=e245]:
+              - img "Mario Armstong" [ref=e247]
+              - heading "Mario Armstong" [level=3] [ref=e248]
+              - paragraph [ref=e249]: Motivator. Entrepreneur. Contributor, 'NBC TODAY Show.' Emmy Award-Winning Host, 'Never Settle Show'
+          - link "Peter Daisyme Peter Daisyme Co-founder of Hostt at Hostt" [ref=e250] [cursor=pointer]:
+            - /url: /author/peter-daisyme
+            - generic [ref=e251]:
+              - img "Peter Daisyme" [ref=e253]
+              - heading "Peter Daisyme" [level=3] [ref=e254]
+              - paragraph [ref=e255]: Co-founder of Hostt at Hostt
+          - link "Aytekin Tank Aytekin Tank Entrepreneur; Founder and CEO, Jotform at Jotform Inc." [ref=e256] [cursor=pointer]:
+            - /url: /author/aytekin-tank
+            - generic [ref=e257]:
+              - img "Aytekin Tank" [ref=e259]
+              - heading "Aytekin Tank" [level=3] [ref=e260]
+              - paragraph [ref=e261]: Entrepreneur; Founder and CEO, Jotform at Jotform Inc.
+          - link "Adrian Falk Adrian Falk Founder & CEO of Believe Advertising & PR at Believe Advertising & PR" [ref=e262] [cursor=pointer]:
+            - /url: /author/adrian-falk
+            - generic [ref=e263]:
+              - img "Adrian Falk" [ref=e265]
+              - heading "Adrian Falk" [level=3] [ref=e266]
+              - paragraph [ref=e267]: Founder & CEO of Believe Advertising & PR at Believe Advertising & PR
+          - link "Andres Tovar Andres Tovar Co-Founder of Noetic Marketer | Growth Consultant | Speaker at Noetic Marketer Inc." [ref=e268] [cursor=pointer]:
+            - /url: /author/andres-tovar
+            - generic [ref=e269]:
+              - img "Andres Tovar" [ref=e271]
+              - heading "Andres Tovar" [level=3] [ref=e272]
+              - paragraph [ref=e273]: Co-Founder of Noetic Marketer | Growth Consultant | Speaker at Noetic Marketer Inc.
+          - link "Sherina Kapany Sherina Kapany Founder, SunStrategic" [ref=e274] [cursor=pointer]:
+            - /url: /author/sherina-kapany
+            - generic [ref=e275]:
+              - img "Sherina Kapany" [ref=e277]
+              - heading "Sherina Kapany" [level=3] [ref=e278]
+              - paragraph [ref=e279]: Founder, SunStrategic
+          - link "Elisette Carlson Elisette Carlson Founder at SMACK! Media" [ref=e280] [cursor=pointer]:
+            - /url: /author/elisette-carlson
+            - generic [ref=e281]:
+              - img "Elisette Carlson" [ref=e283]
+              - heading "Elisette Carlson" [level=3] [ref=e284]
+              - paragraph [ref=e285]: Founder at SMACK! Media
+      - region "Latest Insights" [ref=e286]:
+        - generic [ref=e287]:
+          - heading "Latest Insights" [level=2] [ref=e289]
+          - feed "Latest articles" [ref=e290]:
+            - 'link "Read article: Steve Jobs’ 7 Principles for Unstoppable Success by writer Carmine Gallo" [ref=e291] [cursor=pointer]':
+              - /url: /category/opinion/steve-jobs-7-principles-for-unstoppable-success
+              - article "Steve Jobs’ 7 Principles for Unstoppable Success" [ref=e292]:
+                - generic [ref=e293]:
+                  - img "Man with biography of Steve Jobs" [ref=e294]
+                  - 'generic "Category: Opinion" [ref=e295]': Opinion
+                - generic [ref=e296]:
+                  - heading "Steve Jobs’ 7 Principles for Unstoppable Success" [level=4] [ref=e297]
+                  - generic [ref=e298]:
+                    - 'generic "Writer: Carmine Gallo" [ref=e299]': Carmine Gallo
+                    - 'generic "Views: 5M+ million" [ref=e300]':
+                      - img [ref=e301]
+                      - text: 5M+
+            - 'link "Read article: The One-Sentence Rule: If You Can''t Pitch It in 10 Seconds, You Can''t Pitch It by writer Adrian Falk" [ref=e304] [cursor=pointer]':
+              - /url: /category/innovation/one-sentence-rule-pitch-idea-stick
+              - 'article "The One-Sentence Rule: If You Can''t Pitch It in 10 Seconds, You Can''t Pitch It" [ref=e305]':
+                - generic [ref=e306]:
+                  - 'img "Feature image for The One-Sentence Rule: If You Can''t Pitch It in 10 Seconds, You Can''t Pitch It" [ref=e307]'
+                  - 'generic "Category: Innovation" [ref=e308]': Innovation
+                - generic [ref=e309]:
+                  - 'heading "The One-Sentence Rule: If You Can''t Pitch It in 10 Seconds, You Can''t Pitch It" [level=4] [ref=e310]'
+                  - generic [ref=e311]:
+                    - 'generic "Writer: Adrian Falk" [ref=e312]': Adrian Falk
+                    - 'generic "Views: 4.5 M million" [ref=e313]':
+                      - img [ref=e314]
+                      - text: 4.5 M
+            - 'link "Read article: The Asynchronous Enterprise: Why Meetings are the Enemy of Scale by writer Adrian Falk" [ref=e317] [cursor=pointer]':
+              - /url: /category/leadership/asynchronous-enterprise-meetings-enemy-scale
+              - 'article "The Asynchronous Enterprise: Why Meetings are the Enemy of Scale" [ref=e318]':
+                - generic [ref=e319]:
+                  - 'img "Unique feature image for The Asynchronous Enterprise: Why Meetings are the Enemy of Scale" [ref=e320]'
+                  - 'generic "Category: Leadership" [ref=e321]': Leadership
+                - generic [ref=e322]:
+                  - 'heading "The Asynchronous Enterprise: Why Meetings are the Enemy of Scale" [level=4] [ref=e323]'
+                  - generic [ref=e324]:
+                    - 'generic "Writer: Adrian Falk" [ref=e325]': Adrian Falk
+                    - 'generic "Views: 4.4 M million" [ref=e326]':
+                      - img [ref=e327]
+                      - text: 4.4 M
+            - 'link "Read article: Cloud Sovereignty: Why Your Data Strategy is Your Geopolitical Strategy by writer Adrian Falk" [ref=e330] [cursor=pointer]':
+              - /url: /category/science-technology/cloud-sovereignty-data-strategy-geopolitical-strategy
+              - 'article "Cloud Sovereignty: Why Your Data Strategy is Your Geopolitical Strategy" [ref=e331]':
+                - generic [ref=e332]:
+                  - 'img "Feature image for Cloud Sovereignty: Why Your Data Strategy is Your Geopolitical Strategy" [ref=e333]'
+                  - 'generic "Category: Science & Technology" [ref=e334]': Science & Technology
+                - generic [ref=e335]:
+                  - 'heading "Cloud Sovereignty: Why Your Data Strategy is Your Geopolitical Strategy" [level=4] [ref=e336]'
+                  - generic [ref=e337]:
+                    - 'generic "Writer: Adrian Falk" [ref=e338]': Adrian Falk
+                    - 'generic "Views: 4.1 M million" [ref=e339]':
+                      - img [ref=e340]
+                      - text: 4.1 M
+            - 'link "Read article: Supreet Nagi''s Tri-Stage Data Encryption Model by writer Aisha Farouk" [ref=e343] [cursor=pointer]':
+              - /url: /category/cxo-interview/supreet-nagi
+              - article "Supreet Nagi's Tri-Stage Data Encryption Model" [ref=e344]:
+                - generic [ref=e345]:
+                  - img "Portrait of Supreet Nagi" [ref=e346]
+                  - 'generic "Category: CXO Interview" [ref=e347]': CXO Interview
+                - generic [ref=e348]:
+                  - heading "Supreet Nagi's Tri-Stage Data Encryption Model" [level=4] [ref=e349]
+                  - paragraph [ref=e350]: Forward-Thinking Quantum-Resistant Data Protection Delve into Supreet Nagi’s inclusive, tri-stage model for data encryption.
+                  - generic [ref=e351]:
+                    - 'generic "Writer: Aisha Farouk" [ref=e352]': Aisha Farouk
+                    - 'generic "Views: 4.7 M million" [ref=e353]':
+                      - img [ref=e354]
+                      - text: 4.7 M
+            - 'link "Read article: Unlocking Executive Performance Through Daily Movement by writer Raj Patel" [ref=e357] [cursor=pointer]':
+              - /url: /category/healthcare/unlocking-executive-performance-through-daily-movement
+              - article "Unlocking Executive Performance Through Daily Movement" [ref=e358]:
+                - generic [ref=e359]:
+                  - img "Unlocking Executive Performance Through Daily Movement" [ref=e360]
+                  - 'generic "Category: Healthcare" [ref=e361]': Healthcare
+                - generic [ref=e362]:
+                  - heading "Unlocking Executive Performance Through Daily Movement" [level=4] [ref=e363]
+                  - generic [ref=e364]:
+                    - 'generic "Writer: Raj Patel" [ref=e365]': Raj Patel
+                    - 'generic "Views: 5M+ million" [ref=e366]':
+                      - img [ref=e367]
+                      - text: 5M+
+          - link "View all latest insights" [ref=e371] [cursor=pointer]:
+            - /url: /archive
+            - text: Read More
+      - generic [ref=e374]:
+        - generic [ref=e375]:
+          - heading "Executive Compensation Data" [level=2] [ref=e376]
+          - paragraph [ref=e377]: Explore detailed salary breakdowns, stock awards, and total compensation packages for America's top executives
+        - generic [ref=e380]:
+          - generic [ref=e381]:
+            - heading "Highest Paid CEOs 2024" [level=3] [ref=e382]
+            - paragraph [ref=e383]: Access comprehensive compensation data for top executives including base salary, bonuses, stock awards, and total pay packages. Compare year-over-year changes and understand executive pay structures.
+            - list [ref=e384]:
+              - listitem [ref=e385]:
+                - generic [ref=e386]: ✓
+                - text: Detailed 5-year compensation history
+              - listitem [ref=e387]:
+                - generic [ref=e388]: ✓
+                - text: Complete salary breakdown by component
+              - listitem [ref=e389]:
+                - generic [ref=e390]: ✓
+                - text: Year-over-year trend analysis
+            - link "Explore Executive Salaries →" [ref=e391] [cursor=pointer]:
+              - /url: /executive-salaries
+          - generic [ref=e392]:
+            - heading "Top 3 Executives by Total Compensation" [level=4] [ref=e393]
+            - generic [ref=e394]:
+              - generic [ref=e395]:
+                - generic [ref=e396]:
+                  - generic [ref=e397]: "🏆 #1"
+                  - generic [ref=e398]: $79.1M
+                - generic [ref=e399]: Satya Nadella, Microsoft Corporation
+              - generic [ref=e400]:
+                - generic [ref=e401]:
+                  - generic [ref=e402]: "🥈 #2"
+                  - generic [ref=e403]: $74.6M
+                - generic [ref=e404]: Tim Cook, Apple Inc.
+              - generic [ref=e405]:
+                - generic [ref=e406]:
+                  - generic [ref=e407]: "🥉 #3"
+                  - generic [ref=e408]: $41.1M
+                - generic [ref=e409]: Bob Iger, The Walt Disney Company
+    - generic [ref=e410]:
+      - 'link "Elevate Your Executive Presence: Professional LinkedIn Management by C-Suite Brand Agency →" [ref=e412] [cursor=pointer]':
+        - /url: https://www.csuitebrand.agency
+      - generic [ref=e413]:
+        - generic [ref=e414]:
+          - generic [ref=e415]:
+            - generic [ref=e417]:
+              - generic [ref=e418]:
+                - text: C
+                - generic [ref=e419]: "-"
+                - text: SUITE
+              - text: MAGAZINE
+            - paragraph [ref=e420]: YOUR LEGACY GOES GLOBAL
+          - navigation "Footer links" [ref=e422]:
+            - list [ref=e423]:
+              - listitem [ref=e424]:
+                - link "About Us" [ref=e425] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e426]:
+                - link "Contact Us" [ref=e427] [cursor=pointer]:
+                  - /url: /contact
+              - listitem [ref=e428]:
+                - link "Magazine Archive" [ref=e429] [cursor=pointer]:
+                  - /url: /archive
+              - listitem [ref=e430]:
+                - link "Executive Salaries" [ref=e431] [cursor=pointer]:
+                  - /url: /executive-salaries
+              - listitem [ref=e432]:
+                - link "Privacy Policy" [ref=e433] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=e434]:
+                - link "Terms & Conditions" [ref=e435] [cursor=pointer]:
+                  - /url: /terms
+        - generic [ref=e437]:
+          - paragraph [ref=e438]: © 2026 C-Suite Magazine. All Rights Reserved.
+          - paragraph [ref=e439]: v3.28.2154
+  - alert [ref=e440]
+```
