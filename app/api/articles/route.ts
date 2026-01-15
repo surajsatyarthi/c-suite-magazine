@@ -113,15 +113,15 @@ async function upsertArticle(payload: ArticlePayload) {
 export async function POST(request: NextRequest) {
   try {
     // Validate request with security checks
-    const validationError = await validateWriteRequest(request, {
+    const { error, payload: validatedPayload } = await validateWriteRequest<ArticlePayload>(request, {
       requireReferer: true,
       validateContent: true,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (error) return error
     
-    const payload = (await request.json()) as ArticlePayload
+    const payload = validatedPayload!
     if (!payload || (!payload.title && !payload.slug && !payload.id)) {
       return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 })
     }
@@ -136,15 +136,15 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Validate request with security checks
-    const validationError = await validateWriteRequest(request, {
+    const { error, payload: validatedPayload } = await validateWriteRequest<ArticlePayload>(request, {
       requireReferer: true,
       validateContent: true,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (error) return error
     
-    const payload = (await request.json()) as ArticlePayload
+    const payload = validatedPayload!
     if (!payload || (!payload.id && !payload.slug)) {
       return NextResponse.json({ ok: false, error: 'Provide id or slug for update' }, { status: 400 })
     }

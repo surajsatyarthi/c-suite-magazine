@@ -5,13 +5,13 @@ import { validateWriteRequest } from '@/lib/security'
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting for view updates (more lenient than write operations)
-    const validationError = await validateWriteRequest(request, {
+    const { error } = await validateWriteRequest(request, {
       requireReferer: false, // Allow direct requests for view counting
       validateContent: false,
       allowedContentTypes: ['application/json']
     })
     
-    if (validationError) return validationError
+    if (error) return error
     
     const body = await request.json()
     const { slug } = body || {}

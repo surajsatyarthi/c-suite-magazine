@@ -55,6 +55,7 @@ function validateContentType(request: NextRequest, expectedTypes: string[]): boo
   return expectedTypes.some(type => contentType.includes(type))
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sanitizePayload(payload: any): { valid: boolean; error?: string } {
   if (!payload || typeof payload !== 'object') {
     return { valid: false, error: 'Invalid payload format' }
@@ -82,39 +83,49 @@ function sanitizePayload(payload: any): { valid: boolean; error?: string } {
   return { valid: true }
 }
 
-export async function validateWriteRequest(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function validateWriteRequest<T = any>(
   request: NextRequest, 
   options: {
     requireReferer?: boolean
     validateContent?: boolean
     allowedContentTypes?: string[]
   } = {}
-): Promise<NextResponse | null> {
+): Promise<{ error: null; payload: T | null } | { error: NextResponse; payload: null }> {
   const ip = getClientIP(request)
   
   // Rate limiting check
   if (isRateLimited(ip)) {
-    return NextResponse.json(
-      { ok: false, error: 'Rate limit exceeded. Please try again later.' },
-      { status: 429 }
-    )
+    return {
+      error: NextResponse.json(
+        { ok: false, error: 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      ),
+      payload: null
+    }
   }
   
   // Referer validation (optional but recommended)
   if (options.requireReferer && !isValidReferer(request)) {
-    return NextResponse.json(
-      { ok: false, error: 'Invalid request origin' },
-      { status: 403 }
-    )
+    return {
+      error: NextResponse.json(
+        { ok: false, error: 'Invalid request origin' },
+        { status: 403 }
+      ),
+      payload: null
+    }
   }
   
   // Content type validation
   if (options.allowedContentTypes?.length) {
     if (!validateContentType(request, options.allowedContentTypes)) {
-      return NextResponse.json(
-        { ok: false, error: 'Invalid content type' },
-        { status: 400 }
-      )
+      return {
+        error: NextResponse.json(
+          { ok: false, error: 'Invalid content type' },
+          { status: 400 }
+        ),
+        payload: null
+      }
     }
   }
   
@@ -125,26 +136,28 @@ export async function validateWriteRequest(
       const validation = sanitizePayload(payload)
       
       if (!validation.valid) {
-        return NextResponse.json(
-          { ok: false, error: validation.error },
-          { status: 400 }
-        )
+        return {
+          error: NextResponse.json(
+            { ok: false, error: validation.error },
+            { status: 400 }
+          ),
+          payload: null
+        }
       }
       
-      // Clone request with validated payload
-      const newRequest = new NextRequest(request, {
-        body: JSON.stringify(payload)
-      })
-      return null // Continue with validated request
-    } catch (e) {
-      return NextResponse.json(
-        { ok: false, error: 'Invalid JSON payload' },
-        { status: 400 }
-      )
+      return { error: null, payload: payload as T }
+    } catch {
+      return {
+        error: NextResponse.json(
+          { ok: false, error: 'Invalid JSON payload' },
+          { status: 400 }
+        ),
+        payload: null
+      }
     }
   }
   
-  return null // Continue with original request
+  return { error: null, payload: null }
 }
 
 export function validateImageUpload(file: File): { valid: boolean; error?: string } {
