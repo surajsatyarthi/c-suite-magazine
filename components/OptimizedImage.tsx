@@ -2,20 +2,21 @@ import Image, { ImageProps } from 'next/image'
 import { memo } from 'react'
 
 function shimmer(w: number, h: number) {
-  return `data:image/svg+xml;base64,${Buffer.from(
-    `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="g">
-          <stop stop-color="#f6f7f8" offset="20%"/>
-          <stop stop-color="#edeef1" offset="50%"/>
-          <stop stop-color="#f6f7f8" offset="70%"/>
-        </linearGradient>
-      </defs>
-      <rect width="${w}" height="${h}" fill="#f6f7f8"/>
-      <rect id="r" width="${w}" height="${h}" fill="url(#g)"/>
-      <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.2s" repeatCount="indefinite"  />
-    </svg>`
-  ).toString('base64')}`
+  // Use btoa instead of Buffer to avoid Node.js polyfills in client bundles
+  const svg = `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="g">
+        <stop stop-color="#f6f7f8" offset="20%"/>
+        <stop stop-color="#edeef1" offset="50%"/>
+        <stop stop-color="#f6f7f8" offset="70%"/>
+      </linearGradient>
+    </defs>
+    <rect width="${w}" height="${h}" fill="#f6f7f8"/>
+    <rect id="r" width="${w}" height="${h}" fill="url(#g)"/>
+    <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.2s" repeatCount="indefinite"  />
+  </svg>`
+
+  return `data:image/svg+xml;base64,${typeof window === 'undefined' ? Buffer.from(svg).toString('base64') : window.btoa(svg)}`
 }
 
 type Props = Omit<ImageProps, 'loader'> & {
@@ -39,6 +40,7 @@ const OptimizedImage = memo(function OptimizedImage({
   const useBlurDataURL = blurDataURL || shimmer(700, 475)
 
   // Prefer WebP for local Featured hero assets
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let effectiveSrc: any = (rest as any).src
   if (typeof effectiveSrc === 'string') {
     const isFeaturedHero = effectiveSrc.startsWith('/Featured hero/')
