@@ -23,14 +23,13 @@ export async function POST(req: NextRequest) {
   const rawBody = await req.text()
   const ok = verifySignature(rawBody, sig, secret)
 
-  // Allow fallback via query param for testing if signature missing
-  const testSecret = req.nextUrl.searchParams.get('secret')
-  const authorized = ok || (secret && testSecret === secret)
+  // Strict signature verification
+  const authorized = ok
   if (!authorized) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }
 
-  let body: any
+  let body: any // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
     body = JSON.parse(rawBody)
   } catch {
