@@ -3,7 +3,7 @@ name: Daily Sanity Backup (Google Drive)
 on:
   schedule:
     # Run at 00:00 IST (18:30 UTC) every day
-    - cron: '30 18 * * *'
+    - cron: "30 18 * * *"
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -19,39 +19,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
-          cache: 'pnpm'
+          node-version: "22"
+          cache: "pnpm"
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Sanity CLI
-        run: npm install -g @sanity/cli
-
-      - name: Export Sanity Dataset
+      - name: Run Sanity Backup
         env:
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: production
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-        run: |
-          # Create backups directory
-          mkdir -p backups
-          
-          # Generate filename with timestamp
-          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-          FILENAME="sanity-backup-$TIMESTAMP.tar.gz"
-          
-          # Export dataset (defaulting to 'production')
-          sanity dataset export production "backups/$FILENAME" --project-id ${{ secrets.SANITY_PROJECT_ID }} --dataset production
-
-          echo "BACKUP_FILENAME=$FILENAME" >> $GITHUB_ENV
-          echo "BACKUP_PATH=backups/$FILENAME" >> $GITHUB_ENV
-
-
-      - name: Upload to Google Drive
-        env:
-          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
           GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
           GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
-          BACKUP_PATH: ${{ env.BACKUP_PATH }}
-          BACKUP_FILENAME: ${{ env.BACKUP_FILENAME }}
-        run: node scripts/upload-to-drive.js
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+        run: npx tsx scripts/backup-sanity.ts
