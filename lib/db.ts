@@ -7,7 +7,8 @@ import 'server-only'
  */
 
 import { sql } from '@vercel/postgres'
-import { guardian } from './guardian'
+// Guardian import removed as file is missing
+// import { guardian } from './guardian'
 export { sql }
 
 // Type definitions
@@ -277,7 +278,7 @@ export interface ExecutiveForHub {
 
 export async function getAllExecutivesWithCompensation(limit: number = 10000): Promise<ExecutiveForHub[]> {
   try {
-    const result = await guardian.monitor(sql`
+    const result = await sql`
       SELECT
         e.id,
         e.full_name,
@@ -312,7 +313,7 @@ export async function getAllExecutivesWithCompensation(limit: number = 10000): P
       WHERE latest.total_compensation IS NOT NULL
       ORDER BY latest.total_compensation DESC NULLS LAST
       LIMIT ${limit}
-    `, 'getAllExecutivesWithCompensation')
+    `
     return result.rows as ExecutiveForHub[]
   } catch (error) {
     console.error('[db] Failed to fetch executives with compensation:', error)
