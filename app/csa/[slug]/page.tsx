@@ -543,7 +543,13 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
             dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('article', {
               title: post.title,
               description: sanitizeExcerpt(post.excerpt || firstBlockText || bodyText || '')?.substring(0, 160) || undefined,
-              image: post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
+              image: (() => {
+                try {
+                  return post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined)
+                } catch (e) {
+                  return undefined
+                }
+              })(),
               publishedTime: post.publishedAt,
               writer: post.writer?.name,
               url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
@@ -586,7 +592,13 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                           <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
                             {post.writer.image || post.writer.imageUrl ? (
                               <OptimizedImage
-                                src={post.writer.imageUrl || urlFor(post.writer.image!).width(128).height(128).auto('format').url()}
+                                src={(() => {
+                                  try {
+                                    return post.writer.imageUrl || urlFor(post.writer.image!).width(128).height(128).auto('format').url()
+                                  } catch (e) {
+                                    return '/placeholder-writer.png'
+                                  }
+                                })()}
                                 alt={post.writer.name}
                                 fill
                                 className="object-contain"
@@ -716,7 +728,13 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                           <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200">
                             {post.writer.image || post.writer.imageUrl ? (
                               <OptimizedImage
-                                src={post.writer.imageUrl || urlFor(post.writer.image!).width(256).height(256).auto('format').url()}
+                                src={(() => {
+                                  try {
+                                    return post.writer.imageUrl || urlFor(post.writer.image!).width(256).height(256).auto('format').url()
+                                  } catch (e) {
+                                    return '/placeholder-writer.png'
+                                  }
+                                })()}
                                 alt={post.writer.name}
                                 fill
                                 className="object-cover"
@@ -774,15 +792,17 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                               prefetch
                               className="block group"
                             >
-                              {relatedPost.mainImage && (
-                                <div className="relative w-full h-48 mb-3 rounded overflow-hidden">
-                                  <OptimizedImage
-                                    src={urlFor(relatedPost.mainImage).width(400).height(300).auto('format').url()}
-                                    alt={relatedPost.mainImage.alt || relatedPost.title}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                  />
+                              {relatedPost.mainImage && (() => {
+                                try {
+                                  return (
+                                    <div className="relative w-full h-48 mb-3 rounded overflow-hidden">
+                                      <OptimizedImage
+                                        src={urlFor(relatedPost.mainImage).width(400).height(300).auto('format').url()}
+                                        alt={relatedPost.mainImage.alt || relatedPost.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                      />
                                 </div>
                               )}
                               <h4 className="text-lg font-serif font-normal text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-2">
