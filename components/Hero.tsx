@@ -3,7 +3,11 @@ import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 
 export default function Hero({ bannerImage }: { bannerImage?: any }) {
-  const heroSrc = bannerImage ? urlFor(bannerImage).width(1920).height(1080).url() : "/hero-image.webp"
+  // UAQS v2.2 Hardened: Ensure bannerImage is a valid Sanity image object before builder call
+  const isValidImage = (img: any) => img && (img.asset || img._ref)
+  const heroSrc = isValidImage(bannerImage) 
+    ? urlFor(bannerImage).width(1920).height(1080).quality(90).auto('format').url() 
+    : "/hero-image.webp"
 
   return (
     <section className="dark-section relative h-[600px] md:h-[700px] lg:h-[800px] bg-[#082945]">

@@ -36,12 +36,16 @@ export default async function GuestAuthors() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-                {authors.map((author: any) => (
-                    <Link
-                        href={`/author/${author.slug.current}`}
-                        key={author._id}
-                        className="group h-full"
-                    >
+                {authors.map((author: any) => {
+                    const slug = author?.slug?.current
+                    if (!slug) return null
+
+                    return (
+                        <Link
+                            href={`/author/${slug}`}
+                            key={author._id}
+                            className="group h-full"
+                        >
                         <div className="h-full flex flex-col items-center text-center bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
                             <div className="relative w-24 h-24 mb-4 overflow-hidden rounded-full border-2 border-gray-100 group-hover:border-blue-100 transition-colors">
                                 {author.image ? (
@@ -70,7 +74,8 @@ export default async function GuestAuthors() {
                             )}
                         </div>
                     </Link>
-                ))}
+                    )
+                })}
             </div>
         </section>
     )
