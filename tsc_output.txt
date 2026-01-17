@@ -1,0 +1,2 @@
+app/csa/[slug]/page.tsx(808,31): error TS1472: 'catch' or 'finally' expected.
+app/csa/[slug]/page.tsx(827,29): error TS1128: Declaration or statement expected.

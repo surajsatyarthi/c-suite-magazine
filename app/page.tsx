@@ -146,8 +146,8 @@ export default async function Home() {
   const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
 
   // Fetch top 3 executives by compensation from database
-  const allExecutives = await getAllExecutivesWithCompensation()
-  const topExecutives = allExecutives.slice(0, 3)
+  // Optimization: Pass limit=3 directly to SQL query to avoid fetching 10k rows
+  const topExecutives = await getAllExecutivesWithCompensation(3)
 
   return (
     <>

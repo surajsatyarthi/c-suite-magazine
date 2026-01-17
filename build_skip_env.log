@@ -1,0 +1,28 @@
+
+> ceo-magazine@3.28.2154 prebuild /app
+> node scripts/validate-build-env.js && node scripts/vercel-preflight.js && node scripts/precompute-hero-aspects.js && node scripts/write-build-info.js
+
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+🔍 Validating build environment...
+
+❌ MISSING REQUIRED: NEXT_PUBLIC_SANITY_PROJECT_ID
+❌ MISSING REQUIRED: NEXT_PUBLIC_SANITY_DATASET
+❌ MISSING REQUIRED: NEXT_PUBLIC_SANITY_API_VERSION
+⚠️  OPTIONAL (not set): SANITY_API_TOKEN
+⚠️  OPTIONAL (not set): SANITY_WRITE_TOKEN
+⚠️  OPTIONAL (not set): NEXT_PUBLIC_VERCEL_URL
+
+❌ Build environment validation FAILED!
+
+Required environment variables are missing.
+
+To fix this:
+  1. Create/update .env.local with the missing variables
+  2. For CI/CD, add them as GitHub Secrets or Vercel Environment Variables
+
+Example .env.local:
+  NEXT_PUBLIC_SANITY_PROJECT_ID=2f93fcy8
+  NEXT_PUBLIC_SANITY_DATASET=production
+  NEXT_PUBLIC_SANITY_API_VERSION=2024-10-01
+
+ ELIFECYCLE  Command failed with exit code 1.
