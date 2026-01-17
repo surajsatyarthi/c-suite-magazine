@@ -25,43 +25,16 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
     console.error("Error fetching executive data:", error)
   }
 
-  // Identify Rich Stinson for Executive in Focus (Fallback)
-  const featuredName = "Rich Stinson"
-  // Note: items passed here are already the "grid" items (processed in page.tsx), 
-  // but we might need the original full list to find the featured item if it's not in the grid?
-  // Actually, the fallback logic relies on finding "Rich Stinson" in the items list.
-  // If `items` passed to this component are ALREADY filtered, we might miss him.
-  // However, `processSpotlightItems` filters him out.
-  // So we should probably pass the *full* raw items to this component if we want to find him, 
-  // OR pass the featured item separately.
-  // For now, let's assume `items` passed here are the ones to be displayed in the GRID.
-  // We'll need to fetch the featured item separately or pass it in.
-  // BUT, the fallback logic `items.find` implies `items` contains him.
-
-  // Let's adjust the plan: `page.tsx` will fetch raw items. 
-  // `MagazineGallery` will take `rawItems` and do the processing itself?
-  // OR `page.tsx` does the processing and passes `gridItems` AND `featuredItem`.
-
-  // To minimize changes to the fallback logic structure:
-  // Let's assume `items` passed in are the GRID items.
-  // We'll try to find the featured item from the GRID items (which won't work if he's filtered out).
-  // So we should probably pass `featuredItem` as a prop if we want to support the fallback fully.
-
-  // However, since we migrated data to Sanity, `executiveData` should be present, so the fallback path is less critical.
-  // But to be safe, let's just use a placeholder or empty if not found in grid.
-
-  const featuredItem = items.find(item => item.title === featuredName)
-
-  // Use Sanity data if available, otherwise fallback to static/spotlight item
-  const executiveImage = executiveData?.image ? urlFor(executiveData.image).url() : (featuredItem?.image || '')
-  const executiveTitle = executiveData?.title || featuredItem?.title || featuredName
-  const executivePosition = executiveData?.position || "President & CEO, Southwire Company"
-  const executiveHref = executiveData?.link || featuredItem?.href || '#'
-  const executiveDescription = executiveData?.description || "Visionary Leader Powering America’s Electrification Future"
+  // Determine content to display in the Hero/Focus section
+  const executiveImage = executiveData?.image ? urlFor(executiveData.image).url() : ''
+  const executiveTitle = executiveData?.title || ''
+  const executivePosition = executiveData?.position || ''
+  const executiveHref = executiveData?.link || '#'
+  const executiveDescription = executiveData?.description || ''
 
   return (
     <>
-      {(executiveData || featuredItem) && (
+      {(executiveData || executiveTitle) && (
         <ExecutiveInFocus
           image={executiveImage}
           title={executiveTitle}
