@@ -26,7 +26,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
   }
 
   // Determine content to display in the Hero/Focus section
-  const executiveImage = executiveData?.image ? urlFor(executiveData.image).url() : ''
+  const executiveImage = executiveData?.image ? urlFor(executiveData.image).url() : '/placeholder-executive.png'
   const executiveTitle = executiveData?.title || ''
   const executivePosition = executiveData?.position || ''
   const executiveHref = executiveData?.link || '#'
