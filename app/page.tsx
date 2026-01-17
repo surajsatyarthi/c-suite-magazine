@@ -6,12 +6,13 @@ import MagazineGallery from '@/components/MagazineGallery'
 import IndustryJuggernauts from '@/components/IndustryJuggernauts'
 import GuestAuthors from '@/components/GuestAuthors'
 import LatestInsights from '@/components/LatestInsights'
-import { client } from '@/lib/sanity'
+import { client, urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
 import type { Metadata } from 'next'
 import { generateMetadata, generateStructuredData } from '@/lib/seo'
+import path from 'path'
+import fs from 'fs/promises'
 import { getAllExecutivesWithCompensation } from '@/lib/db'
-import { safeJsonLd } from '@/lib/security'
 import HomepageAdTrigger from '@/components/HomepageAdTrigger'
 
 export const metadata: Metadata = generateMetadata({
@@ -36,7 +37,7 @@ async function fetchWithTimeout<T>(promise: Promise<T>, ms = 1800, onTimeout?: (
 }
 
 
-async function getLatestPosts(excludeSlugs: string[] = []): Promise<Post[]> {
+async function getLatestPosts(): Promise<Post[]> {
   // Get latest articles ensuring different categories for Latest Insights
   const query = `*[_type == "post" && defined(mainImage.asset) && !(slug.current in $excludeSlugs) && isHidden != true] | order(publishedAt desc) {
     _id, title, slug, excerpt,
@@ -46,11 +47,12 @@ async function getLatestPosts(excludeSlugs: string[] = []): Promise<Post[]> {
     tags, publishedAt, views
   }`
   try {
+    const spotlightSlugs = await getSpotlightExcludeSlugs()
     const juggernautSlugs = await getJuggernautExcludeSlugs()
-    const allExcludeSlugs = [...new Set([...excludeSlugs, ...juggernautSlugs])]
+    const excludeSlugs = [...new Set([...spotlightSlugs, ...juggernautSlugs])]
 
     const allResults = await fetchWithTimeout(
-      client.fetch(query, { excludeSlugs: allExcludeSlugs }, { next: { revalidate: 600 } }),
+      client.fetch(query, { excludeSlugs }, { next: { revalidate: 600 } }),
       1500
     )
 
@@ -81,9 +83,12 @@ async function getLatestPosts(excludeSlugs: string[] = []): Promise<Post[]> {
   }
 }
 
-async function getSpotlightExcludeSlugs(spotlightItems: any[]): Promise<string[]> {
+async function getSpotlightExcludeSlugs(): Promise<string[]> {
   try {
-    const slugs = spotlightItems
+    const spotlightPath = path.join(process.cwd(), 'public', 'spotlight.json')
+    const raw = await fs.readFile(spotlightPath, 'utf-8')
+    const data = JSON.parse(raw) as Array<{ href?: string }>
+    const slugs = data
       .map(item => {
         const href = item?.href || ''
         const parts = href.split('/').filter(Boolean)
@@ -93,7 +98,7 @@ async function getSpotlightExcludeSlugs(spotlightItems: any[]): Promise<string[]
     if (!slugs.includes('stoyana-natseva')) slugs.push('stoyana-natseva')
     return slugs
   } catch (e) {
-    console.warn('Failed to extract spotlight slugs; proceeding with minimal guard:', e)
+    console.warn('Failed to read spotlight.json; proceeding with minimal guard:', e)
     return ['stoyana-natseva']
   }
 }
@@ -136,14 +141,13 @@ function formatDate(dateString: string) {
 import { getSpotlightItems, processSpotlightItems } from '@/lib/spotlight'
 
 export default async function Home() {
+  const latestArticles = await getLatestPosts()
   const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
   const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
-  const spotlightSlugs = await getSpotlightExcludeSlugs(spotlightItems)
-  const latestArticles = await getLatestPosts(spotlightSlugs)
-
 
   // Fetch top 3 executives by compensation from database
-  const topExecutives = await getAllExecutivesWithCompensation(3)
+  const allExecutives = await getAllExecutivesWithCompensation()
+  const topExecutives = allExecutives.slice(0, 3)
 
   return (
     <>
@@ -152,18 +156,19 @@ export default async function Home() {
       {/* Enhanced Structured Data */}
       <script
         type="application/ld+json"
-        // eslint-disable-next-line no-restricted-syntax -- Verified Safe: Uses safeJsonLd sanitizer
-        dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('organization', {
-          name: 'C-Suite Magazine',
-          description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
-          url: 'https://csuitemagazine.global',
-          logo: 'https://csuitemagazine.global/logo.png'
-        }))}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateStructuredData('organization', {
+            name: 'C-Suite Magazine',
+            description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
+            url: 'https://csuitemagazine.global',
+            logo: 'https://csuitemagazine.global/logo.png'
+          })),
+        }}
       />
 
       <main>
         {/* Hero Section with Parallax */}
-        <Hero bannerImage={spotlightItems[0]?.rawImage} />
+        <Hero />
 
         {/* Magazine Gallery */}
         <MagazineGallery items={spotlightItems} />
@@ -190,7 +195,7 @@ export default async function Home() {
                   Executive Compensation Data
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Explore detailed salary breakdowns, stock awards, and total compensation packages for America&apos;s top executives
+                  Explore detailed salary breakdowns, stock awards, and total compensation packages for America's top executives
                 </p>
               </div>
 

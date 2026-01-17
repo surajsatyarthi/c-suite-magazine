@@ -39,9 +39,14 @@ export async function getSpotlightItems(): Promise<{ items: SpotlightItem[], des
                 .map((p: any, idx: number) => {
                     const chosen = p.spotlightImage || p.mainImage
                     // Use Sanity Image Builder for all assets (Guideline IV Cleanup)
-                    const image = chosen 
-                        ? urlFor(chosen).width(1200).height(1800).url() 
-                        : `/Featured%20section/${idx + 1}.png`
+                    let image = `/Featured%20section/${idx + 1}.png` // fallback
+                    try {
+                        if (chosen && (chosen.asset || chosen._ref)) {
+                            image = urlFor(chosen).width(1200).height(1800).url()
+                        }
+                    } catch (e) {
+                        console.error(`[spotlight] Failed to build URL for item ${idx} ("${p.title}"):`, e)
+                    }
                     
                     const cat = p.primaryCategory?.slug?.current || 'cxo-interview'
                     const postSlug = p.slug?.current
