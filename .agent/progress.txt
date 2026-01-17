@@ -1,0 +1,22 @@
+=== RALPH v2.1 AUTONOMOUS LOOP STARTING ===
+Timestamp: Wed Jan 14 18:12:38 IST 2026
+=== RALPH v2.1 SESSION SUMMARY ===
+Timestamp: Wed Jan 14 18:27:30 IST 2026
+Iteration 1: PAY-001 PASSED
+Files changed: src/app/api/payments/paypal/create/route.ts tests/api/payments-paypal-create.test.ts
+Learnings: Database and external API mocks must be robust and reset between tests to prevent leaks.
+---
+Iteration 2: PAY-002 PASSED
+Files changed: src/app/api/payments/paypal/capture/route.ts tests/api/payments-paypal-capture.test.ts
+Learnings: Multi-step database updates (payment + resource) require careful mock setup to verify multiple calls.
+---
+Iteration 3: PAY-003 PASSED
+Files changed: src/app/api/payments/razorpay/create/route.ts tests/api/payments-razorpay-create.test.ts
+Learnings: Razorpay uses smallest currency unit (paise/cents) – ensure tests and routes handle this consistently.
+---
+Iteration 4: PAY-004 PASSED
+Files changed: src/app/api/payments/razorpay/webhook/route.ts tests/api/payments-razorpay-webhook.test.ts
+Learnings: Always verify HMAC signatures using the raw request body (text) rather than parsed JSON for security.
+=== FULL PAYMENT API SUITE PASSED ===
+Total Tests: 27/27
+---

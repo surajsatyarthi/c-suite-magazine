@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 1. The "No Rush" Cognitive Check (Interactive)
+# Only run if output is a terminal (interactive mode)
+if [ -t 1 ]; then
+  node scripts/no-rush-check.js
+fi
+
+# 2. The Automated Gates
+npx lint-staged

@@ -1,0 +1,9 @@
+# AI Context Exclusion Rules
+# Prevents heavy directories from being used as context for generation/completion.
+
+node_modules/
+.next/
+dist/
+build/
+.sanity/
+.vercel/

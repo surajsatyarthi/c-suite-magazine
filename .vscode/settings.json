@@ -6,8 +6,7 @@
     "**/dist/**": true,
     "**/.cache/**": true,
     "**/build/**": true,
-    "**/.git/objects/**": true,
-    "**/.git/subtree-cache/**": true,
+    "**/.git/**": true,
     "**/out/**": true,
     "**/.pnpm-store/**": true,
     "**/coverage/**": true,
@@ -22,11 +21,13 @@
     "**/out": true,
     "**/.pnpm-store": true,
     "**/coverage": true,
-    "**/.sanity": true
+    "**/.sanity": true,
+    "**/.git": true
   },
   "files.exclude": {
     "**/.next": true,
-    "**/node_modules": false
+    "**/node_modules": true,
+    "**/.git": true
   },
   "typescript.disableAutomaticTypeAcquisition": true,
   "typescript.tsserver.maxTsServerMemory": 2048,

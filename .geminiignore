@@ -1,0 +1,17 @@
+# Antigravity AI Ignore Rules
+# This file prevents the AI server from indexing large, redundant directories.
+
+.git/
+.next/
+.sanity/
+.vercel/
+dist/
+build/
+.cache/
+logs/
+*.log
+.agent/
+pnpm-lock.yaml
+.git
+**/node_modules/**
+**/dist/**

@@ -3,7 +3,14 @@ import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 
 export default function Hero({ bannerImage }: { bannerImage?: any }) {
-  const heroSrc = bannerImage ? urlFor(bannerImage).width(1920).height(1080).url() : "/hero-image.webp"
+  let heroSrc = "/hero-image.webp"
+  try {
+    if (bannerImage && (bannerImage.asset || bannerImage._ref)) {
+      heroSrc = urlFor(bannerImage).width(1920).height(1080).url()
+    }
+  } catch (e) {
+    console.error('[Hero] Failed to build banner image URL:', e)
+  }
 
   return (
     <section className="dark-section relative h-[600px] md:h-[700px] lg:h-[800px] bg-[#082945]">
