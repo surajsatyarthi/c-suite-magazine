@@ -25,6 +25,7 @@ import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { Post, SanityImage } from '@/lib/types'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
+import { safeJsonLd } from '@/lib/security'
 // Magazine design enhancements
 import InFocusBadge from '@/components/InFocusBadge'
 import HeroOverlay from '@/components/HeroOverlay'
@@ -538,18 +539,17 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
           <ArticleProgress />
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(generateStructuredData('article', {
-                title: post.title,
-                description: sanitizeExcerpt(post.excerpt || firstBlockText || bodyText || '')?.substring(0, 160) || undefined,
-                image: post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
-                publishedTime: post.publishedAt,
-                writer: post.writer?.name,
-                url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
-                wordCount,
-                readTime
-              })),
-            }}
+            // eslint-disable-next-line no-restricted-syntax -- Verified Safe: Uses safeJsonLd sanitizer
+            dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('article', {
+              title: post.title,
+              description: sanitizeExcerpt(post.excerpt || firstBlockText || bodyText || '')?.substring(0, 160) || undefined,
+              image: post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
+              publishedTime: post.publishedAt,
+              writer: post.writer?.name,
+              url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
+              wordCount,
+              readTime
+            }))}
           />
 
           {/* Breadcrumbs - Show "CXO Interview" for CSA articles, not "Company Sponsored" */}

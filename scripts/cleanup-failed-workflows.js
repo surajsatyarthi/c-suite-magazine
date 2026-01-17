@@ -7,7 +7,7 @@
  * Requires: GitHub CLI (gh) to be authenticated
  */
 
-const { execSync } = require('child_process');
+const { spawnSync } = require('child_process');
 
 const WORKFLOWS = ['e2e.yml', 'sanity-backup.yml'];
 const REPO = 'surajsatyarthi/c-suite-magazine';
@@ -25,9 +25,12 @@ function log(message, color = 'reset') {
     console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-function executeCommand(command) {
+function executeCommand(command, args) {
     try {
-        return execSync(command, { encoding: 'utf-8', stdio: 'pipe' });
+        const result = spawnSync(command, args, { encoding: 'utf-8', stdio: 'pipe', shell: false });
+        if (result.error) return null;
+        if (result.status !== 0) return null;
+        return result.stdout.trim();
     } catch (error) {
         return null;
     }
@@ -36,8 +39,8 @@ function executeCommand(command) {
 async function getFailedRuns(workflow) {
     log(`\n📋 Fetching failed runs for ${workflow}...`, 'blue');
 
-    const command = `gh run list --repo ${REPO} --workflow=${workflow} --status=failure --limit=100 --json databaseId,conclusion,createdAt,displayTitle`;
-    const output = executeCommand(command);
+    const args = ['run', 'list', '--repo', REPO, '--workflow', workflow, '--status', 'failure', '--limit', '100', '--json', 'databaseId,conclusion,createdAt,displayTitle'];
+    const output = executeCommand('gh', args);
 
     if (!output) {
         log(`Error fetching runs for ${workflow}`, 'red');
@@ -53,8 +56,8 @@ async function getFailedRuns(workflow) {
 }
 
 function deleteRun(runId) {
-    const command = `gh run delete ${runId} --repo ${REPO}`;
-    const result = executeCommand(command);
+    const args = ['run', 'delete', runId.toString(), '--repo', REPO];
+    const result = executeCommand('gh', args);
     return result !== null;
 }
 
@@ -109,7 +112,7 @@ async function main() {
     log('========================================\n', 'blue');
 
     // Check if gh CLI is available
-    const ghVersion = executeCommand('gh --version');
+    const ghVersion = executeCommand('gh', ['--version']);
     if (!ghVersion) {
         log('❌ Error: GitHub CLI (gh) is not installed or not in PATH', 'red');
         log('Install it from: https://cli.github.com/', 'yellow');

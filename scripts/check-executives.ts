@@ -33,6 +33,7 @@ async function checkExecutives() {
       FROM executives e
       LEFT JOIN companies c ON e.company_id = c.id
       ORDER BY latest_compensation DESC NULLS LAST
+      LIMIT 100
     `
 
     console.log(`Found ${result.rows.length} executives:\n`)

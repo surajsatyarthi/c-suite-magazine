@@ -1,13 +1,14 @@
 const fs = require('fs')
 const path = require('path')
-const { execSync } = require('child_process')
+const { spawnSync } = require('child_process')
 
 function getCommit() {
   try {
     const envSha = process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || process.env.COMMIT_SHA
     if (envSha && typeof envSha === 'string' && envSha.length >= 7) return envSha
-    const sha = execSync('git rev-parse --short HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim()
-    return sha || null
+    const res = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { stdio: ['ignore', 'pipe', 'ignore'], encoding: 'utf-8', shell: false })
+    if (res.error || res.status !== 0) return null
+    return res.stdout.trim() || null
   } catch {
     return null
   }

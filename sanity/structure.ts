@@ -61,7 +61,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title('Homepage Spotlight')
-            .filter('_type == "post" && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
+            .filter('(_type == "post" || _type == "csa") && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
             .child((documentId) =>
               S.document().documentId(documentId).schemaType('post')

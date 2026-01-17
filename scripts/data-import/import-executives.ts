@@ -99,7 +99,7 @@ async function importExecutives() {
 
       // Step 1: Insert or get company
       const existingCompany = await sql`
-        SELECT id FROM companies WHERE ticker_symbol = ${data.company.ticker_symbol}
+        SELECT id FROM companies WHERE ticker_symbol = ${data.company.ticker_symbol} LIMIT 1
       `
 
       let companyId: string
@@ -134,7 +134,7 @@ async function importExecutives() {
 
       // Step 2: Insert or get executive
       const existingExecutive = await sql`
-        SELECT id FROM executives WHERE slug = ${data.executive.slug}
+        SELECT id FROM executives WHERE slug = ${data.executive.slug} LIMIT 1
       `
 
       let executiveId: string

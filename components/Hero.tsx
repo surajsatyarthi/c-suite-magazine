@@ -1,8 +1,9 @@
 
-
 import OptimizedImage from '@/components/OptimizedImage'
+import { urlFor } from '@/lib/sanity'
 
-export default function Hero() {
+export default function Hero({ bannerImage }: { bannerImage?: any }) {
+  const heroSrc = bannerImage ? urlFor(bannerImage).width(1920).height(1080).url() : "/hero-image.webp"
 
   return (
     <section className="dark-section relative h-[600px] md:h-[700px] lg:h-[800px] bg-[#082945]">
@@ -11,7 +12,7 @@ export default function Hero() {
         className="absolute inset-0 z-0"
       >
         <OptimizedImage
-          src="/hero-image.webp"
+          src={heroSrc}
           alt="CEO Magazine Hero Image"
           fill
           className="object-cover"

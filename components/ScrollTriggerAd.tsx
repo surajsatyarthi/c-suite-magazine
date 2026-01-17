@@ -22,7 +22,12 @@ export default function ScrollTriggerAd() {
     useEffect(() => {
         // Add a small delay to allow content to load and layout to settle
         const timer = setTimeout(() => {
+            let lastScrollTime = 0
             const handleScroll = () => {
+                const now = Date.now()
+                if (now - lastScrollTime < 200) return // Throttle to 200ms
+                lastScrollTime = now
+
                 if (hasTriggered) return
 
                 const scrollTop = window.scrollY

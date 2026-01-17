@@ -1,3 +1,4 @@
+import 'server-only'
 // Lazily initialize the Sanity write client so builds don’t fail
 // when env vars aren’t present in the build environment.
 import type { SanityClient } from '@sanity/client'

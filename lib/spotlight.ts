@@ -1,11 +1,10 @@
-import path from 'path'
-import fs from 'fs/promises'
-import { client, urlFor } from '@/lib/sanity'
+import { client, urlFor } from './sanity'
 
 export type SpotlightItem = {
     image: string
     href?: string
     title?: string
+    rawImage?: any
     __idx?: number
 }
 
@@ -15,58 +14,67 @@ export async function getSpotlightItems(): Promise<{ items: SpotlightItem[], des
     let items: SpotlightItem[] = []
     let desiredCount: number | undefined = envCount
 
-    // Prefer static spotlight.json from public
-    const publicDir = path.join(process.cwd(), 'public')
+    // UAQS v2.2: Fetch EXCLUSIVELY from Sanity spotlightConfig (Physical Ground Truth)
     try {
-        const configPath = path.join(publicDir, 'spotlight.json')
-        const raw = await fs.readFile(configPath, 'utf-8')
-        const parsed = JSON.parse(raw)
-        if (Array.isArray(parsed)) items = parsed as SpotlightItem[]
-    } catch {
-        items = []
-    }
-
-    // If no static config present, fall back to Sanity spotlightConfig
-    if (items.length === 0) {
-        try {
-            const data = await client.fetch(
-                `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{
+        const data = await client.fetch(
+            `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{
           cardCount,
-          items[]->{ _id, title, slug, mainImage, spotlightImage, "primaryCategory": categories[0]->{ slug } }
-        }`
-            )
-            if (data && Array.isArray(data.items) && data.items.length > 0) {
-                desiredCount = desiredCount ?? (typeof data.cardCount === 'number' ? data.cardCount : undefined)
-                items = data.items
-                    .filter((p: any) => p !== null && p !== undefined) // Filter out null/undefined elements
-                    .map((p: { title?: string; slug?: { current?: string } | null; mainImage?: unknown; spotlightImage?: unknown; primaryCategory?: { slug?: { current?: string } } }, idx: number) => {
-                        const chosen = (p as any)?.spotlightImage || (p as any)?.mainImage
-                        const image = chosen ? urlFor(chosen as unknown).width(1200).height(1800).url() : `/Featured%20section/${idx + 1}.png`
-                        const cat = p?.primaryCategory?.slug?.current
-                        const postSlug = p?.slug?.current
-                        const href = (cat && postSlug) ? `/category/${cat}/${postSlug}` : '/archive'
-                        return {
-                            image,
-                            href,
-                            title: p?.title || 'C‑Suite Magazine Issue',
-                        }
-                    })
-            }
-        } catch {
-            // Ignore
+          items[]->{ 
+            _id, 
+            _type,
+            title, 
+            slug, 
+            mainImage, 
+            spotlightImage, 
+            "primaryCategory": categories[0]->{ slug } 
+          }
+        }`,
+            {},
+            { useCdn: false }
+        )
+        if (data && Array.isArray(data.items) && data.items.length > 0) {
+            desiredCount = desiredCount ?? (typeof data.cardCount === 'number' ? data.cardCount : undefined)
+            items = data.items
+                .filter((p: any) => p !== null && p !== undefined)
+                .map((p: any, idx: number) => {
+                    const chosen = p.spotlightImage || p.mainImage
+                    // Use Sanity Image Builder for all assets (Guideline IV Cleanup)
+                    const image = chosen 
+                        ? urlFor(chosen).width(1200).height(1800).url() 
+                        : `/Featured%20section/${idx + 1}.png`
+                    
+                    const cat = p.primaryCategory?.slug?.current || 'cxo-interview'
+                    const postSlug = p.slug?.current
+
+                    // HARDENED REDIRECT LOGIC: Ensure canonical mapping
+                    let href = '/archive'
+                    if (postSlug) {
+                        href = (p._type === 'csa') 
+                            ? `/csa/${postSlug}` 
+                            : `/category/${cat}/${postSlug}`
+                    }
+                    
+                    return {
+                        image,
+                        href,
+                        title: p.title || 'C‑Suite Magazine Issue',
+                        rawImage: chosen
+                    }
+                })
         }
+    } catch (e) {
+        console.error('[lib/spotlight] Sanity fetch failed:', e)
+        items = []
     }
 
     return { items, desiredCount }
 }
 
 export function processSpotlightItems(items: SpotlightItem[], desiredCount: number | undefined, featuredName: string = "Rich Stinson"): SpotlightItem[] {
-    // Filter out the featured item from the grid items
-    const gridItems = items.filter(item => item.title !== featuredName)
-
-    // Respect the order from spotlight.json - no custom reordering
-    const maxCount = typeof desiredCount === 'number' ? desiredCount : 12
-    const initialCount = Math.min(gridItems.length, maxCount)
-
-    return gridItems.slice(0, initialCount)
+    // UAQS v2.2 Hardened: Respect business requirement for 13 items
+    // Removed filtering of featuredName to allow Rich Stinson in the grid
+    const maxCount = typeof desiredCount === 'number' ? desiredCount : 13
+    
+    // We just take the top items from the config directly
+    return items.slice(0, maxCount)
 }

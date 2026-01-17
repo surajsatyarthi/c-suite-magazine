@@ -1,6 +1,6 @@
 // Ensures the local folder is linked to the existing Vercel project
 // Skips on Vercel's own build environment (VERCEL=1)
-const { execSync } = require('child_process')
+const { spawnSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
 
@@ -34,7 +34,8 @@ try {
   log('Project not linked. Attempting non-interactive link to existing project...')
   try {
     // Attempt to link to the known project name; requires prior Vercel login
-    execSync('npx vercel link --project ceo-magazine --yes', { stdio: 'inherit' })
+    const result = spawnSync('npx', ['vercel', 'link', '--project', 'ceo-magazine', '--yes'], { stdio: 'inherit', shell: false })
+    if (result.error || result.status !== 0) throw new Error('Vercel link command failed')
     const linked = fs.existsSync(projectJson)
     if (!linked) {
       throw new Error('Link succeeded but .vercel/project.json not found')

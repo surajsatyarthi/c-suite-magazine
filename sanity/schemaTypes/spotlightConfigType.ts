@@ -15,7 +15,7 @@ export const spotlightConfigType: SchemaTypeDefinition = {
       title: 'Card Count',
       type: 'number',
       description: 'Number of cards to show on the homepage spotlight grid',
-      initialValue: 16,
+      initialValue: 13,
       validation: (Rule) => Rule.min(1).max(50),
     },
     {

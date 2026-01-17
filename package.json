@@ -17,6 +17,7 @@
     "deploy:prod": "bash scripts/deploy-gated.sh",
     "start": "next start -p 3000",
     "lint": "eslint",
+    "audit": "audit-ci --moderate",
     "lint:content": "node scripts/lint-content.js",
     "fix:excerpts": "node scripts/fix-excerpts.js",
     "import:docx": "node scripts/import-docx-batch.js",
@@ -26,7 +27,8 @@
     "sanity:backup": "mkdir -p exports/backups && sanity dataset export production exports/backups/$(date +%F-%H%M)-production.tar.gz --yes",
     "sanity:restore": "sanity dataset import $BACKUP_FILE --dataset production --replace --missing --yes",
     "backfill-data": "tsx scripts/backfill-article-data.ts",
-    "optimize:heroes": "node scripts/precompute-hero-aspects.js"
+    "optimize:heroes": "node scripts/precompute-hero-aspects.js",
+    "prepare": "husky && husky install"
   },
   "engines": {
     "node": "22.x"
@@ -46,6 +48,7 @@
     "@vercel/analytics": "^1.5.0",
     "@vercel/postgres": "^0.10.0",
     "dotenv": "^17.2.3",
+    "isomorphic-dompurify": "^2.35.0",
     "mammoth": "^1.6.0",
     "next": "16.1.0",
     "next-sanity": "^11.6.5",
@@ -55,11 +58,18 @@
     "react-player": "^2.16.0",
     "rxjs": "^7.8.2",
     "sanity": "^4.22.0",
+    "server-only": "^0.0.1",
     "styled-components": "^6.1.19",
     "turndown": "^7.2.0",
     "zustand": "^5.0.9"
   },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint -c eslint.security.config.mjs"
+    ]
+  },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@playwright/test": "^1.56.1",
     "@resvg/resvg-js": "^2.6.2",
     "@sanity/dashboard": "^5.0.1",
@@ -68,10 +78,17 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
+    "audit-ci": "^7.1.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.0",
     "eslint-config-next": "16.0.1",
+    "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-sonarjs": "^3.0.5",
     "googleapis": "^128.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^16.2.7",
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",

@@ -510,80 +510,136 @@ export default async function ExecutivePage({ params }: ExecutivePageProps) {
               5 Year Compensation History
             </h2>
 
-            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      Fiscal Year
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      Total Compensation
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      Year-over-Year Change
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-100">
-                  {(() => {
-                    // Create 5-year array (2024-2020) and map to compensation data
-                    const fiscalYears = [2024, 2023, 2022, 2021, 2020]
-                    const compensationRows = fiscalYears.map(year => {
-                      const record = executive.compensation.find(c => c.fiscal_year === year)
-                      return { year, data: record || null }
-                    })
-
-                    return compensationRows.map((row, index) => {
-                      // Find previous year's data for YoY calculation
-                      const prevRow = compensationRows[index + 1]
-                      const change = row.data && prevRow?.data
-                        ? ((row.data.total_compensation - prevRow.data.total_compensation) / prevRow.data.total_compensation * 100)
-                        : null
-                      const isLatest = index === 0 && row.data !== null
-
-                      return (
-                        <tr key={row.year} className={`hover:bg-gray-50 transition-colors ${isLatest ? 'bg-blue-50/30' : ''}`}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-bold text-gray-900">{row.year}</span>
-                              {isLatest && (
-                                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded">
-                                  Latest
-                                </span>
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                <h3 className="font-bold text-gray-900">Compensation Trend</h3>
+                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">5-Year History</span>
+              </div>
+              
+              <div className="p-6">
+                {/* Visual Bar Chart */}
+                <div className="mb-10 mt-4">
+                  <div className="flex items-end justify-between h-48 gap-2 sm:gap-4 w-full">
+                    {(() => {
+                      const fiscalYears = [2024, 2023, 2022, 2021, 2020].reverse() // Chart goes left-to-right (old-to-new)
+                      const allRecords = executive.compensation
+                      const chartData = fiscalYears.map(year => {
+                        const record = allRecords.find(c => c.fiscal_year === year)
+                        return { year, amount: record?.total_compensation || 0 }
+                      })
+                      
+                      const maxAmount = Math.max(...chartData.map(d => d.amount)) || 1
+                      
+                      return chartData.map((data, index) => {
+                        const heightPct = (data.amount / maxAmount) * 100
+                        const isZero = data.amount === 0
+                        const isLatest = index === chartData.length - 1 // 2024 is last in reversed array
+                        
+                        return (
+                          <div key={data.year} className="flex flex-col items-center justify-end h-full flex-1 group">
+                            <div className="relative w-full flex items-end justify-center h-full">
+                              {!isZero && (
+                                <div 
+                                  className={`w-full max-w-[60px] rounded-t-sm transition-all duration-500 relative ${isLatest ? 'bg-[#d4af37]' : 'bg-blue-200 group-hover:bg-blue-300'}`}
+                                  style={{ height: `${heightPct}%` }}
+                                >
+                                  {/* Tooltip on hover */}
+                                  <div className="opacity-0 group-hover:opacity-100 absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-bold px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none transition-opacity">
+                                    {formatCurrency(data.amount)}
+                                  </div>
+                                </div>
+                              )}
+                              {isZero && (
+                                <div className="text-xs text-gray-400 mb-2">N/A</div>
                               )}
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right">
-                            {row.data ? (
-                              <span className="text-sm font-semibold text-gray-900">
-                                {formatCurrency(row.data.total_compensation)}
-                              </span>
-                            ) : (
-                              <span className="text-sm text-gray-400">N/A</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right">
-                            {change !== null ? (
-                              <div className="flex items-center justify-end gap-2">
-                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold ${
-                                  change >= 0
-                                    ? 'bg-green-100 text-green-700'
-                                    : 'bg-red-100 text-red-700'
-                                }`}>
-                                  {change >= 0 ? '↑' : '↓'} {Math.abs(change).toFixed(1)}%
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="text-gray-400 text-sm">—</span>
-                            )}
-                          </td>
-                        </tr>
-                      )
-                    })
-                  })()}
-                </tbody>
-              </table>
+                            <div className="mt-3 text-xs sm:text-sm font-semibold text-gray-600 border-t border-gray-200 w-full text-center pt-2">
+                              {data.year}
+                            </div>
+                          </div>
+                        )
+                      })
+                    })()}
+                  </div>
+                </div>
+
+                {/* Data Table */}
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                          Fiscal Year
+                        </th>
+                        <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                          Total Compensation
+                        </th>
+                        <th className="px-6 py-3 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+                          YoY Change
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-100">
+                      {(() => {
+                        // Create 5-year array (2024-2020) and map to compensation data
+                        const fiscalYears = [2024, 2023, 2022, 2021, 2020]
+                        const compensationRows = fiscalYears.map(year => {
+                          const record = executive.compensation.find(c => c.fiscal_year === year)
+                          return { year, data: record || null }
+                        })
+
+                        return compensationRows.map((row, index) => {
+                          // Find previous year's data for YoY calculation
+                          const prevRow = compensationRows[index + 1]
+                          const change = row.data && prevRow?.data
+                            ? ((row.data.total_compensation - prevRow.data.total_compensation) / prevRow.data.total_compensation * 100)
+                            : null
+                          const isLatest = index === 0 && row.data !== null
+
+                          return (
+                            <tr key={row.year} className={`hover:bg-gray-50 transition-colors ${isLatest ? 'bg-amber-50/30' : ''}`}>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-sm font-bold ${isLatest ? 'text-gray-900' : 'text-gray-600'}`}>{row.year}</span>
+                                  {isLatest && (
+                                    <span className="px-2 py-0.5 bg-[#d4af37]/10 text-[#b8941f] text-[10px] font-bold uppercase rounded-full tracking-wide">
+                                      Latest
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-right">
+                                {row.data ? (
+                                  <span className={`text-sm font-bold ${isLatest ? 'text-gray-900' : 'text-gray-700'}`}>
+                                    {formatCurrency(row.data.total_compensation)}
+                                  </span>
+                                ) : (
+                                  <span className="text-sm text-gray-400 font-medium">Data Unavailable</span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-right">
+                                {change !== null ? (
+                                  <div className="flex items-center justify-end gap-2">
+                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                                      change >= 0
+                                        ? 'bg-green-100 text-green-700'
+                                        : 'bg-red-50 text-red-600'
+                                    }`}>
+                                      {change >= 0 ? '↑' : '↓'} {Math.abs(change).toFixed(1)}%
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-300 text-sm">—</span>
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        })
+                      })()}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>

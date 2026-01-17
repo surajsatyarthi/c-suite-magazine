@@ -1,3 +1,4 @@
+import 'server-only'
 export async function notifySlack(message: string) {
   const url = process.env.SLACK_WEBHOOK_URL
   if (!url) {
