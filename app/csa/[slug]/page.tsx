@@ -803,8 +803,12 @@ export default async function CompanySponsoredArticlePage(props: { params: Promi
                                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                       />
-                                </div>
-                              )}
+                                    </div>
+                                  )
+                                } catch (e) {
+                                  return null
+                                }
+                              })()}
                               <h4 className="text-lg font-serif font-normal text-gray-900 group-hover:text-[#082945] transition-colors leading-snug mb-2">
                                 {relatedPost.title}
                               </h4>
