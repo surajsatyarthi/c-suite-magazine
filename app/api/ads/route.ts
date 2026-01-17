@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { client, urlFor } from '@/lib/sanity'
 import { writeClient } from '@/lib/sanityWrite'
+import { isAuthenticated, unauthorizedResponse } from '@/lib/api-auth'
 
 export async function GET(request: Request) {
   try {
@@ -46,11 +47,16 @@ export async function GET(request: Request) {
       alt: ad.image?.alt || ad.name || 'Sponsored',
     })
   } catch (e) {
+    console.error('Ad fetch error:', e)
     return NextResponse.json({ ok: false, error: 'Failed to fetch ad' }, { status: 500 })
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!isAuthenticated(request)) {
+    return unauthorizedResponse()
+  }
+
   try {
     const body = await request.json()
     const {
@@ -75,7 +81,7 @@ export async function POST(request: Request) {
       ? { _type: 'image', asset: { _type: 'reference', _ref: imageAssetId }, alt: alt || name }
       : undefined
 
-    const doc: any = {
+    const doc: any = { // eslint-disable-line @typescript-eslint/no-explicit-any
       _type: 'advertisement',
       name,
       ...(image ? { image } : {}),
@@ -92,11 +98,16 @@ export async function POST(request: Request) {
     const created = await writeClient.create(doc)
     return NextResponse.json({ ok: true, id: created._id, action: 'created' })
   } catch (e) {
+    console.error('Ad creation error:', e)
     return NextResponse.json({ ok: false, error: 'Failed to create ad' }, { status: 500 })
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
+  if (!isAuthenticated(request)) {
+    return unauthorizedResponse()
+  }
+
   try {
     const body = await request.json()
     const { id, name, targetUrl, placement, dimensions, isActive, priority, startDate, endDate } = body || {}
@@ -121,11 +132,12 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ ok: true, updated: result })
   } catch (e) {
+    console.error('Ad update error:', e)
     return NextResponse.json({ ok: false, error: 'Failed to update ad' }, { status: 500 })
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   // Alias to PATCH for convenience
   return PATCH(request)
 }

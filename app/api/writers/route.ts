@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeClient } from '@/lib/sanityWrite'
+import { isAuthenticated, unauthorizedResponse } from '@/lib/api-auth'
 // import { validateWriteRequest } from '@/lib/security'
 
 type WriterPayload = {
@@ -7,7 +8,7 @@ type WriterPayload = {
   name?: string
   slug?: string
   position?: string
-  bio?: any
+  bio?: any // eslint-disable-line @typescript-eslint/no-explicit-any
   imageAssetId?: string
   twitter?: string
   linkedin?: string
@@ -24,7 +25,7 @@ function buildImage(payload: WriterPayload) {
 
 async function upsertWriter(payload: WriterPayload) {
   const image = buildImage(payload)
-  const baseDoc: any = {
+  const baseDoc: any = { // eslint-disable-line @typescript-eslint/no-explicit-any
     _type: 'writer',
     ...(payload.name ? { name: payload.name } : {}),
     ...(payload.slug ? { slug: { current: payload.slug } } : {}),
@@ -66,6 +67,10 @@ async function upsertWriter(payload: WriterPayload) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isAuthenticated(request)) {
+    return unauthorizedResponse()
+  }
+
   try {
     // Validate request with security checks
     // Validate request - manual check if needed
@@ -82,11 +87,16 @@ export async function POST(request: NextRequest) {
       }
     })
   } catch (e) {
+    console.error('Writer upsert error:', e)
     return NextResponse.json({ ok: false, error: 'Failed to upsert writer' }, { status: 500 })
   }
 }
 
 export async function PUT(request: NextRequest) {
+  if (!isAuthenticated(request)) {
+    return unauthorizedResponse()
+  }
+
   try {
     // Validate request with security checks
     // Validate request - manual check if needed
@@ -103,6 +113,7 @@ export async function PUT(request: NextRequest) {
       }
     })
   } catch (e) {
+    console.error('Writer update error:', e)
     return NextResponse.json({ ok: false, error: 'Failed to update writer' }, { status: 500 })
   }
 }
