@@ -136,137 +136,132 @@ function formatDate(dateString: string) {
 import { getSpotlightItems, processSpotlightItems } from '@/lib/spotlight'
 
 export default async function Home() {
-  let trace = 'START'
-  try {
-    trace = 'FETCH_SPOTLIGHT'
-    const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
-    
-    trace = 'PROCESS_SPOTLIGHT'
-    const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
-    
-    trace = 'EXTRACT_SLUGS'
-    const spotlightSlugs = await getSpotlightExcludeSlugs(spotlightItems)
-    
-    trace = 'FETCH_POSTS'
-    const latestArticles = await getLatestPosts(spotlightSlugs)
+  const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
+  const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
+  const spotlightSlugs = await getSpotlightExcludeSlugs(spotlightItems)
+  const latestArticles = await getLatestPosts(spotlightSlugs)
 
-    trace = 'FETCH_EXECUTIVES'
-    const topExecutives = await getAllExecutivesWithCompensation(3)
 
-    trace = 'RENDER_START'
-    return (
-      <>
-        <Navigation />
+  // Fetch top 3 executives by compensation from database
+  const topExecutives = await getAllExecutivesWithCompensation(3)
 
-        {/* Enhanced Structured Data */}
-        <script
-          type="application/ld+json"
-          // eslint-disable-next-line no-restricted-syntax -- Verified Safe: Uses safeJsonLd sanitizer
-          dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('organization', {
-            name: 'C-Suite Magazine',
-            description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
-            url: 'https://csuitemagazine.global',
-            logo: 'https://csuitemagazine.global/logo.png'
-          }))}
-        />
+  return (
+    <>
+      <Navigation />
 
-        <main>
-          {/* Hero Section with Parallax */}
-          <Hero bannerImage={spotlightItems[0]?.rawImage} />
+      {/* Enhanced Structured Data */}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line no-restricted-syntax -- Verified Safe: Uses safeJsonLd sanitizer
+        dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('organization', {
+          name: 'C-Suite Magazine',
+          description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
+          url: 'https://csuitemagazine.global',
+          logo: 'https://csuitemagazine.global/logo.png'
+        }))}
+      />
 
-          {/* Magazine Gallery */}
-          <MagazineGallery items={spotlightItems} />
+      <main>
+        {/* Hero Section with Parallax */}
+        <Hero bannerImage={spotlightItems[0]?.rawImage} />
 
-          {/* Homepage Popup Ad Trigger (A/B Test Variant) */}
-          <HomepageAdTrigger />
+        {/* Magazine Gallery */}
+        <MagazineGallery items={spotlightItems} />
 
-          {/* Industry Juggernauts */}
-          <IndustryJuggernauts items={spotlightItems} />
+        {/* Homepage Popup Ad Trigger (A/B Test Variant) */}
+        <HomepageAdTrigger />
 
-          {/* Guest Authors */}
-          <GuestAuthors />
+        {/* Industry Juggernauts */}
+        <IndustryJuggernauts items={spotlightItems} />
 
-          {/* Latest Insights */}
-          <LatestInsights articles={latestArticles} />
+        {/* Guest Authors */}
+        <GuestAuthors />
 
-          {/* Executive Compensation Featured Section - DEMO */}
-          <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
-            <div className="container mx-auto px-4">
-              <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-12">
-                  <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
-                    Executive Compensation Data
-                  </h2>
-                  <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                    Explore detailed salary breakdowns, stock awards, and total compensation packages for America&apos;s top executives
-                  </p>
-                </div>
+        {/* Latest Insights */}
+        <LatestInsights articles={latestArticles} />
 
-                <div className="dark-section bg-gradient-to-br from-[#082945] to-[#0a3d5c] rounded-xl shadow-2xl overflow-hidden border-2 border-[#c8ab3d]">
-                  <div className="p-8 md:p-12">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                      <div className="text-white">
-                        <h3 className="text-3xl font-bold mb-4 text-white">
-                          Highest Paid CEOs 2024
-                        </h3>
-                        <p className="text-gray-200 mb-6 leading-relaxed">
-                          Access comprehensive compensation data for top executives including base salary, bonuses, stock awards, and total pay packages. 
-                        </p>
-                        <Link
-                          href="/executive-salaries"
-                          className="inline-block px-8 py-4 bg-[#c8ab3d] text-white font-bold rounded-lg hover:bg-[#d6b745] transition-colors shadow-lg"
-                        >
-                          Explore Executive Salaries →
-                        </Link>
-                      </div>
+        {/* Executive Compensation Featured Section - DEMO */}
+        <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-12">
+                <h2 className="text-4xl md:text-5xl font-serif font-black text-gray-900 mb-4 heading-premium">
+                  Executive Compensation Data
+                </h2>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                  Explore detailed salary breakdowns, stock awards, and total compensation packages for America&apos;s top executives
+                </p>
+              </div>
 
-                      <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                        <h4 className="font-black mb-4 text-xl tracking-tight" style={{ color: 'white' }}>Top 3 Executives</h4>
-                        <div className="space-y-4">
-                          {topExecutives.map((exec, index) => {
-                            const compensationM = exec.total_compensation ? (Number(exec.total_compensation) / 1000000).toFixed(1) : '0.0'
-                            return (
-                              <div key={exec.id || `exec-${index}`} className="bg-white/5 rounded-lg p-4 border border-white/10">
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="text-[#c8ab3d] font-bold">#{index + 1}</span>
-                                  <span className="text-white font-bold">${compensationM}M</span>
-                                </div>
-                                <div className="text-white text-sm">
-                                  {exec.full_name}, {exec.company_name}
-                                </div>
+              {/* Feature Card */}
+              <div className="dark-section bg-gradient-to-br from-[#082945] to-[#0a3d5c] rounded-xl shadow-2xl overflow-hidden border-2 border-[#c8ab3d]">
+                <div className="p-8 md:p-12">
+                  <div className="grid md:grid-cols-2 gap-8 items-center">
+                    {/* Left: Content */}
+                    <div className="text-white">
+                      <h3 className="text-3xl font-bold mb-4 text-white">
+                        Highest Paid CEOs 2024
+                      </h3>
+                      <p className="text-gray-200 mb-6 leading-relaxed">
+                        Access comprehensive compensation data for top executives including base salary, bonuses, stock awards, and total pay packages. Compare year-over-year changes and understand executive pay structures.
+                      </p>
+                      <ul className="space-y-3 mb-8">
+                        <li className="flex items-center text-white">
+                          <span className="text-[#c8ab3d] mr-2">✓</span>
+                          Detailed 5-year compensation history
+                        </li>
+                        <li className="flex items-center text-white">
+                          <span className="text-[#c8ab3d] mr-2">✓</span>
+                          Complete salary breakdown by component
+                        </li>
+                        <li className="flex items-center text-white">
+                          <span className="text-[#c8ab3d] mr-2">✓</span>
+                          Year-over-year trend analysis
+                        </li>
+                      </ul>
+                      <Link
+                        href="/executive-salaries"
+                        className="inline-block px-8 py-4 bg-[#c8ab3d] text-white font-bold rounded-lg hover:bg-[#d6b745] transition-colors shadow-lg"
+                      >
+                        Explore Executive Salaries →
+                      </Link>
+                    </div>
+
+                    {/* Right: Preview Stats */}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                      <h4 className="font-black mb-4 text-xl tracking-tight" style={{ color: 'white' }}>Top 3 Executives by Total Compensation</h4>
+                      <div className="space-y-4">
+                        {topExecutives.map((exec, index) => {
+                          const medals = ['🏆', '🥈', '🥉']
+                          const ranks = ['#1', '#2', '#3']
+                          const compensationM = exec.total_compensation ? (exec.total_compensation / 1000000).toFixed(1) : '0.0'
+
+                          return (
+                            <div key={exec.id} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                              <div className="flex items-center justify-between mb-2">
+                                <span className={`text-[#c8ab3d] font-bold ${index === 0 ? 'text-2xl' : 'text-xl'}`}>
+                                  {medals[index]} {ranks[index]}
+                                </span>
+                                <span className="text-white font-bold">${compensationM}M</span>
                               </div>
-                            )
-                          })}
-                        </div>
+                              <div className="text-white text-sm font-medium">
+                                {exec.full_name}, {exec.company_name}
+                              </div>
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
-        </main>
+          </div>
+        </section>
+      </main>
 
-        <Footer />
-      </>
-    )
-  } catch (error) {
-    console.error(`[homepage] Fatal rendering error at trace [${trace}]:`, error)
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#082945] text-white p-8 text-center">
-        <div>
-          <h1 className="text-4xl font-serif font-black mb-4">Under Maintenance</h1>
-          <p className="text-xl opacity-80 mb-8">We're currently updating our homepage to bring you the best experience.</p>
-          <div className="text-sm opacity-50 font-mono">
-            Trace: {trace} | Error: { (error as Error).message || 'Unknown' }
-          </div>
-          <div className="mt-8">
-            <Link href="/executive-salaries" className="text-[#c8ab3d] font-bold hover:underline">
-              View Executive Salaries →
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
+      <Footer />
+    </>
+  )
 }

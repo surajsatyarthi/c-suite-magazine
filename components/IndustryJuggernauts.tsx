@@ -28,14 +28,13 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
   console.log('[IndustryJuggernauts] Config items:', JSON.stringify(config?.items, null, 2))
 
   // Use Sanity items if available, otherwise fallback to props (Spotlight items)
-  // UAQS v2.2 Guardian Fix: Filter out null/undefined items and ensure valid image URLs
-  const displayItems = config?.items
-    ?.filter((item: any) => item !== null && item !== undefined && (item.image || fallbackItems[0]?.image))
-    .map((item: any) => ({
-      title: item.title,
-      image: item.image || '/Featured%20section/1.png',
-      href: item.link,
-    })) || fallbackItems.slice(0, 9)
+  // We map Sanity items to match the structure we need
+  const displayItems = config?.items?.map((item: any) => ({
+    title: item.title,
+    image: item.image,
+    href: item.link,
+    // category: item.category // We don't currently display category in the card, but it's available
+  })) || fallbackItems.slice(0, 9)
 
   return (
     <section className="py-20 bg-gradient-to-br from-[#2b6cb0] to-[#020f1a] text-white dark-section">
