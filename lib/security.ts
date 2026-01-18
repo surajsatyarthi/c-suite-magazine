@@ -1,12 +1,29 @@
 import 'server-only';
-import DOMPurify from 'isomorphic-dompurify';
 
 /**
- * Sanitizes HTML content to prevent XSS.
- * Use this before injecting dynamic content into dangerouslySetInnerHTML.
+ * Server-safe HTML sanitization without jsdom dependency.
+ * Strips all HTML tags and dangerous characters to prevent XSS.
+ * Lighter alternative to DOMPurify that works in Vercel serverless functions.
  */
 export function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html);
+  if (!html) return '';
+  
+  return html
+    // Remove all HTML tags
+    .replace(/<[^>]*>/g, '')
+    // Remove script tags and content
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    // Remove style tags and content
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+    // Decode HTML entities
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    // Remove any remaining dangerous characters
+    .replace(/[<>]/g, '')
+    .trim();
 }
 
 /**
