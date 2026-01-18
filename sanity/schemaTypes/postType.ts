@@ -80,6 +80,18 @@ export const postType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'spotlightImage',
+      type: 'image',
+      title: 'Homepage Card Image',
+      description: 'Use a 2:3 vertical crop for the homepage spotlight card. If empty, mainImage will be used.',
+      options: { hotspot: true },
+      fields: [
+        defineField({ name: 'alt', type: 'string', title: 'Alternative text' }),
+        defineField({ name: 'caption', type: 'string', title: 'Caption' }),
+      ],
+      group: 'meta',
+    }),
+    defineField({
       name: 'categories',
       type: 'array',
       title: 'Categories',
