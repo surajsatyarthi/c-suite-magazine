@@ -142,7 +142,10 @@ async function getPost(slug: string): Promise<Post | null> {
   }`
   try {
     const { isEnabled } = await draftMode()
-    const token = isEnabled ? process.env.SANITY_API_READ_TOKEN : undefined
+    // Fallback chain: SANITY_API_TOKEN (production) -> SANITY_WRITE_TOKEN (local) -> SANITY_API_READ_TOKEN (legacy)
+    const token = isEnabled 
+      ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_READ_TOKEN)
+      : undefined
     const p = await getClient(token).fetch(query, { slug })
     if (p) {
       console.log(`[getPost] Found article: ${p.title}`)
