@@ -262,9 +262,47 @@ Cover images in spotlight section lack text overlays (article titles, metadata).
 
 ---
 
-## 🔴 **TIER 1: CRITICAL ISSUES** (Fix This Week)
+### Issue #5: Missing Metadata - Article Views
 
-### Issue #4: Tag Data Quality Problems
+- **Status:** 🔴 Critical - Open
+- **Priority:** P1 - Very High
+- **Date Added:** 2026-01-19
+- **Source:** User request
+
+#### **Description**
+
+Many articles are currently showing placeholder or mission viewership counts. This data should be correctly populated from the source JSON imports or maintained via Sanity to show accurate viewership.
+
+#### **Business Impact:**
+
+- **Inaccurate Social Proof:** Articles without view counts or with fake counts reduce trust.
+- **Client Satisfaction:** Paid CSAs should show accurate performance metrics.
+
+---
+
+### Issue #6: Missing Metadata - Reading Time
+
+- **Status:** ⚪️ Scheduled - Open
+- **Priority:** P2 - High
+- **Date Added:** 2026-01-19
+- **Source:** User request
+
+#### **Description**
+
+Estimated reading time is missing from several article types. This is a standard magazine feature that helps user engagement.
+
+#### **Business Impact:**
+
+- **Poor UX:** Users prefer to know time commitment before clicking.
+- **Incomplete Feel:** Pages look less "premium" without standard metadata.
+
+---
+
+---
+
+## 🟡 **TIER 2: IMPORTANT IMPROVEMENTS** (Fix within 2 weeks)
+
+### Issue #7: Tag Data Quality Problems
 
 - **Status:** 🔴 Critical - Open
 - **Priority:** P1 - Very High

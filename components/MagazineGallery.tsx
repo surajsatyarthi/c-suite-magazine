@@ -53,6 +53,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
   let executivePosition = ''
   let executiveHref = '#'
   let executiveDescription = ''
+  let featuredItem: SpotlightItem | undefined = undefined
 
   if (executiveData?.article) {
     // New Config System Path
@@ -62,7 +63,6 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
     executivePosition = executiveData.customPosition || "Principal Executive"
     executiveDescription = executiveData.customDescription || art.description || ''
     
-    // Canonical URL logic
     if (art.slug) {
       const cat = art.primaryCategory?.slug?.current || 'cxo-interview'
       executiveHref = art.type === 'csa' ? `/csa/${art.slug}` : `/category/${cat}/${art.slug}`
@@ -76,7 +76,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
     executiveDescription = executiveData.description || ''
   } else {
     // Total Fallback (Rich Stinson)
-    const featuredItem = items.find(item => item.title === featuredName)
+    featuredItem = items.find(item => item.title === featuredName)
     executiveImage = featuredItem?.image || ''
     executiveTitle = featuredItem?.title || featuredName
     executivePosition = "President & CEO, Southwire Company"
