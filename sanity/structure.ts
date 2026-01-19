@@ -54,18 +54,25 @@ export const structure: StructureResolver = (S) =>
                 ),
             ])
         ),
-      // Homepage Spotlight (formerly CXO Features)
+      // Homepage Spotlight Configuration (Centralized Management)
+      // REMOVED: Old filtered list view - now using enhanced singleton below
       S.listItem()
-        .id('homepage-spotlight')
-        .title('Homepage Spotlight')
+        .id('spotlight-config-singleton')
+        .title('🌟 Homepage Spotlight Config')
         .child(
-          S.documentList()
-            .title('Homepage Spotlight')
-            .filter('(_type == "post" || _type == "csa") && _id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, [])')
-            .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
-            .child((documentId) =>
-              S.document().documentId(documentId).schemaType('post')
-            )
+          S.document()
+            .schemaType('spotlightConfig')
+            .documentId('spotlightConfig')
+        ),
+      
+      // Executive in Focus Configuration
+      S.listItem()
+        .id('executive-in-focus-config-singleton')
+        .title('👔 Executive in Focus Config')
+        .child(
+          S.document()
+            .schemaType('executiveInFocusConfig')
+            .documentId('executiveInFocusConfig')
         ),
 
       // Articles (not spotlighted)
@@ -112,14 +119,7 @@ export const structure: StructureResolver = (S) =>
             .filter('_type == "writer" && writerType == "guest"')
             .defaultOrdering([{ field: 'name', direction: 'asc' }])
         ),
-      S.listItem()
-        .id('spotlight-config-singleton')
-        .title('Spotlight Config')
-        .child(
-          S.document()
-            .schemaType('spotlightConfig')
-            .documentId('spotlightConfig')
-        ),
+      // MOVED UP: Spotlight Config is now the primary interface (see above after Quality Checks)
       S.listItem()
         .id('industry-juggernaut-config')
         .title('Industry Juggernauts Config')

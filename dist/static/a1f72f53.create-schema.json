@@ -1,0 +1,2267 @@
+[
+  {
+    "fields": [
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "cells",
+        "type": "array"
+      }
+    ],
+    "name": "tableRow",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "of": [
+          {
+            "type": "tableRow"
+          }
+        ],
+        "name": "rows",
+        "type": "array"
+      }
+    ],
+    "name": "table",
+    "type": "object"
+  },
+  {
+    "of": [
+      {
+        "marks": {
+          "annotations": [
+            {
+              "fields": [
+                {
+                  "validation": [
+                    {
+                      "rules": [
+                        {
+                          "flag": "uri",
+                          "constraint": {
+                            "options": {
+                              "scheme": [
+                                "/^http$/",
+                                "/^https$/"
+                              ],
+                              "allowRelative": false,
+                              "relativeOnly": false,
+                              "allowCredentials": false
+                            }
+                          }
+                        }
+                      ],
+                      "level": "error"
+                    }
+                  ],
+                  "name": "href",
+                  "type": "url",
+                  "title": "URL"
+                }
+              ],
+              "name": "link",
+              "type": "object",
+              "title": "URL"
+            }
+          ],
+          "decorators": [
+            {
+              "value": "strong",
+              "title": "Strong"
+            },
+            {
+              "value": "em",
+              "title": "Emphasis"
+            },
+            {
+              "value": "underline",
+              "title": "Underline"
+            }
+          ]
+        },
+        "lists": [
+          {
+            "value": "bullet",
+            "title": "Bullet"
+          }
+        ],
+        "styles": [
+          {
+            "value": "normal",
+            "title": "Normal"
+          },
+          {
+            "value": "h1",
+            "title": "H1"
+          },
+          {
+            "value": "h2",
+            "title": "H2"
+          },
+          {
+            "value": "h3",
+            "title": "H3"
+          },
+          {
+            "value": "h4",
+            "title": "H4"
+          },
+          {
+            "value": "blockquote",
+            "title": "Quote"
+          }
+        ],
+        "of": [],
+        "type": "block"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative Text"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "description": "Where the user goes when clicking this ad.",
+            "name": "targetUrl",
+            "type": "url",
+            "title": "Target URL"
+          },
+          {
+            "initialValue": false,
+            "description": "If enabled, this ad will trigger a full-screen popup when scrolled into view (CSA only).",
+            "name": "isPopupTrigger",
+            "type": "boolean",
+            "title": "Triggers Full-Screen Popup?"
+          }
+        ],
+        "type": "image"
+      }
+    ],
+    "name": "blockContent",
+    "type": "array"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g., Leadership, Innovation, Lifestyle",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 3,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "regex",
+                "constraint": {
+                  "pattern": "/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/",
+                  "name": "hex",
+                  "invert": false
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Hex color for category badges (e.g., #D0AF21)",
+        "name": "color",
+        "type": "string",
+        "title": "Accent Color"
+      }
+    ],
+    "name": "category",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "initialValue": false,
+        "description": "If enabled, this article is hidden from the site but remains in the Studio.",
+        "name": "isHidden",
+        "type": "boolean",
+        "title": "Hide Article"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 200
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Short description for article cards and SEO",
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Writer of record for this article",
+        "to": [
+          {
+            "type": "writer"
+          }
+        ],
+        "name": "writer",
+        "type": "reference"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "fields": [
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "presence",
+                    "constraint": "required"
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative text"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "name": "mainImage",
+        "type": "image",
+        "title": "Featured Image"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Use a 2:3 vertical crop for the homepage spotlight card. If empty, mainImage will be used.",
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative text"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "name": "spotlightImage",
+        "type": "image",
+        "title": "Homepage Card Image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "to": [
+              {
+                "type": "category"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to category"
+          }
+        ],
+        "name": "categories",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 3
+              },
+              {
+                "flag": "max",
+                "constraint": 3
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Short topical labels displayed on article cards",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "name": "contentPillar",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Interview",
+              "value": "interview"
+            },
+            {
+              "title": "Opinion",
+              "value": "opinion"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "opinion",
+        "description": "Choose the rendering type",
+        "name": "articleVariant",
+        "type": "string"
+      },
+      {
+        "initialValue": false,
+        "description": "Display this article prominently on the homepage",
+        "name": "isFeatured",
+        "type": "boolean",
+        "title": "Featured Article"
+      },
+      {
+        "description": "Estimated reading time in minutes",
+        "name": "readTime",
+        "type": "number",
+        "title": "Read Time (minutes)"
+      },
+      {
+        "description": "System field. Enter \"spotlight\" to prevent auto-image generation. Leave blank for standard articles.",
+        "name": "articleType",
+        "type": "string"
+      },
+      {
+        "description": "Total words in the article (from source JSON)",
+        "readOnly": true,
+        "name": "wordCount",
+        "type": "number"
+      },
+      {
+        "initialValue": 0,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Total views provided by source JSON",
+        "name": "views",
+        "type": "number",
+        "title": "Viewership Count"
+      },
+      {
+        "description": "Publish date for scheduling and sorting",
+        "name": "publishedAt",
+        "type": "datetime"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Rich text blocks and inline images",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object",
+                  "title": "URL"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Emphasis"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bullet"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "H1"
+              },
+              {
+                "value": "h2",
+                "title": "H2"
+              },
+              {
+                "value": "h3",
+                "title": "H3"
+              },
+              {
+                "value": "h4",
+                "title": "H4"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alternative text"
+              }
+            ],
+            "type": "image"
+          },
+          {
+            "type": "video"
+          },
+          {
+            "type": "table"
+          },
+          {
+            "type": "carousel",
+            "title": "Image Carousel"
+          },
+          {
+            "type": "cta",
+            "title": "Call to Action"
+          },
+          {
+            "type": "partnerQuotes",
+            "title": "Partner Quotes Section"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Article Content"
+      },
+      {
+        "fields": [
+          {
+            "description": "Override the default title for SEO",
+            "name": "metaTitle",
+            "type": "string"
+          },
+          {
+            "rows": 3,
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "max",
+                    "constraint": 160
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "metaDescription",
+            "type": "text"
+          }
+        ],
+        "name": "seo",
+        "type": "object",
+        "title": "SEO Settings"
+      },
+      {
+        "fields": [
+          {
+            "name": "image",
+            "type": "image"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "targetUrl",
+            "type": "url",
+            "title": "Target URL"
+          },
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "popupAd",
+        "type": "object"
+      },
+      {
+        "description": "Previous slug for redirect purposes (auto-populated during slug updates)",
+        "readOnly": true,
+        "name": "legacySlug",
+        "type": "string"
+      },
+      {
+        "description": "Single primary category for display",
+        "to": [
+          {
+            "type": "category"
+          }
+        ],
+        "name": "category",
+        "type": "reference",
+        "title": "Primary Category"
+      },
+      {
+        "description": "Legacy field for imported content",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "hidden": true,
+        "name": "content",
+        "type": "array",
+        "title": "Legacy Content"
+      }
+    ],
+    "name": "post",
+    "type": "document",
+    "title": "Article"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 200
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Short description for article cards and SEO",
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "to": [
+          {
+            "type": "writer"
+          }
+        ],
+        "name": "writer",
+        "type": "reference"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative text"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "name": "mainImage",
+        "type": "image",
+        "title": "Featured Image"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Use a 2:3 vertical crop for the homepage spotlight card. If empty, mainImage will be used.",
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alternative text"
+          },
+          {
+            "name": "caption",
+            "type": "string"
+          }
+        ],
+        "name": "spotlightImage",
+        "type": "image",
+        "title": "Homepage Card Image"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "category"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to category"
+          }
+        ],
+        "name": "categories",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Rich text blocks and inline images",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object",
+                  "title": "URL"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Emphasis"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bullet"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "H1"
+              },
+              {
+                "value": "h2",
+                "title": "H2"
+              },
+              {
+                "value": "h3",
+                "title": "H3"
+              },
+              {
+                "value": "h4",
+                "title": "H4"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alternative text"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "description": "Optional: Make this image clickable (e.g., for ads)",
+                "name": "href",
+                "type": "url",
+                "title": "Link URL"
+              },
+              {
+                "description": "Optional: Text to display below the image",
+                "name": "caption",
+                "type": "string"
+              },
+              {
+                "description": "If checked, this image will trigger the popup ad when viewed.",
+                "name": "triggersPopup",
+                "type": "boolean"
+              }
+            ],
+            "type": "image"
+          },
+          {
+            "type": "video"
+          },
+          {
+            "type": "table"
+          },
+          {
+            "type": "carousel",
+            "title": "Image Carousel"
+          },
+          {
+            "type": "cta",
+            "title": "Call to Action"
+          },
+          {
+            "type": "partnerQuotes",
+            "title": "Partner Quotes Section"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Article Content"
+      },
+      {
+        "fields": [
+          {
+            "name": "metaTitle",
+            "type": "string"
+          },
+          {
+            "rows": 3,
+            "name": "metaDescription",
+            "type": "text"
+          }
+        ],
+        "name": "seo",
+        "type": "object",
+        "title": "SEO Settings"
+      },
+      {
+        "fields": [
+          {
+            "name": "image",
+            "type": "image"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "targetUrl",
+            "type": "url",
+            "title": "Target URL"
+          },
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt Text"
+          }
+        ],
+        "name": "popupAd",
+        "type": "object"
+      },
+      {
+        "description": "Previous slug for redirect purposes (auto-populated during slug updates)",
+        "readOnly": true,
+        "name": "legacySlug",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 1
+              },
+              {
+                "flag": "max",
+                "constraint": 60
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Estimated reading time in minutes",
+        "name": "readTime",
+        "type": "number",
+        "title": "Read Time (minutes)"
+      },
+      {
+        "description": "Primary category for public display. CSA articles are internally company-sponsored but publicly shown under this category (usually CXO Interview).",
+        "to": [
+          {
+            "type": "category"
+          }
+        ],
+        "name": "category",
+        "type": "reference",
+        "title": "Display Category"
+      },
+      {
+        "description": "Legacy field for imported content",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "hidden": true,
+        "name": "content",
+        "type": "array",
+        "title": "Legacy Content"
+      }
+    ],
+    "name": "csa",
+    "type": "document",
+    "title": "Company Sponsored Article (CSA)"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Full Name"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "description": "e.g., Executive Editor, Contributing Writer",
+        "name": "position",
+        "type": "string",
+        "title": "Position/Title"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Staff",
+              "value": "staff"
+            },
+            {
+              "title": "Guest Author",
+              "value": "guest"
+            },
+            {
+              "title": "Contributor",
+              "value": "contributor"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "staff",
+        "description": "Classify the writer (Staff, Guest, Contributor)",
+        "name": "writerType",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Profile Photo"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "name": "bio",
+        "type": "array",
+        "title": "Biography"
+      },
+      {
+        "fields": [
+          {
+            "description": "Contact email for the writer (optional)",
+            "name": "email",
+            "type": "string",
+            "title": "Email Address"
+          },
+          {
+            "initialValue": false,
+            "description": "If enabled, the email will be displayed on the writer profile page",
+            "name": "showEmail",
+            "type": "boolean",
+            "title": "Show Email Publicly?"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "twitter",
+            "type": "url",
+            "title": "Twitter/X URL"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "linkedin",
+            "type": "url",
+            "title": "LinkedIn URL"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "website",
+            "type": "url",
+            "title": "Personal Website"
+          }
+        ],
+        "name": "social",
+        "type": "object",
+        "title": "Social Media"
+      }
+    ],
+    "name": "writer",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Article Sidebar (Large)",
+              "value": "article-sidebar-large"
+            },
+            {
+              "title": "In-Article",
+              "value": "in-article"
+            },
+            {
+              "title": "Popup (Interstitial)",
+              "value": "popup"
+            }
+          ]
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "article-sidebar-large",
+                  "in-article",
+                  "popup"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "placement",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "description": "Image dimensions in pixels (width x height)",
+        "fields": [
+          {
+            "name": "width",
+            "type": "number",
+            "title": "Width (px)"
+          },
+          {
+            "name": "height",
+            "type": "number",
+            "title": "Height (px)"
+          }
+        ],
+        "name": "dimensions",
+        "type": "object"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "targetUrl",
+        "type": "url",
+        "title": "Target URL"
+      },
+      {
+        "initialValue": true,
+        "name": "isActive",
+        "type": "boolean",
+        "title": "Active"
+      },
+      {
+        "initialValue": 0,
+        "description": "Higher number = higher priority when multiple ads match.",
+        "name": "priority",
+        "type": "number"
+      },
+      {
+        "name": "startDate",
+        "type": "datetime"
+      },
+      {
+        "name": "endDate",
+        "type": "datetime"
+      }
+    ],
+    "name": "advertisement",
+    "type": "document"
+  },
+  {
+    "description": "📋 Add exactly 12 articles for the Spotlight grid. Drag to reorder. First article = first grid position.",
+    "fields": [
+      {
+        "initialValue": "Spotlight Grid",
+        "hidden": true,
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "length",
+                "constraint": 12
+              },
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error",
+            "message": "Must have exactly 12 articles in the spotlight grid"
+          }
+        ],
+        "description": "📋 Add exactly 12 articles. Drag to reorder. Click \"+ Add item\" to search and add articles.",
+        "of": [
+          {
+            "to": [
+              {
+                "type": "post"
+              },
+              {
+                "type": "csa"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to article or company sponsored article (csa)"
+          }
+        ],
+        "name": "items",
+        "type": "array",
+        "title": "🎯 Spotlight Articles (Exactly 12)"
+      }
+    ],
+    "name": "spotlightConfig",
+    "type": "document",
+    "title": "⭐ Spotlight Grid (12 Articles)"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "YouTube, Vimeo, or other video URL",
+        "name": "url",
+        "type": "url",
+        "title": "Video URL"
+      },
+      {
+        "description": "Optional caption for the video",
+        "name": "caption",
+        "type": "string"
+      }
+    ],
+    "name": "video",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 2
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alternative text"
+              },
+              {
+                "name": "caption",
+                "type": "string"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "images",
+        "type": "array"
+      }
+    ],
+    "name": "carousel",
+    "type": "object",
+    "title": "Image Carousel"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "text",
+        "type": "string",
+        "title": "Button Text"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "Button URL"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Primary (Gold)",
+              "value": "primary"
+            },
+            {
+              "title": "Outline",
+              "value": "outline"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "primary",
+        "name": "style",
+        "type": "string",
+        "title": "Button Style"
+      }
+    ],
+    "name": "cta",
+    "type": "object",
+    "title": "Call to Action"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Name"
+      },
+      {
+        "description": "e.g. President & CEO, Southwire Company",
+        "name": "position",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "description": "The main headline text displayed below the name.",
+        "name": "description",
+        "type": "text",
+        "title": "Headline / Description"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Portrait Image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Where the \"Read Exclusive Interview\" button should link to.",
+        "name": "link",
+        "type": "url",
+        "title": "Link to Article"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "publishedAt",
+        "type": "datetime"
+      }
+    ],
+    "name": "executiveInFocus",
+    "type": "document",
+    "title": "Executive in Focus"
+  },
+  {
+    "description": "👔 Select which article to feature as the principal \"Executive in Focus\" hero on the homepage.",
+    "fields": [
+      {
+        "initialValue": "Executive in Focus",
+        "hidden": true,
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "🔍 Search and select the article to feature. The article's title, image, and link will be used automatically.",
+        "to": [
+          {
+            "type": "post"
+          },
+          {
+            "type": "csa"
+          }
+        ],
+        "name": "featuredArticle",
+        "type": "reference",
+        "title": "👤 Featured Executive Article"
+      },
+      {
+        "description": "e.g. \"CEO, Xero\". Leave blank to use a default placeholder.",
+        "name": "customPosition",
+        "type": "string",
+        "title": "💼 Custom Position (Optional)"
+      },
+      {
+        "rows": 3,
+        "description": "Override the article description if you want custom text. Leave blank to use article data.",
+        "name": "customDescription",
+        "type": "text",
+        "title": "📝 Custom Description (Optional)"
+      }
+    ],
+    "name": "executiveInFocusConfig",
+    "type": "document",
+    "title": "👔 Executive in Focus Config"
+  },
+  {
+    "fields": [
+      {
+        "initialValue": "Industry Juggernauts",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "description": "List of industry juggernauts to display on the homepage",
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "options": {
+                  "hotspot": true
+                },
+                "name": "image",
+                "type": "image"
+              },
+              {
+                "name": "link",
+                "type": "string"
+              },
+              {
+                "initialValue": "Leadership",
+                "name": "category",
+                "type": "string",
+                "title": "Category Label"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "items",
+        "type": "array",
+        "title": "Juggernaut Items"
+      }
+    ],
+    "name": "industryJuggernautConfig",
+    "type": "document",
+    "title": "Industry Juggernauts Config"
+  },
+  {
+    "fields": [
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "quote",
+                "type": "text"
+              },
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "name": "title",
+                "type": "string",
+                "title": "Job Title"
+              },
+              {
+                "name": "company",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "partnerQuote"
+          }
+        ],
+        "name": "quotes",
+        "type": "array",
+        "title": "Partner Quotes"
+      }
+    ],
+    "name": "partnerQuotes",
+    "type": "object",
+    "title": "Partner Quotes Section"
+  }
+]

@@ -12,52 +12,77 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
   // Fetch Executive in Focus data from Sanity
   let executiveData = null
   try {
+    // UAQS v2.3: Try the new config singleton first (Search-and-Select Utility)
     executiveData = await client.fetch(
-      `*[_type == "executiveInFocus"] | order(publishedAt desc)[0]{
-        title,
-        position,
-        description,
-        image,
-        link
+      `*[_type == "executiveInFocusConfig"][0]{
+        "article": featuredArticle->{
+          title,
+          "description": excerpt,
+          "image": spotlightImage || mainImage,
+          "slug": slug.current,
+          "type": _type,
+          "primaryCategory": categories[0]->{ slug }
+        },
+        customPosition,
+        customDescription
       }`
     )
+    
+    // If no config found, fallback to old manual document system
+    if (!executiveData?.article) {
+      executiveData = await client.fetch(
+        `*[_type == "executiveInFocus"] | order(publishedAt desc)[0]{
+          title,
+          position,
+          description,
+          image,
+          link
+        }`
+      )
+    }
   } catch (error) {
     console.error("Error fetching executive data:", error)
   }
 
   // Identify Rich Stinson for Executive in Focus (Fallback)
   const featuredName = "Rich Stinson"
-  // Note: items passed here are already the "grid" items (processed in page.tsx), 
-  // but we might need the original full list to find the featured item if it's not in the grid?
-  // Actually, the fallback logic relies on finding "Rich Stinson" in the items list.
-  // If `items` passed to this component are ALREADY filtered, we might miss him.
-  // However, `processSpotlightItems` filters him out.
-  // So we should probably pass the *full* raw items to this component if we want to find him, 
-  // OR pass the featured item separately.
-  // For now, let's assume `items` passed here are the ones to be displayed in the GRID.
-  // We'll need to fetch the featured item separately or pass it in.
-  // BUT, the fallback logic `items.find` implies `items` contains him.
+  
+  // Resolve final variables from combined data sources
+  let executiveImage = ''
+  let executiveTitle = ''
+  let executivePosition = ''
+  let executiveHref = '#'
+  let executiveDescription = ''
 
-  // Let's adjust the plan: `page.tsx` will fetch raw items. 
-  // `MagazineGallery` will take `rawItems` and do the processing itself?
-  // OR `page.tsx` does the processing and passes `gridItems` AND `featuredItem`.
-
-  // To minimize changes to the fallback logic structure:
-  // Let's assume `items` passed in are the GRID items.
-  // We'll try to find the featured item from the GRID items (which won't work if he's filtered out).
-  // So we should probably pass `featuredItem` as a prop if we want to support the fallback fully.
-
-  // However, since we migrated data to Sanity, `executiveData` should be present, so the fallback path is less critical.
-  // But to be safe, let's just use a placeholder or empty if not found in grid.
-
-  const featuredItem = items.find(item => item.title === featuredName)
-
-  // Use Sanity data if available, otherwise fallback to static/spotlight item
-  const executiveImage = executiveData?.image ? urlFor(executiveData.image).url() : (featuredItem?.image || '')
-  const executiveTitle = executiveData?.title || featuredItem?.title || featuredName
-  const executivePosition = executiveData?.position || "President & CEO, Southwire Company"
-  const executiveHref = executiveData?.link || featuredItem?.href || '#'
-  const executiveDescription = executiveData?.description || "Visionary Leader Powering America’s Electrification Future"
+  if (executiveData?.article) {
+    // New Config System Path
+    const art = executiveData.article
+    executiveImage = art.image ? urlFor(art.image).url() : ''
+    executiveTitle = art.title || ''
+    executivePosition = executiveData.customPosition || "Principal Executive"
+    executiveDescription = executiveData.customDescription || art.description || ''
+    
+    // Canonical URL logic
+    if (art.slug) {
+      const cat = art.primaryCategory?.slug?.current || 'cxo-interview'
+      executiveHref = art.type === 'csa' ? `/csa/${art.slug}` : `/category/${cat}/${art.slug}`
+    }
+  } else if (executiveData) {
+    // Old Manual System Path
+    executiveImage = executiveData.image ? urlFor(executiveData.image).url() : ''
+    executiveTitle = executiveData.title || ''
+    executivePosition = executiveData.position || ''
+    executiveHref = executiveData.link || '#'
+    executiveDescription = executiveData.description || ''
+  } else {
+    // Total Fallback (Rich Stinson)
+    const featuredItem = items.find(item => item.title === featuredName)
+    executiveImage = featuredItem?.image || ''
+    executiveTitle = featuredItem?.title || featuredName
+    executivePosition = "President & CEO, Southwire Company"
+    executiveHref = featuredItem?.href || '#'
+    executiveDescription = "Visionary Leader Powering America's Electrification Future"
+  }
 
   return (
     <>

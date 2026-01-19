@@ -73,6 +73,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@sanity/dashboard": "^5.0.1",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^24.9.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -91,6 +92,7 @@
     "png-to-ico": "^3.0.1",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.17"
   }
 }
