@@ -123,7 +123,7 @@ async function fetchWriterBySlug(slug: string) {
 async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`);
   // Relaxed query to ensure CSA articles are found even if isHidden is somehow set or undefined logic is tricky
-  const query = `*[_type in ["post","article","csa"] && (slug.current == $slug || slug == $slug) && (_type == "csa" || isHidden != true)][0] {
+  const query = `*[_type in ["post","article","csa"] && slug.current == $slug][0] {
     _id,
     _type,
     title,

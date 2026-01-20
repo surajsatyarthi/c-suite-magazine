@@ -2,9 +2,9 @@ name: E2E
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -12,34 +12,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'pnpm'
-      
+          node-version: "22"
+          cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build
         env:
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
           NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
         run: pnpm build
-      
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-      
+
+      - name: Run Unit Tests
+        run: pnpm test lib/__tests__/
+
       - name: Run Playwright tests
         env:
           BASE_URL: http://localhost:3000
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
           NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
         run: pnpm test:e2e
-

@@ -13,6 +13,8 @@ const client = createClient({
   token: process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN,
 });
 
+const FORCE_UPDATE = process.env.FORCE_UPDATE === 'true';
+
 // Mapping of image filenames to article title search terms
 const imageMapping = [
   { file: 'Bill Faruki.png', searchTerm: 'Bill Faruki' },
@@ -26,6 +28,15 @@ const imageMapping = [
   { file: 'bryce tully.png', searchTerm: 'Bryce Tully' },
   { file: 'cal riley.png', searchTerm: 'Cal Riley' },
   { file: 'Olga Denysiuk.png', searchTerm: 'Olga Denysiuk' },
+  // Missing 8 images added below
+  { file: 'Angelina Usanova.png', searchTerm: 'Angelina Usanova' },
+  { file: 'Benjamin Borketey.png', searchTerm: 'Benjamin Borketey' },
+  { file: 'Bryan Smeltzer.png', searchTerm: 'Bryan Smeltzer' },
+  { file: 'Dean Fealk.png', searchTerm: 'Dean Fealk' },
+  { file: 'John Zangardi.png', searchTerm: 'John Zangardi' },
+  { file: 'Rich Stinson Bansal.png', searchTerm: 'Rich Stinson' },
+  { file: 'Stella Ambrose.png', searchTerm: 'Stella Ambrose' },
+  { file: 'Sukhinder Singh.png', searchTerm: 'Sukhinder' },
 ];
 
 const FEATURED_SECTION_DIR = path.join(__dirname, '../public/Featured section');
@@ -40,8 +51,8 @@ async function uploadSpotlightImages() {
     try {
       console.log(`\n📸 Processing: ${mapping.file}`);
       
-      // 1. Find the article
-      const query = `*[_type == "post" && title match "${mapping.searchTerm}*"][0]{ _id, title, spotlightImage }`;
+      // 1. Find the article (look in both post and csa types)
+      const query = `*[_type in ["post", "csa"] && title match "${mapping.searchTerm}*"][0]{ _id, title, spotlightImage }`;
       const article = await client.fetch(query);
       
       if (!article) {
@@ -52,8 +63,8 @@ async function uploadSpotlightImages() {
       
       console.log(`   ✓ Found article: ${article.title}`);
       
-      // 2. Check if spotlightImage already exists
-      if (article.spotlightImage?.asset) {
+      // 2. Check if spotlightImage already exists (unless forcing)
+      if (article.spotlightImage?.asset && !FORCE_UPDATE) {
         console.log(`   ⚠️  Article already has spotlight image, skipping...`);
         continue;
       }

@@ -85,20 +85,23 @@ async function getLatestPosts(): Promise<Post[]> {
 
 async function getSpotlightExcludeSlugs(): Promise<string[]> {
   try {
-    const spotlightPath = path.join(process.cwd(), 'public', 'spotlight.json')
-    const raw = await fs.readFile(spotlightPath, 'utf-8')
-    const data = JSON.parse(raw) as Array<{ href?: string }>
-    const slugs = data
-      .map(item => {
-        const href = item?.href || ''
-        const parts = href.split('/').filter(Boolean)
-        return parts.length ? parts[parts.length - 1] : ''
-      })
-      .filter(Boolean)
+    // UAQS v2.3: Fetch exclusions directly from Sanity spotlightConfig
+    const data = await client.fetch(
+      `*[_type == "spotlightConfig"][0]{
+        items[]->{ "slug": slug.current }
+      }`,
+      {},
+      { useCdn: false }
+    );
+    
+    const slugs: string[] = Array.isArray(data?.items) 
+      ? data.items.map((it: any) => it.slug).filter(Boolean)
+      : [];
+
     if (!slugs.includes('stoyana-natseva')) slugs.push('stoyana-natseva')
     return slugs
   } catch (e) {
-    console.warn('Failed to read spotlight.json; proceeding with minimal guard:', e)
+    console.warn('Failed to fetch spotlight exclusions from Sanity; using minimal guard:', e)
     return ['stoyana-natseva']
   }
 }

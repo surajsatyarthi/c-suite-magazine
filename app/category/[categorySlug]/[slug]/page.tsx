@@ -108,7 +108,7 @@ async function fetchWriterBySlug(slug: string) {
 async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`)
   // Relaxed query to ensure CSA articles are found even if isHidden is somehow set or undefined logic is tricky
-  const query = `*[_type in ["post","article","csa"] && (slug.current == $slug || slug == $slug) && (_type == "csa" || isHidden != true)][0] {
+  const query = `*[_type in ["post","article","csa"] && slug.current == $slug][0] {
     _id,
     _type,
     title,
@@ -148,7 +148,6 @@ async function getPost(slug: string): Promise<Post | null> {
       : undefined
     const p = await getClient(token).fetch(query, { slug })
     if (p) {
-      console.log(`[getPost] Found article: ${p.title}`)
       // Deterministic display-only fallback to approved writer list when missing.
       if (!p.writer) {
         const fallback = getDefaultWriterFromCsv()
@@ -168,7 +167,11 @@ async function getPost(slug: string): Promise<Post | null> {
       console.log(`[getPost] Article not found in Sanity: ${slug}`)
     }
   } catch (e) {
-    console.error(`[getPost] Error fetching article ${slug}:`, e)
+    console.error(`[getPost] EXCEPTION fetching article ${slug}:`, e)
+    if (e instanceof Error) {
+      console.error(`[getPost] Error message: ${e.message}`);
+      console.error(`[getPost] Error stack: ${e.stack}`);
+    }
   }
   try {
     const fallback = await getPostFromExports(slug)
