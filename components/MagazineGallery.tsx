@@ -18,7 +18,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
         "article": featuredArticle->{
           title,
           "description": excerpt,
-          "image": spotlightImage || mainImage,
+          "image": coalesce(spotlightImage, mainImage),
           "slug": slug.current,
           "type": _type,
           "primaryCategory": categories[0]->{ slug }
