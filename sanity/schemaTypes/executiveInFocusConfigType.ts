@@ -22,6 +22,12 @@ export const executiveInFocusConfigType = defineType({
       validation: (Rule: any) => Rule.required(),
     }),
     defineField({
+      name: 'customTitle',
+      title: '✏️ Custom Title (Optional)',
+      type: 'string',
+      description: 'Override the display title for Executive in Focus. Leave blank to use the article\'s original title.',
+    }),
+    defineField({
       name: 'customPosition',
       title: '💼 Custom Position (Optional)',
       type: 'string',

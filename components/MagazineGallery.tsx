@@ -23,6 +23,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
           "type": _type,
           "primaryCategory": categories[0]->{ slug }
         },
+        customTitle,
         customPosition,
         customDescription
       }`
@@ -59,7 +60,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
     // New Config System Path
     const art = executiveData.article
     executiveImage = art.image ? urlFor(art.image).url() : ''
-    executiveTitle = art.title || ''
+    executiveTitle = executiveData.customTitle || art.title || ''
     executivePosition = executiveData.customPosition || "Principal Executive"
     executiveDescription = executiveData.customDescription || art.description || ''
     
