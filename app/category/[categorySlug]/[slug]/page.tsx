@@ -142,11 +142,8 @@ async function getPost(slug: string): Promise<Post | null> {
   }`
   try {
     const { isEnabled } = await draftMode()
-    // Fallback chain: SANITY_API_TOKEN (production) -> SANITY_WRITE_TOKEN (local) -> SANITY_API_READ_TOKEN (legacy)
-    const token = isEnabled 
-      ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_READ_TOKEN)
-      : undefined
-    const p = await getClient(token).fetch(query, { slug })
+    const client = getClient(isEnabled ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN) : undefined);
+    const p = await client.fetch(query, { slug })
     if (p) {
       // Deterministic display-only fallback to approved writer list when missing.
       if (!p.writer) {
@@ -340,6 +337,8 @@ export const revalidate = 600
 
 const heroAspectCache = new Map<string, number>()
 
+import { safeJsonLd } from '@/lib/security'
+
 export default async function CategoryArticlePage(props: { params: Promise<{ categorySlug: string, slug: string }> }) {
   try {
     const params = await props.params
@@ -529,18 +528,16 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
           <ArticleProgress />
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(generateStructuredData('article', {
-                title: post.title,
-                description: sanitizeExcerpt(post.excerpt || firstBlockText || bodyText || '')?.substring(0, 160) || undefined,
-                image: post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
-                publishedTime: post.publishedAt,
-                writer: post.writer?.name,
-                url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
-                wordCount,
-                readTime
-              })),
-            }}
+            dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('article', {
+              title: post.title,
+              description: sanitizeExcerpt(post.excerpt || firstBlockText || bodyText || '')?.substring(0, 160) || undefined,
+              image: post.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
+              publishedTime: post.publishedAt,
+              writer: post.writer?.name,
+              url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
+              wordCount,
+              readTime
+            }))}
           />
 
           {/* Breadcrumbs - Map "Company Sponsored" to "CXO Interview" for public display */}

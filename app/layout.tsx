@@ -37,6 +37,8 @@ export const metadata: Metadata = generateMetadata({
 
 export const viewport = generateViewport();
 
+import { safeJsonLd } from "@/lib/security";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -57,9 +59,7 @@ export default function RootLayout({
         {/* Fonts loaded via next/font to avoid render-blocking; remove external CSS links */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
+          dangerouslySetInnerHTML={safeJsonLd(organizationSchema)}
         />
       </head>
       <body

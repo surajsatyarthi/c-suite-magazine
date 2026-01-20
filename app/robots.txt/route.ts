@@ -9,7 +9,6 @@ Allow: /
 # Disallow admin and API routes
 Disallow: /api/
 Disallow: /admin/
-Disallow: /studio/
 Disallow: /_next/
 Disallow: /private/
 

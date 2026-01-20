@@ -1,5 +1,7 @@
 import { DocumentTextIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
+import { validateTags } from '../lib/tagValidation'
+import { TagAutocompleteInput } from '../components/TagAutocompleteInput'
 
 export const postType = defineType({
   name: 'post',
@@ -103,10 +105,19 @@ export const postType = defineType({
       name: 'tags',
       type: 'array',
       title: 'Tags',
-      description: 'Short topical labels displayed on article cards',
-      of: [defineArrayMember({ type: 'string' })],
+      description: 'Short topical labels displayed on article cards. Use existing tags when possible. Min 3 characters, no stopwords.',
+      of: [
+        defineArrayMember({ 
+          type: 'string',
+          components: {
+            input: TagAutocompleteInput
+          }
+        })
+      ],
       group: 'meta',
-      validation: (Rule) => Rule.required().min(3).max(3),
+      validation: (Rule) => Rule.required().min(3).max(3).custom((tags) => {
+        return validateTags((tags as string[]) || []);
+      }),
     }),
     defineField({
       name: 'contentPillar',

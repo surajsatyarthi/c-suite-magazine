@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import { type NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig: NextConfig = {
   /* config options here */
@@ -12,9 +12,14 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/studio',
+        destination: 'https://ceo-magazine-2f93fcy8.sanity.studio',
+        permanent: true,
+      },
+      {
         source: '/sanity',
-        destination: '/studio',
-        permanent: false,
+        destination: 'https://ceo-magazine-2f93fcy8.sanity.studio',
+        permanent: true,
       },
       // Normalize broken article slug artifact
       {
@@ -83,8 +88,8 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https: wss: https://core.sanity-cdn.com https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.sanity.studio wss://*.sanity.studio https://studio.csuitemagazine.global wss://studio.csuitemagazine.global https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh https://*.sentry.io https://www.googletagmanager.com",
-              "frame-src 'self' https://*.sanity.studio https://*.sanity.io https://studio.csuitemagazine.global",
+              "connect-src 'self' https: wss: https://core.sanity-cdn.com https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.sanity.studio wss://*.sanity.studio https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh https://*.sentry.io https://www.googletagmanager.com",
+              "frame-src 'self' https://*.sanity.studio https://*.sanity.io",
               "frame-ancestors 'self' https://ceo-magazine-2f93fcy8.sanity.studio https://*.sanity.studio https://*.sanity.io",
             ].join('; '),
           },

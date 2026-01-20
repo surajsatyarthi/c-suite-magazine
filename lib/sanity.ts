@@ -10,15 +10,25 @@ export const client = createClient({
 })
 
 export function getClient(previewToken?: string) {
-  if (previewToken) {
-    return client.withConfig({
-      token: previewToken,
-      useCdn: false,
+  // Base configuration using the read-only client
+  const baseClient = client;
+  
+  // SANITY_API_TOKEN is our primary "read" token for private datasets
+  const token = previewToken || process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
+
+  // For E2E tests or internal staging, we may want to view drafts globally
+  const forceDrafts = process.env.SANITY_VIEW_DRAFTS === 'true';
+
+  if (token) {
+    return baseClient.withConfig({
+      token,
+      useCdn: !(previewToken || forceDrafts), // Bypass CDN if viewing drafts
       ignoreBrowserTokenWarning: true,
-      perspective: 'previewDrafts',
-    })
+      perspective: (previewToken || forceDrafts) ? 'previewDrafts' : 'published',
+    });
   }
-  return client
+  
+  return baseClient;
 }
 
 const builder = imageUrlBuilder(client)

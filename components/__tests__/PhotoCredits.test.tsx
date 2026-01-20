@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
-import { describe, it, expect } from '@jest/globals'
+/** @vitest-environment jsdom */
+import { describe, it, expect } from 'vitest'
 import PhotoCredits from '../PhotoCredits'
 
 describe('PhotoCredits Component', () => {

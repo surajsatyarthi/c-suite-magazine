@@ -1,3 +1,4 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import TagChips from '../TagChips'
@@ -62,13 +63,13 @@ describe('TagChips Component', () => {
   describe('variants', () => {
     it('should apply blue variant classes by default', () => {
       const { container } = render(<TagChips tags={['Test']} />)
-      const chip = container.querySelector('span span span')
+      const chip = container.querySelector('span span') as HTMLElement
       expect(chip?.className).toContain('text-[#082945]')
     })
 
     it('should apply gold variant classes when specified', () => {
       const { container } = render(<TagChips tags={['Test']} variant="gold" />)
-      const chip = container.querySelector('span span span')
+      const chip = container.querySelector('span span') as HTMLElement
       expect(chip?.className).toContain('text-[#3f330d]')
     })
   })
@@ -76,13 +77,13 @@ describe('TagChips Component', () => {
   describe('sizes', () => {
     it('should apply small size classes by default', () => {
       const { container } = render(<TagChips tags={['Test']} />)
-      const chip = container.querySelector('span span span')
+      const chip = container.querySelector('span span') as HTMLElement
       expect(chip?.className).toContain('text-sm')
     })
 
     it('should apply medium size classes when specified', () => {
       const { container } = render(<TagChips tags={['Test']} size="md" />)
-      const chip = container.querySelector('span span span')
+      const chip = container.querySelector('span span') as HTMLElement
       expect(chip?.className).toContain('text-base')
     })
   })
@@ -90,7 +91,7 @@ describe('TagChips Component', () => {
   describe('custom className', () => {
     it('should apply custom className to container', () => {
       const { container } = render(<TagChips tags={['Test']} className="custom-class" />)
-      expect(container.firstChild?.className).toContain('custom-class')
+      expect((container.firstChild as HTMLElement)?.className).toContain('custom-class')
     })
   })
 })

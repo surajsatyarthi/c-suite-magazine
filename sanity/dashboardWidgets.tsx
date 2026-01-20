@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import Link from 'next/link'
-import {useClient, type SanityClient} from 'sanity'
+import {useClient} from 'sanity'
+import type {SanityClient} from 'sanity'
 import {projectId} from './env'
 
 type Counts = {
@@ -78,11 +79,11 @@ export function QuickLinksWidget() {
     <div style={{ padding: 16 }}>
       <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Quick Actions</h2>
       <div style={{ marginTop: 8 }}>
-        <Link href="/studio/desk" style={linkStyle}>Open Desk</Link>
-        <Link href="/studio/desk/post" style={linkStyle}>Posts</Link>
-        <Link href="/studio/desk/writer" style={linkStyle}>Writers</Link>
-        <Link href="/studio/desk/category" style={linkStyle}>Categories</Link>
-        <Link href="/studio/desk/advertisement" style={linkStyle}>Advertisements</Link>
+        <Link href="/desk" style={linkStyle}>Open Desk</Link>
+        <Link href="/desk/post" style={linkStyle}>Posts</Link>
+        <Link href="/desk/writer" style={linkStyle}>Writers</Link>
+        <Link href="/desk/category" style={linkStyle}>Categories</Link>
+        <Link href="/desk/advertisement" style={linkStyle}>Advertisements</Link>
         <a href="intent://edit?type=spotlightConfig&id=spotlightConfig" style={linkStyle}>Spotlight Config</a>
       </div>
       <div style={{ marginTop: 12 }}>

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from '@jest/globals'
+/** @vitest-environment jsdom */
+import { describe, it, expect } from 'vitest'
 import InFocusBadge from '../InFocusBadge'
 
 describe('InFocusBadge Component', () => {

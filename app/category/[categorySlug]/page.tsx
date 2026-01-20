@@ -18,9 +18,11 @@ interface Category {
 // Enable ISR to avoid heavy full-build prerenders for category pages
 export const revalidate = 600
 
+import { getClient } from '@/lib/sanity'
+
 function getFetchClient() {
-  // Always use the read client for SSR/ISR to avoid session-bound errors
-  return client
+  // Use the improved authenticated client to support private datasets and staging drafts
+  return getClient()
 }
 
 async function getCategory(slug: string): Promise<Category | null> {
@@ -83,6 +85,8 @@ export async function generateMetadata({ params }: { params: Promise<{ categoryS
   })
 }
 
+import { safeJsonLd } from '@/lib/security'
+
 export default async function CategoryPage({
   params,
 }: {
@@ -128,16 +132,14 @@ export default async function CategoryPage({
       {/* Breadcrumb JSON-LD for category page */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateStructuredData('breadcrumb', {
-              items: [
-                { name: 'Home', url: 'https://csuitemagazine.global/' },
-                { name: displayCategory.title, url: `https://csuitemagazine.global/category/${displayCategory.slug.current}` },
-              ]
-            })
-          )
-        }}
+        dangerouslySetInnerHTML={safeJsonLd(
+          generateStructuredData('breadcrumb', {
+            items: [
+              { name: 'Home', url: 'https://csuitemagazine.global/' },
+              { name: displayCategory.title, url: `https://csuitemagazine.global/category/${displayCategory.slug.current}` },
+            ]
+          })
+        )}
       />
 
       <main className="min-h-screen bg-gray-50">

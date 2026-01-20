@@ -13,6 +13,7 @@ import { generateMetadata, generateStructuredData } from '@/lib/seo'
 import path from 'path'
 import fs from 'fs/promises'
 import { getAllExecutivesWithCompensation } from '@/lib/db'
+import { getSpotlightItems, processSpotlightItems } from '@/lib/spotlight'
 import HomepageAdTrigger from '@/components/HomepageAdTrigger'
 
 export const metadata: Metadata = generateMetadata({
@@ -141,7 +142,7 @@ function formatDate(dateString: string) {
   })
 }
 
-import { getSpotlightItems, processSpotlightItems } from '@/lib/spotlight'
+import { safeJsonLd } from '@/lib/security'
 
 export default async function Home() {
   const latestArticles = await getLatestPosts()
@@ -159,14 +160,12 @@ export default async function Home() {
       {/* Enhanced Structured Data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateStructuredData('organization', {
-            name: 'C-Suite Magazine',
-            description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
-            url: 'https://csuitemagazine.global',
-            logo: 'https://csuitemagazine.global/logo.png'
-          })),
-        }}
+        dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('organization', {
+          name: 'C-Suite Magazine',
+          description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
+          url: 'https://csuitemagazine.global',
+          logo: 'https://csuitemagazine.global/logo.png'
+        }))}
       />
 
       <main>

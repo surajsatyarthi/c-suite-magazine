@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
-import { describe, it, expect } from '@jest/globals'
+/** @vitest-environment jsdom */
+import { describe, it, expect } from 'vitest'
 import HeroOverlay from '../HeroOverlay'
 
 describe('HeroOverlay Component', () => {
@@ -20,10 +21,8 @@ describe('HeroOverlay Component', () => {
 
   it('applies gradient overlay styling', () => {
     const { container } = render(<HeroOverlay tagline="TEST" />)
-    const overlay = container.querySelector('div[style*="gradient"]')
-    expect(overlay).toHaveStyle({
-      background: expect.stringContaining('linear-gradient'),
-    })
+    const overlay = container.querySelector('div[style*="gradient"]') as HTMLElement
+    expect(overlay.style.background).toContain('linear-gradient')
   })
 
   it('uses uppercase text styling', () => {

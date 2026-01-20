@@ -9,6 +9,8 @@ type BreadcrumbItem = {
 
 const SITE_URL = 'https://csuitemagazine.global'
 
+import { safeJsonLd } from '@/lib/security'
+
 export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -41,7 +43,7 @@ export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
       </div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={safeJsonLd(jsonLd)}
       />
     </div>
   )
