@@ -2,116 +2,46 @@
 
 You are an autonomous coding agent. Your goal: Build working, tested, secure code.
 
-## WORKFLOW (FOLLOW EXACTLY)
+## THE 4-GATE QUALITY PROTOCOL (MANDATORY)
 
-### Step 1: DELIVERABLE CHECK
+### GATE 1: RESEARCH & AUDIT (GROUNDING)
 
-Read current story from prd.json. Determine what's being asked:
+**Goal**: Understand the system before making any changes.
 
-- Code implementation? → BUILD IT (Step 2)
-- Tests only? → WRITE TESTS (Step 3a)
-- Explanation? → EXPLAIN (no code)
+- [ ] **Physical Audit**: Use `view_file` on schemas (Drizzle/Sanity) and relevant libraries.
+- [ ] **Dependency Check**: Verify `package.json` and local environment state.
+- [ ] **Logic Mapping**: Map the current data flow and identify side effects.
+- [ ] **Output**: A summary of findings in the chat.
 
-**BANNED RESPONSES:**
+### GATE 2: PLANNING & DESIGN (IMPLEMENTATION PLAN)
 
-- "Here's a plan..." → NO. Build it now.
-- "I recommend..." → NO. Do it now.
-- "This would require..." → NO. Do it or say you can't.
+**Goal**: Get user approval on the technical strategy.
 
-### Step 2: VERIFICATION GATE (GROUNDING)
+- [ ] **Artifact**: Create `implementation_plan.md` in the brain directory.
+- [ ] **Requirements**: Define Goal, Proposed Changes (File by File), and Verification Plan.
+- [ ] **Approval**: STOP and wait for the user to approve the plan.
+- [ ] **Output**: "PLANNING COMPLETE - AWAITING APPROVAL"
 
-Before ANY code:
-□ **SCHEMA ANCHOR**: `view_file` on `src/drizzle/schema.ts` (or Sanity schema)
-□ **LIB ANCHOR**: `view_file` on relevant library/helper files.
-□ Check files exist: `ls -la [path]`
-□ Verify dependencies: Check package.json
-□ Read agents.md for patterns
+### GATE 3: EXECUTION & VERIFICATION (TDD)
 
-### Step 3: TDD CYCLE (MANDATORY)
+**Goal**: Implement the approved plan with zero regressions.
 
-#### 3a. Generate Tests FIRST
+- [ ] **Step A**: Write Vitest/Playwright tests for the fix (Happy/Edge/Error paths).
+- [ ] **Step B**: Implement minimal code to pass tests.
+- [ ] **Step C**: Run FULL test suite to ensure zero collateral damage.
+- [ ] **Output**: Actual terminal output showing 100% test success.
 
-- Read ONLY acceptance criteria (don't look at existing code)
-- Write comprehensive tests:
-  - Happy path (given-when-then)
-  - Edge cases (empty, null, zero, negative)
-  - Error cases (network failures, invalid data)
-- Save to tests/[type]/[feature].test.ts
+### GATE 4: HANDOVER & DOCUMENTATION (WALKTHROUGH)
 
-#### 3b. **Test-Requirements Diff**
+**Goal**: Prove the work is done and update the master record.
 
-Output explanation proving tests match requirements:
+- [ ] **Artifact**: Create/Update `walkthrough.md` with proof (screenshots/logs).
+- [ ] **Master Record**: Update `MASTER_ISSUE_LIST.md` to "RESOLVED".
+- [ ] **Status**: Update `task.md` to 100% complete.
+- [ ] **Output**: Comprehensive summary table in the chat.
 
-```
-TEST-REQUIREMENTS DIFF:
-Test 1: "should return orderId and approvalURL"
-→ Covers acceptance criterion: "Returns {orderId, approvalURL}"
-
-Test 2: "should reject invalid amount"
-→ Covers test requirement: "Error test: Invalid amount (0, negative)"
-
-Test 3: "should handle API timeout"
-→ Covers acceptance criterion: "Handles network failures gracefully"
-
-All acceptance criteria covered: YES
-All test requirements included: YES
-```
-
-Then output: **"TESTS GENERATED - AWAITING HUMAN REVIEW"**
-
-STOP HERE. Do not implement until human types "APPROVED".
-
-#### 3c. Implement Code
-
-After approval:
-
-- Write minimal code that passes all tests
-- Follow .cursorrules if exists
-- No over-engineering
-
-#### 3d. Iterate Until Pass
-
-Run tests, fix failures, repeat.
-
-### Step 4: SECURITY (Defense-First)
-
-**MANDATORY SECURITY CHECKS:**
-
-- Every API must document Auth, Rate-Limit, and Validation in its header.
-- No "Anonymous" placeholders; use real session IDs.
-
-### Step 5: PROOF OF WORK (THE BLACK-GATE)
-
-After claiming done, provide ACTUAL terminal output:
-
-```bash
-# 1. SCHEMA/PHYSICAL AUDIT
-$ npx tsx -e "Verify actual DB state/Result"
-
-# 2. Files exist
-$ ls -la [path_to_new_file]
-
-# 3. Tests pass
-$ npm run test
-```
-
-**No summaries. Copy-paste actual terminal output.**
-
-### Step 6: HONESTY CHECKPOINT
-
-Before moving on:
-
-- [ ] Did I build what was requested?
-- [ ] Did I only create documentation? (if yes, FAIL)
-- [ ] Do I have physical proof? (if no, FAIL)
-
-### Step 7: UPDATE TRACKING
-
-```bash
-git commit -m "[STORY-ID]: [what you built]"
-# Update progress.txt and agents.md
-```
+---
 
 ## PERMISSION TO SAY "I DON'T KNOW"
 
-Do NOT guess schema or APIs. Verify first.
+Do NOT guess schema or APIs. Verify first using `view_file`.
