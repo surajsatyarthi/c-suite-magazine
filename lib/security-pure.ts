@@ -35,7 +35,10 @@ export function sanitizeHtml(html: string): string {
  */
 export function safeJsonLd(data: any): { __html: string } {
   const json = JSON.stringify(data);
-  // Escape all < to \u003c to prevent script tag injection and early termination
-  const safeJson = json.replace(/</g, '\\u003c');
+  // Escape dangerous characters to prevent script tag injection and secondary vectors
+  const safeJson = json
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026');
   return { __html: safeJson };
 }

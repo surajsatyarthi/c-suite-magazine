@@ -142,7 +142,7 @@ function formatDate(dateString: string) {
   })
 }
 
-import { safeJsonLd } from '@/lib/security'
+import { safeJsonLd, sanitizeHtml } from '@/lib/security'
 
 export default async function Home() {
   const latestArticles = await getLatestPosts()
@@ -160,6 +160,7 @@ export default async function Home() {
       {/* Enhanced Structured Data */}
       <script
         type="application/ld+json"
+        // eslint-disable-next-line no-restricted-syntax -- Verified Safe: Uses safeJsonLd with mandatory escaping for <, >, and &
         dangerouslySetInnerHTML={safeJsonLd(generateStructuredData('organization', {
           name: 'C-Suite Magazine',
           description: 'A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.',
@@ -253,7 +254,7 @@ export default async function Home() {
                                 <span className="text-white font-bold">${compensationM}M</span>
                               </div>
                               <div className="text-white text-sm font-medium">
-                                {exec.full_name}, {exec.company_name}
+                                {sanitizeHtml(exec.full_name || '')}, {sanitizeHtml(exec.company_name || '')}
                               </div>
                             </div>
                           )

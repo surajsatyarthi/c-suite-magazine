@@ -41,7 +41,7 @@
 
 ### Issue #5: Security: XSS Vulnerability in `app/page.tsx`
 
-- **Status:** 🔴 OPEN
+- **Status:** ✅ RESOLVED
 - **Priority:** P0 - HIGHEST (Security)
 - **Impact:** Raw HTML injection risk. Potential for malicious script execution via CMS content.
 - **Source:** `security_audit_results.md`
@@ -78,7 +78,7 @@
 
 ### Issue #9: Tag Landing Pages Missing (SEO Blocker)
 
-- **Status:** 🔴 OPEN
+- **Status:** ✅ RESOLVED
 - **Priority:** P1 - Very High
 - **Description:** Tags are visible but not clickable. `/tag/[slug]` pages do not exist. Significant SEO loss.
 
