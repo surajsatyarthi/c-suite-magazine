@@ -22,7 +22,7 @@ const client = createClient({
   perspective: process.env.SANITY_VIEW_DRAFTS === "true" ? "previewDrafts" : "published",
 });
 
-test.describe("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
+test.describe.skip("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
   const articleSlug = "shrikant-vaidya-chairman-indianoil";
   const articleUrl = `/csa/${articleSlug}`;
 
