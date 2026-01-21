@@ -19,3 +19,22 @@ export async function dismissLocaleModal(page: Page) {
         console.log('Locale modal not found or already dismissed');
     }
 }
+
+/**
+ * Checks if a document exists in Sanity with the given slug and type.
+ * Useful for skipping E2E tests for drafts that aren't published.
+ * 
+ * @param client - Sanity client instance (usually pre-configured with perspective)
+ * @param slug - The slug of the document to check
+ * @param type - The Sanity document type (e.g. 'post', 'csa')
+ * @param testRef - The Playwright 'test' object to call skip() on
+ */
+export async function skipIfMissing(client: any, slug: string, type: string, testRef: any) {
+    const query = `*[_type == $type && slug.current == $slug][0]._id`;
+    const docId = await client.fetch(query, { slug, type });
+    
+    if (!docId) {
+        console.log(`[Dynamic Skip] Content "${slug}" (${type}) not found in Sanity. Skipping test suite.`);
+        testRef.skip();
+    }
+}

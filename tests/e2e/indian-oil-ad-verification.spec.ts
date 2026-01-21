@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { dismissLocaleModal } from "./test-utils";
+import { dismissLocaleModal, skipIfMissing } from "./test-utils";
 import { createClient } from "next-sanity";
 import * as dotenv from 'dotenv';
 import path from 'path';
@@ -27,11 +27,13 @@ test.describe("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
   const articleUrl = `/csa/${articleSlug}`;
 
   // State to hold fetched data
-  let articleData: any = null;
+  let articleData = null;
 
   test.beforeAll(async () => {
-    // 1. Fetch Source of Truth from Sanity to check existence and skip if missing
-    console.log(`[Setup] Validating content for: ${articleSlug}`);
+    // 1. Check if article exists to skip if missing
+    await skipIfMissing(client, articleSlug, "csa", test);
+
+    // 2. Fetch full data for verification
     const query = `*[_type == "csa" && slug.current == $slug][0] {
       title,
       "adImages": body[_type == "image" && isPopupTrigger == false].asset->url,
@@ -45,19 +47,13 @@ test.describe("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Dynamic Skip: If article is not in the current perspective (e.g. still a draft in production), skip the test.
-    if (!articleData) {
-      console.log(`[Skip] Article "${articleSlug}" not found in active perspective. Skipping tests.`);
-      test.skip();
-    }
-
     // Gate 3: Disguise - Standard user interaction flow
     await page.goto(articleUrl);
     await dismissLocaleModal(page);
   });
 
   test("should dynamically verify all configured ad images", async ({ page }) => {
-    // Ensure we have data
+    // Ensure we have data (redundant due to skipIfMissing but safe)
     if (!articleData) return;
 
     console.log(`[Data] Found article in Sanity: "${articleData.title}"`);
