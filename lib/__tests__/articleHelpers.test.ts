@@ -1,12 +1,17 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
+
+// Mock 'server-only' to avoid error in test environment
+vi.mock('server-only', () => ({}))
+
 import { getHeroTagline, getArticleType } from '../articleHelpers'
 import { Post } from '../types'
 
 describe('Hero Tagline Extraction', () => {
-  it('extracts India energy from CSA title', () => {
+  test('extracts India energy from CSA title', () => {
     const article: Partial<Post> = {
       title: "Shrikant Vaidya: Leading India's Energy Transition",
-      categories: [{ slug: { current: 'company-sponsored' }, title: 'Company Sponsored' }],
+      categories: [{ slug: { current: 'cxo-interview' }, title: 'CXO Interview' }],
+      _type: 'csa'
     }
     const tagline = getHeroTagline(article as Post)
     expect(tagline).toBe("INDIA'S ENERGY TRANSITION")
@@ -57,9 +62,10 @@ describe('Hero Tagline Extraction', () => {
 })
 
 describe('Article Type Detection', () => {
-  it('returns CSA for company-sponsored articles', () => {
+  test('returns CSA for company-sponsored articles', () => {
     const article: Partial<Post> = {
-      categories: [{ slug: { current: 'company-sponsored' }, title: 'Company Sponsored' }],
+      _type: 'csa',
+      categories: [{ slug: { current: 'cxo-interview' }, title: 'CXO Interview' }]
     }
     const type = getArticleType(article as Post)
     expect(type).toBe('csa')
