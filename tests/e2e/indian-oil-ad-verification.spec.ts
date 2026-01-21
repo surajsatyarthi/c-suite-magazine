@@ -22,19 +22,16 @@ const client = createClient({
   perspective: process.env.SANITY_VIEW_DRAFTS === "true" ? "previewDrafts" : "published",
 });
 
-test.describe.skip("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
+test.describe("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
   const articleSlug = "shrikant-vaidya-chairman-indianoil";
   const articleUrl = `/csa/${articleSlug}`;
 
-  test.beforeEach(async ({ page }) => {
-    // Gate 3: Disguise - Standard user interaction flow
-    await page.goto(articleUrl);
-    await dismissLocaleModal(page);
-  });
+  // State to hold fetched data
+  let articleData: any = null;
 
-  test("should dynamically verify all configured ad images", async ({ page }) => {
-    // 1. Fetch Source of Truth from Sanity
-    console.log(`[Setup] Fetching ad configuration for: ${articleSlug}`);
+  test.beforeAll(async () => {
+    // 1. Fetch Source of Truth from Sanity to check existence and skip if missing
+    console.log(`[Setup] Validating content for: ${articleSlug}`);
     const query = `*[_type == "csa" && slug.current == $slug][0] {
       title,
       "adImages": body[_type == "image" && isPopupTrigger == false].asset->url,
@@ -44,15 +41,26 @@ test.describe.skip("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
       }
     }`;
 
-    const data = await client.fetch(query, { slug: articleSlug });
+    articleData = await client.fetch(query, { slug: articleSlug });
+  });
 
-    if (!data) {
-       // Graceful degradation / Informative failure
-       console.error(`❌ Article not found in Sanity: ${articleSlug}`);
-       throw new Error(`Article ${articleSlug} not found. Check SANITY_VIEW_DRAFTS env var.`);
+  test.beforeEach(async ({ page }) => {
+    // Dynamic Skip: If article is not in the current perspective (e.g. still a draft in production), skip the test.
+    if (!articleData) {
+      console.log(`[Skip] Article "${articleSlug}" not found in active perspective. Skipping tests.`);
+      test.skip();
     }
 
-    console.log(`[Data] Found article: "${data.title}"`);
+    // Gate 3: Disguise - Standard user interaction flow
+    await page.goto(articleUrl);
+    await dismissLocaleModal(page);
+  });
+
+  test("should dynamically verify all configured ad images", async ({ page }) => {
+    // Ensure we have data
+    if (!articleData) return;
+
+    console.log(`[Data] Found article in Sanity: "${articleData.title}"`);
     
     // Combine ads from body images and partner quotes (if they display logos)
     // Note: Adjust logic based on actual rendering implementation. 
@@ -113,9 +121,9 @@ test.describe.skip("Indian Oil CSA - Ad Integration Tests (Dynamic)", () => {
 
     // Assertion 3: Visibility of Key Sponsors (Dynamic Logic)
     // Only verify logos if they exist in the Sanity data
-    if (data.partnerQuotes && data.partnerQuotes.length > 0) {
-        console.log(`[Verification] Analyzing ${data.partnerQuotes.length} partner quotes...`);
-        for (const quote of data.partnerQuotes) {
+    if (articleData.partnerQuotes && articleData.partnerQuotes.length > 0) {
+        console.log(`[Verification] Analyzing ${articleData.partnerQuotes.length} partner quotes...`);
+        for (const quote of articleData.partnerQuotes) {
             if (quote.company && quote.logoUrl) {
                 console.log(`[Check] Looking for logo: ${quote.company}`);
                 // Flexible regex match for company name in alt text
