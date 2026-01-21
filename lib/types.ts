@@ -54,8 +54,10 @@ export interface Post {
   tags?: string[]
   isFeatured?: boolean
   readTime?: number
-  publishedAt: string
+  heroTagline?: string
   views?: number
+  hideViews?: boolean
+  publishedAt?: string
   body: any[]
   contentPillar?: string
   articleVariant?: string

@@ -6,11 +6,11 @@
  */
 
 export const config = {
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '2f93fcy8',
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-01',
     // The studio host used in sanity.cli.ts
-    studioHost: 'ceo-magazine-2f93fcy8',
+    studioHost: process.env.NEXT_PUBLIC_SANITY_STUDIO_HOST || 'ceo-magazine',
     // Helper to validate formats
     useCdn: false,
 }

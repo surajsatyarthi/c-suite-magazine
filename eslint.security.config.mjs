@@ -1,6 +1,7 @@
 import securityPlugin from "eslint-plugin-security";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
+import sonarjs from "eslint-plugin-sonarjs";
 
 export default [
   {
@@ -19,11 +20,15 @@ export default [
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
-      "security": securityPlugin
+      "security": securityPlugin,
+      "sonarjs": sonarjs
     },
     rules: {
+      ...sonarjs.configs.recommended.rules,
       "security/detect-object-injection": "off",
-      "security/detect-non-literal-fs-filename": "off", // Too noisy for build scripts
+      "security/detect-non-literal-fs-filename": "warn", 
+      "security/detect-unsafe-regex": "error",
+      "security/detect-buffer-noassert": "error",
       "no-restricted-syntax": [
         "error",
         {
@@ -33,8 +38,14 @@ export default [
         {
           "selector": "JSXAttribute[name.name='dangerouslySetInnerHTML']",
           "message": "Dangerous HTML detected. Use DOMPurify or safe alternatives."
+        },
+        {
+          "selector": "CallExpression[callee.name='eval']",
+          "message": "eval() is a high-risk security hazard."
         }
-      ]
+      ],
+      "sonarjs/cognitive-complexity": ["error", 15],
+      "sonarjs/no-duplicate-string": "warn"
     }
   },
   {

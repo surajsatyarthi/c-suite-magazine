@@ -1,3 +1,4 @@
+import 'server-only'
 import { Post } from '@/lib/types'
 
 /**
@@ -10,17 +11,18 @@ export function getHeroTagline(article: Post): string | null {
     return truncateTagline((article as any).heroTagline)
   }
 
-  // Priority 2: Check if CSA type (company-sponsored category)
-  const categorySlug = article.categories?.[0]?.slug?.current
-  if (categorySlug === 'company-sponsored') {
+  // Priority 2: Check if CSA type
+  if ((article as any)._type === 'csa') {
     // Try to extract industry/company from title
     const industryMatch = article.title.match(/India'?s?\s+(\w+\s+\w+)/i)
     if (industryMatch) {
       return truncateTagline(`INDIA'S ${industryMatch[1].toUpperCase()}`)
     }
+    return 'EXECUTIVE INSIGHTS'
   }
 
   // Priority 3: Category-based defaults
+  const categorySlug = article.categories?.[0]?.slug?.current
   const categoryTaglines: Record<string, string> = {
     'cxo-interview': 'EXECUTIVE INSIGHTS',
     'cxo-spotlight': 'LEADER SPOTLIGHT',
@@ -75,7 +77,7 @@ export function getArticleType(article: Post): 'csa' | 'interview' | 'juggernaut
   // Check categories
   const categorySlug = article.categories?.[0]?.slug?.current
 
-  if (categorySlug === 'company-sponsored') {
+  if ((article as any)._type === 'csa') {
     return 'csa'
   }
 

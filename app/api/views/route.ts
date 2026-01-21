@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: 'Missing slug' }, { status: 400 })
     }
 
-    // Find post by slug
-    const query = `*[_type == "post" && slug.current == $slug][0]{ _id, views }`
+    // Find post by slug - supporting multiple types for comprehensive tracking
+    const query = `*[_type in ["post", "csa", "article"] && slug.current == $slug][0]{ _id, views }`
     const post = await writeClient.fetch(query, { slug })
     if (!post?._id) {
       return NextResponse.json({ ok: false, error: 'Post not found' }, { status: 404 })

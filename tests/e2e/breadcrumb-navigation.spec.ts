@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { Page } from '@playwright/test'
 
 test.describe('Breadcrumb Navigation', () => {
     test('Article breadcrumbs show Home and Category (no title)', async ({ page }) => {
@@ -22,12 +23,35 @@ test.describe('Breadcrumb Navigation', () => {
         await page.goto('/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership')
 
         const breadcrumbs = page.locator('nav[aria-label="Breadcrumb"]')
+        // Allow time for navigation to settle
+        await page.waitForLoadState('domcontentloaded')
+
         await expect(breadcrumbs).toContainText('Home')
         await expect(breadcrumbs).toContainText('CXO Interview')
         await expect(breadcrumbs).not.toContainText('Company Sponsored')
 
         // Should NOT contain article title
         await expect(breadcrumbs).not.toContainText('Stella Ambrose')
+    })
+    
+    test('CSA article routes strictly to /csa/ and NOT /category/', async ({ page }) => {
+        // This test confirms we solved the Duplicate URL issue
+        const slug = 'stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership'
+        
+        // 1. Visit correctly
+        const csaResponse = await page.goto(`/csa/${slug}`)
+        expect(csaResponse?.status()).toBe(200)
+
+        // 2. Visit incorrectly (old duplicate path)
+        // With our new logic, this should either 404 or redirect (depending on how getPost fails)
+        // Since we filtered out CSA from category page query, it should 404.
+        const categoryResponse = await page.goto(`/category/choice-interview/${slug}`)
+        // Note: category name might be different, let's try generic
+        const categoryResponse2 = await page.goto(`/category/cxo-interview/${slug}`)
+        
+        // We expect 404 because the query *[_type == "post"] will verify it's NOT a CSA
+        // If it returns 200, we still have the duplicate content bug!
+        expect(categoryResponse2?.status()).toBe(404)
     })
 
     test('Breadcrumb links are functional', async ({ page }) => {
@@ -80,29 +104,34 @@ test.describe('Schema.org Breadcrumb Structured Data', () => {
     test('Breadcrumb JSON-LD has 2 items (Home + Category)', async ({ page }) => {
         await page.goto('/category/cxo-interview/erin-krueger')
 
-        const jsonLdScript = await page.locator('script[type="application/ld+json"]').first().textContent()
-        const data = JSON.parse(jsonLdScript || '{}')
+        const scripts = await page.locator('script[type="application/ld+json"]').allTextContents()
+        const breadcrumbData = scripts
+            .map(s => JSON.parse(s))
+            .find(d => d['@type'] === 'BreadcrumbList')
 
-        expect(data['@type']).toBe('BreadcrumbList')
-        expect(data.itemListElement).toBeDefined()
+        expect(breadcrumbData).toBeDefined()
+        expect(breadcrumbData.itemListElement).toBeDefined()
         // Should have exactly 2 items: Home + Category (no article title)
-        expect(data.itemListElement.length).toBe(2)
-        expect(data.itemListElement[0].name).toBe('Home')
-        expect(data.itemListElement[1].name).toBe('CXO Interview')
+        expect(breadcrumbData.itemListElement.length).toBe(2)
+        expect(breadcrumbData.itemListElement[0].name).toBe('Home')
+        expect(breadcrumbData.itemListElement[1].name).toBe('CXO Interview')
     })
 
     test('CSA article JSON-LD shows "CXO Interview"', async ({ page }) => {
         await page.goto('/csa/stella-ambrose-visionary-trailblazer-in-sustainable-palm-oil-leadership')
 
-        const jsonLdScript = await page.locator('script[type="application/ld+json"]').first().textContent()
-        const data = JSON.parse(jsonLdScript || '{}')
+        const scripts = await page.locator('script[type="application/ld+json"]').allTextContents()
+        const breadcrumbData = scripts
+            .map(s => JSON.parse(s))
+            .find(d => d['@type'] === 'BreadcrumbList')
 
-        expect(data['@type']).toBe('BreadcrumbList')
+        expect(breadcrumbData).toBeDefined()
+        expect(breadcrumbData['@type']).toBe('BreadcrumbList')
         // Should include "CXO Interview" not "Company Sponsored"
-        const names = data.itemListElement.map((item: any) => item.name)
+        const names = breadcrumbData.itemListElement.map((item: any) => item.name)
         expect(names).toContain('CXO Interview')
         expect(names).not.toContain('Company Sponsored')
         // Should have exactly 2 items
-        expect(data.itemListElement.length).toBe(2)
+        expect(names.length).toBe(2)
     })
 })

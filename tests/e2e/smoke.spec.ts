@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { dismissLocaleModal } from './test-utils';
 
 /**
  * Post-deployment smoke tests
@@ -39,10 +40,7 @@ test.describe('Production Smoke Tests', () => {
             expect(response?.status()).toBe(200);
             
             // Dismiss any country selector popup if present
-            const closeButton = page.locator('[aria-label*="close"], [aria-label*="Close"], button:has-text("×"), button:has-text("Close")').first();
-            if (await closeButton.isVisible({ timeout: 1000 }).catch(() => false)) {
-                await closeButton.click();
-            }
+            await dismissLocaleModal(page);
         }
     });
 

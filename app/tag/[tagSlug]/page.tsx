@@ -3,7 +3,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import TagClient from './TagClient'
 import { notFound } from 'next/navigation'
-import { getClient } from '@/lib/sanity'
+import { getServerClient } from '@/lib/sanity.server'
 import { Post } from '@/lib/types'
 import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
@@ -29,8 +29,8 @@ async function getArticlesByTag(tag: string): Promise<Post[]> {
     views,
     tags
   }`
-  
-  return getClient().fetch<Post[]>(query, { tag } as Record<string, string>)
+  const client = getServerClient()
+  return client.fetch<Post[]>(query, { tag } as Record<string, string>)
 }
 
 /**
@@ -38,7 +38,8 @@ async function getArticlesByTag(tag: string): Promise<Post[]> {
  */
 export async function generateStaticParams() {
   const query = `*[_type == "post" && defined(tags)].tags`
-  const allTagsArrays: string[][] = await getClient().fetch(query)
+  const client = getServerClient()
+  const allTagsArrays: string[][] = await client.fetch(query)
   
   const tagCounts: Record<string, number> = {}
   allTagsArrays.flat().forEach(t => {

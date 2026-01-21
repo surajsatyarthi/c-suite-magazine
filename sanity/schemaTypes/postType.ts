@@ -164,6 +164,13 @@ export const postType = defineType({
       group: 'meta',
     }),
     defineField({
+      name: 'heroTagline',
+      type: 'string',
+      title: 'Hero Tagline',
+      description: 'Override tagline for the hero spotlight overlay (e.g., EXECUTIVE INSIGHTS). If empty, it will be auto-generated.',
+      group: 'meta',
+    }),
+    defineField({
       name: 'wordCount',
       type: 'number',
       title: 'Word Count',
@@ -179,6 +186,14 @@ export const postType = defineType({
       group: 'meta',
       initialValue: 0,
       validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
+      name: 'hideViews',
+      type: 'boolean',
+      title: 'Hide View Counts',
+      description: 'If enabled, viewership metrics will be hidden for this article.',
+      group: 'meta',
+      initialValue: false,
     }),
     defineField({
       name: 'publishedAt',

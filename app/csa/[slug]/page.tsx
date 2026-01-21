@@ -19,7 +19,8 @@ import SocialShare from "@/components/SocialShare";
 import PortableBody from "@/components/PortableBody";
 import PortableBodyV2 from "@/components/PortableBodyV2";
 // View tracking disabled per marketing policy
-import { client, urlFor, getClient } from "@/lib/sanity";
+import { client, urlFor } from "@/lib/sanity";
+import { getServerClient } from '@/lib/sanity.server'
 import { draftMode } from "next/headers";
 import { getViews, formatViewsMillion } from "@/lib/views";
 import { sanitizeExcerpt, sanitizeTitle } from "@/lib/text";
@@ -105,15 +106,9 @@ function getDefaultWriterFromCsv() {
 
 async function fetchWriterBySlug(slug: string) {
   try {
-    const q = `*[_type == "writer" && slug.current == $slug][0]{
-      name,
-      slug,
-      position,
-      image,
-      "imageUrl": image.asset->url,
-      bio
-    }`;
-    const doc = await client.fetch(q, { slug });
+    const query = `*[_type == "writer" && slug.current == $slug][0]`
+    const client = getServerClient()
+    const doc = await client.fetch(query, { slug });
     return doc || null;
   } catch {
     return null;
@@ -122,8 +117,11 @@ async function fetchWriterBySlug(slug: string) {
 
 async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`);
-  // Relaxed query to ensure CSA articles are found even if isHidden is somehow set or undefined logic is tricky
-  const query = `*[_type in ["post","article","csa"] && slug.current == $slug][0] {
+  // Relaxed query to ensure CSA articles are found
+  const { isEnabled } = await draftMode();
+  const client = getServerClient(isEnabled ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN) : undefined);
+
+  const query = `*[_type == "csa" && slug.current == $slug][0] {
     _id,
     _type,
     title,
@@ -142,6 +140,7 @@ async function getPost(slug: string): Promise<Post | null> {
     contentPillar,
     articleVariant,
     views,
+    hideViews,
     readTime,
     body[]{
       ...,
@@ -167,8 +166,6 @@ async function getPost(slug: string): Promise<Post | null> {
     popupAd{ targetUrl, image, alt }
   }`;
   try {
-    const { isEnabled } = await draftMode();
-    const client = getClient(isEnabled ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN) : undefined);
     const p = await client.fetch(query, { slug });
     if (p) {
       console.log(`[getPost] Found article: ${p.title}`);
@@ -662,14 +659,13 @@ export default async function CompanySponsoredArticlePage(props: {
                 })(),
                 publishedTime: post.publishedAt,
                 writer: post.writer?.name,
-                url: `https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`,
+                url: `https://csuitemagazine.global/csa/${post.slug.current}`,
                 wordCount,
                 readTime,
               }),
             )}
           />
 
-          {/* Breadcrumbs - Show "CXO Interview" for CSA articles, not "Company Sponsored" */}
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },
@@ -770,7 +766,7 @@ export default async function CompanySponsoredArticlePage(props: {
                       </div>
 
                       <SocialShare
-                        url={`https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`}
+                        url={`https://csuitemagazine.global/csa/${post.slug.current}`}
                         title={post.title}
                       />
                     </div>
@@ -986,7 +982,7 @@ export default async function CompanySponsoredArticlePage(props: {
                                     relatedPost.slug?.current ||
                                     (relatedPost.slug as any);
                                   const v = getViews(slug, relatedPost.views);
-                                  const formatted = formatViewsMillion(v);
+                                  const formatted = formatViewsMillion(v, slug);
                                   return formatted ? (
                                     <span className="flex items-center gap-1">
                                       <svg
@@ -1212,6 +1208,7 @@ export async function generateMetadata(props: {
               .auto("format")
               .url()
           : undefined),
+      url: `https://csuitemagazine.global/csa/${slug}`,
       type: "article",
       publishedTime: (fallback as any)?.publishedAt,
       writer: (fallback as any)?.writer?.name,
@@ -1236,6 +1233,7 @@ export async function generateMetadata(props: {
       (post.mainImage
         ? urlFor(post.mainImage).auto("format").url()
         : undefined),
+    url: `https://csuitemagazine.global/csa/${slug}`,
     type: "article",
     publishedTime: post.publishedAt,
     writer: (post as any)?.writer?.name,

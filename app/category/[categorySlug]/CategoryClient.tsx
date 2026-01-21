@@ -184,8 +184,8 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
                                             {(() => {
                                                 const slug = (post as any)?.slug?.current || (post as any)?.slug
                                                 const v = getViews(slug, (post as any)?.views)
-                                                const formatted = formatViewsMillion(v)
-                                                return formatted ? (
+                                                const formatted = formatViewsMillion(v, slug)
+                                                return formatted && !post.hideViews ? (
                                                     <span className="flex items-center gap-1">
                                                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

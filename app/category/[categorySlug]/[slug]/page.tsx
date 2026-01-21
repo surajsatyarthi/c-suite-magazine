@@ -19,7 +19,10 @@ import SocialShare from '@/components/SocialShare'
 import PortableBody from '@/components/PortableBody'
 import PortableBodyV2 from '@/components/PortableBodyV2'
 // View tracking disabled per marketing policy
-import { client, urlFor, getClient } from '@/lib/sanity'
+import { client } from '@/lib/sanity'
+import { getServerClient } from '@/lib/sanity.server'
+import { urlFor } from '@/lib/sanity'
+import { getArticleType, getHeroTagline } from '@/lib/articleHelpers'
 import { draftMode } from 'next/headers'
 import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
@@ -107,8 +110,11 @@ async function fetchWriterBySlug(slug: string) {
 
 async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`)
-  // Relaxed query to ensure CSA articles are found even if isHidden is somehow set or undefined logic is tricky
-  const query = `*[_type in ["post","article","csa"] && slug.current == $slug][0] {
+  
+  const { isEnabled } = await draftMode()
+  const client = getServerClient()
+
+  const query = `*[_type == "post" && slug.current == $slug][0] {
     _id,
     _type,
     title,
@@ -126,8 +132,10 @@ async function getPost(slug: string): Promise<Post | null> {
     tags,
     contentPillar,
     articleVariant,
+    readTime,
+    heroTagline,
     views,
-    views,
+    hideViews,
     body[]{
       ...,
       _type == "image" => {
@@ -140,9 +148,8 @@ async function getPost(slug: string): Promise<Post | null> {
     seo,
     popupAd{ targetUrl, image, alt }
   }`
+
   try {
-    const { isEnabled } = await draftMode()
-    const client = getClient(isEnabled ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN) : undefined);
     const p = await client.fetch(query, { slug })
     if (p) {
       // Deterministic display-only fallback to approved writer list when missing.
@@ -150,14 +157,12 @@ async function getPost(slug: string): Promise<Post | null> {
         const fallback = getDefaultWriterFromCsv()
         if (fallback) {
           const full = await fetchWriterBySlug(fallback.slug.current)
-            ; (p as Post).writer = full || fallback
+          ;(p as Post).writer = full || fallback
         }
       }
       // Filter out potential null categories from broken references
       if (Array.isArray(p.categories)) {
-        console.log(`[getPost] Categories before filter:`, JSON.stringify(p.categories))
         p.categories = p.categories.filter((c: any) => c !== null)
-        console.log(`[getPost] Categories after filter:`, JSON.stringify(p.categories))
       }
       return p as Post
     } else {
@@ -165,18 +170,13 @@ async function getPost(slug: string): Promise<Post | null> {
     }
   } catch (e) {
     console.error(`[getPost] EXCEPTION fetching article ${slug}:`, e)
-    if (e instanceof Error) {
-      console.error(`[getPost] Error message: ${e.message}`);
-      console.error(`[getPost] Error stack: ${e.stack}`);
-    }
   }
+
   try {
     const fallback = await getPostFromExports(slug)
     if (fallback) return fallback
-  } catch {
-  }
-  // Do NOT fall back to getPostStub here blindly.
-  // getPostStub should only be used if we are sure it's a legacy/stub page.
+  } catch {}
+  
   return null
 }
 
@@ -350,11 +350,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
     }
 
     const isCXOInterview = String(categorySlug) === 'cxo-interview'
-    const isCompanySponsored = (post as any)?._type === 'csa' || String(categorySlug) === 'company-sponsored' || (
-      Array.isArray(post?.categories)
-        ? post.categories.some((c) => String(c?.slug?.current || c?.slug || '').toLowerCase() === 'company-sponsored')
-        : false
-    )
+    const isCompanySponsored = false // CSA articles are excluded from this route
     const isSpotlight = Array.isArray(post?.categories)
       ? post.categories.some((c) => /spotlight|cxo[-_ ]?spotlight/i.test(String(c?.slug?.current || '')) || /spotlight/i.test(String(c?.title || '')))
       : false
@@ -821,7 +817,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                                 {(() => {
                                   const slug = relatedPost.slug?.current || (relatedPost.slug as any)
                                   const v = getViews(slug, relatedPost.views)
-                                  const formatted = formatViewsMillion(v)
+                                  const formatted = formatViewsMillion(v, slug)
                                   return formatted ? (
                                     <span className="flex items-center gap-1">
                                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1001,6 +997,7 @@ export async function generateMetadata(
     description: description ? (description.length > 160 ? description : description + '...') : '',
     keywords: post.tags || [],
     image: (post as any)?.mainImage?.asset?.url || (post.mainImage ? urlFor(post.mainImage).auto('format').url() : undefined),
+    url: `https://csuitemagazine.global/category/${params.categorySlug}/${slug}`,
     type: 'article',
     publishedTime: post.publishedAt,
     writer: (post as any)?.writer?.name,

@@ -1,10 +1,4 @@
-import viewsMap from '@/config/views.json'
-
 export function getViews(slug?: string, fallback?: number | null): number | null {
-  if (!slug) return typeof fallback === 'number' ? fallback : null
-  const key = String(slug).trim().toLowerCase()
-  const local = (viewsMap as Record<string, number>)[key]
-  if (typeof local === 'number' && local > 0) return local
   return typeof fallback === 'number' && fallback > 0 ? fallback : null
 }
 
@@ -23,20 +17,27 @@ function hashCode(str: string): number {
 
 /**
  * Format view counts in millions.
- * • Shows random counts between 4.0M - 5.0M+ for visual variety
- * • Uses slug as seed for consistency (same article = same count)
- * • Actual high view counts (>5M) still show as "5M+"
+ * • BASELINE: Uses slug-based jitter for social proof (2.1M+)
+ * • GROWTH: Adds real viewership data (n) to the baseline
+ * • Values >= 5.0M show as "5M+"
  */
 export function formatViewsMillion(n?: number | null, slug?: string): string {
-  // If we have real high view count (>5M), show 5M+
-  if (typeof n === 'number' && isFinite(n) && n >= 5000000) return '5M+'
+  const realViews = typeof n === 'number' && isFinite(n) ? n : 0
   
-  // Generate pseudo-random count between 4.0M - 5.0M based on slug
+  // If we have real high view count (>5M), show 5M+
+  if (realViews >= 5000000) return '5M+'
+  
+  // Generate pseudo-random count between 2.1M - 5M+ based on slug
   if (slug) {
     const hash = hashCode(slug)
-    const random = (hash % 11) / 10 // Generates 0.0 - 1.0
-    const viewCount = 4.0 + random // 4.0M - 5.0M
-    return viewCount >= 5.0 ? '5M+' : `${viewCount.toFixed(1)} M`
+    const random = (hash % 101) / 100 // Generates 0.0 - 1.0
+    // Range 2.1 to 5.3 (any >= 5.0 becomes 5M+)
+    const jitter = 2.1 + (random * 3.2)
+    
+    // Convert realViews to million scale (e.g., 1000 views = 0.001M)
+    const totalMillion = jitter + (realViews / 1000000)
+    
+    return totalMillion >= 5.0 ? '5M+' : `${totalMillion.toFixed(1)} M`
   }
   
   // Default fallback

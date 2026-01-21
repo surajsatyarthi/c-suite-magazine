@@ -3,26 +3,18 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import CategoryClient from './CategoryClient'
 import { notFound, redirect } from 'next/navigation'
-import { client } from '@/lib/sanity'
-import { Post } from '@/lib/types'
+import { getServerClient } from '@/lib/sanity.server'
+import { Post, Category } from '@/lib/types'
 import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
-
-interface Category {
-  title: string
-  slug: { current: string }
-  description?: string
-  color?: string
-}
+import { safeJsonLd } from '@/lib/security'
 
 // Enable ISR to avoid heavy full-build prerenders for category pages
 export const revalidate = 600
 
-import { getClient } from '@/lib/sanity'
-
 function getFetchClient() {
   // Use the improved authenticated client to support private datasets and staging drafts
-  return getClient()
+  return getServerClient()
 }
 
 async function getCategory(slug: string): Promise<Category | null> {
@@ -53,6 +45,7 @@ async function getCategoryPosts(slug: string): Promise<Post[]> {
 // Generate static params for all categories
 export async function generateStaticParams() {
   // Pull live categories from CMS to avoid drift from hardcoded lists
+  const client = getFetchClient()
   const rows: { slug?: { current?: string } }[] = await client.fetch(`*[_type=="category"]{slug}`)
   const all = rows
     .map((r) => r?.slug?.current)
@@ -85,8 +78,6 @@ export async function generateMetadata({ params }: { params: Promise<{ categoryS
   })
 }
 
-import { safeJsonLd } from '@/lib/security'
-
 export default async function CategoryPage({
   params,
 }: {
@@ -107,7 +98,7 @@ export default async function CategoryPage({
     'not-for-profit': 'public-sector',
     'interview': 'cxo-interview',
   }
-  const REMOVED_SLUGS = new Set<string>(['events', 'business', 'retail', 'cover-story'])
+  const REMOVED_SLUGS = new Set<string>(['events', 'business', 'retail', 'cover-story', 'cxo-interview'])
   if (MERGE_MAP[slug]) {
     redirect(`/category/${MERGE_MAP[slug]}`)
   }
