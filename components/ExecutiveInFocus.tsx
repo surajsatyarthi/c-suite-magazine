@@ -33,7 +33,7 @@ export default function ExecutiveInFocus({ image, title, position, href, descrip
 
                     {/* Content Section - Clean text on dark background */}
                     <div className="text-center max-w-3xl">
-                        <h3 className="text-4xl md:text-6xl font-serif font-bold !text-white mb-4 leading-tight uppercase tracking-wide">
+                        <h3 className="text-4xl md:text-6xl font-serif font-bold !text-white mb-4 leading-tight uppercase tracking-wide article-title">
                             {title}
                         </h3>
 

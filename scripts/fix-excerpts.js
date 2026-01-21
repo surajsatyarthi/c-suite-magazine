@@ -9,7 +9,7 @@ const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-10-28',
-  token: process.env.SANITY_API_TOKEN,
+  token: process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN,
   useCdn: false,
 })
 
@@ -33,12 +33,19 @@ function isImageLine(s) {
 
 function firstBodyText(body) {
   const blocks = Array.isArray(body) ? body : []
-  const textBlock = blocks.find(b => b && b._type === 'block')
-  if (!textBlock) return ''
-  const text = Array.isArray(textBlock.children)
-    ? textBlock.children.map(c => String(c?.text || '')).join(' ')
-    : ''
-  return text
+  let fullText = ''
+  
+  for (const b of blocks) {
+    if (b && b._type === 'block') {
+      const text = Array.isArray(b.children)
+        ? b.children.map(c => String(c?.text || '')).join(' ')
+        : ''
+      fullText += text + ' '
+      // Stop once we have enough for a good excerpt
+      if (fullText.length > 300) break
+    }
+  }
+  return fullText.trim()
 }
 
 async function patchExcerpt(id, newExcerpt) {
@@ -52,28 +59,40 @@ async function patchExcerpt(id, newExcerpt) {
 }
 
 async function main() {
-  console.log('Fetching posts from Sanity...')
-  const posts = await client.fetch('*[_type == "post"]{ _id, slug, title, excerpt, body }')
+  console.log('Fetching posts and CSAs from Sanity...')
+  const query = '*[_type in ["post", "csa"] && !(_id in path("drafts.**"))]{ _id, _type, "slug": slug.current, title, excerpt, body }'
+  const articles = await client.fetch(query)
+  
   let scanned = 0
   let updated = 0
   let skipped = 0
-  for (const p of posts) {
-    scanned++
-    const cleaned = sanitizeExcerpt(p.excerpt)
-    const needsFix = !cleaned || isImageLine(p.excerpt)
-    if (!needsFix) { skipped++; continue }
 
-    const fb = firstBodyText(p.body)
-    const fallback = sanitizeExcerpt(fb)
-    const candidate = fallback || ''
-    if (!candidate) { skipped++; continue }
-    const newExcerpt = candidate.substring(0, 200)
-    const ok = await patchExcerpt(p._id, newExcerpt)
+  for (const a of articles) {
+    scanned++
+    const cleaned = sanitizeExcerpt(a.excerpt)
+    const needsFix = !cleaned || isImageLine(a.excerpt) || cleaned.length < 10
+
+    if (!needsFix) { 
+      skipped++
+      continue 
+    }
+
+    const bodyText = firstBodyText(a.body)
+    const candidate = sanitizeExcerpt(bodyText)
+    
+    if (!candidate) { 
+      skipped++
+      continue 
+    }
+
+    const newExcerpt = candidate.substring(0, 197) + (candidate.length > 200 ? '...' : '')
+    
+    const ok = await patchExcerpt(a._id, newExcerpt)
     if (ok) {
       updated++
+      console.log(`✔ Updated [${a._type}]: ${a.slug} — "${a.title}"`)
       // small throttle to avoid rate limits
-      await new Promise(r => setTimeout(r, 120))
-      console.log(`✔ Updated: ${p.slug?.current} — "${p.title}"`)
+      await new Promise(r => setTimeout(r, 200))
     } else {
       skipped++
     }

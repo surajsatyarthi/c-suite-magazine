@@ -37,7 +37,7 @@ export const csaType = defineType({
       description: 'Short description for article cards and SEO',
       rows: 3,
       group: 'content',
-      validation: (Rule) => Rule.max(200),
+      validation: (Rule) => Rule.required().max(200),
     }),
     defineField({
       name: 'writer',

@@ -15,10 +15,14 @@ export const partnerQuotesType = defineType({
           name: 'partnerQuote',
           title: 'Partner Quote',
           fields: [
-            { name: 'quote', type: 'text', title: 'Quote' },
-            { name: 'name', type: 'string', title: 'Name' },
             { name: 'title', type: 'string', title: 'Job Title' },
             { name: 'company', type: 'string', title: 'Company' },
+            { 
+              name: 'logo', 
+              type: 'image', 
+              title: 'Company Logo',
+              options: { hotspot: true }
+            },
           ],
         }),
       ],

@@ -126,7 +126,7 @@ async function main() {
 
 // Ensure global fetch for @sanity/client if needed on older Node
 if (typeof (global as any).fetch === 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+   
   (global as any).fetch = require('node-fetch')
 }
 

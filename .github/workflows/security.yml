@@ -1,0 +1,58 @@
+name: Security Gates (Iron Dome)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 0" # Weekly scan
+
+jobs:
+  # 1. Secret Scanning (Fastest)
+  secrets:
+    name: 🛡️ TruffleHog Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for secret scanning
+
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: ${{ github.head_ref }}
+          extra_args: --debug --only-verified
+
+  # 2. Dependency Vulnerabilities
+  supply-chain:
+    name: 📦 Supply Chain Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - name: Audit Dependencies
+        run: pnpm run audit
+
+  # 3. Code Security Logic
+  static-analysis:
+    name: 🔍 Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint Security
+        run: pnpm run lint:security

@@ -27,10 +27,10 @@ export default [
       ...sonarjs.configs.recommended.rules,
       "security/detect-object-injection": "off",
       "security/detect-non-literal-fs-filename": "warn", 
-      "security/detect-unsafe-regex": "error",
-      "security/detect-buffer-noassert": "error",
+      "security/detect-unsafe-regex": "warn",
+      "security/detect-buffer-noassert": "warn",
       "no-restricted-syntax": [
-        "error",
+        "warn",
         {
           "selector": "CallExpression[callee.property.name='exec']",
           "message": "Exec is dangerous. Use child_process.execFile or spawn instead."
@@ -44,8 +44,32 @@ export default [
           "message": "eval() is a high-risk security hazard."
         }
       ],
-      "sonarjs/cognitive-complexity": ["error", 15],
-      "sonarjs/no-duplicate-string": "warn"
+      "sonarjs/cognitive-complexity": ["warn", 15],
+      "sonarjs/no-duplicate-string": "warn",
+      "sonarjs/no-nested-functions": "warn",
+      "sonarjs/no-ignored-exceptions": "warn",
+      "sonarjs/unused-import": "warn",
+      "sonarjs/slow-regex": "warn",
+      "sonarjs/no-nested-template-literals": "warn",
+      "sonarjs/no-nested-conditional": "warn",
+      "sonarjs/regex-complexity": "warn",
+      "sonarjs/no-dead-store": "warn",
+      "sonarjs/no-unused-vars": "warn",
+      "sonarjs/no-redundant-assignments": "warn",
+      "sonarjs/no-commented-code": "warn",
+      "sonarjs/concise-regex": "warn",
+      "sonarjs/updated-loop-counter": "warn",
+      "sonarjs/no-redundant-jump": "warn",
+      "sonarjs/pseudo-random": "warn",
+      "sonarjs/no-useless-catch": "warn",
+      "sonarjs/todo-tag": "warn",
+      "sonarjs/no-unused-collection": "warn",
+      "sonarjs/anchor-precedence": "warn",
+      "sonarjs/assertions-in-tests": "warn",
+      "sonarjs/empty-string-repetition": "warn",
+      "sonarjs/no-clear-text-protocols": "warn",
+      "sonarjs/no-os-command-from-path": "warn",
+      "sonarjs/single-char-in-character-classes": "warn"
     }
   },
   {

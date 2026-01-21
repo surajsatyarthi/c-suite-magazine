@@ -6,17 +6,16 @@ import { Page } from '@playwright/test';
  */
 export async function dismissLocaleModal(page: Page) {
     try {
-        const modal = page.locator('.entry-locale-popup');
-        const notNowButton = page.locator('button:has-text("Not now")');
+        // Look for any of the buttons that dismiss the modal
+        const buttons = page.locator('button:has-text("Not now"), button:has-text("Continue"), .entry-locale-popup button');
         
-        // Wait a short time for modal to potentially appear
-        if (await notNowButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await notNowButton.click();
-            // Wait for modal to disappear
-            await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+        // Wait up to 3s for the modal to appear
+        if (await buttons.first().isVisible({ timeout: 3000 }).catch(() => false)) {
+            await buttons.first().click();
+            // Wait for the modal backdrop/container to disappear
+            await page.locator('.entry-locale-popup, [class*="locale-popup"]').waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
         }
     } catch (e) {
-        // Ignore errors if modal doesn't appear or dismissal fails
         console.log('Locale modal not found or already dismissed');
     }
 }

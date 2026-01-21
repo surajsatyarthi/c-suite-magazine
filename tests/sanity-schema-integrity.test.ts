@@ -1,16 +1,19 @@
-import { describe, it, expect } from 'vitest';
-import { createClient } from '@sanity/client';
+import { describe, it, expect, beforeAll } from 'vitest';
+import { createClient, type SanityClient } from '@sanity/client';
 import { config } from '../sanity/config';
 
-const client = createClient({
-    projectId: config.projectId,
-    dataset: config.dataset,
-    apiVersion: config.apiVersion,
-    useCdn: false,
-    token: process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN,
-});
-
 describe('Sanity Schema Integrity Tests', () => {
+    let client: SanityClient;
+
+    beforeAll(() => {
+        client = createClient({
+            projectId: config.projectId,
+            dataset: config.dataset,
+            apiVersion: config.apiVersion,
+            useCdn: false,
+            token: process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN,
+        });
+    });
 
     describe('CSA Articles Schema Compliance', () => {
         it('should have all required fields defined in schema', async () => {

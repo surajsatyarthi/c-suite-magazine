@@ -22,6 +22,7 @@
     "lint": "eslint",
     "audit": "audit-ci --moderate",
     "secretlint": "secretlint \"**/*\"",
+    "lint:security": "eslint -c eslint.security.config.mjs .",
     "lint:content": "node scripts/lint-content.js",
     "fix:excerpts": "node scripts/fix-excerpts.js",
     "import:docx": "node scripts/import-docx-batch.js",

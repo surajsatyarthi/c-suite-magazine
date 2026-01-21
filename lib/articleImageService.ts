@@ -1,5 +1,5 @@
 import 'server-only'
-import { createClient } from '@sanity/client'
+import { createClient, type SanityClient } from '@sanity/client'
 
 interface Article {
   _id: string
@@ -27,6 +27,32 @@ class ArticleImageService {
       ArticleImageService.instance = new ArticleImageService()
     }
     return ArticleImageService.instance
+  }
+
+  /**
+   * Downloads an image from a URL and uploads it to Sanity as a permanent asset
+   */
+  async downloadAndUploadToSanity(imageUrl: string, client: SanityClient, filename: string): Promise<string | null> {
+    try {
+      console.log(`📥 Downloading image for Sanity upload: ${imageUrl}`);
+      const response = await fetch(imageUrl);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      console.log(`⬆️ Uploading to Sanity: ${filename}`);
+      const asset = await client.assets.upload('image', buffer, {
+        filename,
+        contentType: response.headers.get('content-type') || 'image/jpeg'
+      });
+
+      console.log(`✅ Permanently restored as asset: ${asset._id}`);
+      return asset._id;
+    } catch (error) {
+      console.error('Failed to download/upload image:', error);
+      return null;
+    }
   }
 
   /**

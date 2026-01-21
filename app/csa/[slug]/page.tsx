@@ -158,7 +158,9 @@ async function getPost(slug: string): Promise<Post | null> {
           company,
           name,
           title,
-          quote
+          quote,
+          logo,
+          "logoUrl": logo.asset->url
         }
       }
     },

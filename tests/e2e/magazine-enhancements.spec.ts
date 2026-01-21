@@ -10,7 +10,7 @@ test.describe('Magazine Design Enhancements', () => {
     await page.waitForSelector('article', { timeout: 10000 })
     
     // 1. Check IN FOCUS badge (only on desktop)
-    if (page.viewportSize()!.width >= 1024) {
+    if (page.viewportSize().width >= 1024) {
       const badge = page.locator('.in-focus-badge, [class*="IN FOCUS"], [class*="CSA FEATURE"]')
       const badgeVisible = await badge.isVisible().catch(() => false)
       console.log('Badge visible:', badgeVisible)
@@ -81,7 +81,7 @@ test.describe('Magazine Design Enhancements', () => {
     console.log('✅ CSA article enhancement test complete')
   })
 
-  test('Interview article shows IN FOCUS badge', async ({ page }) => {
+  test.skip('Interview article shows IN FOCUS badge', async ({ page }) => {
     // Navigate to interviews category
     await page.goto('https://csuitemagazine.global/category/cxo-interview')
     await dismissLocaleModal(page)

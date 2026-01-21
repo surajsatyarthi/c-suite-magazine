@@ -50,33 +50,46 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        // Generate unique image for non-spotlight articles
+        // Generate candidate URL for non-spotlight articles
         const newImageUrl = await articleImageService.generateUniqueImage(article)
         
         if (newImageUrl) {
-          // Update article with new image in Sanity
-          await client
-            .patch(article._id)
-            .set({
-              featuredImage: {
-                _type: 'image',
-                asset: {
-                  _type: 'reference',
-                  _ref: `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-                },
-                // Store the generated URL for reference
-                generatedUrl: newImageUrl
-              }
-            })
-            .commit()
+          // PERMANENT FIX: Download the image and upload it to Sanity as a real asset
+          const filename = `manual-fix-${article._id}-${Date.now()}.png`
+          const assetId = await articleImageService.downloadAndUploadToSanity(newImageUrl, client as any, filename)
 
-          results.push({
-            articleId: article._id,
-            status: 'success',
-            newImageUrl,
-            method: 'generated'
-          })
-        } else {
+          if (assetId) {
+            // Update article with REAL asset reference
+            await client
+              .patch(article._id)
+              .set({
+                mainImage: {
+                  _type: 'image',
+                  asset: {
+                    _type: 'reference',
+                    _ref: assetId
+                  },
+                  alt: article.title,
+                  caption: 'Stock image'
+                }
+              })
+              .commit()
+
+            results.push({
+              articleId: article._id,
+              status: 'success',
+              assetId,
+              method: 'permanent_upload'
+            })
+          } else {
+            results.push({
+              articleId: article._id,
+              status: 'failed_upload',
+              reason: 'Failed to upload generated image to Sanity'
+            })
+          }
+        }
+ else {
           results.push({
             articleId: article._id,
             status: 'no_change',
