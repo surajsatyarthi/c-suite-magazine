@@ -1,0 +1,31 @@
+name: 🕷️ The Spider (Nightly Patrol)
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Every midnight UTC
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  patrol:
+    runs-on: ubuntu-latest
+    env:
+      BASE_URL: https://csuitemagazine.global
+      EMAIL_USER: ${{ secrets.EMAIL_USER }}
+      EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run The Spider
+        run: npx tsx scripts/the-spider.ts
+        continue-on-error: false # Fail the workflow if links are broken
