@@ -114,5 +114,11 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17"
+  },
+  "pnpm": {
+    "overrides": {
+      "lodash": ">=4.17.23",
+      "lodash-es": ">=4.17.23"
+    }
   }
 }

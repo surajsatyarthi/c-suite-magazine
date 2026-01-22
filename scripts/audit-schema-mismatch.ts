@@ -1,20 +1,25 @@
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+// Load environment variables FIRST
 dotenv.config({ path: path.join(__dirname, '../.env.local') });
 
 import { createClient } from '@sanity/client';
-import { config } from '../sanity/config';
 
 const client = createClient({
-    projectId: config.projectId,
-    dataset: config.dataset,
-    apiVersion: config.apiVersion,
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-01',
     useCdn: false,
     token: process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN,
 });
 
 async function auditSchemas() {
     console.log('🔍 Auditing Data vs Schema Mismatches\n');
+
+    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+        console.error('❌ Error: NEXT_PUBLIC_SANITY_PROJECT_ID is not defined.');
+        return;
+    }
 
     // Check CSA articles for unknown fields
     console.log('📊 CSA Articles (Company Sponsored)');

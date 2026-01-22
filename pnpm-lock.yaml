@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  lodash: '>=4.17.23'
+  lodash-es: '>=4.17.23'
+
 importers:
 
   .:
@@ -6151,8 +6155,8 @@ packages:
     resolution: {integrity: sha512-XT9ewWAC43tiAV7xDAPflMkG0qOPn2QjHqlgX8FOqmWa/rxnyYDulF9T0F7tRy1u+TVTmK/M//6VIOye+2zDXg==}
     engines: {node: '>=20'}
 
-  lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+  lodash-es@4.17.23:
+    resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
 
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
@@ -6175,8 +6179,8 @@ packages:
   lodash.uniqwith@4.5.0:
     resolution: {integrity: sha512-7lYL8bLopMoy4CTICbxygAUq6CdRJ36vFc80DucPueUee+d5NBRxz3FdT9Pes/HEx5mPoT9jwnsEJWz1N7uq7Q==}
 
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  lodash@4.17.23:
+    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
   log-symbols@2.2.0:
     resolution: {integrity: sha512-VeIAFslyIerEJLXHziedo2basKbMKtTw3vfn5IzG0XTjhAVEJyNHnL2p7vc+wBDSdQuUpNw3M2u6xb9QsAY5Eg==}
@@ -11467,7 +11471,7 @@ snapshots:
       '@sanity/image-url': 1.2.0
       '@sanity/incompatible-plugin': 1.0.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@sanity/ui': 3.1.11(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.3)(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 19.2.0
       rxjs: 7.8.2
       sanity: 4.22.0(@emotion/is-prop-valid@1.2.2)(@portabletext/sanity-bridge@1.2.14(@types/react@19.2.7))(@types/node@24.10.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(babel-plugin-react-compiler@1.0.0)(bufferutil@4.1.0)(immer@11.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(terser@5.46.0)(typescript@5.9.3)(yaml@2.8.2)
@@ -11526,7 +11530,7 @@ snapshots:
   '@sanity/id-utils@1.0.0':
     dependencies:
       '@sanity/uuid': 3.0.2
-      lodash: 4.17.21
+      lodash: 4.17.23
       ts-brand: 0.2.0
 
   '@sanity/image-url@1.2.0': {}
@@ -11547,7 +11551,7 @@ snapshots:
       get-uri: 2.0.4
       gunzip-maybe: 1.4.2
       is-tar: 1.0.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       meow: 9.0.0
       mississippi: 4.0.0
       ora: 5.4.1
@@ -11572,7 +11576,7 @@ snapshots:
       '@sanity/icons': 3.7.4(react@19.2.0)
       '@sanity/types': 4.22.0(@types/react@19.2.7)(debug@4.4.3)
       '@sanity/ui': 3.1.11(@emotion/is-prop-valid@1.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.3)(react@19.2.0)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 19.2.0
       react-compiler-runtime: 1.0.0(react@19.2.0)
       react-dom: 19.2.0(react@19.2.0)
@@ -11618,8 +11622,8 @@ snapshots:
       '@sanity/client': 6.29.1
       '@sanity/diff-match-patch': 3.2.0
       hotscript: 1.0.13
-      lodash: 4.17.21
-      lodash-es: 4.17.21
+      lodash: 4.17.23
+      lodash-es: 4.17.23
       mendoza: 3.0.8
       rxjs: 7.8.2
     optionalDependencies:
@@ -11633,7 +11637,7 @@ snapshots:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/uuid': 3.0.2
       hotscript: 1.0.13
-      lodash: 4.17.21
+      lodash: 4.17.23
       mendoza: 3.0.8
       nanoid: 5.1.6
       rxjs: 7.8.2
@@ -11646,7 +11650,7 @@ snapshots:
       '@sanity/diff-match-patch': 3.2.0
       '@sanity/uuid': 3.0.2
       hotscript: 1.0.13
-      lodash: 4.17.21
+      lodash: 4.17.23
       mendoza: 3.0.8
       nanoid: 5.1.6
       rxjs: 7.8.2
@@ -11659,7 +11663,7 @@ snapshots:
       '@sanity/types': 3.99.0(@types/react@19.2.7)(debug@4.4.3)
       '@sanity/uuid': 3.0.2
       debug: 4.4.3(supports-color@8.1.1)
-      lodash: 4.17.21
+      lodash: 4.17.23
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -11670,7 +11674,7 @@ snapshots:
       '@sanity/types': 4.22.0(@types/react@19.2.7)(debug@4.4.3)
       '@sanity/uuid': 3.0.2
       debug: 4.4.3(supports-color@8.1.1)
-      lodash: 4.17.21
+      lodash: 4.17.23
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -11746,7 +11750,7 @@ snapshots:
       groq-js: 1.25.0
       humanize-list: 1.0.1
       leven: 3.1.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       object-inspect: 1.13.4
     transitivePeerDependencies:
       - '@types/react'
@@ -11765,7 +11769,7 @@ snapshots:
       '@sanity/mutate': 0.12.6(debug@4.4.3)
       '@sanity/types': 3.99.0(@types/react@19.2.7)(debug@4.4.3)
       groq: 3.88.1-typegen-experimental.0
-      lodash-es: 4.17.21
+      lodash-es: 4.17.23
       reselect: 5.1.1
       rxjs: 7.8.2
       zustand: 5.0.9(@types/react@19.2.7)(immer@11.0.1)(react@19.2.0)(use-sync-external-store@1.6.0(react@19.2.0))
@@ -11796,7 +11800,7 @@ snapshots:
 
   '@sanity/telemetry@0.8.1(react@19.2.0)':
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 19.2.0
       rxjs: 7.8.2
       typeid-js: 0.3.0
@@ -11879,7 +11883,7 @@ snapshots:
       is-hotkey-esm: 1.0.0
       json-2-csv: 5.5.10
       json5: 2.2.3
-      lodash: 4.17.21
+      lodash: 4.17.23
       quick-lru: 5.1.1
       react: 19.2.0
       react-compiler-runtime: 1.0.0(react@19.2.0)
@@ -12607,7 +12611,7 @@ snapshots:
       chalk: 4.1.2
       debug: 4.4.3(supports-color@8.1.1)
       js-yaml: 4.1.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       pluralize: 2.0.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
@@ -13335,7 +13339,7 @@ snapshots:
       graceful-fs: 4.2.11
       is-stream: 2.0.1
       lazystream: 1.0.1
-      lodash: 4.17.21
+      lodash: 4.17.23
       normalize-path: 3.0.0
       readable-stream: 4.7.0
 
@@ -15693,7 +15697,7 @@ snapshots:
     dependencies:
       p-locate: 6.0.0
 
-  lodash-es@4.17.21: {}
+  lodash-es@4.17.23: {}
 
   lodash.camelcase@4.3.0: {}
 
@@ -15709,7 +15713,7 @@ snapshots:
 
   lodash.uniqwith@4.5.0: {}
 
-  lodash@4.17.21: {}
+  lodash@4.17.23: {}
 
   log-symbols@2.2.0:
     dependencies:
@@ -17060,7 +17064,7 @@ snapshots:
       json-lexer: 1.2.0
       json-reduce: 3.0.0
       json5: 2.2.3
-      lodash: 4.17.21
+      lodash: 4.17.23
       log-symbols: 2.2.0
       mendoza: 3.0.8
       module-alias: 2.2.3
@@ -17316,7 +17320,7 @@ snapshots:
       direction: 1.0.4
       is-hotkey: 0.2.0
       is-plain-object: 5.0.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       scroll-into-view-if-needed: 3.1.0
       slate: 0.120.0
       tiny-invariant: 1.3.1
@@ -17326,7 +17330,7 @@ snapshots:
       '@juggle/resize-observer': 3.4.0
       direction: 1.0.4
       is-hotkey: 0.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
       scroll-into-view-if-needed: 3.1.0
