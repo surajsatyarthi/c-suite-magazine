@@ -7,5 +7,8 @@ if [ -t 1 ]; then
   node scripts/no-rush-check.js
 fi
 
-# 2. The Automated Gates
+# 2. The Ralph Enforcer (Mandatory Protocol)
+npx tsx scripts/ralph-enforcer.ts
+
+# 3. The Automated Gates
 npx lint-staged

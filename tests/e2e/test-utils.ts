@@ -38,3 +38,51 @@ export async function skipIfMissing(client: any, slug: string, type: string, tes
         testRef.skip();
     }
 }
+
+/**
+ * Centralized Discovery for E2E Tests
+ * Handles finding valid, published content to avoid draft 404s.
+ */
+export class SanityDiscovery {
+    private client: any;
+
+    constructor(client: any) {
+        this.client = client;
+    }
+
+    /**
+     * Finds published slugs for a given type.
+     */
+    async getPublishedSlugs(type: string, limit: number = 3): Promise<string[]> {
+        const query = `*[_type == $type && defined(slug.current)][0...$limit].slug.current`;
+        const slugs = await this.client.fetch(query, { type, limit });
+        return slugs || [];
+    }
+
+    /**
+     * Finds articles that contain specific body block types (e.g., partnerQuotes).
+     */
+    async findWithFeature(type: string, featureType: string, limit: number = 1): Promise<string[]> {
+        const query = `*[_type == $type && body[_type == $featureType]][0...$limit].slug.current`;
+        const slugs = await this.client.fetch(query, { type, featureType, limit });
+        return slugs || [];
+    }
+
+    /**
+     * Finds CSAs that have ad-like images in the body.
+     */
+    async findCSAsWithAds(limit: number = 1): Promise<string[]> {
+        const query = `*[_type == "csa" && body[_type == "image" && isPopupTrigger == false]][0...$limit].slug.current`;
+        const slugs = await this.client.fetch(query, { limit });
+        return slugs || [];
+    }
+
+    /**
+     * Finds published categories.
+     */
+    async getCategories(limit: number = 3): Promise<string[]> {
+        const query = `*[_type == "category" && defined(slug.current)][0...$limit].slug.current`;
+        const slugs = await this.client.fetch(query, { limit });
+        return slugs || [];
+    }
+}

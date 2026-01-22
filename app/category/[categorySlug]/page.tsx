@@ -98,7 +98,7 @@ export default async function CategoryPage({
     'not-for-profit': 'public-sector',
     'interview': 'cxo-interview',
   }
-  const REMOVED_SLUGS = new Set<string>(['events', 'business', 'retail', 'cover-story', 'cxo-interview'])
+  const REMOVED_SLUGS = new Set<string>(['events', 'business', 'retail', 'cover-story'])
   if (MERGE_MAP[slug]) {
     redirect(`/category/${MERGE_MAP[slug]}`)
   }

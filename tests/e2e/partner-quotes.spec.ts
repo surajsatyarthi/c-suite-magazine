@@ -1,94 +1,86 @@
 import { test, expect } from '@playwright/test'
-import { dismissLocaleModal } from './test-utils'
+import { dismissLocaleModal, SanityDiscovery } from './test-utils'
+import { createClient } from "next-sanity";
+import * as dotenv from 'dotenv';
+import path from 'path';
 
-test.describe.skip('Partner Quotes and Pull Quotes - Indian Oil CSA', () => {
-    const articleUrl = '/csa/shrikant-vaidya-chairman-indianoil'
+// Load environment variables
+dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
+
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+  perspective: process.env.SANITY_VIEW_DRAFTS === "true" ? "previewDrafts" : "published",
+});
+
+const discovery = new SanityDiscovery(client);
+
+test.describe('Partner Quotes - Dynamic Content Verification', () => {
+    let articleSlug: string | null = null;
+    let partnerData: any[] = [];
     
-    test.beforeEach(async ({ page }) => {
-        await page.goto(articleUrl)
-        await dismissLocaleModal(page)
-    })
-
-    test('should display enhanced pull quotes with background styling', async ({ page }) => {
+    test.beforeAll(async () => {
+        // Find an article (post or csa) that has partnerQuotes
+        const slugs = await discovery.findWithFeature('csa', 'partnerQuotes', 1);
         
-        // Wait for page to load
-        await page.waitForSelector('article', { timeout: 10000 })
-        
-        // Find blockquote elements (pull quotes)
-        const blockquotes = await page.locator('blockquote').all()
-        
-        // Should have at least 4 pull quotes
-        expect(blockquotes.length).toBeGreaterThanOrEqual(4)
-        
-        if (blockquotes.length > 0) {
-            const firstQuote = blockquotes[0]
-            
-            // Check for decorative quote mark
-            const quoteMarkExists = await firstQuote.locator('div').first().isVisible()
-            expect(quoteMarkExists).toBeTruthy()
-            
-            // Check for styled text
-            const quoteText = await firstQuote.locator('p').first()
-            expect(await quoteText.isVisible()).toBeTruthy()
-            
-            // Verify text is not empty
-            const text = await quoteText.textContent()
-            expect(text).toBeTruthy()
-            expect(text!.length).toBeGreaterThan(20)
+        if (slugs.length === 0) {
+            console.log('[Skip] No published articles with partner quotes found.');
+            test.skip();
+            return;
         }
-    })
 
-    test('should display Partner Perspectives section with 7 testimonial cards', async ({ page }) => {
+        articleSlug = slugs[0];
+
+        // Fetch the specific partner names from the discovered article
+        const query = `*[_type == "csa" && slug.current == $slug][0].body[_type == "partnerQuotes"].quotes[] {
+            company
+        }`;
         
-        // Wait for page to load
-        await page.waitForSelector('article', { timeout: 10000 })
+        partnerData = await client.fetch(query, { slug: articleSlug });
+    });
+
+    test.beforeEach(async ({ page }) => {
+        if (!articleSlug) return;
+        await page.goto(`/csa/${articleSlug}`);
+        await dismissLocaleModal(page);
+    });
+
+    test('should display Partner Perspectives section with actual data', async ({ page }) => {
+        await page.waitForSelector('article', { timeout: 10000 });
         
-        // Scroll to bottom to ensure lazy-loaded content appears
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-        await page.waitForTimeout(1000)
+        // Scroll to ensure content loads
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2));
         
-        // Look for partner quotes section
-        // The component should render with specific company names
-        const partnerCompanies = [
-            'AVEVA',
-            'W R Grace',
-            'L&T',
-            'Isgec Hitachi Zosen',
-            'Hewlett Packard Enterprise',
-            'Technip Energies',
-            'Süd-Chemie'
-        ]
-        
-        let foundCount = 0
-        for (const company of partnerCompanies) {
-            const companyElement = page.getByText(company, { exact: false })
-            if (await companyElement.count() > 0) {
-                foundCount++
+        // Look for the "Partner Perspectives" section header
+        const header = page.getByText('Partner Perspectives', { exact: false });
+        await expect(header).toBeVisible();
+
+        // Verify that the companies found in Sanity are actually on the page
+        if (partnerData && partnerData.length > 0) {
+            for (const quote of partnerData.slice(0, 3)) { // Check top 3 to keep test fast
+                if (quote.company) {
+                    const companyElement = page.getByText(quote.company, { exact: false }).first();
+                    await expect(companyElement).toBeVisible();
+                    console.log(`✅ Verified partner: ${quote.company}`);
+                }
             }
         }
-        
-        // Should find at least 5 out of 7 companies (accounting for text variations)
-        expect(foundCount).toBeGreaterThanOrEqual(5)
-    })
+    });
 
-    test('should have proper article structure', async ({ page }) => {
+    test('should have proper pull quote styling', async ({ page }) => {
+        const blockquotes = page.locator('blockquote');
+        const count = await blockquotes.count();
         
-        // Check main elements exist
-        await expect(page.locator('h1')).toBeVisible()
-        await expect(page.locator('article')).toBeVisible()
-        
-        // Check for hero image
-        const heroImage = page.locator('img').first()
-        await expect(heroImage).toBeVisible()
-    })
-
-    test('should display "READ MORE ARTICLES" section', async ({ page }) => {
-        
-        // Scroll to bottom
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-        
-        // Check for read more section
-        const readMore = page.getByText('READ MORE ARTICLES', { exact: false })
-        await expect(readMore).toBeVisible()
-    })
-})
+        if (count > 0) {
+            const firstQuote = blockquotes.first();
+            await expect(firstQuote).toBeVisible();
+            
+            const textAlign = await firstQuote.evaluate(el => window.getComputedStyle(el).textAlign);
+            // Most pull quotes are centered in the new design
+            expect(textAlign).toBe('center');
+        }
+    });
+});

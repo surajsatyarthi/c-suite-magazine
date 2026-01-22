@@ -9,25 +9,36 @@ export async function GET() {
     return typeof lm === 'string' ? lm : lm.toISOString()
   }
   
-  // Get all published articles
-  const posts = await client.fetch(`
-    *[_type == "post" && defined(slug.current) && count(categories) > 0 && isHidden != true] {
-      slug,
-      publishedAt,
+  // 1. Unified Article Fetch (Posts + CSA)
+  // CRITICAL: Must fetch 'csa' type to ensure paid clients are indexed.
+  const articles = await client.fetch(`
+    *[(_type == "post" || _type == "csa") && defined(slug.current) && isHidden != true] {
+      "type": _type,
+      "slug": slug.current,
       _updatedAt,
-      "categories": categories[]->{ slug }
+      publishedAt,
+      "category": categories[0]->slug.current
     }
   `)
 
-  // Get all categories
+  // 2. Fetch All Categories
   const categories = await client.fetch(`
     *[_type == "category" && defined(slug.current)] {
-      slug,
+      "slug": slug.current,
       _updatedAt
     }
   `)
 
-  // Get all executive salary pages
+  // 3. Fetch All Tags (SEO Expansion)
+  // Issue #9: Tag Landing Pages must be indexed.
+  const tags = await client.fetch(`
+    *[_type == "tag" && count(*[_type == "post" && references(^._id)]) > 0] {
+      "slug": slug.current,
+      _updatedAt
+    }
+  `)
+
+  // 4. Executive Salaries (Static List from DB helper)
   let executiveSlugs: string[] = []
   try {
     executiveSlugs = await getExecutiveSlugs()
@@ -36,62 +47,58 @@ export async function GET() {
   }
 
   const sitemap: MetadataRoute.Sitemap = [
-    // Static pages
+    // --- Static Core ---
     {
       url: baseUrl,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    // Executive hub page - high priority for SEO
-    {
-      url: `${baseUrl}/executive-salaries`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.95,
-    },
-    // Category pages
-    ...categories.map((category: any) => ({
-      url: `${baseUrl}/category/${category.slug.current}`,
-      lastModified: new Date(category._updatedAt),
+    { url: `${baseUrl}/tag`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 }, // Issue #28
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${baseUrl}/executive-salaries`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.95 },
+    
+    // --- Dynamic Categories ---
+    ...categories.map((cat: any) => ({
+      url: `${baseUrl}/category/${cat.slug}`,
+      lastModified: new Date(cat._updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     })),
-    // Executive salary pages - high priority for SEO
+
+    // --- Dynamic Tags (Issue #9) ---
+    ...tags.map((tag: any) => ({
+      url: `${baseUrl}/tag/${tag.slug}`,
+      lastModified: new Date(tag._updatedAt || new Date()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+
+    // --- Dynamic Articles (Post & CSA) ---
+    ...articles.map((item: any) => {
+      // CSA URL logic: /csa/[slug]
+      // Post URL logic: /category/[cat]/[slug]
+      let url = ''
+      if (item.type === 'csa') {
+        url = `${baseUrl}/csa/${item.slug}`
+      } else {
+        const cat = item.category || 'general'
+        url = `${baseUrl}/category/${cat}/${item.slug}`
+      }
+
+      return {
+        url,
+        lastModified: new Date(item._updatedAt || item.publishedAt),
+        changeFrequency: 'monthly' as const,
+        priority: item.type === 'csa' ? 1.0 : 0.9, // CSA gets top priority
+      }
+    }),
+
+    // --- Executive Pages ---
     ...executiveSlugs.map((slug) => ({
       url: `${baseUrl}/executive-salaries/${slug}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.9,
-    })),
-    // Article pages (category + title only)
-    ...posts.map((post: any) => ({
-      url: `${baseUrl}/category/${post?.categories?.[0]?.slug?.current}/${post.slug.current}`,
-      lastModified: new Date(post._updatedAt || post.publishedAt),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     })),

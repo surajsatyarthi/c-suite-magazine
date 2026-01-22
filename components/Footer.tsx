@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import pkg from '@/package.json'
+
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
+  const currentYear = 2026
 
   return (
     <footer className="dark-section bg-[#082945] text-white mt-20 border-t-[3px] border-[#0a3350] relative overflow-hidden">
@@ -17,44 +17,85 @@ export default function Footer() {
         </a>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {/* Brand Column: force to rightmost column on lg, right column on md */}
-          <div className="lg:col-span-1 lg:col-start-3 md:col-start-2 flex flex-col items-end">
+          {/* Column 1: Featured Insights (Revenue/Bread-Winner) */}
+          <div className="flex flex-col">
+            <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6">Featured Insights</h3>
+            <ul className="space-y-4 text-sm text-gray-300">
+              <li>
+                <Link href="/category/cxo-interview" className="hover:text-[#f4d875] transition-colors font-semibold">
+                  CXO Interviews
+                </Link>
+              </li>
+              <li>
+                <Link href="/executive-salaries" className="hover:text-[#f4d875] transition-colors">
+                  Executive Salaries
+                </Link>
+              </li>
+              <li>
+                <Link href="/archive" className="hover:text-[#f4d875] transition-colors">
+                  Magazine Archive
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-[#f4d875] transition-colors">
+                  About Us
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: Business Topics (SEO/Context) */}
+          <div className="flex flex-col">
+            <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6">Business Topics</h3>
+            <ul className="space-y-4 text-sm text-gray-300">
+              <li>
+                <Link href="/category/leadership" className="hover:text-[#f4d875] transition-colors">
+                  Leadership
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/money-and-finance" className="hover:text-[#f4d875] transition-colors">
+                  Money & Finance
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/science-technology" className="hover:text-[#f4d875] transition-colors">
+                  Science & Technology
+                </Link>
+              </li>
+              <li>
+                <Link href="/tag" className="hover:text-[#f4d875] transition-colors">
+                  All Industry Tags
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Brand & Agency (Trust) */}
+          <div className="flex flex-col md:items-end lg:items-end">
             <div className="site-logo site-logo--footer text-white mb-4">
               <div className="site-logo-inner">
                 <div className="site-logo-title">C<span className="site-logo-dash">-</span>SUITE</div>
                 <div className="site-logo-subtitle metallic-sheen metallic-sheen-strong">MAGAZINE</div>
               </div>
             </div>
-            <p className="text-white mb-6 text-[0.79rem] leading-relaxed max-w-md text-right">
+            <p className="text-white mb-6 text-[0.79rem] leading-relaxed max-w-xs md:text-right lg:text-right">
               YOUR LEGACY GOES GLOBAL
             </p>
-          </div>
-
-          {/* Content and Popular columns removed per request */}
-
-          {/* Footer Links (full-width single line on desktop) */}
-          <div className="lg:col-span-3 lg:col-start-1 md:col-span-2 md:col-start-1 w-full">
-            <nav aria-label="Footer links">
-              <ul className="flex items-center justify-center gap-x-5 text-sm flex-wrap md:flex-nowrap lg:flex-nowrap">
-                <li><Link href="/about" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">About Us</Link></li>
-                <li><Link href="/contact" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Contact Us</Link></li>
-                <li><Link href="/archive" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Magazine Archive</Link></li>
-                <li><Link href="/executive-salaries" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Executive Salaries</Link></li>
-                <li><Link href="/privacy" prefetch className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 focus:ring-offset-[#082945]">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-300 hover:text-[#f4d875] active:text-[#ffffff] transition-colors premium-underline">Terms & Conditions</Link></li>
-              </ul>
-            </nav>
+            <div className="flex flex-col md:items-end lg:items-end gap-3 text-xs text-gray-400">
+              <Link href="/contact" className="hover:text-[#f4d875] transition-colors">Contact Editorial</Link>
+              <Link href="/privacy" className="hover:text-[#f4d875] transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-[#f4d875] transition-colors">Terms & Conditions</Link>
+            </div>
           </div>
         </div>
 
         {/* Footer Bottom */}
         <div className="border-t border-[#0a3350] mt-12 pt-8">
           <div className="text-center">
-            {/* Increase specificity and adjust size + line-height by ~30% */}
-            <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400">© {currentYear} C-Suite Magazine. All Rights Reserved.</p>
-            <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400 mt-1">v{pkg.version}</p>
+            <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400">© INVICTUS INTERNATIONAL CONSULTING SERVICES {currentYear} TM</p>
           </div>
         </div>
       </div>

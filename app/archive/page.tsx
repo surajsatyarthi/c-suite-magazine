@@ -8,6 +8,8 @@ import { client, urlFor } from '@/lib/sanity'
 import { Post, Category } from '@/lib/types'
 import { Suspense } from 'react'
 
+import { resolveFeaturedHeroImage } from '@/lib/resolveFeaturedHeroImage'
+
 async function getPosts(categoryFilter?: string): Promise<Post[]> {
   // Build query with server-side filtering
   let query = `*[_type == "post" && isHidden != true`
@@ -36,7 +38,12 @@ async function getPosts(categoryFilter?: string): Promise<Post[]> {
   }`
 
   try {
-    return await client.fetch(query)
+    const posts = await client.fetch<Post[]>(query)
+    // Resolve fallback images server-side (Issue #28 Fix)
+    return posts.map(post => ({
+      ...post,
+      fallbackImageUrl: resolveFeaturedHeroImage(post)
+    }))
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
       console.error('Error fetching posts:', error)

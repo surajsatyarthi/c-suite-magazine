@@ -1,6 +1,6 @@
 # The Antigravity Engineering Handbook (Ralph Omnibus)
 
-**Version:** 2.0 (Consolidated)
+**Version:** 2.1 (The Proof Edition)
 **Status:** Active
 **Authority:** Supreme "Law of the Land" for this repository.
 **"Nullius in verba" — Take nobody's word for it.**
@@ -33,6 +33,22 @@ These laws are non-negotiable. Breaking them causes immediate systemic failure.
     - _Why_: Ensures human oversight and prevents "runaway automation".
     - _Verified By_: `docs/reports/phase_X_report.md` existence.
 
+6.  **The Sequential Law**: NEVER skip a lifecycle phase (1-6). Each phase MUST generate its own distinct report and receive explicit permission before opening the next gate.
+    - _Why_: Prevent "Process Erosion" and ensure every step of the Golden Pipeline is documented.
+    - _Verified By_: Presence of all 6 reports in `docs/reports/`.
+
+7.  **The Law of Atomicity**: NEVER combine multiple P1/P2 issues into a single "Mega-Commit" or verification cycle. Each Issue ID must have its own isolated 6-phase lifecycle.
+    - _Why_: Prevent "Blind Spot Syndrome" where critical errors are buried under unrelated successes.
+    - _Verified By_: One `phase_X_report_ID.md` per Issue ID.
+
+8.  **The Revenue Integrity Law**: Every Phase 3 (Verification) MUST verify the status of the **Revenue Registry**.
+    - _Why_: Protect the "Bread Winners" of the business. Code that is technically "correct" but breaks revenue is a failure.
+    - _Verified By_: Execution of `scripts/revenue-integrity-check.ts`.
+
+9.  **The Proof Law**: NEVER submit a Phase Report without **Raw Terminal Output** or **Screenshots**.
+    - _Why_: "Nullius in verba" (Take nobody's word for it). A report without evidence is a lie.
+    - _Verified By_: Presence of ` ```bash ` blocks or `![image]` in reports.
+
 ---
 
 ## 2. Executive Summary
@@ -53,6 +69,7 @@ _Consolidated from `docs/protocols.md` and `docs/world_class_engineering_standar
 - **Trigger**: Any feature > 1 hour.
 - **Action**: Create/Update `docs/PRD_[FeatureName].md` or `implementation_plan.md`.
 - **Requirement**: Define **User Stories** and **Acceptance Criteria (AC)**.
+- **Security**: Define **Threat Model** (How could this be attacked?).
 - **RFC Mandate**: For tasks > 4 hours, an RFC is required.
 - **GATE 1**: Generate `Planning Report` -> Request Permission.
 
@@ -91,7 +108,16 @@ _Consolidated from `docs/protocols.md` and `docs/world_class_engineering_standar
 ### Phase 6: Deployment (The Launch)
 
 - **Action**: Merge to `main`.
-- **Verification**: Synthetic Smoke Test on Staging/Production.
+- **Validation**: Synthetic Smoke Test on Staging/Production.
+
+### Phase 7: Maintenance & Monitoring (The Watchtower)
+
+- **Trigger**: 24 Hours post-deployment.
+- **Action**: "Day 2 Operations" Audit.
+  - Check Logs (Sentry/Vercel).
+  - Verify Revenue flows.
+  - Scan for "Data Rot" (e.g., broken external links).
+- **Requirement**: Zero "Silent Failures".
 
 ---
 

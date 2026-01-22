@@ -60,6 +60,7 @@ export interface Post {
   publishedAt?: string
   body: any[]
   contentPillar?: string
+  fallbackImageUrl?: string | null
   articleVariant?: string
   popupAd?: {
     targetUrl?: string

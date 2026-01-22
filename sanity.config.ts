@@ -36,6 +36,12 @@ export default defineConfig({
       const { getClient, document } = context
       const client = getClient({ apiVersion })
 
+      const origin = typeof window !== 'undefined'
+        ? window.location.origin
+        : process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+          : 'https://csuitemagazine.global'
+
       if (document._type === 'post') {
         const slug = (document.slug as any)?.current
         if (!slug) return prev
@@ -46,13 +52,13 @@ export default defineConfig({
           params
         )
         const category = result?.category || 'general'
-        return `https://csuitemagazine.global/category/${category}/${slug}`
+        return `${origin}/category/${category}/${slug}`
       }
 
       if (document._type === 'csa') {
         const slug = (document.slug as any)?.current
         if (!slug) return prev
-        return `https://csuitemagazine.global/csa/${slug}`
+        return `${origin}/csa/${slug}`
       }
 
       return prev
@@ -64,7 +70,11 @@ export default defineConfig({
     presentationTool({
       title: 'Preview',
       previewUrl: {
-        origin: typeof location === 'undefined' ? 'http://localhost:3000' : location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://csuitemagazine.global',
+        origin: typeof window !== 'undefined'
+          ? window.location.origin
+          : process.env.NEXT_PUBLIC_VERCEL_URL
+            ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+            : 'https://csuitemagazine.global',
         previewMode: {
           enable: '/api/draft',
         },

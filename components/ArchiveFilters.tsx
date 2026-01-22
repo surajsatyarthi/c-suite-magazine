@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
+// REMOVED resolveFeaturedHeroImage (Server Logic moved to Page)
 import { Post, Category } from '@/lib/types'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { formatViewsMillion } from '@/lib/views'
@@ -38,7 +39,7 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
     if (newCategory === 'all') {
       router.push('/archive')
     } else {
-      router.push(`/ archive ? category = ${encodeURIComponent(newCategory)} `)
+      router.push(`/archive?category=${encodeURIComponent(newCategory)}`)
     }
   }
 
@@ -100,7 +101,14 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
             const slug = post?.slug?.current as string | undefined
             const isValidSlug = !!slug && !slug.startsWith('#')
             // @ts-ignore - handling potential legacy data structure
-            const imageUrl = post.mainImage?.asset?.url || (post.mainImage as any)?.url
+            let imageUrl = post.mainImage?.asset?.url || (post.mainImage as any)?.url
+            
+            if (!imageUrl) {
+               // Use server-resolved fallback
+               if (post.fallbackImageUrl) {
+                 imageUrl = post.fallbackImageUrl.replace(/\.(png|jpg|jpeg)$/i, '.webp')
+               }
+            }
             const writerImageUrl = post.writer?.image?.asset?.url || post.writer?.imageUrl
 
             return (
@@ -142,7 +150,7 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
                   {/* Title */}
                   <h2 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
                     {isValidSlug ? (
-                      <Link href={(() => { const cat = ((post as any)?.categories?.[0]?.slug?.current as string | undefined) || 'general'; return `/ category / ${cat}/${slug}` })()} className="hover:text-[#082945] transition-colors" >
+                      <Link href={(() => { const cat = ((post as any)?.categories?.[0]?.slug?.current as string | undefined) || 'general'; return `/category/${cat}/${slug}` })()} className="hover:text-[#082945] transition-colors" >
                         {sanitizeTitle(post.title)}
                       </Link >
                     ) : (

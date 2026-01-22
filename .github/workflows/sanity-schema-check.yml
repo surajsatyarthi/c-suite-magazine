@@ -11,6 +11,7 @@ on:
 
 jobs:
   schema-validation:
+    name: 🏗️ Schema Integrity
     runs-on: ubuntu-latest
 
     steps:

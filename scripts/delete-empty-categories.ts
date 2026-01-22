@@ -1,75 +1,57 @@
-import { createClient } from '@sanity/client'
-import dotenv from 'dotenv'
-import path from 'path'
-import readline from 'readline'
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+// Load environment variables FIRST
+dotenv.config({ path: path.join(__dirname, '../.env.local') });
 
-// Load environment variables
-dotenv.config({ path: '.env.local' })
+import { createClient } from '@sanity/client';
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-    apiVersion: '2024-02-05',
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-01',
     useCdn: false,
-    token: process.env.SANITY_API_TOKEN,
-})
+    token: process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN,
+});
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
+async function deleteEmptyCategories() {
+    const slugsToDelete = ['events', 'business', 'uncategorized'];
+    
+    console.log(`🚀 Starting deletion of empty categories: ${slugsToDelete.join(', ')}...\n`);
+    console.log('='.repeat(80));
 
-async function cleanupCategories() {
-    console.log('--- Cleaning Up Empty Categories ---\n')
-
-    // 1. Audit Phase (Indentify candidates)
-    const categories = await client.fetch(`*[_type == "category"]{_id, title, "slug": slug.current}`)
-    const categoryMap = new Map()
-    categories.forEach((cat: any) => categoryMap.set(cat._id, { ...cat, count: 0 }))
-
-    const posts = await client.fetch(`*[_type == "post"]{ "categories": categories[]{_ref} }`)
-    posts.forEach((post: any) => {
-        if (post.categories) {
-            post.categories.forEach((refObj: any) => {
-                if (categoryMap.has(refObj._ref)) {
-                    categoryMap.get(refObj._ref).count++
-                }
-            })
-        }
-    })
-
-    const emptyCategories = Array.from(categoryMap.values()).filter(cat => cat.count === 0)
-
-    if (emptyCategories.length === 0) {
-        console.log('✅ No empty categories found.')
-        process.exit(0)
+    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+        console.error('❌ Error: NEXT_PUBLIC_SANITY_PROJECT_ID is not defined in .env.local');
+        return;
     }
 
-    console.log(`⚠️  Found ${emptyCategories.length} categories with ZERO articles:`)
-    emptyCategories.forEach(cat => {
-        console.log(`   - "${cat.title}" (ID: ${cat._id})`)
-    })
+    for (const slug of slugsToDelete) {
+        // Double check article count before deletion
+        const category = await client.fetch(`*[_type == "category" && slug.current == $slug][0] {
+            _id,
+            title,
+            "articleCount": count(*[_type in ["post", "csa"] && references(^._id)])
+        }`, { slug });
 
-    // 2. Confirmation Phase - Handled by User Approval in Chat
-    // For the script runtime, we will just proceed if the user runs this script explicitly.
-    // But adding a safety delay/log.
+        if (!category) {
+            console.log(`⚠️ Category with slug "${slug}" not found. Skipping.`);
+            continue;
+        }
 
-    console.log('\nPREPARING TO DELETE THESE CATEGORIES...')
-    console.log('Deleting in 3 seconds (Ctrl+C to cancel)...')
+        if (category.articleCount > 0) {
+            console.log(`❌ ABORT: Category "${category.title}" has ${category.articleCount} articles! Refusing to delete.`);
+            continue;
+        }
 
-    await new Promise(r => setTimeout(r, 3000))
-
-    for (const cat of emptyCategories) {
         try {
-            await client.delete(cat._id)
-            console.log(`🗑️  Deleted: "${cat.title}" (${cat._id})`)
+            await client.delete(category._id);
+            console.log(`✅ Deleted category: ${category.title} (${category._id})`);
         } catch (err: any) {
-            console.error(`❌ Failed to delete "${cat.title}": ${err.message}`)
+            console.error(`❌ Failed to delete category "${category.title}":`, err.message);
         }
     }
 
-    console.log('\n✅ Cleanup complete.')
-    process.exit(0)
+    console.log('\n' + '='.repeat(80));
+    console.log('\n✅ Deletion Process Complete.');
 }
 
-cleanupCategories()
+deleteEmptyCategories().catch(console.error);

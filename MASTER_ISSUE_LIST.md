@@ -46,6 +46,14 @@
 | **#32** | The Spider: Adversarial Crawler | **P0** | ✅ RESOLVED | Automated Crawler + Daily Email Report. |
 | **#33** | The Eagle: Visual Regression | **P2** | 🔴 OPEN | Automated visual regression testing. |
 | **#34** | Ralph Protocol Upgrade v2.1 | **P0** | ✅ RESOLVED | Enforced "Proof Law" & Added Phase 7. |
+| **#35** | Prod Link Rot (14 URLs) | **P0** | ✅ RESOLVED | Fixed malformed URL code in ArchiveFilters.tsx. |
+| **#36** | DevOps: Dedupe CI | **P3** | ✅ RESOLVED | Removed redundant `e2e.yml` workflow. |
+| **#39** | Data: Ghost Category Deletion | **P2** | ✅ RESOLVED | Verified empty categories (Events/Business) are absent. |
+| **#40** | Data: Batch Tagging "CEO" | **P2** | ✅ RESOLVED | Tagged 35 CXO Interview articles with "CEO". |
+| **#41** | Data: Tag Metadata Cleanup | **P2** | ✅ RESOLVED | Cleaned up empty/stopword tags and verified 0 orphaned docs. |
+| **#42** | Data: Discard Stale Drafts | **P2** | ✅ RESOLVED | Deleted redundant Andy Jassy draft; verified published clean. |
+| **#37** | Sec: Iron Dome (Dep Audit) | **P1** | 🔴 OPEN | Fix `lodash` vulnerability in Sanity plugin. |
+| **#38** | Sanity: Schema Integrity | **P2** | 🔴 OPEN | Investigate Schema Validation failure. |
 
 ---
 
