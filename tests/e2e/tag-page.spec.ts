@@ -51,6 +51,24 @@ test.describe("Tag Landing Pages (Issue #9)", () => {
     await expect(articles.first()).toBeVisible();
   });
 
+
+  test("Visual Regression: Luxury Tag Page", async ({ page }) => {
+    await page.goto("/tag/luxury");
+    
+    // Force hide country selector modal if present (robustness)
+    await page.addStyleTag({ content: `[role="dialog"] { display: none !important; }` });
+    
+    await dismissLocaleModal(page);
+    await expect(page.locator("h1")).toContainText("Luxury");
+    await page.evaluate(() => document.fonts.ready);
+    
+    const { visualExpect } = require('./utils/visual');
+    await visualExpect(page, 'tag-page-luxury.png', {
+      mask: [page.locator('.ad-slot')], 
+      maxDiffPixels: 3000 // Increased tolerance for gradient/rendering diffs
+    });
+  });
+
   test("should redirect Uppercase URLs to Lowercase (Middleware)", async ({ page }) => {
     const capsUrl = "/tag/LEADERSHIP";
     await page.goto(capsUrl);

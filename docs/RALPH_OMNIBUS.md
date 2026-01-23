@@ -89,6 +89,15 @@ No code reaches production without passing through **The Golden Pipeline**: a se
 
 - **Validation**: Synthetic Smoke Test on Staging/Production.
 
+### Phase 7: Maintenance & Monitoring (The Watchtower)
+
+- **Trigger**: 24 Hours post-deployment.
+- **Action**: "Day 2 Operations" Audit.
+  - Check Logs (Sentry/Vercel).
+  - Verify Revenue flows.
+  - Scan for "Data Rot" (e.g., broken external links).
+- **Requirement**: Generate `phase_7_audit_report_ID.md`. Zero "Silent Failures".
+
 ---
 
 ## 4. Emergency Protocols (Protocol B / P0)

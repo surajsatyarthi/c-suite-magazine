@@ -3,49 +3,20 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import CategoryClient from '@/app/category/[categorySlug]/CategoryClient'
 import { notFound } from 'next/navigation'
-import { getServerClient } from '@/lib/sanity.server'
-import { Post } from '@/lib/types'
 import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
 import { slugifyTag, normalizeDisplayTag } from '@/lib/tag-utils'
+import { getAllUniqueTags, getTagFromSlug, getTagPosts } from '@/lib/sanity.queries'
 
 // Enable ISR (1 hour revalidation as per Research)
 export const revalidate = 3600
 
-function getFetchClient() {
-  return getServerClient()
-}
-
+// Local interface if not exported
 interface TagPayload {
   title: string
   slug: { current: string }
   description: string
   color: string
-}
-
-async function getAllUniqueTags(): Promise<string[]> {
-  const client = getFetchClient()
-  const query = `*[_type == "post" && defined(tags)].tags[]`
-  const tags: string[] = await client.fetch(query)
-  return Array.from(new Set(tags))
-}
-
-async function getTagPosts(originalTag: string): Promise<Post[]> {
-  // Query using the EXACT original tag string from DB
-  const query = `*[_type in ["post", "csa"] && defined(tags) && $originalTag in tags] | order(publishedAt desc) {
-    _id,
-    title,
-    slug,
-    excerpt,
-    "writer": writer->{name, slug, position, image},
-    mainImage,
-    "categories": categories[]->{title, slug, color},
-    publishedAt,
-    views,
-    tags
-  }`
-  
-  return getFetchClient().fetch(query, { originalTag })
 }
 
 export async function generateStaticParams() {
@@ -63,8 +34,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ tagSlug: string }> }): Promise<Metadata> {
   const resolvedParams = await params
   const slug = resolvedParams?.tagSlug || ''
-  // Best guess display title from slug if we don't have the original tag context here easily
-  // or we could fetch mapping again, but for metadata, simple formatting is okay.
   const title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   
   return generateSEOMetadata({
@@ -85,10 +54,8 @@ export default async function TagPage({
   
   if (!slug) notFound()
 
-  // REVERSE LOOKUP: Find the original tag that produces this slug
-  // We must fetch all tags to find the match. Use cached fetch.
-  const allTags = await getAllUniqueTags()
-  const originalTag = allTags.find(t => slugifyTag(t) === slug)
+  // REVERSE LOOKUP: Uses cached map
+  const originalTag = await getTagFromSlug(slug)
 
   if (!originalTag) {
     notFound()
