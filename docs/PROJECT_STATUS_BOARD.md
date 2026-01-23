@@ -1,3 +1,7 @@
+# ⚠️ DEPERECATED
+
+> **See [ISSUES_LOG.md](./ISSUES_LOG.md) for the active Master Source of Truth.**
+
 # Project Status Board (Systemic Upgrade)
 
 **Date**: 2026-01-21

@@ -92,4 +92,39 @@ test.describe('The Eagle - Visual Regression Tests', () => {
     });
   });
 
+  test('Executive Salary Index (Revenue Registry)', async ({ page }) => {
+    await page.goto('/executive-salaries');
+    await dismissLocaleModal(page);
+
+    const salaryGrid = page.locator('main');
+    await expect(salaryGrid).toBeVisible({ timeout: 20000 });
+    await expect(page.getByPlaceholder('Search executives...')).toBeVisible();
+
+    await page.evaluate(() => document.fonts.ready);
+
+    await visualExpect(salaryGrid, 'revenue-salary-index.png', {
+      mask: [page.locator('.ad-slot')],
+      maxDiffPixels: 1000
+    });
+  });
+
+  test('Executive Salary Detail (Revenue Registry)', async ({ page }) => {
+    // Targeting a known high-traffic profile
+    await page.goto('/executive-salaries/sundar-pichai-alphabet');
+    await dismissLocaleModal(page);
+
+    const salaryDetail = page.locator('article');
+    await expect(salaryDetail).toBeVisible({ timeout: 20000 });
+    
+    // Validate key data presence before snapshot
+    await expect(page.getByText('Total Compensation')).toBeVisible();
+
+    await page.evaluate(() => document.fonts.ready);
+
+    await visualExpect(salaryDetail, 'revenue-salary-detail.png', {
+      mask: [page.locator('.ad-slot')],
+      maxDiffPixels: 1000
+    });
+  });
+
 });

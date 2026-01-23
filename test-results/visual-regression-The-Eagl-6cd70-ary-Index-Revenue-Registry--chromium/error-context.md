@@ -1,0 +1,386 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - navigation "Main navigation" [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "C-Suite Magazine - Home" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e8]:
+              - generic [ref=e9]:
+                - text: C
+                - generic [ref=e10]: "-"
+                - text: SUITE
+              - text: MAGAZINE
+          - generic [ref=e11]:
+            - generic [ref=e12]:
+              - button "Search" [ref=e13]:
+                - img [ref=e14]
+              - generic:
+                - generic:
+                  - textbox "Search articles..."
+            - button "Change country" [ref=e17]: 🇺🇸
+        - paragraph [ref=e19]: YOUR LEGACY GOES GLOBAL
+      - navigation "Article categories" [ref=e22]:
+        - generic [ref=e23]:
+          - link "View Automotive And Logistics articles" [ref=e24] [cursor=pointer]:
+            - /url: /category/automotive-and-logistics
+            - text: Automotive And Logistics
+          - link "View CXO Interview articles" [ref=e25] [cursor=pointer]:
+            - /url: /category/cxo-interview
+            - text: CXO Interview
+          - link "View Changemakers And Sustainability articles" [ref=e26] [cursor=pointer]:
+            - /url: /category/changemakers-and-sustainability
+            - text: Changemakers And Sustainability
+          - link "View Construction And Mining articles" [ref=e27] [cursor=pointer]:
+            - /url: /category/construction-and-mining
+            - text: Construction And Mining
+          - link "View Education articles" [ref=e28] [cursor=pointer]:
+            - /url: /category/education
+            - text: Education
+          - link "View Healthcare articles" [ref=e29] [cursor=pointer]:
+            - /url: /category/healthcare
+            - text: Healthcare
+          - link "View Innovation articles" [ref=e30] [cursor=pointer]:
+            - /url: /category/innovation
+            - text: Innovation
+          - link "View Leadership articles" [ref=e31] [cursor=pointer]:
+            - /url: /category/leadership
+            - text: Leadership
+          - link "View Money And Finance articles" [ref=e32] [cursor=pointer]:
+            - /url: /category/money-and-finance
+            - text: Money And Finance
+          - link "View Opinion articles" [ref=e33] [cursor=pointer]:
+            - /url: /category/opinion
+            - text: Opinion
+          - link "View Professional Services articles" [ref=e34] [cursor=pointer]:
+            - /url: /category/professional-services
+            - text: Professional Services
+          - link "View Science & Technology articles" [ref=e35] [cursor=pointer]:
+            - /url: /category/science-technology
+            - text: Science & Technology
+          - link "View Startups articles" [ref=e36] [cursor=pointer]:
+            - /url: /category/startups
+            - text: Startups
+    - navigation "Breadcrumb" [ref=e39]:
+      - generic [ref=e40]:
+        - link "Home" [ref=e41] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e42]: /
+      - link "Executive Salaries" [ref=e44] [cursor=pointer]:
+        - /url: /executive-salaries
+    - generic [ref=e45]:
+      - generic [ref=e48]:
+        - heading "Highest Paid CEOs & Executives" [level=1] [ref=e49]
+        - paragraph [ref=e50]: Comprehensive executive compensation data for 10 top leaders
+      - paragraph [ref=e55]: Explore detailed compensation packages for America's highest-paid executives. Our database includes complete salary breakdowns with base pay, stock awards, bonuses, and total compensation for fiscal year 2024. Compare CEO salaries across companies and track year-over-year changes in executive pay.
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - heading "Executive Compensation Rankings" [level=2] [ref=e61]
+          - paragraph [ref=e62]: Sorted by total compensation (highest to lowest)
+        - table [ref=e64]:
+          - rowgroup [ref=e65]:
+            - row "Rank Executive Company Total Compensation YoY Change Details" [ref=e66]:
+              - columnheader "Rank" [ref=e67]
+              - columnheader "Executive" [ref=e68]
+              - columnheader "Company" [ref=e69]
+              - columnheader "Total Compensation" [ref=e70]
+              - columnheader "YoY Change" [ref=e71]
+              - columnheader "Details" [ref=e72]
+          - rowgroup [ref=e73]:
+            - row "1 🏆 Satya Nadella Chief Executive Officer Microsoft Corporation MSFT $79.1M FY 2024 ↑ 63.1% View Details" [ref=e74]:
+              - cell "1 🏆" [ref=e75]:
+                - generic [ref=e76]:
+                  - generic [ref=e77]: "1"
+                  - generic [ref=e78]: 🏆
+              - cell "Satya Nadella Chief Executive Officer" [ref=e79]:
+                - generic [ref=e80]:
+                  - link "Satya Nadella" [ref=e81] [cursor=pointer]:
+                    - /url: /executive-salaries/satya-nadella
+                  - generic [ref=e82]: Chief Executive Officer
+              - cell "Microsoft Corporation MSFT" [ref=e83]:
+                - generic [ref=e84]:
+                  - generic [ref=e85]: Microsoft Corporation
+                  - generic [ref=e86]: MSFT
+              - cell "$79.1M FY 2024" [ref=e87]:
+                - generic [ref=e88]:
+                  - generic [ref=e89]: $79.1M
+                  - generic [ref=e90]: FY 2024
+              - cell "↑ 63.1%" [ref=e91]:
+                - generic [ref=e93]: ↑ 63.1%
+              - cell "View Details" [ref=e94]:
+                - link "View Details" [ref=e95] [cursor=pointer]:
+                  - /url: /executive-salaries/satya-nadella
+            - row "2 🥈 Tim Cook Chief Executive Officer Apple Inc. AAPL $74.6M FY 2024 ↑ 18.1% View Details" [ref=e96]:
+              - cell "2 🥈" [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]: "2"
+                  - generic [ref=e100]: 🥈
+              - cell "Tim Cook Chief Executive Officer" [ref=e101]:
+                - generic [ref=e102]:
+                  - link "Tim Cook" [ref=e103] [cursor=pointer]:
+                    - /url: /executive-salaries/tim-cook
+                  - generic [ref=e104]: Chief Executive Officer
+              - cell "Apple Inc. AAPL" [ref=e105]:
+                - generic [ref=e106]:
+                  - generic [ref=e107]: Apple Inc.
+                  - generic [ref=e108]: AAPL
+              - cell "$74.6M FY 2024" [ref=e109]:
+                - generic [ref=e110]:
+                  - generic [ref=e111]: $74.6M
+                  - generic [ref=e112]: FY 2024
+              - cell "↑ 18.1%" [ref=e113]:
+                - generic [ref=e115]: ↑ 18.1%
+              - cell "View Details" [ref=e116]:
+                - link "View Details" [ref=e117] [cursor=pointer]:
+                  - /url: /executive-salaries/tim-cook
+            - row "3 🥉 Bob Iger Chief Executive Officer The Walt Disney Company DIS $41.1M FY 2024 ↑ 30.1% View Details" [ref=e118]:
+              - cell "3 🥉" [ref=e119]:
+                - generic [ref=e120]:
+                  - generic [ref=e121]: "3"
+                  - generic [ref=e122]: 🥉
+              - cell "Bob Iger Chief Executive Officer" [ref=e123]:
+                - generic [ref=e124]:
+                  - link "Bob Iger" [ref=e125] [cursor=pointer]:
+                    - /url: /executive-salaries/bob-iger
+                  - generic [ref=e126]: Chief Executive Officer
+              - cell "The Walt Disney Company DIS" [ref=e127]:
+                - generic [ref=e128]:
+                  - generic [ref=e129]: The Walt Disney Company
+                  - generic [ref=e130]: DIS
+              - cell "$41.1M FY 2024" [ref=e131]:
+                - generic [ref=e132]:
+                  - generic [ref=e133]: $41.1M
+                  - generic [ref=e134]: FY 2024
+              - cell "↑ 30.1%" [ref=e135]:
+                - generic [ref=e137]: ↑ 30.1%
+              - cell "View Details" [ref=e138]:
+                - link "View Details" [ref=e139] [cursor=pointer]:
+                  - /url: /executive-salaries/bob-iger
+            - row "4 Andy Jassy President and Chief Executive Officer Amazon.com, Inc. AMZN $40.1M FY 2024 ↑ 2848.6% View Details" [ref=e140]:
+              - cell "4" [ref=e141]:
+                - generic [ref=e143]: "4"
+              - cell "Andy Jassy President and Chief Executive Officer" [ref=e144]:
+                - generic [ref=e145]:
+                  - link "Andy Jassy" [ref=e146] [cursor=pointer]:
+                    - /url: /executive-salaries/andy-jassy
+                  - generic [ref=e147]: President and Chief Executive Officer
+              - cell "Amazon.com, Inc. AMZN" [ref=e148]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]: Amazon.com, Inc.
+                  - generic [ref=e151]: AMZN
+              - cell "$40.1M FY 2024" [ref=e152]:
+                - generic [ref=e153]:
+                  - generic [ref=e154]: $40.1M
+                  - generic [ref=e155]: FY 2024
+              - cell "↑ 2848.6%" [ref=e156]:
+                - generic [ref=e158]: ↑ 2848.6%
+              - cell "View Details" [ref=e159]:
+                - link "View Details" [ref=e160] [cursor=pointer]:
+                  - /url: /executive-salaries/andy-jassy
+            - row "5 Jamie Dimon Chairman and Chief Executive Officer JPMorgan Chase & Co. JPM $39.0M FY 2024 ↑ 8.3% View Details" [ref=e161]:
+              - cell "5" [ref=e162]:
+                - generic [ref=e164]: "5"
+              - cell "Jamie Dimon Chairman and Chief Executive Officer" [ref=e165]:
+                - generic [ref=e166]:
+                  - link "Jamie Dimon" [ref=e167] [cursor=pointer]:
+                    - /url: /executive-salaries/jamie-dimon
+                  - generic [ref=e168]: Chairman and Chief Executive Officer
+              - cell "JPMorgan Chase & Co. JPM" [ref=e169]:
+                - generic [ref=e170]:
+                  - generic [ref=e171]: JPMorgan Chase & Co.
+                  - generic [ref=e172]: JPM
+              - cell "$39.0M FY 2024" [ref=e173]:
+                - generic [ref=e174]:
+                  - generic [ref=e175]: $39.0M
+                  - generic [ref=e176]: FY 2024
+              - cell "↑ 8.3%" [ref=e177]:
+                - generic [ref=e179]: ↑ 8.3%
+              - cell "View Details" [ref=e180]:
+                - link "View Details" [ref=e181] [cursor=pointer]:
+                  - /url: /executive-salaries/jamie-dimon
+            - row "6 Brian Moynihan Chairman and Chief Executive Officer Bank of America Corporation BAC $35.0M FY 2024 ↑ 20.7% View Details" [ref=e182]:
+              - cell "6" [ref=e183]:
+                - generic [ref=e185]: "6"
+              - cell "Brian Moynihan Chairman and Chief Executive Officer" [ref=e186]:
+                - generic [ref=e187]:
+                  - link "Brian Moynihan" [ref=e188] [cursor=pointer]:
+                    - /url: /executive-salaries/brian-moynihan
+                  - generic [ref=e189]: Chairman and Chief Executive Officer
+              - cell "Bank of America Corporation BAC" [ref=e190]:
+                - generic [ref=e191]:
+                  - generic [ref=e192]: Bank of America Corporation
+                  - generic [ref=e193]: BAC
+              - cell "$35.0M FY 2024" [ref=e194]:
+                - generic [ref=e195]:
+                  - generic [ref=e196]: $35.0M
+                  - generic [ref=e197]: FY 2024
+              - cell "↑ 20.7%" [ref=e198]:
+                - generic [ref=e200]: ↑ 20.7%
+              - cell "View Details" [ref=e201]:
+                - link "View Details" [ref=e202] [cursor=pointer]:
+                  - /url: /executive-salaries/brian-moynihan
+            - row "7 Jensen Huang President and Chief Executive Officer NVIDIA Corporation NVDA $34.2M FY 2024 ↑ 60% View Details" [ref=e203]:
+              - cell "7" [ref=e204]:
+                - generic [ref=e206]: "7"
+              - cell "Jensen Huang President and Chief Executive Officer" [ref=e207]:
+                - generic [ref=e208]:
+                  - link "Jensen Huang" [ref=e209] [cursor=pointer]:
+                    - /url: /executive-salaries/jensen-huang
+                  - generic [ref=e210]: President and Chief Executive Officer
+              - cell "NVIDIA Corporation NVDA" [ref=e211]:
+                - generic [ref=e212]:
+                  - generic [ref=e213]: NVIDIA Corporation
+                  - generic [ref=e214]: NVDA
+              - cell "$34.2M FY 2024" [ref=e215]:
+                - generic [ref=e216]:
+                  - generic [ref=e217]: $34.2M
+                  - generic [ref=e218]: FY 2024
+              - cell "↑ 60%" [ref=e219]:
+                - generic [ref=e221]: ↑ 60%
+              - cell "View Details" [ref=e222]:
+                - link "View Details" [ref=e223] [cursor=pointer]:
+                  - /url: /executive-salaries/jensen-huang
+            - row "8 Lisa Su Chair and Chief Executive Officer Advanced Micro Devices, Inc. AMD $31.0M FY 2024 ↑ 2.1% View Details" [ref=e224]:
+              - cell "8" [ref=e225]:
+                - generic [ref=e227]: "8"
+              - cell "Lisa Su Chair and Chief Executive Officer" [ref=e228]:
+                - generic [ref=e229]:
+                  - link "Lisa Su" [ref=e230] [cursor=pointer]:
+                    - /url: /executive-salaries/lisa-su
+                  - generic [ref=e231]: Chair and Chief Executive Officer
+              - cell "Advanced Micro Devices, Inc. AMD" [ref=e232]:
+                - generic [ref=e233]:
+                  - generic [ref=e234]: Advanced Micro Devices, Inc.
+                  - generic [ref=e235]: AMD
+              - cell "$31.0M FY 2024" [ref=e236]:
+                - generic [ref=e237]:
+                  - generic [ref=e238]: $31.0M
+                  - generic [ref=e239]: FY 2024
+              - cell "↑ 2.1%" [ref=e240]:
+                - generic [ref=e242]: ↑ 2.1%
+              - cell "View Details" [ref=e243]:
+                - link "View Details" [ref=e244] [cursor=pointer]:
+                  - /url: /executive-salaries/lisa-su
+            - row "9 Mary Barra Chair and Chief Executive Officer General Motors Company GM $29.5M FY 2024 ↑ 5.9% View Details" [ref=e245]:
+              - cell "9" [ref=e246]:
+                - generic [ref=e248]: "9"
+              - cell "Mary Barra Chair and Chief Executive Officer" [ref=e249]:
+                - generic [ref=e250]:
+                  - link "Mary Barra" [ref=e251] [cursor=pointer]:
+                    - /url: /executive-salaries/mary-barra
+                  - generic [ref=e252]: Chair and Chief Executive Officer
+              - cell "General Motors Company GM" [ref=e253]:
+                - generic [ref=e254]:
+                  - generic [ref=e255]: General Motors Company
+                  - generic [ref=e256]: GM
+              - cell "$29.5M FY 2024" [ref=e257]:
+                - generic [ref=e258]:
+                  - generic [ref=e259]: $29.5M
+                  - generic [ref=e260]: FY 2024
+              - cell "↑ 5.9%" [ref=e261]:
+                - generic [ref=e263]: ↑ 5.9%
+              - cell "View Details" [ref=e264]:
+                - link "View Details" [ref=e265] [cursor=pointer]:
+                  - /url: /executive-salaries/mary-barra
+            - row "10 Sundar Pichai Chief Executive Officer Alphabet Inc. GOOGL $10.7M FY 2024 ↑ 21.9% View Details" [ref=e266]:
+              - cell "10" [ref=e267]:
+                - generic [ref=e269]: "10"
+              - cell "Sundar Pichai Chief Executive Officer" [ref=e270]:
+                - generic [ref=e271]:
+                  - link "Sundar Pichai" [ref=e272] [cursor=pointer]:
+                    - /url: /executive-salaries/sundar-pichai
+                  - generic [ref=e273]: Chief Executive Officer
+              - cell "Alphabet Inc. GOOGL" [ref=e274]:
+                - generic [ref=e275]:
+                  - generic [ref=e276]: Alphabet Inc.
+                  - generic [ref=e277]: GOOGL
+              - cell "$10.7M FY 2024" [ref=e278]:
+                - generic [ref=e279]:
+                  - generic [ref=e280]: $10.7M
+                  - generic [ref=e281]: FY 2024
+              - cell "↑ 21.9%" [ref=e282]:
+                - generic [ref=e284]: ↑ 21.9%
+              - cell "View Details" [ref=e285]:
+                - link "View Details" [ref=e286] [cursor=pointer]:
+                  - /url: /executive-salaries/sundar-pichai
+      - generic [ref=e290]:
+        - heading "Understanding Executive Compensation" [level=2] [ref=e291]
+        - paragraph [ref=e292]: Executive compensation packages typically consist of multiple components including base salary, annual bonuses, stock awards, stock options, non-equity incentive plans, and other benefits. Total compensation provides the most comprehensive view of what executives earn, combining all these elements into a single figure.
+        - generic [ref=e293]:
+          - heading "Understanding Total Compensation" [level=3] [ref=e294]
+          - generic [ref=e295]:
+            - generic [ref=e296]: Base Salary
+            - generic [ref=e297]: +
+            - generic [ref=e298]: Bonus
+            - generic [ref=e299]: +
+            - generic [ref=e300]: Stock Awards
+            - generic [ref=e301]: +
+            - generic [ref=e302]: Option Awards
+            - generic [ref=e303]: +
+            - generic [ref=e304]: Non-Equity Incentive
+            - generic [ref=e305]: +
+            - generic [ref=e306]: Pension Change
+            - generic [ref=e307]: +
+            - generic [ref=e308]: Other Compensation
+            - generic [ref=e309]: =
+            - generic [ref=e310]: Total Compensation
+          - paragraph [ref=e311]: Executive compensation consists of multiple components. Total compensation provides the most comprehensive view of executive earnings.
+        - paragraph [ref=e312]: Year-over-year changes in CEO pay reflect company performance, board decisions, and market conditions. Our rankings help investors, analysts, and the public understand how executive pay aligns with corporate results.
+    - generic [ref=e313]:
+      - 'link "Elevate Your Executive Presence: Professional LinkedIn Management by C-Suite Brand Agency →" [ref=e315] [cursor=pointer]':
+        - /url: https://www.csuitebrand.agency
+      - generic [ref=e316]:
+        - generic [ref=e317]:
+          - generic [ref=e318]:
+            - heading "Featured Insights" [level=3] [ref=e319]
+            - list [ref=e320]:
+              - listitem [ref=e321]:
+                - link "CXO Interviews" [ref=e322] [cursor=pointer]:
+                  - /url: /category/cxo-interview
+              - listitem [ref=e323]:
+                - link "Executive Salaries" [ref=e324] [cursor=pointer]:
+                  - /url: /executive-salaries
+              - listitem [ref=e325]:
+                - link "Magazine Archive" [ref=e326] [cursor=pointer]:
+                  - /url: /archive
+              - listitem [ref=e327]:
+                - link "About Us" [ref=e328] [cursor=pointer]:
+                  - /url: /about
+          - generic [ref=e329]:
+            - heading "Business Topics" [level=3] [ref=e330]
+            - list [ref=e331]:
+              - listitem [ref=e332]:
+                - link "Leadership" [ref=e333] [cursor=pointer]:
+                  - /url: /category/leadership
+              - listitem [ref=e334]:
+                - link "Money & Finance" [ref=e335] [cursor=pointer]:
+                  - /url: /category/money-and-finance
+              - listitem [ref=e336]:
+                - link "Science & Technology" [ref=e337] [cursor=pointer]:
+                  - /url: /category/science-technology
+              - listitem [ref=e338]:
+                - link "All Industry Tags" [ref=e339] [cursor=pointer]:
+                  - /url: /tag
+          - generic [ref=e340]:
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - text: C
+                - generic [ref=e344]: "-"
+                - text: SUITE
+              - text: MAGAZINE
+            - paragraph [ref=e345]: YOUR LEGACY GOES GLOBAL
+            - generic [ref=e346]:
+              - link "Contact Editorial" [ref=e347] [cursor=pointer]:
+                - /url: /contact
+              - link "Privacy Policy" [ref=e348] [cursor=pointer]:
+                - /url: /privacy
+              - link "Terms & Conditions" [ref=e349] [cursor=pointer]:
+                - /url: /terms
+        - paragraph [ref=e352]: © INVICTUS INTERNATIONAL CONSULTING SERVICES 2026 TM
+  - button "Open Next.js Dev Tools" [ref=e358] [cursor=pointer]:
+    - img [ref=e359]
+  - alert [ref=e362]
+```
