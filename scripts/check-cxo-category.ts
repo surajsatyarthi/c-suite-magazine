@@ -12,8 +12,8 @@ const client = createClient({
 
 async function checkCategory() {
   const slug = 'cxo-interview';
-  const query = `*[_type == "category" && slug.current == "${slug}"][0]`;
-  const result = await client.fetch(query);
+  const query = `*[_type == "category" && slug.current == $slug][0]`;
+  const result = await client.fetch(query, { slug });
   console.log(`Category "${slug}":`, result ? 'FOUND' : 'NOT FOUND');
   if (result) {
     console.log('Details:', JSON.stringify(result, null, 2));

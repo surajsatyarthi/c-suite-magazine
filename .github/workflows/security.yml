@@ -56,3 +56,9 @@ jobs:
 
       - name: Run ESLint Security
         run: pnpm run lint:security
+
+      - name: 🛡️ Iron Dome Injection Scan (v3.0)
+        run: pnpm run security-scan
+
+      - name: 🔍 Structural Report Audit (v2.5)
+        run: pnpm run validate-reports

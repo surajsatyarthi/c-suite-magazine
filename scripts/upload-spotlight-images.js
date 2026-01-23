@@ -52,8 +52,8 @@ async function uploadSpotlightImages() {
       console.log(`\n📸 Processing: ${mapping.file}`);
       
       // 1. Find the article (look in both post and csa types)
-      const query = `*[_type in ["post", "csa"] && title match "${mapping.searchTerm}*"][0]{ _id, title, spotlightImage }`;
-      const article = await client.fetch(query);
+      const query = `*[_type in ["post", "csa"] && title match $searchTerm][0]{ _id, title, spotlightImage }`;
+      const article = await client.fetch(query, { searchTerm: mapping.searchTerm + '*' });
       
       if (!article) {
         console.log(`   ❌ Article not found for: ${mapping.searchTerm}`);

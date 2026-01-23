@@ -2,8 +2,8 @@
 
 ### Quick Summary
 
-- **12 Resolved** | **13 Pending/Re-opened**
-  **Status:** ACTIVE - 25 Core Issues Identified. 12 Resolved. 13 Pending.
+- **20 Resolved** | **4 Pending/Re-opened**
+  **Status:** ACTIVE - 26 Core Issues Identified. 22 Resolved. 4 Pending.
 
 ---
 
@@ -19,8 +19,8 @@
 | **#6**  | Security: SQL Injection Audit      | **P0**   | 🔴 RE-OPENED | 💀 LOW  | Confirmed False Positive (GROQ used, not SQL).              |
 | **#7**  | Unreliable Deployment Tracking     | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Enforced Staging -> Main branch protection workflow.        |
 | **#8**  | Tag Data Quality (Stopwords)       | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Reduced tags 131->28; enforced schema validation.           |
-| **#9**  | Tag Landing Pages Missing          | **P1**   | 🔴 RE-OPENED | ⚠️ MID  | Implemented `/tag/[slug]` pages for SEO growth.             |
-| **#10** | Missing Metadata: Views            | **P1**   | 🔴 RE-OPENED | ⚠️ MID  | Implemented Hybrid Model (`Jitter + Real`).                 |
+| **#9**  | Tag Landing Pages Missing          | **P1**   | ✅ RESOLVED  | ⚠️ MID  | Implemented `/tag/[slug]` pages for SEO growth.             |
+| **#10** | Missing Metadata: Views            | **P1**   | ✅ RESOLVED  | ⚠️ MID  | Implemented Hybrid Model (`Jitter + Real`).                 |
 | **#11** | Hardcoded Secrets Audit            | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Removed project IDs from code; enforced env vars.           |
 | **#12** | Server-to-Client Leak              | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Split `lib/sanity.ts` & added guards.                       |
 | **#13** | E2E Tooling Gaps (CI Sync)         | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Sync'd env vars & verified MacOS/Linux runners.             |
@@ -28,9 +28,9 @@
 | **#15** | "Sponsored" Category Debt          | **P2**   | ✅ RESOLVED  | ⭐ HIGH | Removed category; enforced strict `/csa` routing.           |
 | **#16** | Playwright Coverage                | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Implemented dynamic ad verification with Sanity drafts.     |
 | **#17** | CI/CD Rulesets                     | **P2**   | ✅ RESOLVED  | ⭐ HIGH | Defined "Locked Vault" policy & job standardization.        |
-| **#18** | Sanity Preview                     | **P2**   | 🔴 RE-OPENED | ⚠️ MID  | Dynamic environment-agnostic preview sync.                  |
+| **#18** | Sanity Preview                     | **P2**   | ✅ RESOLVED  | ⚠️ MID  | Dynamic environment-agnostic preview sync.                  |
 | **#19** | View Count Anomaly (5M+)           | **P0**   | ✅ RESOLVED  | ⚠️ MID  | Clamped rand to 4.8M; Manual 5M+ override only.             |
-| **#20** | Footer/Nav SEO                     | **P3**   | 🔴 RE-OPENED | ⚠️ MID  | Anchored CXO Interviews; rebuilt 3-column footer.           |
+| **#20** | Footer/Nav SEO                     | **P3**   | ✅ RESOLVED  | ⚠️ MID  | Anchored CXO Interviews; rebuilt 3-column footer.           |
 | **#21** | Dynamic Metadata Debt              | **P1**   | 🔴 RE-OPENED | ⚠️ MID  | Persisted to Sanity fields.                                 |
 | **#22** | Legacy Image Gaps                  | **P1**   | 🔴 RE-OPENED | 💀 LOW  | Backfilled 100% assets.                                     |
 | **#23** | QA Tooling Implementation          | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Deployed Iron Dome (8 Core Tools) & Security CI.            |
@@ -41,7 +41,8 @@
 | **#30** | Legacy Versioning Cleanup          | **P4**   | ✅ RESOLVED  | ⭐ HIGH | Removed `package.json` import from Footer.tsx.              |
 | **#31** | Automated Sitemap Gen              | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Unified Query `post` + `csa` + `tag`; Tested.               |
 | **#32** | The Spider: Crawler                | **P0**   | ✅ RESOLVED  | ⭐ HIGH | Automated Crawler + Daily Email Report.                     |
-| **#33** | The Eagle: Visual Regression       | **P2**   | 🔴 OPEN      | TBD     | Automated visual regression testing.                        |
+| **#33** | The Eagle: Visual Regression       | **P2**   | ✅ RESOLVED  | ⭐ HIGH | Automated visual regression testing + Sync script.          |
+| **#43** | Spotlight Grid Consistency         | **P2**   | 🔴 OPEN      | ⚠️ LOW  | Fix inconsistent grid layout (Issue #34 in task.md).        |
 | **#34** | Ralph Protocol Upgrade v2.1        | **P0**   | ✅ RESOLVED  | ⭐ HIGH | Enforced "Proof Law" & Added Phase 7.                       |
 | **#35** | Prod Link Rot (14 URLs)            | **P0**   | ✅ RESOLVED  | ⭐ HIGH | Fixed malformed URL code in ArchiveFilters.tsx.             |
 | **#36** | DevOps: Dedupe CI                  | **P3**   | ✅ RESOLVED  | ⭐ HIGH | Removed redundant `e2e.yml` workflow.                       |

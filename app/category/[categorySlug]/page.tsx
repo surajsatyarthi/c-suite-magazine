@@ -18,17 +18,27 @@ function getFetchClient() {
 }
 
 async function getCategory(slug: string): Promise<Category | null> {
-  const query = `*[_type == "category" && slug.current == "${slug}"][0] {
+  // Defense in Depth: Validate slug format before query
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    return null;
+  }
+
+  const query = `*[_type == "category" && slug.current == $slug][0] {
     title,
     slug,
     description,
     color
   }`
-  return getFetchClient().fetch(query)
+  return getFetchClient().fetch(query, { slug })
 }
 
 async function getCategoryPosts(slug: string): Promise<Post[]> {
-  const query = `*[_type in ["post", "csa"] && "${slug}" in categories[]->slug.current && isHidden != true] | order(publishedAt desc) {
+  // Defense in Depth: Validate slug format before query
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    return [];
+  }
+
+  const query = `*[_type in ["post", "csa"] && $slug in categories[]->slug.current && isHidden != true] | order(publishedAt desc) {
     _id,
     title,
     slug,
@@ -39,7 +49,7 @@ async function getCategoryPosts(slug: string): Promise<Post[]> {
     publishedAt,
     views
   }`
-  return getFetchClient().fetch(query)
+  return getFetchClient().fetch(query, { slug })
 }
 
 // Generate static params for all categories
@@ -102,7 +112,7 @@ export default async function CategoryPage({
   if (MERGE_MAP[slug]) {
     redirect(`/category/${MERGE_MAP[slug]}`)
   }
-  if (REMOVED_SLUGS.has(slug)) {
+  if (REMOVED_SLUGS.has(slug) || !/^[a-z0-9-]+$/.test(slug)) {
     notFound()
   }
   const category = await getCategory(slug)

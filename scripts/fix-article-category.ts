@@ -25,7 +25,10 @@ async function fixArticleCategory() {
 
     // 1. Get the 'Leadership' category ID
     const targetSlug = 'leadership'
-    const targetCategory = await client.fetch(`*[_type == "category" && slug.current == "${targetSlug}"][0]{_id, title}`)
+    const targetCategory = await client.fetch(
+        `*[_type == "category" && slug.current == $slug][0]{_id, title}`,
+        { slug: targetSlug }
+    )
     if (!targetCategory) {
         console.error(`❌ Error: Could not find "${targetSlug}" category.`)
         process.exit(1)
@@ -33,7 +36,8 @@ async function fixArticleCategory() {
     console.log(`✅ Found target category: ${targetCategory.title} (${targetCategory._id})`)
 
     // 2. Find the article
-    const articleQuery = `*[_type == "post" && title match "The Asynchronous Enterprise*"][0] {
+    const searchTerm = "The Asynchronous Enterprise*"
+    const articleQuery = `*[_type == "post" && title match $term][0] {
     _id,
     title,
     articleType,
@@ -41,7 +45,7 @@ async function fixArticleCategory() {
     "categories": categories[]->slug.current
   }`
 
-    const article = await client.fetch(articleQuery)
+    const article = await client.fetch(articleQuery, { term: searchTerm })
 
     if (!article) {
         console.error('❌ Error: Could not find article "The Asynchronous Enterprise..."')

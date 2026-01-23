@@ -60,4 +60,36 @@ test.describe('The Eagle - Visual Regression Tests', () => {
     });
   });
 
+  test('CXO Interview Page (Revenue Registry)', async ({ page }) => {
+    // Navigate to a high-traffic CXO interview (Rich Stinson)
+    await page.goto('/csa/rich-stinson-ceo-southwire');
+    await dismissLocaleModal(page);
+
+    const articleLayout = page.locator('article');
+    await expect(articleLayout).toBeVisible({ timeout: 20000 });
+    
+    await page.evaluate(() => document.fonts.ready);
+
+    await visualExpect(articleLayout, 'revenue-cxO-interview.png', {
+      mask: [page.locator('.ad-slot')],
+      maxDiffPixels: 1000 // Complex layout
+    });
+  });
+
+  test('Search Results Page (Revenue Registry)', async ({ page }) => {
+    // Navigate to search with a common query
+    await page.goto('/search?q=sustainability');
+    await dismissLocaleModal(page);
+
+    const searchResults = page.locator('main');
+    await expect(searchResults).toBeVisible({ timeout: 20000 });
+
+    await page.evaluate(() => document.fonts.ready);
+
+    await visualExpect(searchResults, 'revenue-search-results.png', {
+      mask: [page.locator('.ad-slot')],
+      maxDiffPixels: 800
+    });
+  });
+
 });

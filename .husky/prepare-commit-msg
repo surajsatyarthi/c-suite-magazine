@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 🛡️ Ralph Protocol v2.5: Prepare Commit Message
+# Injects the security checklist template automatically.
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+
+# Only inject on fresh commits (not on rebase/amend)
+if [ -z "$COMMIT_SOURCE" ]; then
+  # Try to find the Current Issue ID from the branch name or task.md (harder to automate purely)
+  # For now, we'll use a placeholder [#ID] that forces the user to fill it.
+  
+  echo "\n\nSECURITY-CHECKLIST [#ID]: [ ] No injection risk [ ] Revenue intact [ ] Air-Gap used" >> "$COMMIT_MSG_FILE"
+fi

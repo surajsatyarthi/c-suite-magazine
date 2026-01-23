@@ -3,32 +3,30 @@ import { createClient } from 'next-sanity'
 import { apiVersion, dataset, projectId } from '@/sanity/env'
 
 /**
- * Server-only Sanity client with token support.
- * Use this for high-privilege reads (drafts) or write operations.
+ * 🛡️ Ralph Protocol v2.5: Standard Server Client (Read-Only)
+ * 
+ * Use this for standard data fetching and previews.
+ * For write operations, use lib/sanity.admin.ts.
  */
 export const serverClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: false,
-  token: process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN,
-  perspective: process.env.SANITY_VIEW_DRAFTS === 'true' ? 'previewDrafts' : 'published',
+  useCdn: true,
+  perspective: 'published',
 })
 
 /**
- * Get a configured server client.
+ * Get a configured server client for read/preview operations.
  * @param previewToken - Optional preview token from draft mode.
  */
 export function getServerClient(previewToken?: string) {
-  const token = previewToken || process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
-  const forceDrafts = process.env.SANITY_VIEW_DRAFTS === 'true';
-
-  if (token) {
+  if (previewToken) {
     return serverClient.withConfig({
-      token,
-      useCdn: !(previewToken || forceDrafts),
+      token: previewToken,
+      useCdn: false,
       ignoreBrowserTokenWarning: true,
-      perspective: (previewToken || forceDrafts) ? 'previewDrafts' : 'published',
+      perspective: 'previewDrafts',
     });
   }
   
