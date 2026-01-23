@@ -1,0 +1,14 @@
+[dotenv@17.2.3] injecting env (16) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Category "cxo-interview": FOUND
+Details: {
+  "_createdAt": "2025-11-01T23:36:25Z",
+  "_id": "CLZyEnOmHFQ0HoyBtIU3xy",
+  "_rev": "6AmixktFioqDVQEgoXC266",
+  "_type": "category",
+  "_updatedAt": "2025-11-10T16:42:19Z",
+  "color": "#c8ab3d",
+  "slug": {
+    "current": "cxo-interview"
+  },
+  "title": "CXO Interview"
+}

@@ -1,23 +1,38 @@
 import Navigation from '@/components/Navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
-import TagClient from './TagClient'
+import CategoryClient from '@/app/category/[categorySlug]/CategoryClient'
 import { notFound } from 'next/navigation'
 import { getServerClient } from '@/lib/sanity.server'
 import { Post } from '@/lib/types'
 import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
-import { normalizeDisplayTag } from '@/lib/tag-utils'
-import { safeJsonLd } from '@/lib/security'
-import { generateStructuredData } from '@/lib/seo'
+import { slugifyTag, normalizeDisplayTag } from '@/lib/tag-utils'
 
-// ISR: Revalidate every 10 minutes
-export const revalidate = 600
+// Enable ISR (1 hour revalidation as per Research)
+export const revalidate = 3600
 
-async function getArticlesByTag(tag: string): Promise<Post[]> {
-  // We search for articles where any tag (case-insensitive) matches our display-normalized tag
-  // Note: match is case-insensitive in GROQ.
-  const query = `*[_type in ["post", "csa"] && isHidden != true && count(tags[@ match $tag]) > 0] | order(publishedAt desc) {
+function getFetchClient() {
+  return getServerClient()
+}
+
+interface TagPayload {
+  title: string
+  slug: { current: string }
+  description: string
+  color: string
+}
+
+async function getAllUniqueTags(): Promise<string[]> {
+  const client = getFetchClient()
+  const query = `*[_type == "post" && defined(tags)].tags[]`
+  const tags: string[] = await client.fetch(query)
+  return Array.from(new Set(tags))
+}
+
+async function getTagPosts(originalTag: string): Promise<Post[]> {
+  // Query using the EXACT original tag string from DB
+  const query = `*[_type in ["post", "csa"] && defined(tags) && $originalTag in tags] | order(publishedAt desc) {
     _id,
     title,
     slug,
@@ -29,46 +44,34 @@ async function getArticlesByTag(tag: string): Promise<Post[]> {
     views,
     tags
   }`
-  const client = getServerClient()
-  return client.fetch<Post[]>(query, { tag } as Record<string, string>)
+  
+  return getFetchClient().fetch(query, { originalTag })
 }
 
-/**
- * Generate static params for the most popular tags to ensure SEO performance
- */
 export async function generateStaticParams() {
-  const query = `*[_type == "post" && defined(tags)].tags`
-  const client = getServerClient()
-  const allTagsArrays: string[][] = await client.fetch(query)
+  const tags = await getAllUniqueTags()
+  const uniqueSlugs = new Set<string>()
   
-  const tagCounts: Record<string, number> = {}
-  allTagsArrays.flat().forEach(t => {
-    const slug = t.toLowerCase().replace(/\s+/g, '-')
-    tagCounts[slug] = (tagCounts[slug] || 0) + 1
+  tags.forEach(tag => {
+    const slug = slugifyTag(tag)
+    if (slug) uniqueSlugs.add(slug)
   })
-
-  // Pre-render top 100 tags
-  return Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 100)
-    .map(([slug]) => ({ tagSlug: slug }))
+  
+  return Array.from(uniqueSlugs).map((slug) => ({ tagSlug: slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ tagSlug: string }> }): Promise<Metadata> {
   const resolvedParams = await params
-  const slug = resolvedParams.tagSlug
-  const displayTag = normalizeDisplayTag(slug)
+  const slug = resolvedParams?.tagSlug || ''
+  // Best guess display title from slug if we don't have the original tag context here easily
+  // or we could fetch mapping again, but for metadata, simple formatting is okay.
+  const title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   
-  const title = `Industry Insights: ${displayTag}`
-  const description = `Explore the latest articles, interviews, and strategic insights about ${displayTag} from global business leaders.`
-  const url = `https://csuitemagazine.global/tag/${slug}`
-
   return generateSEOMetadata({
-    title,
-    description,
-    url,
+    title: `${title} - C-Suite Magazine`,
+    description: `Browse articles tagged with ${title}. Expert insights and leadership trends.`,
+    url: `https://csuitemagazine.global/tag/${slug}`,
     type: 'website',
-    section: 'Business Intelligence',
   })
 }
 
@@ -78,50 +81,60 @@ export default async function TagPage({
   params: Promise<{ tagSlug: string }>
 }) {
   const resolvedParams = await params
-  const slug = resolvedParams.tagSlug
-  const displayTag = normalizeDisplayTag(slug)
+  const slug = resolvedParams?.tagSlug?.toLowerCase()
+  
+  if (!slug) notFound()
 
-  const posts = await getArticlesByTag(displayTag)
+  // REVERSE LOOKUP: Find the original tag that produces this slug
+  // We must fetch all tags to find the match. Use cached fetch.
+  const allTags = await getAllUniqueTags()
+  const originalTag = allTags.find(t => slugifyTag(t) === slug)
 
-  // If we have literally zero posts and it's not a common tag, we could 404
-  // But for tags, usually better to show an empty state unless the slug is garbage
-  if (posts.length === 0 && slug.length < 3) {
+  if (!originalTag) {
     notFound()
+  }
+
+  const posts = await getTagPosts(originalTag)
+
+  if (!posts || posts.length === 0) {
+    notFound()
+  }
+
+  // Synthesize a Category-like object for the Client Component
+  const displayTitle = normalizeDisplayTag(originalTag)
+  const displayTag: TagPayload = {
+    title: displayTitle,
+    slug: { current: slug },
+    description: `Articles tagged with #${displayTitle}`,
+    color: '#082945' // Default brand blue for tags
   }
 
   return (
     <>
       <Navigation />
-      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: `Tag: ${displayTag}` }]} />
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: `Tag: ${displayTag.title}` }]} />
       
-      {/* Breadcrumb JSON-LD */}
-      <script
-        type="application/ld+json"
-        // eslint-disable-next-line no-restricted-syntax -- Verified Safe: Uses safeJsonLd with mandatory escaping for <, >, and &
-        dangerouslySetInnerHTML={safeJsonLd(
-          generateStructuredData('breadcrumb', {
-            items: [
-              { name: 'Home', url: 'https://csuitemagazine.global/' },
-              { name: displayTag, url: `https://csuitemagazine.global/tag/${slug}` },
-            ]
-          })
-        )}
-      />
-
       <main className="min-h-screen bg-gray-50">
         {/* Tag Header */}
-        <div className="dark-section py-20 bg-[#082945] text-white">
+        <div
+          className="dark-section py-16 text-white"
+          style={{ backgroundColor: displayTag.color }}
+        >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-6xl font-serif font-black mb-4">
-              #{displayTag}
+            <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider uppercase bg-white/10 rounded-full">
+              Topic
+            </span>
+            <h1 className="text-4xl font-serif font-black mb-4">
+              {displayTag.title}
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Strategic insights and executive analysis on {displayTag}
+              {displayTag.description}
             </p>
           </div>
         </div>
 
-        <TagClient posts={posts} tag={slug} displayTag={displayTag} />
+        {/* Reuse CategoryClient for Grid & Pagination */}
+        <CategoryClient posts={posts} category={displayTag} />
       </main>
 
       <Footer />

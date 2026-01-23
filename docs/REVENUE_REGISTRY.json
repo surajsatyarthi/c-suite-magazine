@@ -1,0 +1,17 @@
+[
+  {
+    "label": "CXO Interviews (Bread-Winner)",
+    "url": "/category/cxo-interview",
+    "priority": "P0"
+  },
+  {
+    "label": "Executive Salaries",
+    "url": "/executive-salaries",
+    "priority": "P1"
+  },
+  {
+    "label": "Home Page",
+    "url": "/",
+    "priority": "P0"
+  }
+]

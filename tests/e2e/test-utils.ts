@@ -85,4 +85,15 @@ export class SanityDiscovery {
         const slugs = await this.client.fetch(query, { limit });
         return slugs || [];
     }
+
+    /**
+     * Finds active tags from posts.
+     */
+    async getTags(limit: number = 3): Promise<string[]> {
+        // Fetch unique tags from posts
+        const query = `*[_type == "post" && defined(tags)].tags[]`;
+        const allTags = await this.client.fetch(query);
+        const unique = Array.from(new Set(allTags));
+        return unique.slice(0, limit) as string[];
+    }
 }

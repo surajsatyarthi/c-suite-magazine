@@ -1,6 +1,6 @@
 # The Antigravity Engineering Handbook (Ralph Omnibus)
 
-**Version:** 2.1 (The Proof Edition)
+**Version:** 2.3 (The Search Edition)
 **Status:** Active
 **Authority:** Supreme "Law of the Land" for this repository.
 **"Nullius in verba" — Take nobody's word for it.**
@@ -72,6 +72,15 @@ _Consolidated from `docs/protocols.md` and `docs/world_class_engineering_standar
 - **Security**: Define **Threat Model** (How could this be attacked?).
 - **RFC Mandate**: For tasks > 4 hours, an RFC is required.
 - **GATE 1**: Generate `Planning Report` -> Request Permission.
+
+### Phase 1.5: Research (The Truth)
+
+- **Trigger**: Before Development (Gate 2).
+- **Action**: Mandatory **Google Search** (`search_web` tool) to validate assumptions.
+  - **Sources**: Official Docs, GitHub Issues, CVE Databases.
+  - **Search Query Pattern**: `[Technology] [Error/Concept] best practices/vulnerabilities`.
+- **Goal**: Detect "Assumption Blind Spots" (e.g., "Sanity has no SQL").
+- **Output**: `Research Summary` added to Plan with citation URLs.
 
 ### Phase 2: Development (The Build)
 
