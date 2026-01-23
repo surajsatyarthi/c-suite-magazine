@@ -75,8 +75,6 @@ export default function Navigation() {
 
   const [allCategories, setAllCategories] = useState<Array<{ title: string, slug: string }>>([])
   const scrollContainerRef = React.useRef<HTMLElement>(null)
-  const scrollIntervalRef = React.useRef<NodeJS.Timeout | null>(null)
-  const scrollDirectionRef = React.useRef<number>(1)
 
   // Fetch categories with articles (server-side via API)
   useEffect(() => {
@@ -97,100 +95,7 @@ export default function Navigation() {
     fetchCategories()
   }, [])
 
-  // Auto-scroll functionality (optimized to prevent overheating)
-  useEffect(() => {
-    const container = scrollContainerRef.current
-    if (!container || allCategories.length === 0) return
-
-    let isScrolling = false
-    let animationFrameId: number | null = null
-    let lastTimestamp = 0
-    const scrollSpeed = 15 // pixels per second (much smoother and less CPU intensive)
-
-    const animate = (timestamp: number) => {
-      if (!isScrolling || !container) return
-
-      // Calculate delta time in seconds
-      const deltaTime = lastTimestamp ? (timestamp - lastTimestamp) / 1000 : 0
-      lastTimestamp = timestamp
-
-      const maxScroll = container.scrollWidth - container.clientWidth
-      const currentScroll = container.scrollLeft
-
-      // Calculate next position based on time (smoother than fixed increments)
-      const increment = scrollSpeed * deltaTime
-      const nextScroll = currentScroll + (scrollDirectionRef.current * increment)
-
-      // Check if we'll hit a boundary with the next increment
-      if (nextScroll >= maxScroll && scrollDirectionRef.current === 1) {
-        scrollDirectionRef.current = -1
-      } else if (nextScroll <= 0 && scrollDirectionRef.current === -1) {
-        scrollDirectionRef.current = 1
-      }
-
-      // Apply the scroll with the (potentially updated) direction
-      container.scrollLeft += scrollDirectionRef.current * increment
-
-      // Continue animation
-      if (isScrolling) {
-        animationFrameId = requestAnimationFrame(animate)
-      }
-    }
-
-    const startScrolling = () => {
-      if (isScrolling) return
-      isScrolling = true
-      lastTimestamp = 0
-      animationFrameId = requestAnimationFrame(animate)
-    }
-
-    const stopScrolling = () => {
-      isScrolling = false
-      if (animationFrameId !== null) {
-        cancelAnimationFrame(animationFrameId)
-        animationFrameId = null
-      }
-    }
-
-    // Stop scrolling when page is hidden (saves massive CPU)
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        stopScrolling()
-      } else {
-        // Resume scrolling when page becomes visible again
-        const wasHovering = container.matches(':hover')
-        if (!wasHovering) {
-          startScrolling()
-        }
-      }
-    }
-
-    // Start scrolling after 2 seconds
-    const startDelay = setTimeout(startScrolling, 2000)
-
-    // Stop scrolling on user interaction
-    container.addEventListener('mouseenter', stopScrolling)
-    container.addEventListener('touchstart', stopScrolling, { passive: true })
-
-    // Resume scrolling when user leaves
-    container.addEventListener('mouseleave', startScrolling)
-    container.addEventListener('touchend', startScrolling, { passive: true })
-
-    // Pause when page is hidden (critical for performance!)
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      clearTimeout(startDelay)
-      stopScrolling()
-      if (container) {
-        container.removeEventListener('mouseenter', stopScrolling)
-        container.removeEventListener('touchstart', stopScrolling)
-        container.removeEventListener('mouseleave', startScrolling)
-        container.removeEventListener('touchend', startScrolling)
-      }
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-    }
-  }, [allCategories.length])
+  // Auto-scroll removed to fix touch locking issues (Issue #24)
 
   const navLinks = [
     { href: '/', label: 'Home' },
