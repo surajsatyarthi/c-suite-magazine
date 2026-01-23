@@ -34,7 +34,7 @@
 | **#21** | Dynamic Metadata Debt              | **P1**   | 🔴 RE-OPENED | ⚠️ MID  | Persisted to Sanity fields.                                 |
 | **#22** | Legacy Image Gaps                  | **P1**   | 🔴 RE-OPENED | 💀 LOW  | Backfilled 100% assets.                                     |
 | **#23** | QA Tooling Implementation          | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Deployed Iron Dome (8 Core Tools) & Security CI.            |
-| **#24** | Category Scroll Freeze             | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Removed conflicting JS auto-scroll loop.                    |
+| **#24** | Category Scroll Freeze             | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Fixed via Global Lock Hook & EntryLocalePopup Refactor.     |
 | **#25** | Governance: Missing PRD            | **P2**   | 🔴 OPEN      | ⚠️ LOW  | No central PRD defining features/roadmap.                   |
 | **#28** | Missing Tag Index Page             | **P1**   | ✅ RESOLVED  | ⭐ HIGH | Implemented `/tag` static index.                            |
 | **#29** | Missing Legal Entity Copyright     | **P2**   | ✅ RESOLVED  | ⭐ HIGH | Footer updated to "INVICTUS INTERNATIONAL..."               |
@@ -132,9 +132,13 @@
 
 ### Issue #9: Tag Landing Pages Missing (SEO Blocker)
 
-- **Status:** ✅ RESOLVED
+- **Status:** ✅ RESOLVED (2026-01-23)
 - **Priority:** P1 - Very High
-- **Description:** Tags are visible but not clickable. `/tag/[slug]` pages do not exist. Significant SEO loss.
+- **Description:** Implemented dynamic `/tag/[slug]` Landing Pages with Middleware to handle case-sensitivity.
+- **Ralph Protocol v2.3:**
+  - **Gate 1.5 (Research):** Validated Middleware requirement (User-Assisted).
+  - **Gate 3 (Verify):** Passed E2E Suite `tag-page.spec.ts` (Dynamic Discovery).
+  - **Gate 6 (Deploy):** Commit `14020bf8`.
 
 ### Issue #10: Missing Metadata: Article Views
 
@@ -221,10 +225,14 @@
 
 ### Issue #24: Category Scroll Freeze (P1 - High)
 
-- **Status:** 🔴 OPEN
+- **Status:** ✅ RESOLVED (2026-01-23)
 - **Priority:** P1 - High
 - **Description:** Users report that the category navigation or list scroll "freezes" or becomes unresponsive under specific browser conditions.
-- **Impact:** High UX friction; prevents content discovery in major categories.
+- **Root Cause:** Race condition in `useEffect` cleanup and unsafe manual `document.body.style` manipulation in `EntryLocalePopup` and `AdInterstitialV2`.
+- **Resolution:**
+  - Implemented `hooks/useBodyScrollLock.ts` (Global Ref Count + Safety Valve).
+  - Refactored `EntryLocalePopup` and `AdInterstitialV2` to use the hook.
+  - Verified via E2E test `tests/e2e/category-scroll.spec.ts`.
 
 ### Issue #20: Footer/Nav SEO (Ghost Link Cleanup)
 

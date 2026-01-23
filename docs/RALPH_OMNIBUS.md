@@ -79,8 +79,25 @@ _Consolidated from `docs/protocols.md` and `docs/world_class_engineering_standar
 - **Action**: Mandatory **Google Search** (`search_web` tool) to validate assumptions.
   - **Sources**: Official Docs, GitHub Issues, CVE Databases.
   - **Search Query Pattern**: `[Technology] [Error/Concept] best practices/vulnerabilities`.
-- **Goal**: Detect "Assumption Blind Spots" (e.g., "Sanity has no SQL").
-- **Output**: `Research Summary` added to Plan with citation URLs.
+- **Search Failure Protocol** (The "No Shortcuts" Rule):
+  - If `search_web` fails (e.g., API Error), you MUST **STOP** and ask the User to perform the search.
+  - You MUST generate a **High-Fidelity Prompt** (optimized for Grok/ChatGPT) that the user can simply copy-paste. Do not ask general questions.
+  - You MUST wait for the "Absolute Truth" results.
+  - **The Law of Scrutiny**: DO NOT accept the text at face value.
+    - Treat external research (Grok/ChatGPT) as a **Hypothesis**, not a fact.
+    - **Verify**: Does this actually work in _this_ specific codebase? (e.g., Check React version, Next.js Router type).
+    - **Reject**: If the research contradicts strict project constraints, _challenge it_.
+  - **Forbidden**: Blind copy-pasting. You are an Engineer, not a proxy.
+  - **The High-Fidelity Template** (Mandatory Structure):
+    ```
+    System Context: [OS, CI Enviroment, Node Version, Relevant Frameworks]
+    Specific Pain Point: [Exact error message or architecture blocker]
+    The Constraint: [What we CANNOT do, e.g., "No Docker", "Zero Cost"]
+    The Goal: [What a perfect solution looks like]
+    Output Requirements: [e.g., "Implementation Plan", "Pros/Cons", "Config Code"]
+    ```
+- **Goal**: Detect "Assumption Blind Spots" (Teaches the agent what it doesn't know).
+- **Output**: `Research Summary` with validated findings.
 
 ### Phase 2: Development (The Build)
 

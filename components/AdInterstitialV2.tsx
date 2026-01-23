@@ -5,6 +5,7 @@ import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { useAdStore } from '@/store/adStore'
 import { usePathname } from 'next/navigation'
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { trackPopupView, trackAdClick, trackPopupClose } from '@/lib/analytics'
 
 import { ADS, CAROUSEL_INTERVAL } from '@/lib/adInterstitial/constants'
@@ -50,17 +51,7 @@ export default function AdInterstitialV2() {
     }, [isOpen, content, isPaused])
 
     // Lock body scroll when ad is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-        } else {
-            document.body.style.overflow = ''
-        }
-
-        return () => {
-            document.body.style.overflow = ''
-        }
-    }, [isOpen])
+    useBodyScrollLock(isOpen)
 
     // Handle Escape key to close
     useEffect(() => {

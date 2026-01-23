@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { ISO_COUNTRY_CODES } from '@/lib/countries'
 import { getCountryFlag } from '@/components/CountrySelector'
 import { setLocaleOpen, setLocaleDismissed, setHasCountry } from '@/lib/localeGate'
@@ -21,6 +22,7 @@ function setCookie(name: string, value: string, days = 365) {
 }
 
 export default function EntryLocalePopup() {
+  const pathname = usePathname()
   // Show locale popup on all pages (global gatekeeper)
   const [isOpen, setIsOpen] = useState(false)
   const [country, setCountry] = useState<string>('US')
@@ -93,32 +95,7 @@ export default function EntryLocalePopup() {
   }, [])
 
   // Lock background scroll while modal is open
-  useEffect(() => {
-    if (typeof document === 'undefined') return
-    if (isOpen) {
-      try {
-        const prev = document.body.style.overflow
-        document.body.setAttribute('data-prev-overflow', prev)
-        document.body.style.overflow = 'hidden'
-      } catch { }
-    } else {
-      try {
-        const prev = document.body.getAttribute('data-prev-overflow') || ''
-        document.body.style.overflow = prev
-        document.body.removeAttribute('data-prev-overflow')
-        // Reflect close to LocaleGate without implying dismissal
-        try { setLocaleOpen(false) } catch { }
-      } catch { }
-    }
-
-    return () => {
-      try {
-        const prev = document.body.getAttribute('data-prev-overflow') || ''
-        document.body.style.overflow = prev
-        document.body.removeAttribute('data-prev-overflow')
-      } catch { }
-    }
-  }, [isOpen])
+  useBodyScrollLock(isOpen)
 
   const handleSave = async () => {
     try {
@@ -169,6 +146,8 @@ export default function EntryLocalePopup() {
 
     setIsOpen(false)
   }
+
+  if (!isOpen) return null
 
   if (!isOpen) return null
 
