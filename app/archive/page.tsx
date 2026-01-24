@@ -21,6 +21,7 @@ async function getPosts(categoryFilter?: string): Promise<Post[]> {
 
   query += `] | order(publishedAt desc) {
     _id,
+    _type,
     title,
     slug,
     excerpt,

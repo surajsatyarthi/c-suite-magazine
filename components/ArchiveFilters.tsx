@@ -10,6 +10,7 @@ import { urlFor } from '@/lib/sanity'
 import { Post, Category } from '@/lib/types'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { formatViewsMillion } from '@/lib/views'
+import { getArticleUrl } from '@/lib/urls'
 
 interface ArchiveFiltersProps {
   posts: Post[]
@@ -150,7 +151,10 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
                   {/* Title */}
                   <h2 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
                     {isValidSlug ? (
-                      <Link href={(() => { const cat = ((post as any)?.categories?.[0]?.slug?.current as string | undefined) || 'general'; return `/category/${cat}/${slug}` })()} className="hover:text-[#082945] transition-colors" >
+                      <Link 
+                        href={getArticleUrl(post)} 
+                        className="hover:text-[#082945] transition-colors" 
+                      >
                         {sanitizeTitle(post.title)}
                       </Link >
                     ) : (
@@ -182,7 +186,7 @@ export default function ArchiveFilters({ posts, categories, initialCategory = 'a
                       <span>{(post as any)?.writer?.name || 'Anonymous'}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      {typeof post.views === 'number' && !post.hideViews && (
+                      {!post.hideViews && (
                         <span className="flex items-center gap-1">
                           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

@@ -1,4 +1,5 @@
 import { client, urlFor } from './sanity'
+import { getArticleUrl } from './urls'
 
 export type SpotlightItem = {
     image: string
@@ -57,9 +58,7 @@ export async function getSpotlightItems(): Promise<{ items: SpotlightItem[], des
                             // HARDENED REDIRECT LOGIC: Ensure canonical mapping
                             let href = '/archive'
                             if (postSlug) {
-                                href = (p._type === 'csa') 
-                                    ? `/csa/${postSlug}` 
-                                    : `/category/${cat}/${postSlug}`
+                                href = getArticleUrl(p)
                             }
                             
                             return {

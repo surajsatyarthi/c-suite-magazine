@@ -7,6 +7,7 @@ import { Post } from '@/lib/types'
 import { getCategoryColor } from '@/lib/categoryColors'
 import SkeletonCard from '@/components/SkeletonCard'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
+import { getArticleUrl } from '@/lib/urls'
 
 type LatestInsightsProps = {
   articles: Post[]
@@ -132,11 +133,7 @@ export default function LatestInsights({ articles }: LatestInsightsProps) {
               return isValidSlug ? (
                 <Link
                   key={(post as any)._id}
-                  href={(() => {
-                    const categories = (post as any)?.categories || [];
-                    const cat = (Array.isArray(categories) && categories.length > 0 && categories[0]?.slug?.current) || 'general';
-                    return `/category/${cat}/${slug}`;
-                  })()}
+                  href={getArticleUrl(post)}
                   prefetch={false}
                   className="group bg-white focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2 rounded-lg overflow-hidden shadow-md"
                   aria-label={`Read article: ${postTitle}${writerName ? ` by writer ${writerName}` : ''}`}

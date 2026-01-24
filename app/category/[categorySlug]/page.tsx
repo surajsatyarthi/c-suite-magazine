@@ -40,6 +40,7 @@ async function getCategoryPosts(slug: string): Promise<Post[]> {
 
   const query = `*[_type in ["post", "csa"] && $slug in categories[]->slug.current && isHidden != true] | order(publishedAt desc) {
     _id,
+    _type,
     title,
     slug,
     excerpt,

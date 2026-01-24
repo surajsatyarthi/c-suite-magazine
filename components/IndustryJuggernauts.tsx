@@ -2,6 +2,7 @@ import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { SpotlightItem } from '@/lib/spotlight'
 import { client } from '@/lib/sanity'
+import { getArticleUrl } from '@/lib/urls'
 
 type IndustryJuggernautsProps = {
   items?: SpotlightItem[]
@@ -29,12 +30,60 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
 
   // Use Sanity items if available, otherwise fallback to props (Spotlight items)
   // We map Sanity items to match the structure we need
-  const displayItems = config?.items?.map((item: any) => ({
-    title: item.title,
-    image: item.image,
-    href: item.link,
-    // category: item.category // We don't currently display category in the card, but it's available
-  })) || fallbackItems.slice(0, 9)
+  // Resolve manual links to ensure they point to the correct route (e.g. /csa/ vs /category/)
+  const rawItems = config?.items || []
+  let resolvedItems: any[] = []
+
+  if (rawItems.length > 0) {
+    const slugs = rawItems
+      .map((item: any) => {
+        if (!item.link) return null
+        // Extract slug from end of URL (e.g. .../foo-bar -> foo-bar)
+        const parts = item.link.split('/').filter(Boolean)
+        return parts.length > 0 ? parts[parts.length - 1] : null
+      })
+      .filter((s: string | null): s is string => Boolean(s))
+
+    if (slugs.length > 0) {
+      // Fetch actual types for these slugs
+      const docs = await client.fetch(
+        `*[_type in ["post", "csa"] && slug.current in $slugs]{ 
+          slug, 
+          _type,
+          "categories": categories[]->{ slug }
+        }`,
+        { slugs }
+      )
+      
+      const docMap = new Map(docs.map((d: any) => [d.slug.current, d]))
+
+      resolvedItems = rawItems.map((item: any) => {
+        const slug = (item.link || '').split('/').filter(Boolean).pop()
+        const doc = docMap.get(slug)
+        if (doc) {
+          // Re-generate URL using central resolver
+          return {
+            title: item.title,
+            image: item.image,
+            href: getArticleUrl(doc),
+          }
+        }
+        return {
+          title: item.title,
+          image: item.image,
+          href: item.link
+        }
+      })
+    } else {
+      resolvedItems = rawItems.map((item: any) => ({
+        title: item.title,
+        image: item.image,
+        href: item.link
+      }))
+    }
+  }
+
+  const displayItems = resolvedItems.length > 0 ? resolvedItems : fallbackItems.slice(0, 9)
 
   return (
     <section className="py-20 bg-gradient-to-br from-[#2b6cb0] to-[#020f1a] text-white dark-section">

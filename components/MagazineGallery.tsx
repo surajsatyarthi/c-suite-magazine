@@ -3,6 +3,7 @@ import ExecutiveInFocus from '@/components/ExecutiveInFocus'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
 import { SpotlightItem } from '@/lib/spotlight'
+import { getArticleUrl } from '@/lib/urls'
 
 type MagazineGalleryProps = {
   items: SpotlightItem[]
@@ -19,9 +20,9 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
           title,
           "description": excerpt,
           "image": coalesce(spotlightImage, mainImage),
-          "slug": slug.current,
-          "type": _type,
-          "primaryCategory": categories[0]->{ slug }
+          _type,
+          slug,
+          categories[]->{ "slug": slug.current }
         },
         customTitle,
         customPosition,
@@ -65,8 +66,7 @@ export default async function MagazineGallery({ items }: MagazineGalleryProps) {
     executiveDescription = executiveData.customDescription || art.description || ''
     
     if (art.slug) {
-      const cat = art.primaryCategory?.slug?.current || 'cxo-interview'
-      executiveHref = art.type === 'csa' ? `/csa/${art.slug}` : `/category/${cat}/${art.slug}`
+      executiveHref = getArticleUrl(art as any)
     }
   } else if (executiveData) {
     // Old Manual System Path

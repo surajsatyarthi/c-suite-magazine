@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
+import { getArticleUrl } from '@/lib/urls'
 import OptimizedImage from './OptimizedImage'
 
 interface SpotlightLeader {
@@ -53,7 +54,7 @@ async function getSpotlightLeaders(): Promise<SpotlightLeader[]> {
         company: '',
         achievement: article.excerpt ? article.excerpt.substring(0, 80) : '',
         image: article.mainImage,
-        profileUrl: `/category/cxo-interview/${article.slug.current}`
+        profileUrl: getArticleUrl(article)
       }
     })
     

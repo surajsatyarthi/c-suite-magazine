@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { client } from '@/lib/sanity'
 import { getExecutiveSlugs } from '@/lib/db'
+import { getArticleUrl } from '@/lib/urls'
 
 export async function GET() {
   const baseUrl = 'https://csuitemagazine.global'
@@ -13,11 +14,11 @@ export async function GET() {
   // CRITICAL: Must fetch 'csa' type to ensure paid clients are indexed.
   const articles = await client.fetch(`
     *[(_type == "post" || _type == "csa") && defined(slug.current) && isHidden != true] {
-      "type": _type,
-      "slug": slug.current,
+      _type,
+      slug,
       _updatedAt,
       publishedAt,
-      "category": categories[0]->slug.current
+      "categories": categories[]->{ "slug": slug.current }
     }
   `)
 
@@ -77,21 +78,13 @@ export async function GET() {
 
     // --- Dynamic Articles (Post & CSA) ---
     ...articles.map((item: any) => {
-      // CSA URL logic: /csa/[slug]
-      // Post URL logic: /category/[cat]/[slug]
-      let url = ''
-      if (item.type === 'csa') {
-        url = `${baseUrl}/csa/${item.slug}`
-      } else {
-        const cat = item.category || 'general'
-        url = `${baseUrl}/category/${cat}/${item.slug}`
-      }
+      const url = `${baseUrl}${getArticleUrl(item)}`
 
       return {
         url,
         lastModified: new Date(item._updatedAt || item.publishedAt),
         changeFrequency: 'monthly' as const,
-        priority: item.type === 'csa' ? 1.0 : 0.9, // CSA gets top priority
+        priority: item._type === 'csa' ? 1.0 : 0.9, // CSA gets top priority
       }
     }),
 
