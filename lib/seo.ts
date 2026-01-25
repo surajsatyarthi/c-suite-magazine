@@ -176,7 +176,16 @@ export function generateStructuredData(type: 'organization' | 'article' | 'bread
         articleSection: data.section,
         keywords: data.keywords?.join(', '),
         wordCount: data.wordCount,
-        timeRequired: data.readTime ? `PT${data.readTime}M` : undefined
+        timeRequired: data.readTime ? `PT${data.readTime}M` : undefined,
+        ...(data.interactionCount
+          ? {
+              interactionStatistic: {
+                '@type': 'InteractionCounter',
+                interactionType: 'https://schema.org/UserInteraction',
+                userInteractionCount: data.interactionCount,
+              },
+            }
+          : {}),
       }
 
     case 'breadcrumb':

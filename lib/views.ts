@@ -21,28 +21,38 @@ function hashCode(str: string): number {
  * • GROWTH: Adds real viewership data (n) to the baseline
  * • Values >= 5.0M show as "5M+"
  */
-export function formatViewsMillion(n?: number | null, slug?: string): string {
-  const realViews = typeof n === 'number' && isFinite(n) ? n : 0
+
+/**
+ * Calculates the raw numeric view count including Jitter.
+ * Returns a number (e.g., 2500000).
+ */
+export function getViewCountValue(realViews?: number | null, slug?: string): number {
+  const real = typeof realViews === 'number' && isFinite(realViews) ? realViews : 0
   
-  // 1. INTENTIONAL: If real data (from CMS) is >= 5M, show the badge.
-  if (realViews >= 5000000) return '5M+'
-  
-  // 2. JITTER: Generate pseudo-random count between 2.1M - 4.8M based on slug.
-  // We strictly clamp at 4.8M to reserve "5M+" for true viral content.
+  // 1. If real data is massive, return it directly
+  if (real >= 5000000) return real
+
+  // 2. Jitter Logic (Must match formatViewsMillion)
   if (slug) {
     const hash = hashCode(slug)
-    const random = (hash % 101) / 100 // Generates 0.0 - 1.0
+    const random = (hash % 101) / 100 // 0.0 - 1.0
+    const jitterMillion = 2.1 + (random * 2.7) // Range 2.1M - 4.8M
     
-    // Range: 2.1M + (0 to 2.7M) = Max 4.8M
-    const jitter = 2.1 + (random * 2.7)
+    // Combine Jitter + Real (scaled to millions)
+    const totalMillion = Math.min(jitterMillion + (real / 1000000), 4.8)
     
-    // Convert realViews to million scale (e.g., 1000 views = 0.001M)
-    // Even with jitter, we ensure it doesn't accidentally cross 4.9M
-    const totalMillion = Math.min(jitter + (realViews / 1000000), 4.8)
-    
-    return `${totalMillion.toFixed(1)} M`
+    return Math.round(totalMillion * 1000000)
   }
+
+  // 3. Fallback baseline
+  return 2100000
+}
+
+export function formatViewsMillion(n?: number | null, slug?: string): string {
+  const val = getViewCountValue(n, slug)
   
-  // 3. FALLBACK: Default to baseline if no slug provided (was '5M+', now safer '2.1 M')
-  return '2.1 M'
+  if (val >= 5000000) return '5M+'
+  
+  const millions = val / 1000000
+  return `${millions.toFixed(1)} M`
 }

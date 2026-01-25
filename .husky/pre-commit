@@ -9,6 +9,9 @@ fi
 
 # 2. The Ralph Enforcer (Mandatory Protocol)
 npx tsx scripts/ralph-enforcer.ts
+./scripts/canonical-enforcer.sh
+node scripts/check-gates.js
+node scripts/enforce-gates.js
 
 # 3. The Automated Gates
 npx lint-staged

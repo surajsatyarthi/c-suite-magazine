@@ -23,7 +23,7 @@ import { client, urlFor } from "@/lib/sanity";
 import { getServerClient } from '@/lib/sanity.server'
 import { getArticleUrl } from "@/lib/urls";
 import { draftMode } from "next/headers";
-import { getViews, formatViewsMillion } from "@/lib/views";
+import { getViews, formatViewsMillion, getViewCountValue } from "@/lib/views";
 import { sanitizeExcerpt, sanitizeTitle } from "@/lib/text";
 import { Post, SanityImage } from "@/lib/types";
 import {
@@ -667,6 +667,7 @@ export default async function CompanySponsoredArticlePage(props: {
                 url: `https://csuitemagazine.global/csa/${post.slug.current}`,
                 wordCount,
                 readTime,
+                interactionCount: getViewCountValue(post.views, post.slug.current),
               }),
             )}
           />

@@ -1,4 +1,5 @@
 # Production Execution Rules
+
 ## MANDATORY CHECKLIST - Must Complete BEFORE Any Action
 
 **These rules apply to ALL tasks on this production site.**
@@ -8,13 +9,16 @@
 ## 🛑 STOP - Before You Start
 
 ### Phase 1: UNDERSTAND (2 minutes)
+
 - [ ] What is the exact task?
 - [ ] What is the expected outcome?
 - [ ] Is this reversible or irreversible?
 - [ ] What are the risks if this goes wrong?
 - [ ] Am I 100% clear on requirements, or do I need to ask clarifying questions?
+- [ ] **PROTOCOL CHECK:** Have I performed the mandatory Gate 4 Research? (Never justify skipping this).
 
 ### First Principles Check:
+
 - [ ] What are the fundamental facts? (today's date, data availability, API functionality)
 - [ ] What am I assuming without verifying?
 - [ ] Can I test my assumptions right now?
@@ -29,6 +33,7 @@
 ## 🔍 Phase 2: VERIFY (3-5 minutes)
 
 ### For External APIs/Services:
+
 - [ ] Does the API/service actually exist and work?
 - [ ] Test the API endpoint with a sample request
 - [ ] Check API documentation for rate limits, ToS
@@ -36,6 +41,7 @@
 - [ ] **NEVER add untested APIs to production**
 
 ### For Data:
+
 - [ ] What is today's date?
 - [ ] What is the latest available data?
 - [ ] Is the data I'm using current or stale?
@@ -43,6 +49,7 @@
 - [ ] Can I verify accuracy before importing?
 
 ### For Code Changes:
+
 - [ ] Have I read the existing code I'm modifying?
 - [ ] Do I understand why it was written this way?
 - [ ] Will my change break existing functionality?
@@ -56,6 +63,7 @@
 ## 📋 Phase 3: PLAN (3-5 minutes)
 
 ### Create a written plan:
+
 1. What files will be modified?
 2. What is the sequence of operations?
 3. What dependencies exist between operations?
@@ -64,11 +72,13 @@
 6. What is the rollback plan if it fails?
 
 ### Risk Assessment:
+
 - **HIGH RISK:** Database changes, API integrations, global config
 - **MEDIUM RISK:** Component changes, new features
 - **LOW RISK:** Copy changes, styling tweaks
 
 **For HIGH RISK tasks:**
+
 - [ ] Written plan approved by user BEFORE execution
 - [ ] Test on subset before full deployment
 - [ ] Backup/rollback strategy in place
@@ -78,12 +88,14 @@
 ## ✅ Phase 4: EXECUTE
 
 ### Rules:
+
 1. **Read before write** - Always read files before modifying
 2. **Test before deploy** - Verify functionality works
 3. **Batch commits** - 5-6 related changes per commit, not individual changes
 4. **Document changes** - Clear commit messages with context
 
 ### Production Safety:
+
 - [ ] This is a LIVE production site with REAL users
 - [ ] Changes deploy immediately on push
 - [ ] Broken code = broken user experience = damaged reputation
@@ -118,6 +130,7 @@
 ## 📊 Before Presenting ANY Plan to User
 
 ### Checklist:
+
 - [ ] I have verified all external dependencies work
 - [ ] I have checked data is current
 - [ ] I have read all relevant existing code
@@ -133,6 +146,7 @@
 ## 🎯 Success Criteria
 
 **A task is complete when:**
+
 1. ✅ Functionality works as expected
 2. ✅ No broken dependencies or side effects
 3. ✅ Data is accurate and current
@@ -150,6 +164,7 @@
 ## 🔄 Pattern Recognition
 
 **If you find yourself:**
+
 - Moving fast without pausing
 - Assuming things work without testing
 - Making multiple small commits
@@ -163,50 +178,60 @@
 ## 🎓 Senior Programmer Principles
 
 ### 1. Blast Radius Thinking
+
 - **What's the worst that can happen if this fails?**
 - How many users/pages/systems are affected?
 - **Rule:** Test 1 → verify → scale to rest (never all at once)
 
 ### 2. Chesterton's Fence
+
 - Never remove/modify code until you understand WHY it exists
 - **Rule:** Before changing existing code, document its original purpose
 
 ### 3. Progressive Rollout
+
 - Don't change 10 things at once
 - Change 1 thing → verify → change next thing
 - **Rule:** One logical change per deployment cycle
 
 ### 4. Edge Cases First
+
 - Don't think "happy path" - think "what breaks this?"
 - What if API returns 500? Data is null? User has 0 records?
 - **Rule:** List 3 ways this can fail before writing code
 
 ### 5. Observability
+
 - How will I KNOW if this is working in production?
 - What metrics/logs tell me success vs failure?
 - **Rule:** Define success criteria BEFORE deploying
 
 ### 6. Idempotency
+
 - Can I run this script 5 times safely?
 - Does re-running fix things or break them?
 - **Rule:** All scripts must be safe to re-run (use `ON CONFLICT DO UPDATE`)
 
 ### 7. Automation Over Repetition
+
 - Am I doing the same manual task repeatedly?
 - Will I need to do this again in 3 months?
 - **Rule:** If you'll do it more than 3 times, automate it
 
 ### 8. Simplicity Over Cleverness
+
 - Will a junior developer understand this in 6 months?
 - Can I solve this WITHOUT adding complexity?
 - **Rule:** Build the simplest thing that works
 
 ### 9. Delete More Than You Add
+
 - Can I solve this WITHOUT new code?
 - Can I delete old code while adding new?
 - **Rule:** For every 100 lines added, try to delete 50
 
 ### 10. Reversibility Test
+
 - Can I undo this in 30 seconds if it breaks?
 - **Rule:** If you can't undo it quickly, don't do it without backup
 
@@ -219,6 +244,7 @@
 **User asks:** "Show me your plan following EXECUTION_RULES"
 
 **I must provide:**
+
 - [ ] Phase 1 complete - Task understood, risks identified
 - [ ] Phase 2 complete - All verification results with PROOF
 - [ ] Written plan with numbered steps
@@ -234,6 +260,7 @@
 **User asks:** "Show me it works"
 
 **I must provide:**
+
 - [ ] Test results demonstrating functionality
 - [ ] Edge cases considered and handled
 - [ ] Rollback plan if deployment fails
@@ -246,9 +273,11 @@
 ### Enforcement Protocol
 
 **If I skip ahead without approval:**
+
 - User stops me: "Which checkpoint are we at? Show me the checklist."
 
 **If I can't provide verification proof:**
+
 - User rejects: "STOP - Go verify and come back with proof"
 
 **The rules are not self-enforcing. User vigilance + written rules = quality work.**

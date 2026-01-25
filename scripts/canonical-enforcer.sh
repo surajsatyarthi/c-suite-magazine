@@ -25,9 +25,12 @@ for FILE in $FILES_TO_SCAN; do
   fi
 
   # Gate 4 Skip Detection (Executive Solution)
-  if [[ "$FILE" == *"gate4-research.md" ]]; then
-    if ! grep -qE "web_search|browse_page|Web Search" "$FILE"; then
-      echo "❌ Gate 4 skip detected in $FILE – Online research evidence required"
+  # Check relevant planning documents for research keywords
+  if [[ "$FILE" == *"implementation_plan.md"* ]] || [[ "$FILE" == *"task.md"* ]] || [[ "$FILE" == *"gate4"* ]]; then
+    REQUIRED_TERMS="web_search|online research"
+    if ! grep -iqE "$REQUIRED_TERMS" "$FILE"; then
+      echo "❌ Gate 4 skip detected in $FILE - Online search evidence missing"
+      echo "   Rule: You MUST use 'web_search' or perform 'online research' before planning."
       FOUND_VIOLATIONS=1
     fi
   fi
