@@ -22,6 +22,7 @@ import PortableBodyV2 from '@/components/PortableBodyV2'
 import { client } from '@/lib/sanity'
 import { getServerClient } from '@/lib/sanity.server'
 import { urlFor } from '@/lib/sanity'
+import { getArticleUrl } from '@/lib/urls'
 import { getArticleType, getHeroTagline } from '@/lib/articleHelpers'
 import { draftMode } from 'next/headers'
 import { getViews, formatViewsMillion } from '@/lib/views'
@@ -292,6 +293,7 @@ async function getRelatedPosts(
     count(tags[@ in $tags]) > 0 => 1
   ) | order(_score desc, publishedAt desc) [0...4] {
     _id,
+    _type,
     title,
     slug,
     "writer": writer->{name},
@@ -795,7 +797,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                           {relatedPosts.map((relatedPost) => (
                             <Link
                               key={relatedPost._id}
-                              href={`/category/${relatedPost.categories?.[0]?.slug?.current}/${relatedPost.slug?.current || relatedPost.slug}`}
+                              href={getArticleUrl(relatedPost)}
                               prefetch
                               className="block group"
                             >

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
+import { getArticleUrl } from '@/lib/urls'
 import Pagination from '@/components/Pagination'
 import { urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
@@ -143,7 +144,7 @@ export default function CategoryClient({ posts, category }: CategoryClientProps)
                             {paginatedPosts.map((post) => (
                                 <Link
                                     key={post._id}
-                                    href={`/category/${category.slug.current}/${post.slug.current}`}
+                                    href={getArticleUrl(post)}
                                     prefetch={false}
                                     className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] focus:ring-offset-2"
                                 >

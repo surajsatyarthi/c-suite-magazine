@@ -21,6 +21,7 @@ import PortableBodyV2 from "@/components/PortableBodyV2";
 // View tracking disabled per marketing policy
 import { client, urlFor } from "@/lib/sanity";
 import { getServerClient } from '@/lib/sanity.server'
+import { getArticleUrl } from "@/lib/urls";
 import { draftMode } from "next/headers";
 import { getViews, formatViewsMillion } from "@/lib/views";
 import { sanitizeExcerpt, sanitizeTitle } from "@/lib/text";
@@ -361,6 +362,7 @@ async function getRelatedPosts(
     count(tags[@ in $tags]) > 0 => 1
   ) | order(_score desc, publishedAt desc) [0...4] {
     _id,
+    _type,
     title,
     slug,
     "writer": writer->{name},
@@ -390,6 +392,7 @@ async function getTrendingPosts(): Promise<
   const trendingQuery = `*[_type == "post" && isHidden != true && defined(views) && views > 0] 
     | order(views desc)[0...5] {
     _id,
+    _type,
     title,
     slug,
     views,
@@ -946,7 +949,7 @@ export default async function CompanySponsoredArticlePage(props: {
                           {relatedPosts.map((relatedPost) => (
                             <Link
                               key={relatedPost._id}
-                              href={`/category/${relatedPost.categories?.[0]?.slug?.current}/${relatedPost.slug?.current || relatedPost.slug}`}
+                              href={getArticleUrl(relatedPost)}
                               prefetch
                               className="block group"
                             >

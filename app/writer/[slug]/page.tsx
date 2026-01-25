@@ -5,6 +5,7 @@ import Navigation from '@/components/Navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 import { client, urlFor } from '@/lib/sanity'
+import { getArticleUrl } from '@/lib/urls'
 import PortableBody from '@/components/PortableBody'
 import { sanitizeExcerpt } from '@/lib/text'
 import { Writer, Post } from '@/lib/types'
@@ -24,6 +25,7 @@ async function getWriter(slug: string): Promise<Writer | null> {
     social,
     "articles": *[_type == "post" && writer->slug.current == $slug && isHidden != true] | order(publishedAt desc) {
       _id,
+      _type,
       title,
       slug,
       excerpt,
@@ -154,7 +156,7 @@ export default async function WriterPage({ params }: { params: Promise<{ slug: s
                       return (
                         <Link
                           key={article._id}
-                          href={`/category/${categorySlug}/${article.slug.current}`}
+                          href={getArticleUrl(article)}
                           prefetch={false}
                           className="group block rounded-lg overflow-hidden border border-gray-200 bg-white hover:shadow-lg transition-shadow"
                         >

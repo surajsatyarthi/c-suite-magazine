@@ -16,10 +16,20 @@ fi
 FOUND_VIOLATIONS=0
 
 for FILE in $FILES_TO_SCAN; do
+
+  # Check for Forbidden Terms
   if grep -inE "$FORBIDDEN_TERMS" "$FILE"; then
     echo "❌ Forbidden reference found in $FILE:"
     grep -inE "$FORBIDDEN_TERMS" "$FILE"
     FOUND_VIOLATIONS=1
+  fi
+
+  # Gate 4 Skip Detection (Executive Solution)
+  if [[ "$FILE" == *"gate4-research.md" ]]; then
+    if ! grep -qE "web_search|browse_page|Web Search" "$FILE"; then
+      echo "❌ Gate 4 skip detected in $FILE – Online research evidence required"
+      FOUND_VIOLATIONS=1
+    fi
   fi
 done
 

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
+import { getArticleUrl } from '@/lib/urls'
 import OptimizedImage from './OptimizedImage'
 import { Post } from '@/lib/types'
 
@@ -50,7 +51,7 @@ export default async function ReadMoreArticles({ currentPostId }: { currentPostI
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {articles.map((article) => (
                     <Link
-                        href={`/category/${article.categories?.[0]?.slug?.current || 'general'}/${article.slug.current}`}
+                        href={getArticleUrl(article)}
                         key={article._id}
                         className="group flex flex-col h-full"
                     >

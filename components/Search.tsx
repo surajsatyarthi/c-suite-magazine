@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { getArticleUrl } from '@/lib/urls'
 
 export default function Search() {
     const [isOpen, setIsOpen] = useState(false)
@@ -117,16 +118,15 @@ export default function Search() {
                                         return slug && typeof slug === 'string' && slug.length > 0;
                                     })
                                     .map((result: any) => {
-                                        const slug = result.slug?.current || result.slug;
                                         return (
                                             <li key={result._id} className="border-b border-gray-50 last:border-0">
                                                 <Link
-                                                    href={`/category/${result.categorySlug || 'leadership'}/${slug}`}
+                                                    href={getArticleUrl(result)}
                                                     className="block px-4 py-3 hover:bg-gray-50 transition-colors group"
                                                     onClick={() => setIsOpen(false)}
                                                 >
                                                     <div className="text-xs text-[#c8ab3d] font-medium mb-1 uppercase tracking-wider">
-                                                        {result.categoryTitle || 'Article'}
+                                                        {result.categories?.[0]?.title || 'Article'}
                                                     </div>
                                                     <div className="text-sm font-semibold text-gray-800 group-hover:text-[#082945] leading-snug line-clamp-2">
                                                         {result.title}

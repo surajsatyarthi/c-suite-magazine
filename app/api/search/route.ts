@@ -12,11 +12,12 @@ export async function GET(request: Request) {
     }
     const safe = q.replace(/\s+/g, ' ').slice(0, 80)
     const pattern = `*${safe}*`
-    const query = `*[_type == "post" && isHidden != true && (title match $pattern || lower(title) match $pattern)] | order(publishedAt desc) [0...10] {
+    const query = `*[_type in ["post", "csa"] && isHidden != true && (title match $pattern || lower(title) match $pattern)] | order(publishedAt desc) [0...10] {
       _id,
+      _type,
       title,
       slug,
-      "category": categories[0]->{ title, slug }
+      "categories": categories[]->{ title, slug }
     }`
     const results = await client.fetch(query, { pattern })
     return NextResponse.json({ results })

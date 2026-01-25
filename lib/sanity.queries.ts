@@ -35,6 +35,7 @@ export const getTagFromSlug = cache(async (slug: string): Promise<string | undef
 export async function getTagPosts(originalTag: string) {
   const query = `*[_type in ["post", "csa"] && defined(tags) && $originalTag in tags] | order(publishedAt desc) {
     _id,
+    _type,
     title,
     slug,
     excerpt,

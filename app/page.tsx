@@ -41,7 +41,7 @@ async function fetchWithTimeout<T>(promise: Promise<T>, ms = 1800, onTimeout?: (
 async function getLatestPosts(): Promise<Post[]> {
   // Get latest articles ensuring different categories for Latest Insights
   const query = `*[_type == "post" && defined(mainImage.asset) && !(slug.current in $excludeSlugs) && isHidden != true] | order(publishedAt desc) {
-    _id, title, slug, excerpt,
+    _id, _type, title, slug, excerpt,
     "writer": writer->{name, slug, image},
     mainImage,
     "categories": categories[]->{title, slug, color},

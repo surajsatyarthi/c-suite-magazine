@@ -1,15 +1,26 @@
 import { Post } from './types'
 
+
 /**
  * 🛡️ The Central Ralph Resolver (v2.6)
  * This is the ONLY way URLs should be generated.
  * It prevents the CSA vs Post routing mismatch that caused Issue #47.
  */
+export function getCategoryUrl(categorySlug: string): string {
+  // Enforce lowercase
+  const slug = categorySlug?.toLowerCase() || 'leadership'
+  return `/category/${slug}`
+}
+
 export function getArticleUrl(post: Partial<Post>): string {
   const slug = post.slug?.current || (post.slug as any)
   if (!slug) return '#'
 
-  const isCSA = (post as any)._type === 'csa'
+  // Priority 1: CSA (Company Sponsored)
+  // Must check both _type and potential 'csa' category explicitly
+  const isCSA = (post as any)._type === 'csa' || 
+                (post as any).type === 'csa' 
+
   if (isCSA) {
     return `/csa/${slug}`
   }
