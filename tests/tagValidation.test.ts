@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { validateTag, validateTags, resetValidation } from '../sanity/lib/tagValidation';
 
 describe('Tag Validation', () => {

@@ -24,22 +24,19 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "**/*.mts",
-    ".next/dev/types/**/*.ts"
+    "app",
+    "lib",
+    "components",
+    "hooks",
+    "sanity",
+    "tests",
+    "middleware.ts",
+    "sanity.config.ts",
+    "sanity.cli.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    ".next",
-    "out",
-    ".vercel",
-    "build",
-    "dist",
-    "next.config.ts",
-    "scripts/**/*",
-    "**/*.spec.ts",
     "**/*.test.ts",
     "**/__tests__/**/*"
   ]

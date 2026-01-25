@@ -34,7 +34,9 @@ describe('Issue #10: Schema/UI Parity (Jitter Logic)', () => {
     })
 
     expect(schema).toHaveProperty('interactionStatistic')
-    expect(schema.interactionStatistic).toEqual({
+    if (!schema || typeof schema !== 'object') throw new Error('Schema missing')
+    const safeSchema = schema as any
+    expect(safeSchema.interactionStatistic).toEqual({
       '@type': 'InteractionCounter',
       'interactionType': 'https://schema.org/UserInteraction',
       'userInteractionCount': rawValue
@@ -60,7 +62,12 @@ describe('Issue #10: Schema/UI Parity (Jitter Logic)', () => {
     // The Schema Number / 1M should approx equal the UI String Number
     // UI String is "2.4 M" -> Parse "2.4"
     const uiNumber = parseFloat(uiString.split(' ')[0])
-    const schemaNumber = schema.interactionStatistic.userInteractionCount / 1000000
+    
+    if (!schema || typeof schema !== 'object') {
+      throw new Error('Schema generation failed')
+    }
+    const safeSchema = schema as any
+    const schemaNumber = safeSchema.interactionStatistic.userInteractionCount / 1000000
     
     expect(schemaNumber.toFixed(1)).toBe(uiNumber.toString())
   })
