@@ -7,6 +7,10 @@ export const client = createClient({
   dataset,
   apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
+  stega: {
+    enabled: process.env.NEXT_PUBLIC_VERCEL_ENV !== 'production',
+    studioUrl: '/studio',
+  },
 })
 
 // REMOVED getClient() for security (Issue #12).

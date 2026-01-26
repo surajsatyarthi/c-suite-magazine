@@ -34,11 +34,12 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ tagSlug: string }> }): Promise<Metadata> {
   const resolvedParams = await params
   const slug = resolvedParams?.tagSlug || ''
-  const title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+  const originalTag = await getTagFromSlug(slug)
+  const displayTitle = originalTag ? normalizeDisplayTag(originalTag) : slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   
   return generateSEOMetadata({
-    title: `${title} - C-Suite Magazine`,
-    description: `Browse articles tagged with ${title}. Expert insights and leadership trends.`,
+    title: displayTitle,
+    description: `Browse articles tagged with ${displayTitle}. Expert insights and leadership trends from C-Suite Magazine.`,
     url: `https://csuitemagazine.global/tag/${slug}`,
     type: 'website',
   })

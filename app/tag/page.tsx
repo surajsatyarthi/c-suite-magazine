@@ -2,6 +2,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { getServerClient } from '@/lib/sanity.server'
+import { draftMode } from 'next/headers'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { normalizeDisplayTag } from '@/lib/tag-utils'
@@ -15,8 +16,10 @@ export const metadata: Metadata = {
 }
 
 async function getAllUniqueTags(): Promise<string[]> {
+  const { isEnabled } = await draftMode();
+  const previewToken = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
   const query = `*[_type in ["post", "csa"] && defined(tags)].tags`
-  const client = getServerClient()
+  const client = getServerClient(isEnabled ? previewToken : undefined)
   const allTagsArrays: string[][] = await client.fetch(query)
   
   // Flatten, Normalize, Dedupe

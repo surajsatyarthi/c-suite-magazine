@@ -6,6 +6,36 @@ import { Post } from './types'
  * This is the ONLY way URLs should be generated.
  * It prevents the CSA vs Post routing mismatch that caused Issue #47.
  */
+
+/**
+ * Dynamically resolves the frontend base URL based on the environment.
+ * Prevents Sanity Studio from using its own origin for previews.
+ */
+export function getBaseUrl(): string {
+  // 1. Explicit Frontend URL override (Manual config)
+  if (process.env.NEXT_PUBLIC_FRONTEND_URL) {
+    return process.env.NEXT_PUBLIC_FRONTEND_URL
+  }
+
+  // 2. Browser Context (detect if we are in a Sanity Studio environment)
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin
+    // If we are NOT on a Sanity hosted domain, we can trust the current origin
+    // (This covers localhost:3000/studio and custom studio domains)
+    if (!origin.includes('sanity.studio') && !origin.includes('sanity.io')) {
+      return origin
+    }
+  }
+
+  // 3. Vercel System Variable (available in build and sometimes runtime)
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+  }
+
+  // 4. Fallback to production
+  return 'https://csuitemagazine.global'
+}
+
 export function getCategoryUrl(categorySlug: string): string {
   // Enforce lowercase
   const slug = categorySlug?.toLowerCase() || 'leadership'

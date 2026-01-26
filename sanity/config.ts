@@ -6,8 +6,8 @@
  */
 
 export const config = {
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_STUDIO_PROJECT_ID!,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || process.env.SANITY_STUDIO_DATASET || 'production',
     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-10-01',
     // The studio host used in sanity.cli.ts
     studioHost: process.env.NEXT_PUBLIC_SANITY_STUDIO_HOST || 'ceo-magazine',

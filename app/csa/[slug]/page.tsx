@@ -107,8 +107,10 @@ function getDefaultWriterFromCsv() {
 
 async function fetchWriterBySlug(slug: string) {
   try {
+    const { isEnabled } = await draftMode();
+    const previewToken = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
     const query = `*[_type == "writer" && slug.current == $slug][0]`
-    const client = getServerClient()
+    const client = getServerClient(isEnabled ? previewToken : undefined)
     const doc = await client.fetch(query, { slug });
     return doc || null;
   } catch {
@@ -120,7 +122,8 @@ async function getPost(slug: string): Promise<Post | null> {
   console.log(`[getPost] Fetching article: ${slug}`);
   // Relaxed query to ensure CSA articles are found
   const { isEnabled } = await draftMode();
-  const client = getServerClient(isEnabled ? (process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN) : undefined);
+  const previewToken = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
+  const client = getServerClient(isEnabled ? previewToken : undefined);
 
   const query = `*[_type == "csa" && slug.current == $slug][0] {
     _id,
@@ -1201,11 +1204,12 @@ export async function generateMetadata(props: {
       };
     }
     return generateSEOMetadata({
-      title: (fallback as any)?.seo?.metaTitle || (fallback as any)?.title,
+      metaTitle: (fallback as any)?.seo?.metaTitle,
+      metaDescription: (fallback as any)?.seo?.metaDescription,
+      title: (fallback as any)?.title,
       description:
         (fallback as any)?.excerpt ||
-        (fallback as any)?.body?.[0]?.children?.[0]?.text?.substring(0, 160) ||
-        undefined,
+        (fallback as any)?.body?.[0]?.children?.[0]?.text,
       keywords: (fallback as any)?.tags || [],
       image:
         (fallback as any)?.mainImage?.asset?.url ||
@@ -1227,12 +1231,10 @@ export async function generateMetadata(props: {
     post.body?.[0]?.children?.[0]?.text?.substring(0, 160) ||
     "";
   return generateSEOMetadata({
-    title: (post as any)?.seo?.metaTitle || post.title,
-    description: description
-      ? description.length > 160
-        ? description
-        : description + "..."
-      : "",
+    metaTitle: (post as any)?.seo?.metaTitle,
+    metaDescription: (post as any)?.seo?.metaDescription,
+    title: post.title,
+    description: post.excerpt || post.body?.[0]?.children?.[0]?.text,
     keywords: post.tags || [],
     image:
       (post as any)?.mainImage?.asset?.url ||

@@ -4,7 +4,9 @@ import { validatePreviewUrl } from '@sanity/preview-url-secret'
 import { client } from '@/lib/sanity'
 import { token } from '@/sanity/env'
 
-const clientWithToken = client.withConfig({ token })
+const clientWithToken = client.withConfig({ 
+    token: process.env.SANITY_API_READ_TOKEN || token 
+})
 
 export async function GET(request: Request) {
     const { isValid, redirectTo = '/' } = await validatePreviewUrl(

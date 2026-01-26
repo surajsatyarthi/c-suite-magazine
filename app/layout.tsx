@@ -12,6 +12,8 @@ const AdInterstitialV2 = dynamic(() => import("@/components/AdInterstitialV2"));
 const GoogleAnalytics = dynamic(() => import("@/components/GoogleAnalytics"));
 import { generateMetadata, generateStructuredData, generateViewport } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
+import { draftMode } from "next/headers";
+import VisualEditing from "@/components/VisualEditing";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -39,7 +41,7 @@ export const viewport = generateViewport();
 
 import { safeJsonLd } from "@/lib/security";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -77,6 +79,7 @@ export default function RootLayout({
         </main>
         <GoogleAnalytics />
         {process.env.NEXT_PUBLIC_ENABLE_INSIGHTS === '1' ? <Analytics /> : null}
+        {(await draftMode()).isEnabled && <VisualEditing />}
       </body>
     </html>
   );

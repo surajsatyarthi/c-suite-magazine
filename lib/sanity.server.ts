@@ -14,6 +14,10 @@ export const serverClient = createClient({
   apiVersion,
   useCdn: true,
   perspective: 'published',
+  stega: {
+    enabled: false, // Default off for server productivity
+    studioUrl: '/studio',
+  },
 })
 
 /**
@@ -27,6 +31,10 @@ export function getServerClient(previewToken?: string) {
       useCdn: false,
       ignoreBrowserTokenWarning: true,
       perspective: 'previewDrafts',
+      stega: {
+        enabled: true,
+        studioUrl: '/studio',
+      },
     });
   }
   

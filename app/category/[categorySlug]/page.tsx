@@ -5,6 +5,7 @@ import CategoryClient from './CategoryClient'
 import { notFound, redirect } from 'next/navigation'
 import { getServerClient } from '@/lib/sanity.server'
 import { Post, Category } from '@/lib/types'
+import { draftMode } from 'next/headers'
 import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
 import { safeJsonLd } from '@/lib/security'
@@ -12,9 +13,10 @@ import { safeJsonLd } from '@/lib/security'
 // Enable ISR to avoid heavy full-build prerenders for category pages
 export const revalidate = 600
 
-function getFetchClient() {
-  // Use the improved authenticated client to support private datasets and staging drafts
-  return getServerClient()
+async function getFetchClient() {
+  const { isEnabled } = await draftMode();
+  const previewToken = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_TOKEN || process.env.SANITY_WRITE_TOKEN;
+  return getServerClient(isEnabled ? previewToken : undefined);
 }
 
 async function getCategory(slug: string): Promise<Category | null> {
@@ -29,7 +31,7 @@ async function getCategory(slug: string): Promise<Category | null> {
     description,
     color
   }`
-  return getFetchClient().fetch(query, { slug })
+  return (await getFetchClient()).fetch(query, { slug })
 }
 
 async function getCategoryPosts(slug: string): Promise<Post[]> {
@@ -50,13 +52,14 @@ async function getCategoryPosts(slug: string): Promise<Post[]> {
     publishedAt,
     views
   }`
-  return getFetchClient().fetch(query, { slug })
+  return (await getFetchClient()).fetch(query, { slug })
 }
 
 // Generate static params for all categories
 export async function generateStaticParams() {
   // Pull live categories from CMS to avoid drift from hardcoded lists
-  const client = getFetchClient()
+  // NOTE: Use standard server client (not draft mode) since this runs at build time
+  const client = getServerClient()
   const rows: { slug?: { current?: string } }[] = await client.fetch(`*[_type=="category"]{slug}`)
   const all = rows
     .map((r) => r?.slug?.current)
@@ -76,8 +79,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ categorySlug: string }> }): Promise<Metadata> {
   const resolvedParams = await params
   const slug = typeof resolvedParams?.categorySlug === 'string' ? resolvedParams.categorySlug : ''
-  const title = slug ? slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Category'
-  const description = slug ? `Explore articles about ${slug.replace(/-/g, ' ')}` : 'Explore curated articles by category'
+  const category = await getCategory(slug)
+
+  const title = category?.title || (slug ? slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Category')
+  const description = category?.description || (slug ? `Explore articles about ${slug.replace(/-/g, ' ')}` : 'Explore curated articles by category')
   const url = `https://csuitemagazine.global/category/${slug}`
 
   return generateSEOMetadata({

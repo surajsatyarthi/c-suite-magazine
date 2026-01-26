@@ -3,6 +3,8 @@ import { Metadata, Viewport } from 'next'
 export interface SEOProps {
   title?: string
   description?: string
+  metaTitle?: string
+  metaDescription?: string
   keywords?: string[]
   image?: string
   url?: string
@@ -32,8 +34,10 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
   const yandexVerify = process.env.NEXT_PUBLIC_YANDEX_SITE_VERIFICATION
 
   const {
-    title = defaultSEO.title,
-    description = defaultSEO.description,
+    metaTitle,
+    metaDescription,
+    title,
+    description,
     keywords = defaultSEO.keywords,
     image = defaultSEO.image,
     url = defaultSEO.url,
@@ -46,11 +50,15 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
     noIndex = false
   } = seo
 
-  const fullTitle = title === defaultSEO.title ? title : `${title} | C-Suite Magazine`
+  // Fallback Chain: Sanity SEO Field -> Content Field -> Default
+  const finalTitle = metaTitle || title || defaultSEO.title
+  const finalDescription = metaDescription || description || defaultSEO.description
+
+  const fullTitle = finalTitle === defaultSEO.title ? finalTitle : `${finalTitle} | C-Suite Magazine`
 
   return {
     title: fullTitle,
-    description,
+    description: finalDescription,
     keywords: keywords.join(', '),
     // Remove generic author meta; enforce writer-only terminology in visible metadata
     creator: 'C-Suite Magazine',
@@ -71,7 +79,7 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
     },
     openGraph: {
       title: fullTitle,
-      description,
+      description: finalDescription,
       url,
       siteName: defaultSEO.siteName,
       images: [
@@ -79,7 +87,7 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
           url: image,
           width: 1200,
           height: 630,
-          alt: title,
+          alt: finalTitle,
         }
       ],
       locale: 'en_US',
@@ -95,7 +103,7 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
-      description,
+      description: finalDescription,
       creator: defaultSEO.twitterHandle,
       images: [image],
     },
