@@ -94,11 +94,9 @@ async function exportDataset(): Promise<string> {
   ];
 
   try {
-    // Try using local 'sanity' binary provided by @sanity/cli via npx logic or direct assumption
-    // We assume 'npx' is available in the environment (CI or local)
-    // Using 'npx -y @sanity/cli' ensures we have a CLI even if not locally installed,
-    // though ideally it uses the project's dependency if available.
-    await spawnSafe('npx', ['-y', '@sanity/cli', ...args]);
+    // Use local 'sanity' binary provided by project dependencies via pnpm exec
+    // This avoids downloading the CLI on every run and ensures version consistency.
+    await spawnSafe('pnpm', ['exec', 'sanity', ...args]);
     
     // Check if file was actually created
     if (!fs.existsSync(filePath) || fs.statSync(filePath).size === 0) {
