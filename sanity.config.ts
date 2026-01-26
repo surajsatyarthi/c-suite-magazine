@@ -14,6 +14,7 @@ import { apiVersion, dataset, projectId } from './sanity/env'
 import { table } from '@sanity/table'
 import { schema } from './sanity/schemaTypes'
 import { structure } from './sanity/structure'
+import { getBaseUrl } from './lib/urls'
 
 import { map } from 'rxjs/operators'
 
@@ -36,11 +37,7 @@ export default defineConfig({
       const { getClient, document } = context
       const client = getClient({ apiVersion })
 
-      const origin = typeof window !== 'undefined'
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_VERCEL_URL
-          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-          : 'https://csuitemagazine.global'
+      const origin = getBaseUrl()
 
       if (document._type === 'post') {
         const slug = (document.slug as any)?.current
@@ -70,11 +67,7 @@ export default defineConfig({
     presentationTool({
       title: 'Preview',
       previewUrl: {
-        origin: typeof window !== 'undefined'
-          ? window.location.origin
-          : process.env.NEXT_PUBLIC_VERCEL_URL
-            ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-            : 'https://csuitemagazine.global',
+        origin: getBaseUrl(),
         previewMode: {
           enable: '/api/draft',
         },
@@ -82,42 +75,55 @@ export default defineConfig({
       resolve: {
         locations: (params, context) => {
           const { id, type } = params
+          console.log('[Presentation Tool] Resolving location for:', { id, type })
+
           if (type === 'csa') {
             return context.documentStore
-              .listenQuery(`*[_id == $id][0]{slug}`, { id }, { perspective: 'previewDrafts' })
+              .listenQuery(`*[_id == $id][0]{_id, slug}`, { id }, { perspective: 'previewDrafts' })
               .pipe(
                 map((doc: any) => {
+                  console.log('[Presentation Tool] CSA document:', doc)
                   if (doc?.slug?.current) {
+                    const href = `/csa/${doc.slug.current}`
+                    console.log('[Presentation Tool] Resolved CSA href:', href)
                     return {
                       locations: [
                         {
                           title: 'Preview',
-                          href: `/csa/${doc.slug.current}`,
+                          href,
                         },
                       ],
                     }
                   }
+                  console.warn('[Presentation Tool] CSA slug missing:', doc)
                   return null
                 })
               )
           }
+
           if (type === 'post') {
             return context.documentStore
-              .listenQuery(`*[_id == $id][0]{slug, "category": categories[0]->slug.current}`, { id }, { perspective: 'previewDrafts' })
+              .listenQuery(`*[_id == $id][0]{_id, slug, "category": categories[0]->slug.current}`, { id }, { perspective: 'previewDrafts' })
               .pipe(
                 map((doc: any) => {
+                  console.log('[Presentation Tool] Post document:', doc)
                   if (doc?.slug?.current) {
                     const cat = doc.category || 'general'
+                    const href = `/category/${cat}/${doc.slug.current}`
+                    console.log('[Presentation Tool] Resolved post href:', href)
                     return {
                       locations: [
-                        { title: 'Preview', href: `/category/${cat}/${doc.slug.current}` }
+                        { title: 'Preview', href }
                       ]
                     }
                   }
+                  console.warn('[Presentation Tool] Post slug missing:', doc)
                   return null
                 })
               )
           }
+
+          console.warn('[Presentation Tool] Unknown document type:', type)
           return null
         }
       },
