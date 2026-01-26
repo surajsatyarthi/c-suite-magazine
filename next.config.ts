@@ -11,8 +11,16 @@ const nextConfig: NextConfig = {
         destination: '/writer/:slug',
         permanent: true,
       },
-      // Removed /studio redirect to use embedded Sanity Studio (Issue #18)
-      // Embedded studio provides immediate config updates and better preview integration
+      {
+        source: '/studio',
+        destination: 'https://ceo-magazine-2f93fcy8.sanity.studio',
+        permanent: true,
+      },
+      {
+        source: '/sanity',
+        destination: 'https://ceo-magazine-2f93fcy8.sanity.studio',
+        permanent: true,
+      },
       // Normalize broken article slug artifact
       {
         source: '/article/from-vision-to-market-victory-the-s-blueprint-for-concept-commercialization',
