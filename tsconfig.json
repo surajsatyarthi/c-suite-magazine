@@ -38,15 +38,23 @@
     "tests",
     "middleware.ts",
     "sanity.config.ts",
-    "sanity.cli.ts",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    "sanity.cli.ts"
   ],
   "exclude": [
     "node_modules",
     ".next",
     "dist",
+    "out",
+    "build",
+    "coverage",
+    "public",
+    "scripts",
     "**/*.test.ts",
-    "**/__tests__/**/*"
+    "**/*.spec.ts",
+    "**/__tests__/**/*",
+    "**/tests/**/*",
+    "**/e2e/**/*",
+    "playwright-report",
+    "test-results"
   ]
 }
