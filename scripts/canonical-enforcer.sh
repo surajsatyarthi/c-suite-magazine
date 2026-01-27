@@ -6,7 +6,7 @@
 FORBIDDEN_TERMS="RALPH_OMNIBUS|MANDATORY_PROTOCOLS|RALPH_PROTOCOL|world_class_engineering_standards|operational|protocols"
 
 # Files to scan (expandable)
-FILES_TO_SCAN=$(git diff --cached --name-only | grep -E '\.md$|\.ts$|\.tsx$|\.js$')  # Targets Markdown and code files
+FILES_TO_SCAN=$(git diff --cached --name-only --diff-filter=d | grep -E '\.md$|\.ts$|\.tsx$|\.js$')  # Targets Markdown and code files
 
 if [ -z "$FILES_TO_SCAN" ]; then
   echo "No relevant files changed. Skipping check."

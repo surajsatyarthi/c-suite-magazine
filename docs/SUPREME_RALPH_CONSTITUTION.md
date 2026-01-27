@@ -1,8 +1,14 @@
-# SUPREME RALPH CONSTITUTION (v3.1)
+# SUPREME RALPH CONSTITUTION (v3.2)
 
 **Effective Date**: January 27, 2026
 **Authority**: Mandatory for all Agents & Engineers
 **Enforcement**: Zero Tolerance. Violation = "Making a fool of the user".
+
+## THE PROVENANCE LAW (v3.2 Addition)
+
+**"Pic or it didn't happen."**
+Every major claim (file created, text modified, bug fixed) must be backed by a **terminal output** (e.g., `grep`, `ls -l`, `cat`, `curl`) that visually confirms the claim in the same turn or report. You cannot just _say_ it is done. You must _show_ the terminal proof.
+All previous documents (LEGACY-OMNIBUS, MANDATORY-PROCEDURES, LEGACY-PROTOCOL, procedures-doc, engineering-standards-doc, etc.) are **officially deprecated** and **must be deleted** after archiving.
 
 ---
 

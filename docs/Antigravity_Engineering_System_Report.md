@@ -15,7 +15,7 @@ The "CEO Magazine" codebase was previously developed using an ad-hoc methodology
 
 - **Recursive Bug Loops**: Fixes introducing new regressions.
 - **Security Exposure**: Potential for XSS and Supply Chain attacks due to lack of automated governance.
-- **Operational Fragility**: Dependency on individual memory ("Context") rather than systemic verification.
+- **Design Fragility**: Dependency on individual memory ("Context") rather than systemic verification.
 
 ### 1.2 Strategic Resolution
 
@@ -62,9 +62,9 @@ The pipeline consists of three enforced layers of defense.
 
 ---
 
-## 3. Operational Protocols (The Constitution)
+## 3. Systemic Procedures (The Constitution)
 
-We have formally adopted the **Antigravity Engineering Handbook (v1.1)**.
+We have formally adopted the **SUPREME RALPH CONSTITUTION (docs/SUPREME_RALPH_CONSTITUTION.md)**.
 
 ### 3.1 The RFC Mandate (Planning)
 
