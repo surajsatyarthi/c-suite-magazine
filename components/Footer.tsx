@@ -95,7 +95,7 @@ export default function Footer() {
         {/* Footer Bottom */}
         <div className="border-t border-[#0a3350] mt-12 pt-8">
           <div className="text-center">
-            <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400">© INVICTUS INTERNATIONAL CONSULTING SERVICES {currentYear} TM</p>
+            <p className="!text-[0.65rem] !leading-[0.8125rem] !text-gray-400">INVICTUS INTERNATIONAL CONSULTING SERVICES 2026 © ™</p>
           </div>
         </div>
       </div>

@@ -64,12 +64,12 @@ export default async function TagIndexPage() {
 
       <main className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-[#082945] text-white py-16">
+        <div className="dark-section bg-[#082945] text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-serif font-black mb-4">
               Industry Topics
             </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Explore our complete index of executive insights, organized by topic.
             </p>
           </div>

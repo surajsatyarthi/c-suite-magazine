@@ -59,6 +59,11 @@ const nextConfig: NextConfig = {
         destination: '/csa/shrikant-vaidya-chairman-indianoil',
         permanent: true,
       },
+      {
+        source: '/article/powering-the-future-andy-jassys-strategic-vision-for-amazons-energy-driven-expansion',
+        destination: '/article/andy-jassy',
+        permanent: true,
+      },
     ]
   },
   async headers() {

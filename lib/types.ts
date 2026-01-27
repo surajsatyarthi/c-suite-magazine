@@ -20,6 +20,7 @@ export interface Writer {
   _id: string
   name: string
   slug: { current: string }
+  writerType?: 'staff' | 'guest' | 'contributor' | 'client'
   position?: string
   imageUrl?: string
   image?: SanityImage
@@ -43,6 +44,7 @@ export interface Category {
 }
 
 export interface Post {
+  _type?: 'post' | 'csa'
   _id: string
   title: string
   slug: { current: string }

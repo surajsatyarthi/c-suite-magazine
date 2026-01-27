@@ -81,7 +81,7 @@ test.describe('The Eagle - Visual Regression Tests', () => {
     await page.goto('/search?q=sustainability');
     await dismissLocaleModal(page);
 
-    const searchResults = page.locator('main');
+    const searchResults = page.locator('main').first();
     await expect(searchResults).toBeVisible({ timeout: 20000 });
 
     await page.evaluate(() => document.fonts.ready);

@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic'
 const ArticleProgress = dynamic(() => import('@/components/ArticleProgress'))
 import ReadMoreArticles from '@/components/ReadMoreArticles'
 import Link from 'next/link'
+import EditorialBrandAvatar from "@/components/EditorialBrandAvatar";
 import Navigation from '@/components/Navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
@@ -565,65 +566,81 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                       <h1 className="text-3xl md:text-5xl font-serif font-black text-gray-900 leading-tight tracking-tight">
                         {sanitizeTitle(post.title)}
                       </h1>
-                      {(() => {
-                        const rawTags: string[] = Array.isArray(post.tags)
-                          ? (post.tags as string[]).map((x) => String(x || ''))
-                          : []
-                        const tagsFiltered = isCompanySponsored
-                          ? rawTags.filter((t) => t.toLowerCase() !== 'sponsored')
-                          : rawTags
-                        return tagsFiltered.length > 0 ? (
-                          <TagChips tags={tagsFiltered} className="mt-3" size="sm" variant="blue" />
-                        ) : null
-                      })()}
-                      {/* Opinion variant renders standard layout; interview handled by interviewMode */}
-                      {post.writer && (
-                        <div className="flex items-center gap-3 mt-3" aria-label={`By ${post.writer.name}`}>
-                          <div className="relative w-8 h-8 rounded-full overflow-hidden border border-gray-200">
-                            {post.writer.image || post.writer.imageUrl ? (
-                              <OptimizedImage
-                                src={post.writer.imageUrl || urlFor(post.writer.image!).width(128).height(128).auto('format').url()}
-                                alt={post.writer.name}
-                                fill
-                                className="object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-[#082945] text-white flex items-center justify-center">
-                                <span className="text-xs font-semibold">
-                                  {String(post.writer.name || '')
-                                    .split(' ')
-                                    .map((n) => n[0])
-                                    .slice(0, 2)
-                                    .join('')
-                                    .toUpperCase()}
-                                </span>
+                      {/* Condensed Classic Editorial Card */}
+                      <div className="bg-[#fcf8f1] border-y border-[#e5e1d8] py-4 px-5 flex flex-col md:flex-row md:items-center justify-between gap-5 my-8 rounded-sm shadow-sm">
+                        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-gray-700">
+                          {post.writer ? (
+                            <div className="flex items-center gap-3">
+                              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#d4d0c7] bg-[#082945] text-white flex items-center justify-center">
+                                {post.writer.image ? (
+                                  <CXOOptimizedImage
+                                    src={urlFor(post.writer.image).width(100).height(100).auto('format').url()}
+                                    alt={post.writer.name}
+                                    fill
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <div className="bg-[#082945] w-full h-full flex items-center justify-center">
+                                    <span className="text-xs font-semibold">
+                                      {String(post.writer.name || '')
+                                        .split(' ')
+                                        .map((n) => n[0])
+                                        .slice(0, 2)
+                                        .join('')
+                                        .toUpperCase()}
+                                    </span>
+                                  </div>
+                                )}
                               </div>
-                            )}
+                              <Link
+                                href={`/writer/${post.writer.slug?.current || post.writer.slug}`}
+                                className="font-sans font-bold text-[#082945] hover:text-[#c8ab3d] transition-colors tracking-tight"
+                              >
+                                By {post.writer.name}
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-3">
+                              <EditorialBrandAvatar />
+                              <span className="font-sans font-bold text-[#082945]">By C-Suite Editorial Team</span>
+                            </div>
+                          )}
+                          <span className="hidden md:inline text-[#d4d0c7] font-light">|</span>
+                          <div className="flex items-center gap-4 font-medium text-gray-500">
+                            <span className="flex items-center gap-1.5">
+                              <svg className="w-4 h-4 text-[#c8ab3d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                              {formatViewsMillion(post.views, post.slug.current)}
+                            </span>
+                            <span aria-hidden className="text-[#d4d0c7]">•</span>
+                            <span>{readTime} min read</span>
                           </div>
-                          <Link
-                            href={`/writer/${post.writer.slug?.current || post.writer.slug}`}
-                            className="font-sans text-sm font-medium text-[#082945] hover:text-[#0a3350] transition-colors"
-                          >
-                            By {post.writer.name}
-                          </Link>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mt-3">
-                        <span>{readTime} min read</span>
-                        {!isCompanySponsored && post.categories && post.categories.length > 0 && (
-                          <span className="flex items-center gap-2">
-                            <span aria-hidden>•</span>
-                            <Link href={`/category/${post.categories[0].slug.current}`} className="font-medium text-[#082945] hover:text-[#0a3350] transition-colors">
-                              {post.categories[0].title}
-                            </Link>
-                          </span>
-                        )}
-                      </div>
 
-                      <SocialShare
-                        url={`https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`}
-                        title={post.title}
-                      />
+                          {(() => {
+                            const rawTags: string[] = Array.isArray(post.tags) ? (post.tags as string[]).map((x) => String(x || '')) : []
+                            const tagsFiltered = isCompanySponsored ? rawTags.filter((t) => t.toLowerCase() !== 'sponsored') : rawTags
+                            return tagsFiltered.length > 0 ? (
+                              <>
+                                <span className="hidden md:inline text-[#d4d0c7] font-light">|</span>
+                                <div className="flex flex-wrap gap-2">
+                                  {tagsFiltered.map((tag) => (
+                                    <span key={tag} className="text-[10px] font-black uppercase tracking-[0.1em] text-[#082945] bg-white border border-[#e5e1d8] px-2.5 py-1 rounded-sm shadow-sm transition-all hover:border-[#c8ab3d]">
+                                      #{tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              </>
+                            ) : null
+                          })()}
+                        </div>
+
+                        <SocialShare
+                          url={`https://csuitemagazine.global/category/${categorySlug}/${post.slug.current}`}
+                          title={post.title}
+                        />
+                      </div>
                     </div>
 
 

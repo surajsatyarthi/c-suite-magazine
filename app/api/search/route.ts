@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       _type,
       title,
       slug,
-      "categories": categories[]->{ title, slug }
+      "categories": categories[]->{ title, "slug": slug.current }
     }`
     const results = await client.fetch(query, { pattern })
     return NextResponse.json({ results })

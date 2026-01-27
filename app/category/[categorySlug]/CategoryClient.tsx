@@ -8,6 +8,7 @@ import Pagination from '@/components/Pagination'
 import { urlFor } from '@/lib/sanity'
 import { Post } from '@/lib/types'
 import { getViews, formatViewsMillion } from '@/lib/views'
+import { getArticleUrl } from '@/lib/urls'
 
 interface CategoryClientProps {
     posts: Post[]

@@ -1,4 +1,5 @@
 import { client } from '@/lib/sanity'
+import { getArticleUrl } from '@/lib/urls'
 
 function escape(str: string) {
   return (str || '')
@@ -12,18 +13,18 @@ export async function GET() {
     const siteUrl = 'https://csuitemagazine.global'
 
     // Fetch latest published articles (limit to 50 for feed)
-    const posts = await client.fetch(`*[_type == "post" && defined(slug.current) && count(categories) > 0 && isHidden != true] | order(publishedAt desc)[0...50] {
+    const posts = await client.fetch(`*[_type in ["post", "csa"] && defined(slug.current) && isHidden != true] | order(publishedAt desc)[0...50] {
       title,
       excerpt,
-      "slug": slug.current,
+      _type,
+      slug,
       publishedAt,
       _updatedAt,
-      "categories": categories[]->{ slug }
+      "categories": categories[]->{ "slug": slug.current }
     }`)
 
     const items = (posts || []).map((p: any) => {
-      const primaryCat = p?.categories?.[0]?.slug?.current
-      const url = `${siteUrl}/category/${primaryCat}/${p.slug}`
+      const url = `${siteUrl}${getArticleUrl(p)}`
       const pubDate = p.publishedAt ? new Date(p.publishedAt).toUTCString() : new Date().toUTCString()
       return `\n    <item>
         <title>${escape(p.title)}</title>

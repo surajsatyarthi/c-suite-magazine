@@ -9,8 +9,11 @@ import { getArticleUrl } from '@/lib/urls'
 import PortableBody from '@/components/PortableBody'
 import { sanitizeExcerpt } from '@/lib/text'
 import { Writer, Post } from '@/lib/types'
+import { getViews, formatViewsMillion } from '@/lib/views'
 
-// Enable ISR to avoid heavy full-build prerenders for writer pages
+import { getServerClient } from '@/lib/sanity.server'
+
+// Enable ISR
 export const revalidate = 600
 
 async function getWriter(slug: string): Promise<Writer | null> {
@@ -19,6 +22,7 @@ async function getWriter(slug: string): Promise<Writer | null> {
     name,
     slug,
     position,
+    writerType,
     bio,
     image,
     "imageUrl": image.asset->url,
@@ -29,7 +33,6 @@ async function getWriter(slug: string): Promise<Writer | null> {
       title,
       slug,
       excerpt,
-      // Ensure a safe plaintext excerpt regardless of field type
       "excerptText": coalesce(pt::text(excerpt), pt::text(body)),
       mainImage,
       "categories": categories[]->{title, slug, color},
@@ -37,6 +40,7 @@ async function getWriter(slug: string): Promise<Writer | null> {
       views
     }
   }`
+  const client = getServerClient()
   return client.fetch(query, { slug })
 }
 
@@ -180,6 +184,15 @@ export default async function WriterPage({ params }: { params: Promise<{ slug: s
                             {excerptText && (
                               <p className="mt-2 text-sm text-gray-600 line-clamp-3">{excerptText}</p>
                             )}
+                            <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
+                              <span className="flex items-center gap-1">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                {formatViewsMillion(article.views, article.slug.current)}
+                              </span>
+                            </div>
                           </div>
                         </Link>
                       )

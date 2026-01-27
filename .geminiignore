@@ -15,9 +15,6 @@ pnpm-lock.yaml
 .git
 **/node_modules/**
 **/dist/**
-**/.next/**
-**/.vercel/**
-**/.turbo/**
-**/.cache/**
-**/.sanity/**
-tsconfig.tsbuildinfo
+exports/
+dist/
+*.tsbuildinfo

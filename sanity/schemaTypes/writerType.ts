@@ -39,6 +39,7 @@ export const writerType = defineType({
           { title: 'Staff', value: 'staff' },
           { title: 'Guest Author', value: 'guest' },
           { title: 'Contributor', value: 'contributor' },
+          { title: 'Featured Client (No Profile Page)', value: 'client' },
         ],
         layout: 'radio',
       },
