@@ -17,6 +17,11 @@ FOUND_VIOLATIONS=0
 
 for FILE in $FILES_TO_SCAN; do
 
+  # Skip the constitution itself to avoid false positives
+  if [[ "$FILE" == *"SUPREME_RALPH_CONSTITUTION.md"* ]]; then
+    continue
+  fi
+
   # Check for Forbidden Terms
   if grep -inE "$FORBIDDEN_TERMS" "$FILE"; then
     echo "❌ Forbidden reference found in $FILE:"
