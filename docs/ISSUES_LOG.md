@@ -4,7 +4,7 @@
 **Source**: User-Provided Comprehensive List (Merged)
 
 | Issue   | Title                              | Priority | Status       | Est. | Resolution / Short Summary                                       |
-| :------ | :--------------------------------- | :------- | :----------- | :--- | :--------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| :------ | :--------------------------------- | :------- | :----------- | :--- | :--------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----- | -------------------------------- | ------- |
 | **#1**  | CSA Spotlight Visibility (Revenue) | P0       | ✅ RESOLVED  | --   | Unified logic to use Sanity as Ground Truth.                     |
 | **#2**  | Spotlight Config Mismatch          | P0       | ✅ RESOLVED  | --   | Removed spotlight.json; migrated to Sanity single-source.        |
 | **#3**  | **Missing Spotlight Overlays**     | P0       | ✅ FIXED     | 2h   | Performed 100% sync of overlaid images to Sanity (19/19 mapped). | [Deployment Report 03](file:///Users/surajsatyarthi/Desktop/ceo-magazine/docs/reports/deployment_report_03.md) |
@@ -24,7 +24,7 @@
 | **#17** | CI/CD Rulesets                     | P2       | ✅ RESOLVED  | --   | Defined "Locked Vault" policy & job standardization.             |
 | **#18** | **Sanity Preview**                 | P2       | 🔴 RE-OPENED | 6h   | Dynamic environment-agnostic preview sync.                       |
 | **#19** | View Count Anomaly (5M+)           | P0       | ✅ RESOLVED  | --   | Clamped rand to 4.8M; Manual 5M+ override only.                  |
-| **#20** | **Footer/Nav SEO**                 | P3       | 🔴 RE-OPENED | 4h   | Anchored CXO Interviews; rebuilt 3-column footer.                |
+| **#20** | **Footer/Nav SEO**                 | P1       | ✅ RESOLVED  | 6h   | 4-col layout (Insights                                           | Topics                                                                                                         | Legal | Logo), headers 16px, links 13px. | footer. |
 | **#21** | **Dynamic Metadata Debt**          | P1       | 🔴 RE-OPENED | 4h   | Persisted to Sanity fields.                                      |
 | **#22** | **Legacy Image Gaps**              | P1       | 🔴 RE-OPENED | 3h   | Backfilled 100% assets.                                          |
 | **#23** | QA Tooling Implementation          | P1       | ✅ RESOLVED  | --   | Deployed Iron Dome (8 Core Tools) & Security CI.                 |
