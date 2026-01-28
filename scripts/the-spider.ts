@@ -10,7 +10,14 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Load Environment Variables
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+// Load Environment Variables (Graceful fallback for CI)
+const fs = require('fs');
+const envPath = path.resolve(process.cwd(), '.env.local');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+} else {
+  console.log('ℹ️  .env.local not found. Relying on process.env (CI Mode).');
+}
 
 const BASE_URL = process.env.BASE_URL || 'https://csuitemagazine.global';
 const MAX_PAGES = 2000;
@@ -20,6 +27,9 @@ const CONCURRENCY = 10;
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 const EMAIL_TO = process.env.EMAIL_TO || 'csuitebrandagency@gmail.com';
+
+// Debug Logging
+console.log(`📧 Config: User=${EMAIL_USER ? '***' : 'MISSING'}, Pass=${EMAIL_PASS ? '***' : 'MISSING'}`);
 
 // State
 const visited = new Set<string>();
