@@ -26,8 +26,17 @@ async function generateAndEmailReport() {
     console.log('📊 Generating Weekly SEO Report...\n');
 
     try {
-        // Load credentials
-        const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, 'utf8'));
+        // Load credentials (Env Var Priority > Local File Fallback)
+        let credentials;
+        if (process.env.GOOGLE_SEARCH_CONSOLE_JSON) {
+            console.log('🔑 Authenticating via Environment Variable...');
+            credentials = JSON.parse(process.env.GOOGLE_SEARCH_CONSOLE_JSON);
+        } else if (fs.existsSync(CREDENTIALS_PATH)) {
+            console.log('📂 Authenticating via Local File...');
+            credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH, 'utf8'));
+        } else {
+            throw new Error('Missing Credentials: Set GOOGLE_SEARCH_CONSOLE_JSON env var or place file in .credentials/');
+        }
 
         // Create auth client
         const auth = new google.auth.GoogleAuth({
