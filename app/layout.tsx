@@ -10,10 +10,11 @@ import LazyEntryLocale from "@/components/LazyEntryLocale";
 
 const AdInterstitialV2 = dynamic(() => import("@/components/AdInterstitialV2"));
 const GoogleAnalytics = dynamic(() => import("@/components/GoogleAnalytics"));
-import { generateMetadata, generateStructuredData, generateViewport } from "@/lib/seo";
+import { generateMetadata as generateSEO, generateStructuredData, generateViewport } from "@/lib/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { draftMode } from "next/headers";
 import VisualEditing from "@/components/VisualEditing";
+import { getSiteSettings } from "@/lib/sanity.queries";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -29,13 +30,18 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = generateMetadata({
-  title: "C-Suite Magazine - Leadership, Innovation & Executive Insights",
-  description: "A premium magazine for global CXOs featuring exclusive interviews, leadership insights, and business strategies from top executives worldwide.",
-  keywords: ['CEO', 'CXO', 'leadership', 'business strategy', 'executive insights', 'innovation', 'management', 'corporate leadership', 'business transformation', 'digital transformation'],
-  url: "https://csuitemagazine.global",
-  type: "website"
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  
+  return generateSEO({
+    title: settings?.title, // Will fallback to defaultSEO in lib/seo if undefined
+    description: settings?.description,
+    keywords: settings?.keywords,
+    image: settings?.ogImage,
+    url: "https://csuitemagazine.global",
+    type: "website"
+  });
+}
 
 export const viewport = generateViewport();
 

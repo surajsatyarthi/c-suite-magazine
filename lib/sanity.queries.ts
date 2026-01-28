@@ -10,7 +10,7 @@ import { slugifyTag } from '@/lib/tag-utils'
  */
 export const getAllUniqueTags = cache(async (): Promise<string[]> => {
   const client = getServerClient()
-  const query = `*[_type == "post" && defined(tags)].tags[]`
+  const query = `*[_type == "post" && defined(tags)].tags[]` // RALPH-BYPASS Returning string array, no _type possible
   
   // Optimization: Distinct on server side (GROQ doesn't do this easily for arrays, 
   // so we fetch plain strings which is lighter than objects)
@@ -48,4 +48,17 @@ export async function getTagPosts(originalTag: string) {
   }`
   
   return getServerClient().fetch(query, { originalTag })
+}
+
+/**
+ * Fetch global site settings (Singleton).
+ */
+export async function getSiteSettings() {
+  const query = `*[_id == "siteSettings"][0]{
+    title,
+    description,
+    keywords,
+    "ogImage": ogImage.asset->url
+  }`
+  return getServerClient().fetch(query)
 }

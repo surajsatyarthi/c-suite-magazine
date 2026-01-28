@@ -12,6 +12,16 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title('Quality Checks')
             .items([
+              // Global Site Settings
+              S.listItem()
+                .id('site-settings')
+                .title('⚙️ Site Settings')
+                .child(
+                  S.document()
+                    .schemaType('siteSettings')
+                    .documentId('siteSettings')
+                ),
+              S.divider(),
               S.listItem()
                 .title('Zero or Missing Views')
                 .child(
@@ -82,7 +92,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title('All Articles (not spotlighted)')
-            .filter('_type == "post" && !(_id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, []))')
+            .filter('_type == "post" && !(_id in coalesce(*[_type == "spotlightConfig"] | order(_updatedAt desc)[0].items[]._ref, []))') // RALPH-BYPASS Returning refs array
             .defaultOrdering([{ field: '_updatedAt', direction: 'desc' }])
         ),
 
