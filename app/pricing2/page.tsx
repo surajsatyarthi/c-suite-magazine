@@ -1097,8 +1097,8 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>LinkedIn Amplification</strong>
-                                    <span class="feature-description">Distribution to 100K+ LinkedIn network</span>
+                                    <strong>LinkedIn Ads</strong>
+                                    <span class="feature-description">Paid promotion up to 100K views</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
@@ -1291,7 +1291,7 @@ const pricing2HTML = `
                             <li>Priority homepage placement extension (+30 days)</li>
                             <li>Free guest article upgrade (standard → featured)</li>
                             <li>Personal branding consultation (60 minutes)</li>
-                            <li>LinkedIn amplification to our 100K+ network</li>
+                            <li>LinkedIn ads up to 100K views</li>
                         </ul>
                     </div>
                 </div>

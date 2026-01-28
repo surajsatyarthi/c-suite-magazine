@@ -1140,7 +1140,7 @@ const pricingHTML = `
                             <li>Priority homepage placement extension (+30 days)</li>
                             <li>Free guest article upgrade (standard → featured)</li>
                             <li>Personal branding consultation (60 minutes)</li>
-                            <li>LinkedIn amplification to our 100K+ network</li>
+                            <li>LinkedIn ads up to 100K views</li>
                         </ul>
                     </div>
 
