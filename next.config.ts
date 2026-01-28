@@ -61,7 +61,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/article/powering-the-future-andy-jassys-strategic-vision-for-amazons-energy-driven-expansion',
-        destination: '/article/andy-jassy',
+        destination: '/category/innovation/andy-jassy',
+        permanent: true,
+      },
+      {
+        source: '/article/andy-jassy',
+        destination: '/category/innovation/andy-jassy',
         permanent: true,
       },
     ]
