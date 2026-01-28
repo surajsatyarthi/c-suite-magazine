@@ -18,7 +18,7 @@ export default function Footer() {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Column 1: Featured Insights (Revenue/Bread-Winner) */}
           <div className="flex flex-col">
             <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6">Featured Insights</h3>
@@ -73,18 +73,23 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Brand & Agency (Trust) */}
-          <div className="flex flex-col md:items-end lg:items-end">
+          {/* Column 3: Brand & Logo */}
+          <div className="flex flex-col items-end">
             <div className="site-logo site-logo--footer text-white mb-4">
               <div className="site-logo-inner">
                 <div className="site-logo-title">C<span className="site-logo-dash">-</span>SUITE</div>
                 <div className="site-logo-subtitle metallic-sheen metallic-sheen-strong">MAGAZINE</div>
               </div>
             </div>
-            <p className="text-white mb-6 text-[0.79rem] leading-relaxed max-w-xs md:text-right lg:text-right">
+            <p className="text-white mb-6 text-[0.79rem] leading-relaxed max-w-xs text-right">
               YOUR LEGACY GOES GLOBAL
             </p>
-            <div className="flex flex-col md:items-end lg:items-end gap-3 text-xs text-gray-400">
+          </div>
+
+          {/* Column 4: Legal Links */}
+          <div className="flex flex-col items-end">
+            <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6 text-right">Legal</h3>
+            <div className="flex flex-col items-end gap-3 text-sm text-gray-300">
               <Link href="/contact" className="hover:text-[#f4d875] transition-colors">Contact Editorial</Link>
               <Link href="/privacy" className="hover:text-[#f4d875] transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-[#f4d875] transition-colors">Terms & Conditions</Link>
