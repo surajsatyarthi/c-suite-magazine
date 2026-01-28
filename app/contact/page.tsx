@@ -107,6 +107,17 @@ export default function ContactPage() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-gray-200">
+                  <a href="/pricing" className="block mb-6 p-4 bg-gradient-to-r from-[#c8ab3d]/10 to-[#b39935]/10 border border-[#c8ab3d]/30 rounded-lg hover:border-[#c8ab3d] transition-all group">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">Check Package Details</h3>
+                        <p className="text-sm text-gray-600">View our executive feature packages and pricing</p>
+                      </div>
+                      <svg className="w-5 h-5 text-[#c8ab3d] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </a>
                   <h3 className="font-semibold text-gray-900 mb-4">Response Time</h3>
                   <p className="text-gray-600 text-sm">We typically respond within 24-48 business hours.</p>
                 </div>

@@ -1,0 +1,9 @@
+# Exclude from indexing to prevent crashes
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.git/
+*.log
+.sanity/

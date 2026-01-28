@@ -1,58 +1,21 @@
 {
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/dist": true
+  },
   "files.watcherExclude": {
     "**/node_modules/**": true,
+    "**/.git/objects/**": true,
     "**/.next/**": true,
-    "**/.vercel/**": true,
     "**/dist/**": true,
-    "**/.cache/**": true,
-    "**/build/**": true,
-    "**/.git/**": true,
-    "**/out/**": true,
-    "**/.pnpm-store/**": true,
-    "**/coverage/**": true,
     "**/.sanity/**": true
   },
   "search.exclude": {
     "**/node_modules": true,
-    "**/.next": true,
-    "**/.vercel": true,
     "**/dist": true,
-    "**/build": true,
-    "**/out": true,
-    "**/.pnpm-store": true,
-    "**/coverage": true,
-    "**/.sanity": true,
-    "**/.git": true
-  },
-  "files.exclude": {
-    "**/.next": true,
-    "**/node_modules": true,
-    "**/.git": true
-  },
-  "typescript.disableAutomaticTypeAcquisition": true,
-  "typescript.tsserver.maxTsServerMemory": 2048,
-  "typescript.tsserver.experimental.enableProjectDiagnostics": false,
-  "typescript.tsserver.exclude": [
-    "**/node_modules/**",
-    "**/.next/**",
-    "**/dist/**",
-    "**/build/**",
-    "**/out/**",
-    "**/tests/**",
-    "**/test/**",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/scripts/**",
-    "**/.vercel/**",
-    "**/.cache/**",
-    "**/coverage/**"
-  ],
-  "javascript.suggest.enabled": true,
-  "typescript.suggest.enabled": true,
-  "editor.quickSuggestions": {
-    "other": true,
-    "comments": false,
-    "strings": false
-  },
-  "files.autoSave": "onFocusChange"
+    "**/.next": true
+  }
 }
