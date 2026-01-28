@@ -92,7 +92,8 @@ const pricing2HTML = `
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(180deg, var(--gold-light) 0%, var(--background-white) 100%);
+            background: linear-gradient(135deg, rgba(8, 41, 69, 0.97) 0%, rgba(10, 51, 80, 0.95) 100%),
+                        url('/hero-image.webp') center/cover no-repeat;
             padding: 100px 0 80px;
             text-align: center;
             position: relative;
@@ -102,12 +103,25 @@ const pricing2HTML = `
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 1200px;
-            height: 1200px;
-            background: radial-gradient(circle, rgba(200, 171, 61, 0.08) 0%, transparent 70%);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(200, 171, 61, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(200, 171, 61, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, transparent 0%, rgba(200, 171, 61, 0.05) 100%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, var(--background-white));
             pointer-events: none;
         }
 
@@ -133,7 +147,7 @@ const pricing2HTML = `
             font-weight: 400;
             line-height: 53px;
             margin-bottom: 24px;
-            color: var(--primary-dark);
+            color: #ffffff;
             animation: fadeInUp 0.6s ease-out 0.1s both;
         }
 
@@ -146,7 +160,7 @@ const pricing2HTML = `
 
         .hero-subtitle {
             font-size: clamp(16px, 2vw, 20px);
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             max-width: 900px;
             margin: 0 auto 40px;
             font-weight: 400;
@@ -180,7 +194,7 @@ const pricing2HTML = `
 
         .proof-label {
             font-size: 14px;
-            color: var(--text-muted);
+            color: rgba(255, 255, 255, 0.8);
             margin-top: 8px;
             font-weight: 500;
         }
@@ -851,7 +865,7 @@ const pricing2HTML = `
             <div class="alert-box">
                 <div class="alert-title">🎯 Performance Guaranteed</div>
                 <div class="alert-text">
-                    If we don't meet our agreed performance benchmarks within 90 days, we'll refund 100% or run a bonus campaign at no cost. All packages include 14-day article publication and minimal client effort (just a 30-minute interview).
+                    If we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost. All packages include 14-day article publication and minimal client effort (just a 30-minute interview).
                 </div>
             </div>
         </div>
@@ -890,12 +904,6 @@ const pricing2HTML = `
                                 <td style="text-align: center;"><span class="check-icon">✓</span> Unlimited</td>
                             </tr>
                             <tr>
-                                <td><strong>Performance Guarantee</strong></td>
-                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
-                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> 100% Money-back</td>
-                            </tr>
-                            <tr>
                                 <td><strong>AI Search Optimization</strong></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
@@ -911,7 +919,7 @@ const pricing2HTML = `
                                 <td><strong>Monthly Reporting</strong></td>
                                 <td style="text-align: center;">Basic metrics</td>
                                 <td style="text-align: center;">Quarterly</td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> Detailed dashboard</td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span> Performance report at campaign end</td>
                             </tr>
                         </tbody>
                     </table>
@@ -947,9 +955,9 @@ const pricing2HTML = `
                                     <strong>Profile Article Length</strong>
                                     <span class="feature-description">In-depth executive profile optimized for SEO and thought leadership</span>
                                 </td>
-                                <td style="text-align: center;">3,000-4,000 words</td>
-                                <td style="text-align: center;">3,000-4,000 words</td>
-                                <td style="text-align: center;">3,000-4,000 words</td>
+                                <td style="text-align: center;">Up to 4,000 words</td>
+                                <td style="text-align: center;">Up to 4,000 words</td>
+                                <td style="text-align: center;">Up to 4,000 words</td>
                             </tr>
                             <tr>
                                 <td>
@@ -962,12 +970,12 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Homepage Spotlight</strong>
+                                    <strong>Executive in Focus Placement</strong>
                                     <span class="feature-description">Priority placement on magazine homepage</span>
                                 </td>
+                                <td style="text-align: center;">2 days</td>
+                                <td style="text-align: center;">4 days</td>
                                 <td style="text-align: center;">7 days</td>
-                                <td style="text-align: center;">30 days</td>
-                                <td style="text-align: center;">60 days</td>
                             </tr>
                             <tr>
                                 <td>
@@ -980,12 +988,12 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Content Longevity</strong>
+                                    <strong>⭐ Evergreen Content</strong>
                                     <span class="feature-description">How long article stays published</span>
                                 </td>
-                                <td style="text-align: center;">Evergreen</td>
-                                <td style="text-align: center;">Evergreen</td>
-                                <td style="text-align: center;">Evergreen</td>
+                                <td style="text-align: center;">Forever</td>
+                                <td style="text-align: center;">Forever</td>
+                                <td style="text-align: center;">Forever</td>
                             </tr>
                             <tr>
                                 <td>
@@ -998,7 +1006,7 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>AI Search Optimization</strong>
+                                    <strong>⭐ AI Search Optimization</strong>
                                     <span class="feature-description">ChatGPT, Gemini, and Grok optimization</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
@@ -1010,9 +1018,9 @@ const pricing2HTML = `
                                     <strong>Performance Reports</strong>
                                     <span class="feature-description">Analytics and engagement tracking</span>
                                 </td>
-                                <td style="text-align: center;">Quarterly</td>
-                                <td style="text-align: center;">Quarterly</td>
-                                <td style="text-align: center;">Monthly</td>
+                                <td style="text-align: center;">At campaign end</td>
+                                <td style="text-align: center;">At campaign end</td>
+                                <td style="text-align: center;">At campaign end</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1025,17 +1033,17 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Do-Follow Hyperlinks</strong>
+                                    <strong>Images & Do-Follow Links</strong>
                                     <span class="feature-description">SEO-boosting backlinks to your website</span>
                                 </td>
-                                <td style="text-align: center;">2 links</td>
-                                <td style="text-align: center;">2 links</td>
-                                <td style="text-align: center;">2 links</td>
+                                <td style="text-align: center;">2 images & 2 links</td>
+                                <td style="text-align: center;">4 images & 4 links</td>
+                                <td style="text-align: center;">6 images & 6 links</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Guest Article Opportunities</strong>
-                                    <span class="feature-description">Additional thought leadership articles over 12 months</span>
+                                    <span class="feature-description">Additional thought leadership articles over 6 months at 25% discount</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;">4 articles</td>
@@ -1089,7 +1097,7 @@ const pricing2HTML = `
                             <tr>
                                 <td>
                                     <strong>Press Release Distribution</strong>
-                                    <span class="feature-description">Distributed to 500+ media outlets</span>
+                                    <span class="feature-description">Distributed to partner media outlets</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
@@ -1103,6 +1111,15 @@ const pricing2HTML = `
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Article Revisions</strong>
+                                    <span class="feature-description">Number of revision rounds included</span>
+                                </td>
+                                <td style="text-align: center;">Up to 3</td>
+                                <td style="text-align: center;">Up to 3</td>
+                                <td style="text-align: center;">Up to 3</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1150,7 +1167,7 @@ const pricing2HTML = `
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">
-                                3,000-4,000 Word Profile Article
+                                Up to 4,000 Word Profile Article
                                 <span class="feature-tooltip">ⓘ
                                     <span class="tooltip-content">In-depth executive profile showcasing your expertise, achievements, and vision. Optimized for SEO and thought leadership.</span>
                                 </span>
@@ -1158,11 +1175,19 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
+                            <span class="feature-text">2 images & 2 do-follow links</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Up to 3 article revisions</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
                             <span class="feature-text">Digital Cover Feature</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Homepage Spotlight (7 days)</span>
+                            <span class="feature-text">Executive in Focus Placement (2 days)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1170,7 +1195,7 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Evergreen Content (No Expiration)</span>
+                            <span class="feature-text">⭐ Evergreen Content (No Expiration)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1178,15 +1203,11 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Quarterly Performance Reports</span>
+                            <span class="feature-text">Performance Report (at campaign end)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">Framed Digital Certificate</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">2 Do-Follow Hyperlinks to Your Site</span>
                         </li>
                     </ul>
                 </div>
@@ -1208,17 +1229,25 @@ const pricing2HTML = `
                             <span class="feature-text">
                                 4 Guest Article Opportunities
                                 <span class="feature-tooltip">ⓘ
-                                    <span class="tooltip-content">Contribute four additional thought leadership articles over 12 months, maintaining ongoing visibility.</span>
+                                    <span class="tooltip-content">Contribute four additional thought leadership articles over 6 months at 25% discount, maintaining ongoing visibility.</span>
                                 </span>
                             </span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Extended Homepage Spotlight (30 days)</span>
+                            <span class="feature-text">4 images & 4 do-follow links</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">ChatGPT, Gemini & Grok AEO Optimization</span>
+                            <span class="feature-text">Up to 3 article revisions</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Executive in Focus Placement (4 days)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">⭐ AI Search Optimization (ChatGPT, Gemini & Grok)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1265,6 +1294,14 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
+                            <span class="feature-text">6 images & 6 do-follow links</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Up to 3 article revisions</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
                             <span class="feature-text">Meta & Partner Sites Brand Campaign</span>
                         </li>
                         <li class="feature-item">
@@ -1273,15 +1310,15 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">60-Day Priority Homepage Placement</span>
+                            <span class="feature-text">Executive in Focus Placement (7 days)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Monthly Performance Analytics Dashboard</span>
+                            <span class="feature-text">Performance Report (at campaign end)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Press Release Distribution (500+ Outlets)</span>
+                            <span class="feature-text">Press Release Distribution (Partner Outlets)</span>
                         </li>
                     </ul>
 
@@ -1305,7 +1342,7 @@ const pricing2HTML = `
             <div class="guarantee-icon">🛡️</div>
             <h3 class="guarantee-title">100% Performance Guarantee</h3>
             <p class="guarantee-text">
-                We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll either provide a full refund OR run an additional bonus campaign at absolutely no cost to you.
+                We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
             </p>
         </div>
     </section>
@@ -1377,7 +1414,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    Traditional PR firms charge $10,000-$50,000 per month with no guarantees, temporary exposure, and limited reprint rights. We provide guaranteed performance, evergreen content with unlimited reprint rights, faster turnaround (14 days vs 4-12 weeks), and pricing that's 70-90% lower—all with a 100% money-back guarantee if we don't meet agreed benchmarks.
+                    Traditional PR firms charge $10,000-$50,000 per month with no guarantees, temporary exposure, and limited reprint rights. We provide guaranteed performance, evergreen content with unlimited reprint rights, faster turnaround (14 days vs 4-12 weeks), and pricing that's 70-90% lower—all with a bonus campaign guarantee if we don't meet agreed benchmarks.
                 </div>
             </div>
         </div>
@@ -1389,7 +1426,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    We offer unlimited revisions until you're completely satisfied. Our editorial team works closely with you through a collaborative review process. Additionally, our 100% performance guarantee means if we don't meet our agreed metrics within 90 days, you get a full refund or a bonus campaign at no cost.
+                    We offer up to 3 revisions until you're completely satisfied. Our editorial team works closely with you through a collaborative review process. Additionally, our 100% performance guarantee means if we don't meet our agreed metrics within 90 days, we'll run a bonus campaign at no cost.
                 </div>
             </div>
         </div>
@@ -1413,7 +1450,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    Our reach is verified through Google Analytics, third-party traffic analysis tools (SimilarWeb), and our email subscriber database. We provide detailed audience demographics and engagement metrics in your quarterly performance reports. We're happy to share redacted analytics during your strategy call.
+                    Our reach is verified through Google Analytics, third-party traffic analysis tools (SimilarWeb), and our email subscriber database. We provide detailed audience demographics and engagement metrics in your performance reports. We're happy to share redacted analytics during your strategy call.
                 </div>
             </div>
         </div>
@@ -1437,7 +1474,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    Yes. During your strategy call, we establish clear, measurable KPIs based on your tier (views, engagement, reach, referral traffic). If we fall short of these agreed benchmarks within 90 days, we provide either a 100% refund or run an additional promotional campaign at no cost. We're the only publication in our space offering this guarantee.
+                    Yes. During your strategy call, we establish clear, measurable KPIs based on your tier (views, engagement, reach, referral traffic). If we fall short of these agreed benchmarks within 90 days, we'll run an additional promotional campaign at no cost. We're the only publication in our space offering this guarantee.
                 </div>
             </div>
         </div>
