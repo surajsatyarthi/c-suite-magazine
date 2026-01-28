@@ -75,6 +75,7 @@ export default function Navigation() {
 
   const [allCategories, setAllCategories] = useState<Array<{ title: string, slug: string }>>([])
   const scrollContainerRef = React.useRef<HTMLElement>(null)
+  const [isScrollPaused, setIsScrollPaused] = useState(false)
 
   // Fetch categories with articles (server-side via API)
   useEffect(() => {
@@ -95,7 +96,39 @@ export default function Navigation() {
     fetchCategories()
   }, [])
 
-  // Auto-scroll removed to fix touch locking issues (Issue #24)
+  // Auto-scroll with pause on hover/click
+  useEffect(() => {
+    if (!scrollContainerRef.current) return
+    
+    const container = scrollContainerRef.current
+    let animationId: number
+    let scrollPosition = 0
+    const scrollSpeed = 0.5 // pixels per frame
+    
+    const animate = () => {
+      if (!isScrollPaused && container) {
+        scrollPosition += scrollSpeed
+        
+        // Reset when we've scrolled halfway (for infinite loop effect)
+        if (scrollPosition >= container.scrollWidth / 2) {
+          scrollPosition = 0
+        }
+        
+        container.scrollLeft = scrollPosition
+      }
+      
+      animationId = requestAnimationFrame(animate)
+    }
+    
+    // Start animation
+    animationId = requestAnimationFrame(animate)
+    
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId)
+      }
+    }
+  }, [isScrollPaused])
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -172,14 +205,40 @@ export default function Navigation() {
               className="category-scroll-container-minimal"
               role="navigation"
               aria-label="Article categories"
+              onMouseEnter={() => setIsScrollPaused(true)}
+              onMouseLeave={() => setIsScrollPaused(false)}
+              onClick={() => setIsScrollPaused(true)}
+              onTouchStart={() => setIsScrollPaused(true)}
+              onTouchEnd={() => setIsScrollPaused(false)}
             >
               <div className="category-scroll-content-minimal">
+                {/* Duplicate categories for infinite scroll effect */}
                 {allCategories.filter((c: any) => typeof c?.slug === 'string' && c.slug.length > 0).map((category) => {
                   const categoryPath = `/category/${encodeURIComponent(category.slug)}`
                   const isActive = pathname === categoryPath
                   return (
                     <Link
-                      key={category.slug}
+                      key={`first-${category.slug}`}
+                      href={categoryPath}
+                      prefetch
+                      className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${isActive
+                        ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]'
+                        : 'text-[#082945] hover:text-[#9d7e2a] active:text-[#7a6420]'
+                        }`}
+                      aria-label={`View ${category.title} articles`}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {category.title}
+                    </Link>
+                  )
+                })}
+                {/* Second set for seamless loop */}
+                {allCategories.filter((c: any) => typeof c?.slug === 'string' && c.slug.length > 0).map((category) => {
+                  const categoryPath = `/category/${encodeURIComponent(category.slug)}`
+                  const isActive = pathname === categoryPath
+                  return (
+                    <Link
+                      key={`second-${category.slug}`}
                       href={categoryPath}
                       prefetch
                       className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${isActive
