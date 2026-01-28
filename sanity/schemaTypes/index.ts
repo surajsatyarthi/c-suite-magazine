@@ -17,7 +17,8 @@ import { partnerQuotesType } from './partnerQuotesType'
 import { advertisementType } from './advertisementType'
 
 import { industryJuggernautConfigType } from './industryJuggernautConfigType'
+import { systemLogType } from './systemLogType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType, executiveInFocusType, executiveInFocusConfigType, industryJuggernautConfigType, partnerQuotesType],
+  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType, executiveInFocusType, executiveInFocusConfigType, industryJuggernautConfigType, partnerQuotesType, systemLogType],
 }

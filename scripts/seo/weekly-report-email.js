@@ -18,6 +18,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
+const { logSystemStatus } = require('../utils/sanity-logger');
 
 const SITE_URL = 'https://csuitemagazine.global';
 const CREDENTIALS_PATH = path.join(__dirname, '../../.credentials/google-search-console.json');
@@ -79,6 +80,9 @@ async function generateAndEmailReport() {
         await sendEmail(emailHTML, thisWeekStart, thisWeekEnd);
 
         console.log('\n✅ Weekly report emailed successfully!\n');
+        
+        // Log Success
+        await logSystemStatus('seo-sentinel', 'SUCCESS', `Weekly SEO report sent.`, metrics);
 
     } catch (error) {
         console.error('❌ Error:', error.message);
@@ -90,6 +94,8 @@ async function generateAndEmailReport() {
             console.error('Failed to send error email:', emailError.message);
         }
 
+        // Log Failure
+        await logSystemStatus('seo-sentinel', 'FAILURE', `Report generation failed: ${error.message}`, { error: error.message });
         process.exit(1);
     }
 }

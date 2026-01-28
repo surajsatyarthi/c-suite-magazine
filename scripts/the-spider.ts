@@ -8,6 +8,8 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import path from 'path';
+// @ts-ignore - CommonJS import
+import { logSystemStatus } from './utils/sanity-logger.js';
 
 // Load Environment Variables
 // Load Environment Variables (Graceful fallback for CI)
@@ -166,9 +168,13 @@ async function crawl() {
 
   if (brokenLinks.length > 0) {
     console.error(`\n🔥 CRITICAL: Found ${brokenLinks.length} Broken Links!`);
+    // Log Failure
+    await logSystemStatus('the-spider', 'FAILURE', `Crawl finished with ${brokenLinks.length} broken links.`, { brokenLinkCount: brokenLinks.length });
     process.exit(1); 
   } else {
     console.log("\n✅ Web Integrity Verified.");
+    // Log Success
+    await logSystemStatus('the-spider', 'SUCCESS', `Crawl complete. ${processed} pages scanned. Zero broken links.`, { pagesScanned: processed });
     process.exit(0);
   }
 }
