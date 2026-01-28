@@ -25,6 +25,7 @@
     "lint:security": "eslint -c eslint.security.config.mjs .",
     "lint:content": "node scripts/lint-content.js",
     "security-scan": "npx tsx scripts/ralph-verify-sql-safety.ts",
+    "check:integrity": "npx tsx scripts/assumption-scanner.ts",
     "validate-reports": "bash scripts/validate-phase-report.sh",
     "fix:excerpts": "node scripts/fix-excerpts.js",
     "import:docx": "node scripts/import-docx-batch.js",
