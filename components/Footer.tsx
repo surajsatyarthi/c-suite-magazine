@@ -21,7 +21,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Column 1: Featured Insights (Revenue/Bread-Winner) */}
           <div className="flex flex-col">
-            <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6">Featured Insights</h3>
+            <h3 className="text-[#c8ab3d] font-bold uppercase text-[0.65rem] tracking-widest mb-6">Featured Insights</h3>
             <ul className="space-y-4 text-sm text-gray-300">
               <li>
                 <Link href="/category/cxo-interview" className="hover:text-[#f4d875] transition-colors font-semibold">
@@ -48,7 +48,7 @@ export default function Footer() {
 
           {/* Column 2: Business Topics (SEO/Context) */}
           <div className="flex flex-col">
-            <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6">Business Topics</h3>
+            <h3 className="text-[#c8ab3d] font-bold uppercase text-[0.65rem] tracking-widest mb-6">Business Topics</h3>
             <ul className="space-y-4 text-sm text-gray-300">
               <li>
                 <Link href="/category/leadership" className="hover:text-[#f4d875] transition-colors">
@@ -73,7 +73,17 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Brand & Logo */}
+          {/* Column 3: Legal Links */}
+          <div className="flex flex-col items-end">
+            <h3 className="text-[#c8ab3d] font-bold uppercase text-[0.65rem] tracking-widest mb-6 text-right">Legal</h3>
+            <div className="flex flex-col items-end gap-3 text-sm text-gray-300">
+              <Link href="/contact" className="hover:text-[#f4d875] transition-colors">Contact Editorial</Link>
+              <Link href="/privacy" className="hover:text-[#f4d875] transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-[#f4d875] transition-colors">Terms & Conditions</Link>
+            </div>
+          </div>
+
+          {/* Column 4: Brand & Logo (rightmost) */}
           <div className="flex flex-col items-end">
             <div className="site-logo site-logo--footer text-white mb-4">
               <div className="site-logo-inner">
@@ -84,16 +94,6 @@ export default function Footer() {
             <p className="text-white mb-6 text-[0.79rem] leading-relaxed max-w-xs text-right">
               YOUR LEGACY GOES GLOBAL
             </p>
-          </div>
-
-          {/* Column 4: Legal Links */}
-          <div className="flex flex-col items-end">
-            <h3 className="text-[#c8ab3d] font-bold uppercase text-xs tracking-widest mb-6 text-right">Legal</h3>
-            <div className="flex flex-col items-end gap-3 text-sm text-gray-300">
-              <Link href="/contact" className="hover:text-[#f4d875] transition-colors">Contact Editorial</Link>
-              <Link href="/privacy" className="hover:text-[#f4d875] transition-colors">Privacy Policy</Link>
-              <Link href="/terms" className="hover:text-[#f4d875] transition-colors">Terms & Conditions</Link>
-            </div>
           </div>
         </div>
 
