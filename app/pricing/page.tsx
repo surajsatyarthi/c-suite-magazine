@@ -66,18 +66,15 @@ const pricing2HTML = `
             --font-serif: 'Playfair Display', Georgia, serif;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
+        .pricing-page-content * {
             box-sizing: border-box;
         }
 
-        body {
+        .pricing-page-content {
             font-family: var(--font-sans);
             background: var(--background-white);
             color: var(--text-primary);
             line-height: 1.6;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -834,7 +831,7 @@ const pricing2HTML = `
         }
     </style>
 
-    <main>
+    <div class="pricing-page-content">
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -1558,5 +1555,5 @@ const pricing2HTML = `
             observer.observe(card);
         });
     </script>
-    </main>
+    </div>
 `
