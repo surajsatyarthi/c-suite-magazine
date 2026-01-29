@@ -846,8 +846,9 @@ const pricing2HTML = `
                 ✨ Application Required — We Screen Every Executive
             </div>
             <h1 class="hero-title">
+                Build your legacy<br>
                 Beat Your Competition<br>
-                <span class="hero-title-accent">Get Ranked in AI and Google</span><br>
+                <span class="hero-title-accent">Get Ranked in AI and Search</span><br>
                 Be Seen. Be Heard. Be Impactful.
             </h1>
             <p class="hero-subtitle">
@@ -873,11 +874,44 @@ const pricing2HTML = `
                 </div>
             </div>
 
-            <div class="alert-box">
-                <div class="alert-title">🎯 Performance Guaranteed</div>
-                <div class="alert-text">
-                    If we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost. All packages include 14-day article publication (based on 1 discussion).
+            <div class="growth-engine-formula" style="margin-top: 40px; margin-bottom: 20px; animation: fadeInUp 0.6s ease-out 0.4s both;">
+                <div style="
+                    display: inline-block;
+                    background: rgba(255, 255, 255, 0.1);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(200, 171, 61, 0.3);
+                    padding: 16px 32px;
+                    border-radius: 100px;
+                    color: #ffffff;
+                    font-weight: 600;
+                    font-size: 14px;
+                    letter-spacing: 1px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                ">
+                    <span style="color: var(--primary-gold);">SEO</span> + 
+                    <span style="color: var(--primary-gold);">AEO</span> + 
+                    <span style="color: var(--primary-gold);">ADS</span> + 
+                    <span style="color: var(--primary-gold);">EMAIL</span> + 
+                    <span style="color: var(--primary-gold);">PR Campaign</span>
+                    <div style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 4px; letter-spacing: 2px;">
+                        The Growth Engine
+                    </div>
                 </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <!-- Guarantee Section (Moved) -->
+    <section class="guarantee-wrapper">
+        <div class="container">
+            <div class="guarantee-section">
+                <div class="guarantee-icon">🛡️</div>
+                <h3 class="guarantee-title">100% Performance Guarantee</h3>
+                <p class="guarantee-text">
+                    We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
+                </p>
             </div>
         </div>
     </section>
@@ -947,6 +981,15 @@ const pricing2HTML = `
                                 <td style="text-align: center;">Quarterly</td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <strong>Performance Reports</strong><br>
+                                    <span class="feature-description">Analytics and metrics tracking</span>
+                                </td>
+                                <td style="text-align: center;">Basic metrics</td>
+                                <td style="text-align: center;">Basic metrics</td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -981,8 +1024,8 @@ const pricing2HTML = `
                                     <strong>Profile Article Length</strong>
                                     <span class="feature-description">In-depth executive profile optimized for SEO and thought leadership</span>
                                 </td>
-                                <td style="text-align: center;">Up to 4,000 words</td>
-                                <td style="text-align: center;">Up to 4,000 words</td>
+                                <td style="text-align: center;">Up to 3,000 words</td>
+                                <td style="text-align: center;">Up to 3,500 words</td>
                                 <td style="text-align: center;">Up to 4,000 words</td>
                             </tr>
                             <tr>
@@ -1024,7 +1067,7 @@ const pricing2HTML = `
                             <tr>
                                 <td>
                                     <strong>Search Engine Indexing</strong>
-                                    <span class="feature-description">Google, Bing, Yahoo visibility</span>
+                                    <span class="feature-description">Google, Bing, Yahoo</span>
                                 </td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span></td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span></td>
@@ -1033,7 +1076,7 @@ const pricing2HTML = `
                             <tr>
                                 <td>
                                     <strong>⭐ AI Search Optimization</strong>
-                                    <span class="feature-description">ChatGPT, Gemini, and Grok optimization</span>
+                                    <span class="feature-description">ChatGPT, Gemini, and Grok</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span></td>
@@ -1059,12 +1102,21 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Images & Do-Follow Links</strong>
+                                    <strong>Images</strong>
+                                    <span class="feature-description">Visual assets included in article</span>
+                                </td>
+                                <td style="text-align: center;">upto 2 images</td>
+                                <td style="text-align: center;">upto 4 images</td>
+                                <td style="text-align: center;">upto 6 images</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Do-Follow Links</strong>
                                     <span class="feature-description">SEO-boosting backlinks to your website</span>
                                 </td>
-                                <td style="text-align: center;">2 images & 2 links</td>
-                                <td style="text-align: center;">4 images & 4 links</td>
-                                <td style="text-align: center;">6 images & 6 links</td>
+                                <td style="text-align: center;">upto 2 links</td>
+                                <td style="text-align: center;">upto 4 links</td>
+                                <td style="text-align: center;">upto 6 links</td>
                             </tr>
                             <tr>
                                 <td>
@@ -1096,7 +1148,7 @@ const pricing2HTML = `
                             <tr>
                                 <td>
                                     <strong>Returning Client Discount</strong>
-                                    <span class="feature-description">Discount on future campaigns within 9 months</span>
+                                    <span class="feature-description">Discount on future campaigns within 6 months</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;">25%</td>
@@ -1105,7 +1157,7 @@ const pricing2HTML = `
                             <tr>
                                 <td>
                                     <strong>EDM Campaign</strong>
-                                    <span class="feature-description">Email blast to 100K+ subscribers</span>
+                                    <span class="feature-description">Email blast to 100K+ ICP</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;">Bonus</td>
@@ -1113,8 +1165,8 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Social Media Amplification</strong>
-                                    <span class="feature-description">Meta & Partner Sites brand campaign</span>
+                                    <strong>Meta Amplification</strong>
+                                    <span class="feature-description">FB & Insta campaign</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
@@ -1132,7 +1184,7 @@ const pricing2HTML = `
                             <tr>
                                 <td>
                                     <strong>LinkedIn Ads</strong>
-                                    <span class="feature-description">Paid promotion up to 100K views</span>
+                                    <span class="feature-description">Paid promotion up to 100K impressions</span>
                                 </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
@@ -1140,7 +1192,7 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Article Revisions</strong>
+                                    <strong>Draft Revisions</strong>
                                     <span class="feature-description">Number of revision rounds included</span>
                                 </td>
                                 <td style="text-align: center;">Up to 3</td>
@@ -1193,7 +1245,7 @@ const pricing2HTML = `
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">
-                                Up to 4,000 Word Profile Article
+                                Up to 3,000 Word Profile Article
                                 <span class="feature-tooltip">ⓘ
                                     <span class="tooltip-content">In-depth executive profile showcasing your expertise, achievements, and vision. Optimized for SEO and thought leadership.</span>
                                 </span>
@@ -1201,7 +1253,7 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">2 images & 2 do-follow links</span>
+                            <span class="feature-text">upto 2 images & upto 2 do-follow links</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1261,7 +1313,7 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">4 images & 4 do-follow links</span>
+                            <span class="feature-text">upto 4 images & upto 4 do-follow links</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1285,14 +1337,14 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">25% Discount on Next Campaign (9 months)</span>
+                            <span class="feature-text">25% Discount on Next Campaign (6 months)</span>
                         </li>
                     </ul>
 
                     <div class="bonus-section">
                         <div class="bonus-title">🎁 Limited-Time Bonus</div>
                         <ul class="bonus-list">
-                            <li>Complimentary EDM campaign to 100K+ subscribers</li>
+                            <li>Complimentary EDM campaign to 100K+ ICP</li>
                             <li>Priority customer success manager</li>
                         </ul>
                     </div>
@@ -1320,7 +1372,7 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">6 images & 6 do-follow links</span>
+                            <span class="feature-text">upto 6 images & upto 6 do-follow links</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1328,7 +1380,7 @@ const pricing2HTML = `
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
-                            <span class="feature-text">Meta & Partner Sites Brand Campaign</span>
+                            <span class="feature-text">Meta Amplification (FB & Insta campaign)</span>
                         </li>
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
@@ -1354,7 +1406,7 @@ const pricing2HTML = `
                             <li>Priority homepage placement extension (+30 days)</li>
                             <li>Free guest article upgrade (standard → featured)</li>
                             <li>Personal branding consultation (60 minutes)</li>
-                            <li>LinkedIn ads up to 100K views</li>
+                            <li>LinkedIn ads up to 100K impressions</li>
                         </ul>
                     </div>
                 </div>
@@ -1362,18 +1414,7 @@ const pricing2HTML = `
         </div>
     </section>
 
-    <!-- Guarantee Section -->
-    <section class="guarantee-wrapper">
-        <div class="container">
-            <div class="guarantee-section">
-                <div class="guarantee-icon">🛡️</div>
-                <h3 class="guarantee-title">100% Performance Guarantee</h3>
-                <p class="guarantee-text">
-                    We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
-                </p>
-            </div>
-        </div>
-    </section>
+
 
     <!-- Testimonials -->
     <section class="testimonials-section">
@@ -1387,13 +1428,13 @@ const pricing2HTML = `
                 <div class="testimonial-card">
                     <div class="testimonial-stars">★★★★★</div>
                     <p class="testimonial-text">
-                        "After my feature, I received speaking invitations and board appointment inquiries. The visibility boost was exactly what my brand needed."
+                        "C-Suite Magazine's approach to executive branding is unparalleled. The speed of execution and the quality of the final profile exceeded my expectations. It's not just PR; it's a strategic asset."
                     </p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">MR</div>
+                        <div class="author-avatar">RS</div>
                         <div class="author-info">
-                            <h4>Michael Rodriguez</h4>
-                            <p>CEO, TechVentures Global</p>
+                            <h4>Rich Stinson</h4>
+                            <p>President & CEO, Southwire Company</p>
                         </div>
                     </div>
                 </div>
@@ -1401,13 +1442,13 @@ const pricing2HTML = `
                 <div class="testimonial-card">
                     <div class="testimonial-stars">★★★★★</div>
                     <p class="testimonial-text">
-                        "The quality of leads we received after my feature was exceptional. We closed partnerships directly from people who read my profile. Best marketing investment we've made."
+                        "As we scale our sustainability initiatives, having the right platform is crucial. The team understood our mission perfectly and amplified our voice to the right audience."
                     </p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">SP</div>
+                        <div class="author-avatar">SA</div>
                         <div class="author-info">
-                            <h4>Sarah Patterson</h4>
-                            <p>Founder & CEO, Innovation Capital</p>
+                            <h4>Stella Ambrose</h4>
+                            <p>Deputy Group CEO, Sawit Kinabalu Group</p>
                         </div>
                     </div>
                 </div>
@@ -1415,13 +1456,13 @@ const pricing2HTML = `
                 <div class="testimonial-card">
                     <div class="testimonial-stars">★★★★★</div>
                     <p class="testimonial-text">
-                        "I've worked with 5 different PR agencies over my career. None delivered the level of polish, speed, and measurable results that C-Suite Magazine provided. Game changer."
+                        "A truly professional experience from start to finish. The 'Growth Engine' formula really works—we saw tangible engagement across multiple channels immediately after publication."
                     </p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">DK</div>
+                        <div class="author-avatar">SN</div>
                         <div class="author-info">
-                            <h4>David Kim</h4>
-                            <p>Board Member, Fortune 500</p>
+                            <h4>Dr. Stoyana Natseva</h4>
+                            <p>CEO, Happy Life Academy</p>
                         </div>
                     </div>
                 </div>
