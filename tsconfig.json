@@ -38,7 +38,9 @@
     "tests",
     "middleware.ts",
     "sanity.config.ts",
-    "sanity.cli.ts"
+    "sanity.cli.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

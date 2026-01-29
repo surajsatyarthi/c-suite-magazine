@@ -10,6 +10,15 @@
 Every major claim (file created, text modified, bug fixed) must be backed by a **terminal output** (e.g., `grep`, `ls -l`, `cat`, `curl`) that visually confirms the claim in the same turn or report. You cannot just _say_ it is done. You must _show_ the terminal proof.
 All previous documents (LEGACY-OMNIBUS, MANDATORY-PROCEDURES, LEGACY-PROTOCOL, procedures-doc, engineering-standards-doc, etc.) are **officially deprecated** and **must be deleted** after archiving.
 
+## THE ATOMIC UPDATE LAW (v3.3 Addition)
+
+**"Target the patient, not the hospital."**
+When updating shared registries, logs, or lists (e.g., `ISSUES_LOG.md`), you MUST use **granular replacement** (targeting specific unique strings) rather than replacing the entire file or table.
+
+- **Forbidden**: `TargetContent: <Entire Table>` (Risk: revertState)
+- **Required**: `TargetContent: | #19 | ...` (Action: Updates only Row 19)
+  This prevents "Regression by Overwrite" where an Agent unwittingly reinstates deprecated data from its stale context window.
+
 ---
 
 ## THE 10 GATES OF RALPH
