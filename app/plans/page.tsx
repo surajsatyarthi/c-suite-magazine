@@ -1455,7 +1455,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    We offer up to 3 revisions until you're completely satisfied. Our editorial team works closely with you through a collaborative review process. Additionally, our 100% performance guarantee means if we don't meet our agreed metrics within 90 days, we'll run a bonus campaign at no cost.
+                    We offer up to 3 revisions of the draft until you're completely satisfied. Our editorial team works closely with you through a collaborative review process. Additionally, our 100% performance guarantee means if we don't meet our agreed metrics within 90 days, we'll run a bonus campaign at no cost.
                 </div>
             </div>
         </div>
@@ -1479,7 +1479,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    Minimal. Based on 1 discussion (phone or video) and 15-20 minutes for article review. Our expert writers and editorial team handle everything else—research, writing, SEO optimization, image selection, and distribution.
+                    Minimal. Based on 1 video interview and 15-20 minutes for article review. Our expert writers and editorial team handle everything else—research, writing, SEO optimization, image selection, and distribution.
                 </div>
             </div>
         </div>

@@ -56,6 +56,7 @@
 | **#51** | **The Integrity Layer**            | P1       | ✅ RESOLVED | 4h   | Enforced `assumption-scanner` in pre-commit hook (Commit `25217fa`).                                       |
 | **#54** | **Sec: Next.js DoS Vulnerability** | P0       | ✅ RESOLVED | 1h   | Patched GHSA-h25m-26qc-wcjf (High). Upgraded next@16.1.6 (Commit `7c24dd9`).                               |
 | **#25** | **Governance: Missing PRD**        | P2       | ✅ RESOLVED | 2h   | Updated PRODUCT_REQUIREMENTS_DOCUMENT.md to v1.5.0 (Commit `54e9f0c`).                                     |
+| **#55** | **Plans Page FAQ Content Update**  | P2       | 🔴 OPEN     | 1h   | Update interview format and revision policy text.                                                          |
 
 ## Active Roadmap (Next Steps)
 
