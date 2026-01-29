@@ -47,7 +47,7 @@ export default function ContactPage() {
               Contact Us
             </h1>
             <p className="text-xl text-white max-w-2xl mx-auto mb-8">
-              Submit your press release or reach out to the C-Suite Magazine team.
+              Reach out to the C-Suite Magazine team.
             </p>
             <div className="flex justify-center">
                 <a href="/plans" className="inline-flex items-center gap-2 px-8 py-4 bg-[#c8ab3d] text-[#082945] font-bold rounded-lg hover:bg-[#d6b745] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
