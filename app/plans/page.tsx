@@ -3,8 +3,8 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'Executive Feature Packages - C-Suite Magazine',
-  description: 'Premium PR packages for global C-suite executives',
+  title: 'Executive Feature Plans - C-Suite Magazine',
+  description: 'Premium PR plans for global C-suite executives',
   robots: {
     index: false,
     follow: false,
@@ -77,6 +77,13 @@ const pricing2HTML = `
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pricing-page-content section:last-child {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
         }
 
         .container {
