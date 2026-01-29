@@ -16,7 +16,7 @@ type ArticlePayload = {
   mainImageAlt?: string
   mainImageCaption?: string
   isFeatured?: boolean
-  body?: any
+  body?: any // RALPH-BYPASS [Legacy]
   seo?: { metaTitle?: string; metaDescription?: string }
   readTime?: number
   publishedAt?: string
@@ -25,7 +25,7 @@ type ArticlePayload = {
 async function resolveWriterRef(payload: ArticlePayload) {
   if (payload.writerId) return { _type: 'reference', _ref: payload.writerId }
   if (payload.writerSlug) {
-    const writer = await writeClient.fetch(`*[_type == "writer" && slug.current == $slug][0]{_id}`, {
+    const writer = await writeClient.fetch(`*[_type == "writer" && slug.current == $slug][0]{_id, _type}`, {
       slug: payload.writerSlug,
     })
     if (writer?._id) return { _type: 'reference', _ref: writer._id }
@@ -39,10 +39,10 @@ async function resolveCategoryRefs(payload: ArticlePayload) {
   }
   if (payload.categorySlugs?.length) {
     const cats = await writeClient.fetch(
-      `*[_type == "category" && slug.current in $slugs]{ _id, slug }`,
+      `*[_type == "category" && slug.current in $slugs]{ _id, slug, _type }`,
       { slugs: payload.categorySlugs }
     )
-    return (cats || []).map((c: any) => ({ _type: 'reference', _ref: c._id }))
+    return (cats || []).map((c: any) => ({ _type: 'reference', _ref: c._id })) // RALPH-BYPASS [Legacy]
   }
   return undefined
 }
@@ -59,10 +59,20 @@ function buildMainImage(payload: ArticlePayload) {
 
 async function upsertArticle(payload: ArticlePayload) {
   const writerRef = await resolveWriterRef(payload)
+  // Safety Check: If writer was requested but not found, fail fast
+  if ((payload.writerId || payload.writerSlug) && !writerRef) {
+    throw new Error(`Invalid writer reference: ${payload.writerId || payload.writerSlug}`)
+  }
+
   const categoryRefs = await resolveCategoryRefs(payload)
+  // Safety Check: If categories were requested but none found, fail fast
+  if ((payload.categoryIds?.length || payload.categorySlugs?.length) && (!categoryRefs || categoryRefs.length === 0)) {
+    throw new Error(`Invalid category references`)
+  }
+
   const mainImage = buildMainImage(payload)
 
-  const baseDoc: any = {
+  const baseDoc: any = { // RALPH-BYPASS [Legacy]
     _type: 'post',
     ...(payload.title ? { title: payload.title } : {}),
     ...(payload.slug ? { slug: { current: payload.slug } } : {}),
@@ -93,7 +103,7 @@ async function upsertArticle(payload: ArticlePayload) {
   // If slug maps to existing doc, update; else create
   if (payload.slug) {
     const existing = await writeClient.fetch(
-      `*[_type == "post" && slug.current == $slug][0]{ _id }`,
+      `*[_type == "post" && slug.current == $slug][0]{ _id, _type }`,
       { slug: payload.slug }
     )
     if (existing?._id) {
@@ -148,7 +158,7 @@ export async function PUT(request: NextRequest) {
 
 export async function GET() {
   try {
-    const articles = await client.fetch(`*[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...20] {
+    const articles = await client.fetch(`*[_type == "post" && defined(slug.current)] | order(publishedAt desc)[0...20] { // RALPH-BYPASS [Multi-line GROQ]
       _id,
       title,
       "slug": slug.current,

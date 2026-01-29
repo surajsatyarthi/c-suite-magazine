@@ -13,8 +13,14 @@ select:focus-visible,
 [role="link"]:focus-visible,
 [tabindex]:focus-visible,
 nav a:focus-visible {
-  outline: none !important;
+  outline: 2px solid #c8ab3d !important;
+  outline-offset: 2px !important;
   box-shadow: none !important;
+}
+
+/* Hide focus ring for mouse users unless they are using keyboard */
+:focus:not(:focus-visible) {
+  outline: none !important;
 }
 
 /* Focus trap styles for modals */
@@ -24,7 +30,7 @@ nav a:focus-visible {
 
 .focus-trap::before,
 .focus-trap::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 1px;
   height: 1px;
