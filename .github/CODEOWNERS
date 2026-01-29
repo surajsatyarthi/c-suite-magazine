@@ -1,0 +1,8 @@
+# Protective Measures
+# These files are critical infrastructure and should NOT be deleted by automated agents.
+
+scripts/backup-sanity.ts @surajsatyarthi
+scripts/seo/** @surajsatyarthi
+scripts/the-spider.ts @surajsatyarthi
+scripts/ralph-*.ts @surajsatyarthi
+sanity/schemaTypes/** @surajsatyarthi
