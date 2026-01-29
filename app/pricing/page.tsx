@@ -219,7 +219,7 @@ const pricing2HTML = `
 
         /* Comparison Section */
         .comparison-section {
-            background: var(--background-white);
+            background: var(--background-grey);
             padding: 80px 0;
         }
 
@@ -306,7 +306,7 @@ const pricing2HTML = `
         /* Feature Comparison Table */
         .features-comparison-section {
             padding: 80px 0;
-            background: var(--background-grey);
+            background: var(--background-white);
         }
 
         .features-table {
@@ -357,7 +357,7 @@ const pricing2HTML = `
         /* Pricing Section */
         .pricing-section {
             padding: 80px 0;
-            background: var(--background-white);
+            background: var(--background-grey);
         }
 
         .pricing-grid {
@@ -579,7 +579,7 @@ const pricing2HTML = `
         /* Testimonials */
         .testimonials-section {
             padding: 80px 0;
-            background: var(--background-grey);
+            background: var(--background-white);
         }
 
         .testimonials-grid {
@@ -650,9 +650,13 @@ const pricing2HTML = `
 
         /* FAQ Section */
         .faq-section {
+            background: var(--background-grey);
+            padding: 80px 24px;
+        }
+
+        .faq-container {
             max-width: 900px;
-            margin: 80px auto;
-            padding: 0 24px;
+            margin: 0 auto;
         }
 
         .faq-item {
@@ -1410,11 +1414,12 @@ const pricing2HTML = `
 
     <!-- FAQ Section -->
     <section class="faq-section">
-        <div class="section-header">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-        </div>
+        <div class="faq-container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
 
-        <div class="faq-item">
+            <div class="faq-item">
             <div class="faq-question">
                 How is this different from paying traditional PR firms?
                 <span class="faq-icon">+</span>
@@ -1452,18 +1457,6 @@ const pricing2HTML = `
 
         <div class="faq-item">
             <div class="faq-question">
-                How do you verify the 4 million reader claim?
-                <span class="faq-icon">+</span>
-            </div>
-            <div class="faq-answer">
-                <div class="faq-answer-content">
-                    Our reach is verified through Google Analytics, third-party traffic analysis tools (SimilarWeb), and our email subscriber database. We provide detailed audience demographics and engagement metrics in your performance reports. We're happy to share redacted analytics during your strategy call.
-                </div>
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-question">
                 What's the time commitment required from me?
                 <span class="faq-icon">+</span>
             </div>
@@ -1484,6 +1477,7 @@ const pricing2HTML = `
                     Yes. During your strategy call, we establish clear, measurable KPIs based on your tier (views, engagement, reach, referral traffic). If we fall short of these agreed benchmarks within 90 days, we'll run an additional promotional campaign at no cost. We're the only publication in our space offering this guarantee.
                 </div>
             </div>
+        </div>
         </div>
     </section>
 
