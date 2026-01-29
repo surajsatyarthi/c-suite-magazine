@@ -5,8 +5,8 @@ require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 
 // Initialize Client with Write Token
 const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '36465452', // Fallback to known ID if env missing
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID || '2f93fcy8',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || process.env.SANITY_DATASET || 'production',
   token: process.env.SANITY_WRITE_TOKEN, // CRITICAL: Write access
   useCdn: false, // Always fresh for logs
   apiVersion: '2024-01-01',
