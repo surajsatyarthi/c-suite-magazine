@@ -219,8 +219,13 @@ const pricing2HTML = `
 
         /* Comparison Section */
         .comparison-section {
-            background: var(--background-grey);
+            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
             padding: 80px 0;
+        }
+
+        .comparison-section .section-title,
+        .comparison-section .section-subtitle {
+            color: #ffffff;
         }
 
         .section-header {
@@ -357,7 +362,12 @@ const pricing2HTML = `
         /* Pricing Section */
         .pricing-section {
             padding: 80px 0;
-            background: var(--background-grey);
+            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
+        }
+
+        .pricing-section .section-title,
+        .pricing-section .section-subtitle {
+            color: #ffffff;
         }
 
         .pricing-grid {
@@ -650,8 +660,12 @@ const pricing2HTML = `
 
         /* FAQ Section */
         .faq-section {
-            background: var(--background-grey);
+            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
             padding: 80px 24px;
+        }
+
+        .faq-section .section-title {
+            color: #ffffff;
         }
 
         .faq-container {
