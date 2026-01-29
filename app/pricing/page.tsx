@@ -9,18 +9,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default function PricingPage() {
+export default function Pricing2Page() {
   return (
     <>
       {/* SEO: Additional noindex safeguard */}
       <meta name="robots" content="noindex, nofollow" />
-      
-      <div dangerouslySetInnerHTML={{ __html: pricingHTML }} />
+
+      <div dangerouslySetInnerHTML={{ __html: pricing2HTML }} />
     </>
   )
 }
 
-const pricingHTML = `
+const pricing2HTML = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,30 +39,30 @@ const pricingHTML = `
             --gold-medium: #b39935;
             --gold-light: #f2f0eb;
             --luxury-cream: #fefdfb;
-            
+
             /* Typography Colors */
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --text-muted: #64748b;
-            
+
             /* Backgrounds */
             --background-white: #ffffff;
             --background-grey: #f8fafc;
             --card-bg: #ffffff;
-            
+
             /* Borders & Effects */
             --border-subtle: #e2e8f0;
             --border-light: rgba(226, 232, 240, 0.5);
             --gold-shadow: rgba(200, 171, 61, 0.3);
             --gold-translucent: rgba(200, 171, 61, 0.1);
-            
+
             /* Shadows */
             --shadow-minimal: 0 1px 2px rgba(0, 0, 0, 0.05);
             --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.1);
             --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
             --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
             --shadow-gold: 0 4px 20px rgba(200, 171, 61, 0.25);
-            
+
             /* Fonts */
             --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-serif: 'Playfair Display', Georgia, serif;
@@ -217,10 +217,10 @@ const pricingHTML = `
             line-height: 1.7;
         }
 
-        /* Pricing Section */
-        .pricing-section {
-            padding: 80px 0;
+        /* Comparison Section */
+        .comparison-section {
             background: var(--background-white);
+            padding: 80px 0;
         }
 
         .section-header {
@@ -243,6 +243,121 @@ const pricingHTML = `
             max-width: 700px;
             margin: 0 auto;
             line-height: 1.6;
+        }
+
+        .comparison-table {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--background-white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--luxury-cream) 100%);
+        }
+
+        th {
+            padding: 24px 20px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-subtle);
+        }
+
+        th:first-child {
+            font-size: 16px;
+            color: var(--primary-gold);
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        tr:hover {
+            background: rgba(200, 171, 61, 0.03);
+        }
+
+        .check-icon {
+            color: #10B981;
+            font-size: 20px;
+        }
+
+        .cross-icon {
+            color: var(--text-muted);
+            font-size: 18px;
+        }
+
+        /* Feature Comparison Table */
+        .features-comparison-section {
+            padding: 80px 0;
+            background: var(--background-grey);
+        }
+
+        .features-table {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--background-white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .features-table th {
+            text-align: center;
+            padding: 24px 16px;
+        }
+
+        .features-table th:first-child {
+            text-align: left;
+            width: 35%;
+        }
+
+        .features-table th:nth-child(2) {
+            width: 25%;
+        }
+
+        .features-table td:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .features-table td {
+            text-align: center;
+        }
+
+        .features-table td:first-child {
+            text-align: left;
+        }
+
+        .feature-description {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 400;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 80px 0;
+            background: var(--background-white);
         }
 
         .pricing-grid {
@@ -330,45 +445,6 @@ const pricingHTML = `
             color: var(--text-secondary);
             margin-bottom: 28px;
             line-height: 1.6;
-        }
-
-        .price-container {
-            margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 2px solid var(--border-subtle);
-        }
-
-        .price {
-            font-size: 54px;
-            font-weight: 800;
-            font-family: var(--font-serif);
-            color: var(--primary-gold);
-            line-height: 1;
-        }
-
-        .price-period {
-            font-size: 15px;
-            color: var(--text-muted);
-            font-weight: 400;
-            margin-top: 4px;
-        }
-
-        .price-note {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 10px;
-            font-style: italic;
-        }
-
-        .value-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            background: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 12px;
         }
 
         .features-list {
@@ -498,109 +574,6 @@ const pricingHTML = `
         .bonus-list li::before {
             content: '🎁';
             flex-shrink: 0;
-        }
-
-        .cta-button {
-            width: 100%;
-            padding: 18px 32px;
-            background: linear-gradient(135deg, var(--primary-gold), var(--gold-medium));
-            color: var(--background-white);
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-gold);
-        }
-
-        .cta-button.secondary {
-            background: transparent;
-            border: 2px solid var(--primary-gold);
-            color: var(--primary-gold);
-        }
-
-        .cta-button.secondary:hover {
-            background: var(--gold-translucent);
-        }
-
-        /* Comparison Section */
-        .comparison-section {
-            background: var(--background-white);
-            padding: 80px 0;
-        }
-
-        .comparison-table {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: var(--background-white);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-subtle);
-            box-shadow: var(--shadow-soft);
-        }
-
-        .table-scroll {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: linear-gradient(135deg, var(--gold-light) 0%, var(--luxury-cream) 100%);
-        }
-
-        th {
-            padding: 24px 20px;
-            text-align: left;
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--border-subtle);
-        }
-
-        th:first-child {
-            font-size: 16px;
-            color: var(--primary-gold);
-        }
-
-        td {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-light);
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        tr:hover {
-            background: rgba(200, 171, 61, 0.03);
-        }
-
-        .check-icon {
-            color: #10B981;
-            font-size: 20px;
-        }
-
-        .cross-icon {
-            color: var(--text-muted);
-            font-size: 18px;
-        }
-
-        .feature-description {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 400;
-            display: block;
-            margin-top: 4px;
         }
 
         /* Testimonials */
@@ -735,77 +708,6 @@ const pricingHTML = `
             max-height: 500px;
         }
 
-        /* Final CTA */
-        .final-cta {
-            text-align: center;
-            padding: 100px 0;
-            background: linear-gradient(180deg, var(--background-white) 0%, var(--gold-light) 100%);
-        }
-
-        .final-cta-title {
-            font-family: var(--font-serif);
-            font-size: 32px;
-            font-weight: 400;
-            line-height: 42px;
-            margin-bottom: 24px;
-            color: var(--primary-dark);
-        }
-
-        .final-cta-subtitle {
-            font-size: 20px;
-            color: var(--text-secondary);
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-primary {
-            padding: 18px 48px;
-            background: linear-gradient(135deg, var(--primary-gold), var(--gold-medium));
-            color: var(--background-white);
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .cta-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-gold);
-        }
-
-        .cta-secondary {
-            padding: 18px 48px;
-            background: transparent;
-            color: var(--primary-gold);
-            border: 2px solid var(--primary-gold);
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .cta-secondary:hover {
-            background: var(--gold-translucent);
-        }
-
         /* Guarantee Section */
         .guarantee-section {
             max-width: 800px;
@@ -875,11 +777,6 @@ const pricingHTML = `
                 line-height: 24px;
             }
 
-            .final-cta-title {
-                font-size: 24px;
-                line-height: 32px;
-            }
-
             .pricing-grid {
                 grid-template-columns: 1fr;
                 gap: 24px;
@@ -897,14 +794,13 @@ const pricingHTML = `
                 grid-template-columns: 1fr;
             }
 
-            .cta-buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
             th, td {
                 padding: 12px;
                 font-size: 13px;
+            }
+
+            .features-table th:first-child {
+                width: auto;
             }
         }
 
@@ -938,7 +834,7 @@ const pricingHTML = `
             <p class="hero-subtitle">
                 100% Done-For-You PR campaign. From interview to publication in 14 days.
             </p>
-            
+
             <div class="social-proof">
                 <div class="proof-item">
                     <div class="proof-number">4M+</div>
@@ -967,235 +863,7 @@ const pricingHTML = `
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Choose Your Growth Path</h2>
-                <p class="section-subtitle">
-                    Each tier is designed to match your ambitions. From establishing credibility to commanding global influence.
-                </p>
-            </div>
-
-            <div class="pricing-grid">
-                <!-- Professional Tier -->
-                <div class="pricing-card tier-professional">
-                    <div class="availability-badge">⚡ 10 slots/quarter</div>
-                    <h3 class="tier-name">Professional</h3>
-                    <p class="tier-description">Perfect for executives establishing their thought leadership and digital presence.</p>
-                    
-                    <div class="price-container">
-                        <div class="price">$2,500</div>
-                        <div class="price-period">one-time feature</div>
-                        <div class="value-badge">$6,000 Value - Save $3,500</div>
-                        <p class="price-note">*Final pricing based on customization</p>
-                    </div>
-
-                    <ul class="features-list">
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">
-                                Up to 4,000 Word Profile Article
-                                <span class="feature-tooltip">ⓘ
-                                    <span class="tooltip-content">In-depth executive profile showcasing your expertise, achievements, and vision. Optimized for SEO and thought leadership.</span>
-                                </span>
-                            </span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">2 images & 2 do-follow links</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Up to 3 article revisions</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Digital Cover Feature</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Executive in Focus Placement (2 days)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Unlimited Reprint Rights</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">⭐ Evergreen Content (No Expiration)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Google, Bing, Yahoo Indexing</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Performance Report (at campaign end)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Framed Digital Certificate</span>
-                        </li>
-                    </ul>
-
-                    <button class="cta-button secondary" onclick="window.location.href='/contact'">Schedule Strategy Call</button>
-                </div>
-
-                <!-- Authority Tier (Featured) -->
-                <div class="pricing-card tier-authority featured">
-                    <div class="tier-badge">Most Popular</div>
-                    <div class="availability-badge">🔥 7 slots/quarter</div>
-                    <h3 class="tier-name">Authority</h3>
-                    <p class="tier-description">For leaders ready to dominate their industry narrative and build lasting influence.</p>
-                    
-                    <div class="price-container">
-                        <div class="price">$5,000</div>
-                        <div class="price-period">one-time feature</div>
-                        <div class="value-badge">$12,000 Value - Save $7,000</div>
-                        <p class="price-note">*Final pricing based on customization</p>
-                    </div>
-
-                    <ul class="features-list">
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text"><strong>Everything in Professional, plus:</strong></span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">
-                                4 Guest Article Opportunities
-                                <span class="feature-tooltip">ⓘ
-                                    <span class="tooltip-content">Contribute four additional thought leadership articles over 6 months at 25% discount, maintaining ongoing visibility.</span>
-                                </span>
-                            </span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">4 images & 4 do-follow links</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Up to 3 article revisions</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Executive in Focus Placement (4 days)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">⭐ AI Search Optimization (ChatGPT, Gemini & Grok)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Executive Profile Among Global Leaders</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Magazine Logo Usage Rights</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">25% Discount on Next Campaign (9 months)</span>
-                        </li>
-                    </ul>
-
-                    <div class="bonus-section">
-                        <div class="bonus-title">🎁 Limited-Time Bonus</div>
-                        <ul class="bonus-list">
-                            <li>Complimentary EDM campaign to 100K+ subscribers</li>
-                            <li>Priority customer success manager</li>
-                        </ul>
-                    </div>
-
-                    <button class="cta-button" onclick="window.location.href='/contact'">Claim Your Slot Now</button>
-                </div>
-
-                <!-- Visionary Tier -->
-                <div class="pricing-card tier-visionary">
-                    <div class="availability-badge">💎 5 slots/quarter - VIP</div>
-                    <h3 class="tier-name">Visionary</h3>
-                    <p class="tier-description">For transformational leaders commanding attention across continents and industries.</p>
-                    
-                    <div class="price-container">
-                        <div class="price">$8,500</div>
-                        <div class="price-period">one-time feature</div>
-                        <div class="value-badge">$22,000 Value - Save $13,500</div>
-                        <p class="price-note">*Final pricing based on customization</p>
-                    </div>
-
-                    <ul class="features-list">
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text"><strong>Everything in Authority, plus:</strong></span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">
-                                Direct Reach to 4M+ Global C-Suite
-                                <span class="feature-tooltip">ⓘ
-                                    <span class="tooltip-content">Verified reach via Google Analytics and third-party certification. Includes CEOs, board members, and decision-makers worldwide.</span>
-                                </span>
-                            </span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">6 images & 6 do-follow links</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Up to 3 article revisions</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Meta & Partner Sites Brand Campaign</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Dedicated EDM Campaign Blast</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Executive in Focus Placement (7 days)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Performance Report (at campaign end)</span>
-                        </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Press Release Distribution (Partner Outlets)</span>
-                        </li>
-                    </ul>
-
-                    <div class="bonus-section">
-                        <div class="bonus-title">💎 VIP Exclusive Bonuses</div>
-                        <ul class="bonus-list">
-                            <li>Priority homepage placement extension (+30 days)</li>
-                            <li>Free guest article upgrade (standard → featured)</li>
-                            <li>Personal branding consultation (60 minutes)</li>
-                            <li>LinkedIn ads up to 100K views</li>
-                        </ul>
-                    </div>
-
-                    <button class="cta-button" onclick="window.location.href='/contact'">See If You Qualify</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Guarantee Section -->
-    <section class="guarantee-section">
-        <div class="container">
-            <div class="guarantee-icon">🛡️</div>
-            <h3 class="guarantee-title">100% Performance Guarantee</h3>
-            <p class="guarantee-text">
-                We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
-            </p>
-        </div>
-    </section>
-
-    <!-- Comparison Section -->
+    <!-- Why C-Suite Magazine (Moved to Top) -->
     <section class="comparison-section">
         <div class="container">
             <div class="section-header">
@@ -1260,19 +928,429 @@ const pricingHTML = `
                                 <td style="text-align: center;">Quarterly</td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
                             </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Comparison Table -->
+    <section class="features-comparison-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Package Features Comparison</h2>
+                <p class="section-subtitle">
+                    Compare all features across our three executive packages
+                </p>
+            </div>
+
+            <div class="features-table">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature<br><span class="feature-description">What's included</span></th>
+                                <th>Professional</th>
+                                <th>Authority</th>
+                                <th>Visionary</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <tr>
                                 <td>
-                                    <strong>Starting Price</strong><br>
-                                    <span class="feature-description">Investment required</span>
+                                    <strong>Profile Article Length</strong>
+                                    <span class="feature-description">In-depth executive profile optimized for SEO and thought leadership</span>
                                 </td>
-                                <td style="text-align: center;">$10,000+/month</td>
-                                <td style="text-align: center;">$3,500+</td>
-                                <td style="text-align: center;"><strong style="color: var(--primary-gold);">$2,500</strong></td>
+                                <td style="text-align: center;">Up to 4,000 words</td>
+                                <td style="text-align: center;">Up to 4,000 words</td>
+                                <td style="text-align: center;">Up to 4,000 words</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Digital Cover Feature</strong>
+                                    <span class="feature-description">Featured on magazine cover design</span>
+                                </td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Executive in Focus Placement</strong>
+                                    <span class="feature-description">Priority placement on magazine homepage</span>
+                                </td>
+                                <td style="text-align: center;">2 days</td>
+                                <td style="text-align: center;">4 days</td>
+                                <td style="text-align: center;">7 days</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Reprint Rights</strong>
+                                    <span class="feature-description">Use article across your marketing materials</span>
+                                </td>
+                                <td style="text-align: center;">Unlimited</td>
+                                <td style="text-align: center;">Unlimited</td>
+                                <td style="text-align: center;">Unlimited</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>⭐ Evergreen Content</strong>
+                                    <span class="feature-description">How long article stays published</span>
+                                </td>
+                                <td style="text-align: center;">Forever</td>
+                                <td style="text-align: center;">Forever</td>
+                                <td style="text-align: center;">Forever</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Search Engine Indexing</strong>
+                                    <span class="feature-description">Google, Bing, Yahoo visibility</span>
+                                </td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>⭐ AI Search Optimization</strong>
+                                    <span class="feature-description">ChatGPT, Gemini, and Grok optimization</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Performance Reports</strong>
+                                    <span class="feature-description">Analytics and engagement tracking</span>
+                                </td>
+                                <td style="text-align: center;">At campaign end</td>
+                                <td style="text-align: center;">At campaign end</td>
+                                <td style="text-align: center;">At campaign end</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Digital Certificate</strong>
+                                    <span class="feature-description">Framed certification of feature</span>
+                                </td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Images & Do-Follow Links</strong>
+                                    <span class="feature-description">SEO-boosting backlinks to your website</span>
+                                </td>
+                                <td style="text-align: center;">2 images & 2 links</td>
+                                <td style="text-align: center;">4 images & 4 links</td>
+                                <td style="text-align: center;">6 images & 6 links</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Guest Article Opportunities</strong>
+                                    <span class="feature-description">Additional thought leadership articles over 6 months at 25% discount</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;">4 articles</td>
+                                <td style="text-align: center;">4 articles</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Executive Profile Page</strong>
+                                    <span class="feature-description">Dedicated profile among global leaders</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Magazine Logo Usage</strong>
+                                    <span class="feature-description">Rights to use C-Suite Magazine branding</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Returning Client Discount</strong>
+                                    <span class="feature-description">Discount on future campaigns within 9 months</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;">25%</td>
+                                <td style="text-align: center;">25%</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>EDM Campaign</strong>
+                                    <span class="feature-description">Email blast to 100K+ subscribers</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;">Bonus</td>
+                                <td style="text-align: center;">Dedicated</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Social Media Amplification</strong>
+                                    <span class="feature-description">Meta & Partner Sites brand campaign</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Press Release Distribution</strong>
+                                    <span class="feature-description">Distributed to partner media outlets</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>LinkedIn Ads</strong>
+                                    <span class="feature-description">Paid promotion up to 100K views</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Article Revisions</strong>
+                                    <span class="feature-description">Number of revision rounds included</span>
+                                </td>
+                                <td style="text-align: center;">Up to 3</td>
+                                <td style="text-align: center;">Up to 3</td>
+                                <td style="text-align: center;">Up to 3</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Personal Branding Consultation</strong>
+                                    <span class="feature-description">60-minute strategy session</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Customer Success Manager</strong>
+                                    <span class="feature-description">Dedicated support contact</span>
+                                </td>
+                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
+                                <td style="text-align: center;">Priority</td>
+                                <td style="text-align: center;">VIP</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Package Overview Cards (No Prices, No CTAs) -->
+    <section class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Choose Your Growth Path</h2>
+                <p class="section-subtitle">
+                    Each tier is designed to match your ambitions. From establishing credibility to commanding global influence.
+                </p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Professional Tier -->
+                <div class="pricing-card tier-professional">
+                    <div class="availability-badge">⚡ 10 slots/quarter</div>
+                    <h3 class="tier-name">Professional</h3>
+                    <p class="tier-description">Perfect for executives establishing their thought leadership and digital presence.</p>
+
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">
+                                Up to 4,000 Word Profile Article
+                                <span class="feature-tooltip">ⓘ
+                                    <span class="tooltip-content">In-depth executive profile showcasing your expertise, achievements, and vision. Optimized for SEO and thought leadership.</span>
+                                </span>
+                            </span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">2 images & 2 do-follow links</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Up to 3 article revisions</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Digital Cover Feature</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Executive in Focus Placement (2 days)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Unlimited Reprint Rights</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">⭐ Evergreen Content (No Expiration)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Google, Bing, Yahoo Indexing</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Performance Report (at campaign end)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Framed Digital Certificate</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Authority Tier (Featured) -->
+                <div class="pricing-card tier-authority featured">
+                    <div class="tier-badge">Most Popular</div>
+                    <div class="availability-badge">🔥 7 slots/quarter</div>
+                    <h3 class="tier-name">Authority</h3>
+                    <p class="tier-description">For leaders ready to dominate their industry narrative and build lasting influence.</p>
+
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text"><strong>Everything in Professional, plus:</strong></span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">
+                                4 Guest Article Opportunities
+                                <span class="feature-tooltip">ⓘ
+                                    <span class="tooltip-content">Contribute four additional thought leadership articles over 6 months at 25% discount, maintaining ongoing visibility.</span>
+                                </span>
+                            </span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">4 images & 4 do-follow links</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Up to 3 article revisions</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Executive in Focus Placement (4 days)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">⭐ AI Search Optimization (ChatGPT, Gemini & Grok)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Executive Profile Among Global Leaders</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Magazine Logo Usage Rights</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">25% Discount on Next Campaign (9 months)</span>
+                        </li>
+                    </ul>
+
+                    <div class="bonus-section">
+                        <div class="bonus-title">🎁 Limited-Time Bonus</div>
+                        <ul class="bonus-list">
+                            <li>Complimentary EDM campaign to 100K+ subscribers</li>
+                            <li>Priority customer success manager</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Visionary Tier -->
+                <div class="pricing-card tier-visionary">
+                    <div class="availability-badge">💎 5 slots/quarter - VIP</div>
+                    <h3 class="tier-name">Visionary</h3>
+                    <p class="tier-description">For transformational leaders commanding attention across continents and industries.</p>
+
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text"><strong>Everything in Authority, plus:</strong></span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">
+                                Direct Reach to 4M+ Global C-Suite
+                                <span class="feature-tooltip">ⓘ
+                                    <span class="tooltip-content">Verified reach via Google Analytics and third-party certification. Includes CEOs, board members, and decision-makers worldwide.</span>
+                                </span>
+                            </span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">6 images & 6 do-follow links</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Up to 3 article revisions</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Meta & Partner Sites Brand Campaign</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Dedicated EDM Campaign Blast</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Executive in Focus Placement (7 days)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Performance Report (at campaign end)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="feature-text">Press Release Distribution (Partner Outlets)</span>
+                        </li>
+                    </ul>
+
+                    <div class="bonus-section">
+                        <div class="bonus-title">💎 VIP Exclusive Bonuses</div>
+                        <ul class="bonus-list">
+                            <li>Priority homepage placement extension (+30 days)</li>
+                            <li>Free guest article upgrade (standard → featured)</li>
+                            <li>Personal branding consultation (60 minutes)</li>
+                            <li>LinkedIn ads up to 100K views</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="guarantee-section">
+        <div class="container">
+            <div class="guarantee-icon">🛡️</div>
+            <h3 class="guarantee-title">100% Performance Guarantee</h3>
+            <p class="guarantee-text">
+                We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
+            </p>
         </div>
     </section>
 
@@ -1409,32 +1487,18 @@ const pricingHTML = `
         </div>
     </section>
 
-    <!-- Final CTA -->
-    <section class="final-cta">
-        <div class="container">
-            <h2 class="final-cta-title">Ready to Transform Your Executive Brand?</h2>
-            <p class="final-cta-subtitle">
-                Join 200+ global leaders who chose to amplify their influence. Limited slots available.
-            </p>
-            <div class="cta-buttons">
-                <a href="/contact" class="cta-primary">Schedule Your Strategy Call</a>
-                <a href="/contact" class="cta-secondary">Contact Us</a>
-            </div>
-        </div>
-    </section>
-
     <script>
         // FAQ Accordion
         document.querySelectorAll('.faq-question').forEach(question => {
             question.addEventListener('click', () => {
                 const faqItem = question.parentElement;
                 const isActive = faqItem.classList.contains('active');
-                
+
                 // Close all FAQ items
                 document.querySelectorAll('.faq-item').forEach(item => {
                     item.classList.remove('active');
                 });
-                
+
                 // Open clicked item if it wasn't active
                 if (!isActive) {
                     faqItem.classList.add('active');
