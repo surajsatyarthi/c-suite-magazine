@@ -114,16 +114,7 @@ const pricing2HTML = `
             pointer-events: none;
         }
 
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, var(--background-white));
-            pointer-events: none;
-        }
+        /* Removed blur transition for sharp margins */
 
         .hero-badge {
             display: inline-flex;
@@ -160,7 +151,7 @@ const pricing2HTML = `
 
         .hero-subtitle {
             font-size: clamp(16px, 2vw, 20px);
-            color: rgba(255, 255, 255, 0.9);
+            color: #ffffff;
             max-width: 900px;
             margin: 0 auto 40px;
             font-weight: 400;
@@ -194,7 +185,7 @@ const pricing2HTML = `
 
         .proof-label {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #ffffff;
             margin-top: 8px;
             font-weight: 500;
         }
@@ -228,7 +219,7 @@ const pricing2HTML = `
 
         /* Comparison Section */
         .comparison-section {
-            background: var(--background-grey);
+            background: var(--background-white);
             padding: 80px 0;
         }
 
@@ -315,7 +306,7 @@ const pricing2HTML = `
         /* Feature Comparison Table */
         .features-comparison-section {
             padding: 80px 0;
-            background: var(--background-white);
+            background: var(--background-grey);
         }
 
         .features-table {
@@ -588,7 +579,7 @@ const pricing2HTML = `
         /* Testimonials */
         .testimonials-section {
             padding: 80px 0;
-            background: var(--background-white);
+            background: var(--background-grey);
         }
 
         .testimonials-grid {
@@ -833,14 +824,15 @@ const pricing2HTML = `
     <section class="hero">
         <div class="container">
             <div class="hero-badge">
-                ✨ Trusted by 500+ Global C-Suite Leaders
+                ✨ Application Required — We Screen Every Executive
             </div>
             <h1 class="hero-title">
-                Executive Feature Packages:<br>
-                <span class="hero-title-accent">Your Brand, Amplified Globally</span>
+                Beat Your Competition<br>
+                <span class="hero-title-accent">Get Ranked in AI and Google</span><br>
+                Be Seen. Be Heard. Be Impactful.
             </h1>
             <p class="hero-subtitle">
-                Join the world's most influential CEOs, board members, and thought leaders who leveraged our platform to secure speaking engagements, board appointments, and $50M+ in new business opportunities.
+                100% Done-For-You PR campaign. From interview to publication in 14 days.
             </p>
 
             <div class="social-proof">
@@ -849,7 +841,7 @@ const pricing2HTML = `
                     <div class="proof-label">Global Readers</div>
                 </div>
                 <div class="proof-item">
-                    <div class="proof-number">500+</div>
+                    <div class="proof-number">200+</div>
                     <div class="proof-label">CXOs Featured</div>
                 </div>
                 <div class="proof-item">
@@ -865,7 +857,7 @@ const pricing2HTML = `
             <div class="alert-box">
                 <div class="alert-title">🎯 Performance Guaranteed</div>
                 <div class="alert-text">
-                    If we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost. All packages include 14-day article publication and minimal client effort (just a 30-minute interview).
+                    If we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost. All packages include 14-day article publication (based on 1 discussion).
                 </div>
             </div>
         </div>
@@ -892,34 +884,49 @@ const pricing2HTML = `
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Turnaround Time</strong></td>
+                                <td>
+                                    <strong>Turnaround Time</strong><br>
+                                    <span class="feature-description">From interview to publication</span>
+                                </td>
                                 <td style="text-align: center;">4-12 weeks</td>
                                 <td style="text-align: center;">3-8 weeks</td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span> 14 days</td>
                             </tr>
                             <tr>
-                                <td><strong>Reprint Rights</strong></td>
+                                <td>
+                                    <strong>Reprint Rights</strong><br>
+                                    <span class="feature-description">Use article in your marketing</span>
+                                </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span> Extra fees</td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span> Limited</td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span> Unlimited</td>
                             </tr>
                             <tr>
-                                <td><strong>AI Search Optimization</strong></td>
+                                <td>
+                                    <strong>AI Search Optimization</strong><br>
+                                    <span class="feature-description">ChatGPT, Gemini, Grok visibility</span>
+                                </td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
                                 <td style="text-align: center;"><span class="cross-icon">✗</span></td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> ChatGPT, Gemini, Grok</td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span> Optimized</td>
                             </tr>
                             <tr>
-                                <td><strong>Content Longevity</strong></td>
+                                <td>
+                                    <strong>Content Longevity</strong><br>
+                                    <span class="feature-description">How long article stays live</span>
+                                </td>
                                 <td style="text-align: center;">Temporary</td>
                                 <td style="text-align: center;">1-2 years</td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> Evergreen (Forever)</td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span> Forever</td>
                             </tr>
                             <tr>
-                                <td><strong>Monthly Reporting</strong></td>
+                                <td>
+                                    <strong>Performance Reports</strong><br>
+                                    <span class="feature-description">Analytics and metrics tracking</span>
+                                </td>
                                 <td style="text-align: center;">Basic metrics</td>
                                 <td style="text-align: center;">Quarterly</td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> Performance report at campaign end</td>
+                                <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1359,7 +1366,7 @@ const pricing2HTML = `
                 <div class="testimonial-card">
                     <div class="testimonial-stars">★★★★★</div>
                     <p class="testimonial-text">
-                        "Within 60 days of my feature, I received 3 speaking invitations and 2 board appointment inquiries. The ROI has been extraordinary—easily 50x what I invested."
+                        "After my feature, I received speaking invitations and board appointment inquiries. The visibility boost was exactly what my brand needed."
                     </p>
                     <div class="testimonial-author">
                         <div class="author-avatar">MR</div>
@@ -1373,7 +1380,7 @@ const pricing2HTML = `
                 <div class="testimonial-card">
                     <div class="testimonial-stars">★★★★★</div>
                     <p class="testimonial-text">
-                        "The quality of leads we received after my feature was exceptional. I closed a $2.3M partnership directly from someone who read my profile. Best marketing investment we've made."
+                        "The quality of leads we received after my feature was exceptional. We closed partnerships directly from people who read my profile. Best marketing investment we've made."
                     </p>
                     <div class="testimonial-author">
                         <div class="author-avatar">SP</div>
@@ -1462,7 +1469,7 @@ const pricing2HTML = `
             </div>
             <div class="faq-answer">
                 <div class="faq-answer-content">
-                    Minimal. We only require a 30-minute initial interview (phone or video) and 15-20 minutes for article review. Our expert writers and editorial team handle everything else—research, writing, SEO optimization, image selection, and distribution. We respect your time.
+                    Minimal. Based on 1 discussion (phone or video) and 15-20 minutes for article review. Our expert writers and editorial team handle everything else—research, writing, SEO optimization, image selection, and distribution.
                 </div>
             </div>
         </div>
