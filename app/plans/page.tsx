@@ -983,12 +983,12 @@ const pricing2HTML = `
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Typical Investment</strong><br>
-                                    <span class="feature-description">Cost comparison</span>
+                                    <strong>Pricing Model</strong><br>
+                                    <span class="feature-description">Payment structure</span>
                                 </td>
-                                <td style="text-align: center;">$10k-$50k/mo (Retainer)</td>
-                                <td style="text-align: center;">High / Variable</td>
-                                <td style="text-align: center; font-weight: 700; color: #10B981;">70-90% Lower (Flat Fee)</td>
+                                <td style="text-align: center;">Monthly Retainer</td>
+                                <td style="text-align: center;">Hourly / Variable</td>
+                                <td style="text-align: center; font-weight: 700; color: #10B981;">One-Time Flat Fee</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1409,6 +1409,42 @@ const pricing2HTML = `
                             <li>LinkedIn ads up to 100K impressions</li>
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add-Ons Section -->
+    <section class="addons-section" style="padding: 4rem 0; background-color: #f8f9fa;">
+        <div class="container">
+            <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="section-title">Customize Your Campaign</h2>
+                <p class="section-subtitle">Amplify your impact with these powerful add-ons available for all packages</p>
+            </div>
+            <div class="addons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <!-- Add-On 1 -->
+                <div class="addon-card" style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #eee; text-align: left;">
+                    <div class="addon-icon" style="font-size: 2rem; margin-bottom: 1rem;">📢</div>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Global Press Release</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Distribution to 500+ major news outlets including AP, MarketWatch, and Yahoo Finance.</p>
+                </div>
+                <!-- Add-On 2 -->
+                <div class="addon-card" style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #eee; text-align: left;">
+                    <div class="addon-icon" style="font-size: 2rem; margin-bottom: 1rem;">📧</div>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Dedicated EDM Blast</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Exclusive email campaign sent directly to your target industry leaders within our 100K+ database.</p>
+                </div>
+                <!-- Add-On 3 -->
+                <div class="addon-card" style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #eee; text-align: left;">
+                    <div class="addon-icon" style="font-size: 2rem; margin-bottom: 1rem;">🚀</div>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Social Boost Pack</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Guaranteed 50,000 additional impressions across LinkedIn and Meta for maximum visibility.</p>
+                </div>
+                <!-- Add-On 4 -->
+                <div class="addon-card" style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #eee; text-align: left;">
+                    <div class="addon-icon" style="font-size: 2rem; margin-bottom: 1rem;">⚡</div>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">48-Hour Rush</h3>
+                    <p style="color: #666; margin-bottom: 1rem;">Skip the queue. Expedited interview, drafting, and publication process within 2 business days.</p>
                 </div>
             </div>
         </div>
