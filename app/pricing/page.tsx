@@ -47,7 +47,7 @@ const pricing2HTML = `
 
             /* Backgrounds */
             --background-white: #ffffff;
-            --background-grey: #f8fafc;
+            --background-grey: #f3f4f6;
             --card-bg: #ffffff;
 
             /* Borders & Effects */
