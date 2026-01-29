@@ -978,17 +978,17 @@ const pricing2HTML = `
                                     <span class="feature-description">Analytics and metrics tracking</span>
                                 </td>
                                 <td style="text-align: center;">Basic metrics</td>
-                                <td style="text-align: center;">Quarterly</td>
+                                <td style="text-align: center;">Basic metrics</td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Performance Reports</strong><br>
-                                    <span class="feature-description">Analytics and metrics tracking</span>
+                                    <strong>Typical Investment</strong><br>
+                                    <span class="feature-description">Cost comparison</span>
                                 </td>
-                                <td style="text-align: center;">Basic metrics</td>
-                                <td style="text-align: center;">Basic metrics</td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
+                                <td style="text-align: center;">$10k-$50k/mo (Retainer)</td>
+                                <td style="text-align: center;">High / Variable</td>
+                                <td style="text-align: center; font-weight: 700; color: #10B981;">70-90% Lower (Flat Fee)</td>
                             </tr>
                         </tbody>
                     </table>
