@@ -46,9 +46,17 @@ export default function ContactPage() {
             <h1 className="text-5xl font-serif font-black mb-4 text-white heading-premium">
               Contact Us
             </h1>
-            <p className="text-xl text-white max-w-2xl mx-auto">
+            <p className="text-xl text-white max-w-2xl mx-auto mb-8">
               Submit your press release or reach out to the C-Suite Magazine team.
             </p>
+            <div className="flex justify-center">
+                <a href="/plans" className="inline-flex items-center gap-2 px-8 py-4 bg-[#c8ab3d] text-[#082945] font-bold rounded-lg hover:bg-[#d6b745] transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                    <span>Check Plan Details</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+            </div>
           </div>
         </div>
 
@@ -107,17 +115,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="mt-8 pt-8 border-t border-gray-200">
-                  <a href="/plans" className="block mb-6 p-4 bg-gradient-to-r from-[#c8ab3d]/10 to-[#b39935]/10 border border-[#c8ab3d]/30 rounded-lg hover:border-[#c8ab3d] transition-all group">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-1">Check Plan Details</h3>
-                        <p className="text-sm text-gray-600">View our executive feature plans and deliverables</p>
-                      </div>
-                      <svg className="w-5 h-5 text-[#c8ab3d] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </div>
-                  </a>
+
                   <h3 className="font-semibold text-gray-900 mb-4">Response Time</h3>
                   <p className="text-gray-600 text-sm">We typically respond within 24-48 business hours.</p>
                 </div>

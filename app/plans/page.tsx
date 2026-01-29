@@ -1423,11 +1423,7 @@ const pricing2HTML = `
             </div>
             <div class="addons-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
                 <!-- Add-On 1 -->
-                <div class="addon-card" style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #eee; text-align: left;">
-                    <div class="addon-icon" style="font-size: 2rem; margin-bottom: 1rem;">📢</div>
-                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Global Press Release</h3>
-                    <p style="color: #666; margin-bottom: 1rem;">Distribution to 500+ major news outlets including AP, MarketWatch, and Yahoo Finance.</p>
-                </div>
+                <!-- Add-On 1 Removed -->
                 <!-- Add-On 2 -->
                 <div class="addon-card" style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid #eee; text-align: left;">
                     <div class="addon-icon" style="font-size: 2rem; margin-bottom: 1rem;">📧</div>

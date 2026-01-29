@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getCategoryUrl } from '@/lib/urls'
 
 export default function Footer() {
   const currentYear = 2026
@@ -24,7 +25,7 @@ export default function Footer() {
             <h3 className="text-[#c8ab3d] font-bold uppercase text-[1rem] tracking-widest mb-6">Insights</h3>
             <ul className="space-y-4 text-[0.8125rem] text-gray-300">
               <li>
-                <Link href="/category/cxo-interview" className="hover:text-[#f4d875] transition-colors font-semibold">
+                <Link href={getCategoryUrl('cxo-interview')} className="hover:text-[#f4d875] transition-colors font-semibold">
                   CXO Interviews
                 </Link>
               </li>
@@ -51,17 +52,17 @@ export default function Footer() {
             <h3 className="text-[#c8ab3d] font-bold uppercase text-[1rem] tracking-widest mb-6">Topics</h3>
             <ul className="space-y-4 text-[0.8125rem] text-gray-300">
               <li>
-                <Link href="/category/leadership" className="hover:text-[#f4d875] transition-colors">
+                <Link href={getCategoryUrl('leadership')} className="hover:text-[#f4d875] transition-colors">
                   Leadership
                 </Link>
               </li>
               <li>
-                <Link href="/category/money-and-finance" className="hover:text-[#f4d875] transition-colors">
+                <Link href={getCategoryUrl('money-and-finance')} className="hover:text-[#f4d875] transition-colors">
                   Money & Finance
                 </Link>
               </li>
               <li>
-                <Link href="/category/science-technology" className="hover:text-[#f4d875] transition-colors">
+                <Link href={getCategoryUrl('science-technology')} className="hover:text-[#f4d875] transition-colors">
                   Science & Technology
                 </Link>
               </li>
@@ -77,6 +78,7 @@ export default function Footer() {
           <div className="flex flex-col">
             <h3 className="text-[#c8ab3d] font-bold uppercase text-[1rem] tracking-widest mb-6">Legal</h3>
             <div className="flex flex-col gap-3 text-[0.8125rem] text-gray-300">
+              <Link href="/plans" className="hover:text-[#f4d875] transition-colors">Plan Details</Link>
               <Link href="/contact" className="hover:text-[#f4d875] transition-colors">Contact Editorial</Link>
               <Link href="/privacy" className="hover:text-[#f4d875] transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-[#f4d875] transition-colors">Terms & Conditions</Link>
