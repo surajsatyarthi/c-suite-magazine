@@ -3,37 +3,17 @@
 import Navigation from '@/components/Navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
-import { useState } from 'react'
+import { useActionState, useEffect } from 'react'
+import { submitContactForm } from '@/app/actions/contact'
+
+const initialState = {
+  success: false,
+  message: '',
+}
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    position: '',
-    phone: '',
-    submissionType: 'press-release',
-    subject: '',
-    message: '',
-  })
-  
-  const [submitted, setSubmitted] = useState(false)
+  const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Form submitted:', formData)
-    }
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 5000)
-  }
   return (
     <>
       <Navigation />
@@ -127,22 +107,27 @@ export default function ContactPage() {
               <div className="bg-white p-8 rounded-lg shadow-md">
                 <h2 className="text-3xl font-serif font-bold text-gray-900 mb-6">Get in Touch</h2>
                 
-                {submitted && (
+                {state.success && (
                   <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg" role="status" aria-live="polite">
-                    <p className="text-green-800 font-medium">✓ Thank you! Your submission has been received.</p>
+                    <p className="text-green-800 font-medium">✓ {state.message}</p>
+                  </div>
+                )}
+                 {!state.success && state.message && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg" role="alert">
+                    <p className="text-red-800 font-medium">{state.message}</p>
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form action={formAction} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
-                      <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange}
+                      <input type="text" id="name" name="name" required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]" />
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                      <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange}
+                      <input type="email" id="email" name="email" required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]" />
                     </div>
                   </div>
@@ -150,12 +135,12 @@ export default function ContactPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="company" className="block text-sm font-semibold text-gray-700 mb-2">Company *</label>
-                      <input type="text" id="company" name="company" required value={formData.company} onChange={handleChange}
+                      <input type="text" id="company" name="company" required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]" />
                     </div>
                     <div>
                       <label htmlFor="position" className="block text-sm font-semibold text-gray-700 mb-2">Position *</label>
-                      <input type="text" id="position" name="position" required value={formData.position} onChange={handleChange}
+                      <input type="text" id="position" name="position" required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]" />
                     </div>
                   </div>
@@ -163,12 +148,12 @@ export default function ContactPage() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                      <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
+                      <input type="tel" id="phone" name="phone"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]" />
                     </div>
                     <div>
                       <label htmlFor="submissionType" className="block text-sm font-semibold text-gray-700 mb-2">Type *</label>
-                      <select id="submissionType" name="submissionType" required value={formData.submissionType} onChange={handleChange}
+                      <select id="submissionType" name="submissionType" required defaultValue="press-release"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]">
                         <option value="press-release">Press Release</option>
                         <option value="feature-request">Feature Request</option>
@@ -180,13 +165,13 @@ export default function ContactPage() {
 
                   <div>
                     <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
-                    <input type="text" id="subject" name="subject" required value={formData.subject} onChange={handleChange}
+                    <input type="text" id="subject" name="subject" required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d]" />
                   </div>
 
                   <div>
                     <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
-                    <textarea id="message" name="message" required rows={8} value={formData.message} onChange={handleChange}
+                    <textarea id="message" name="message" required rows={8}
                       placeholder="Provide details about your press release or inquiry..."
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c8ab3d] resize-none" />
                   </div>
@@ -195,8 +180,8 @@ export default function ContactPage() {
                     <p className="text-sm text-gray-600"><strong>Guidelines:</strong> Ensure content is newsworthy and relevant to C-level executives.</p>
                   </div>
 
-                  <button type="submit" className="w-full py-4 bg-[#082945] text-white font-bold text-lg rounded-lg hover:bg-[#0a3a5c] transition-colors">
-                    Submit for Review
+                  <button type="submit" disabled={isPending} className="w-full py-4 bg-[#082945] text-white font-bold text-lg rounded-lg hover:bg-[#0a3a5c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    {isPending ? 'Sending...' : 'Submit for Review'}
                   </button>
                 </form>
               </div>
