@@ -202,54 +202,24 @@ async function main() {
 
     // 4. Log Success
     try {
-        const { createClient } = require('next-sanity');
-        const client = createClient({
-            projectId: CONFIG.sanity.projectId,
-            dataset: CONFIG.sanity.dataset,
-            apiVersion: '2024-10-01',
-            useCdn: false,
-            token: CONFIG.sanity.authToken
+        const { logSystemStatus } = require('./utils/sanity-logger');
+        await logSystemStatus('backup-sanity', 'SUCCESS', 'Daily backup completed successfully.', { 
+            file: path.basename(filePath) 
         });
-        
-        await client.create({
-            _type: 'systemLog',
-            system: 'backup-sanity',
-            status: 'SUCCESS',
-            message: 'Daily backup completed successfully.',
-            timestamp: new Date().toISOString(),
-            metadata: JSON.stringify({ file: path.basename(filePath) })
-        });
-        console.log('✅ Logged success to Sanity.');
     } catch (logError) {
         console.error('⚠️ Failed to log success:', logError);
     }
-    
-    // Cleanup local file after successful upload (optional, but good for CI limits)
-    // In local dev we might want to keep it, but CI is ephemeral.
-    // For now we assume CI environment cleans up or we leave it for debugging.
     
   } catch (error) {
     console.error('\n💥 Pipeline failed:', error);
 
     // Log Failure
     try {
-        const { createClient } = require('next-sanity');
-        const client = createClient({
-            projectId: CONFIG.sanity.projectId,
-            dataset: CONFIG.sanity.dataset,
-            apiVersion: '2024-10-01',
-            useCdn: false,
-            token: CONFIG.sanity.authToken
+        const { logSystemStatus } = require('./utils/sanity-logger');
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        await logSystemStatus('backup-sanity', 'FAILURE', `Backup failed: ${errorMessage}`, { 
+            error: errorMessage 
         });
-        
-        await client.create({
-            _type: 'systemLog',
-            system: 'backup-sanity',
-            status: 'FAILURE',
-            message: error instanceof Error ? error.message : 'Unknown error',
-            timestamp: new Date().toISOString()
-        });
-        console.log('✅ Logged failure to Sanity.');
     } catch (logError) {
         console.error('⚠️ Failed to log failure:', logError);
     }
