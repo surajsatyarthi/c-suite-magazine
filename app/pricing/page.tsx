@@ -213,7 +213,7 @@ const pricingHTML = `
 
         .alert-text {
             font-size: 16px;
-            color: var(--text-secondary);
+            color: #ffffff;
             line-height: 1.7;
         }
 
