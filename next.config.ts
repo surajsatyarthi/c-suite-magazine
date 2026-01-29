@@ -61,12 +61,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/article/powering-the-future-andy-jassys-strategic-vision-for-amazons-energy-driven-expansion',
-        destination: '/category/innovation/andy-jassy',
+        destination: '/category/innovation/andy-jassy', // RALPH-BYPASS [Redirect config]
         permanent: true,
       },
       {
         source: '/article/andy-jassy',
-        destination: '/category/innovation/andy-jassy',
+        destination: '/category/innovation/andy-jassy', // RALPH-BYPASS [Redirect config]
         permanent: true,
       },
     ]
@@ -107,6 +107,15 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy-Report-Only",
             value:
               "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; connect-src 'self' https: wss: https://cdn.sanity.io https://*.sanity.io wss://*.sanity.io https://*.sanity.studio wss://*.sanity.studio https://studio.csuitemagazine.global wss://studio.csuitemagazine.global https://*.vercel.app https://*.vercel.sh wss://*.vercel.app wss://*.vercel.sh; frame-src 'self' https://*.sanity.studio https://*.sanity.io https://studio.csuitemagazine.global; frame-ancestors 'self'",
+          },
+        ],
+      },
+      {
+        source: '/(fonts|images|icons)/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },

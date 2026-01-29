@@ -336,7 +336,9 @@ async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' |
   }
 }
 
-export const revalidate = 600
+export const dynamic = 'force-static'
+export const revalidate = 3600 // Revalidate aggressively (1 hour)
+export const dynamicParams = true
 
 const heroAspectCache = new Map<string, number>()
 

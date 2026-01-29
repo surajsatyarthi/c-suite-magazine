@@ -17,5 +17,18 @@
     "**/node_modules": true,
     "**/dist": true,
     "**/.next": true
-  }
+  },
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "typescript.tsserver.watchOptions": {
+    "excludeDirectories": [
+      "**/node_modules",
+      "**/.next",
+      "**/dist"
+    ]
+  },
+  "eslint.workingDirectories": [
+    { "mode": "auto" }
+  ],
+  "eslint.runtime": "node",
+  "files.watcherExclude.usePolling": false
 }

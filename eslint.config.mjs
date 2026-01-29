@@ -4,6 +4,7 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 const eslintConfig = [
   {
     ignores: [
+        "node_modules/**",
         ".next/**",
         "out/**",
         "build/**",
@@ -11,7 +12,11 @@ const eslintConfig = [
         "next-env.d.ts",
         "scripts/**",
         "tmp/**",
-        "tmp-*.js"
+        "tmp-*.js",
+        "dist/**",
+        "coverage/**",
+        ".husky/**",
+        ".git/**"
     ]
   },
   {

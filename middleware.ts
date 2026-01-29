@@ -1,19 +1,31 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  const url = request.nextUrl
+export function middleware(req: NextRequest) {
+  const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
   
-  // Only normalize if there are uppercase characters
-  if (url.pathname !== url.pathname.toLowerCase()) {
-    url.pathname = url.pathname.toLowerCase()
-    return NextResponse.redirect(url, 308) // Permanent redirect
+  // List of bots to block to save compute
+  // These bots are known to be aggressive and provide little value to a content site
+  const forbiddenBots = [
+    'gptbot', 
+    'bytespider', 
+    'claudebot', 
+    'anthropic-ai', 
+    'omgili', 
+    'omgilibot',
+    'facebookexternalhit', // Optional: Blocks FB previews/scraping if high load
+    'mj12bot',
+    'semrushbot',
+    'dotbot'
+  ];
+
+  if (forbiddenBots.some(bot => userAgent.includes(bot))) {
+    return new NextResponse('Access Denied: Bot Traffic Blocked to Save Resources', { status: 403 });
   }
-  
-  return NextResponse.next()
+
+  return NextResponse.next();
 }
 
 export const config = {
-  // Only run on tag routes to minimize performance impact
-  matcher: '/tag/:path*',
-}
+  matcher: '/:path*',
+};

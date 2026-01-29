@@ -1,12 +1,12 @@
-# SUPREME RALPH CONSTITUTION (v3.1)
+# SUPREME RALPH CONSTITUTION (v3.3)
 
 ## SINGLE SOURCE OF TRUTH (SSoT) — OFFICIAL & ONLY VALID DOCUMENT
 
-**Effective Date:** January 25, 2026  
+**Effective Date:** January 30, 2026  
 **Authority:** This document is the **sole authoritative source** for all engineering, security, and operational protocols in this repository.
 
 **MANDATORY RULE:**  
-All previous documents (RALPH_OMNIBUS.md, MANDATORY_PROTOCOLS.md, RALPH_PROTOCOL.md, protocols.md, operational.md, world_class_engineering_standards.md, etc.) are **officially deprecated** and **must be deleted** after archiving.
+All previous documents (RALPH_OMNIBUS.md, MANDATORY_PROTOCOLS.md, RALPH_PROTOCOL.md, protocols.md, operational.md, world_class_engineering_standards.md, etc.) and specific gate addendums are **officially deprecated** and **must be deleted**.
 
 **Motto:** "Nullius in verba" — Take nobody's word for it.
 
@@ -32,16 +32,18 @@ Violation of any law = **P0 Protocol Breach**
 
 ### 2. THE 10 QUALITY GATES (Mandatory Lifecycle)
 
-1. **Gate 1** – Physical Audit (`grep`, `view_file`)
-2. **Gate 2** – Logic Mapping (Identify all consumers)
-3. **Gate 3** – Blueprint (`implementation_plan.md` + User Approval)
-4. **Gate 4** – Research Gate (Minimum 2 web searches + validation)
-5. **Gate 5** – Cognitive Pause + 3 Safety Questions
-6. **Gate 6** – Static Analysis (trufflehog, audit-ci, eslint)
-7. **Gate 7** – TDD Proof (Vitest + Playwright)
-8. **Gate 8** – Sanity Schema Gate (Deploy schema → Studio refresh)
-9. **Gate 9** – UI Proof (Sanity Studio + Screenshots)
-10. **Gate 10** – Watchtower (24h post-deploy monitoring)
+1.  **Gate 1** – Physical Audit (`grep`, `view_file`, `curl`)
+2.  **Gate 2** – Logic Mapping (Identify all consumers + 3 web searches)
+3.  **Gate 3** – Blueprint (`implementation_plan.md` + User Approval)
+4.  **Gate 4** – Implementation (Adhere strictly to approved Blueprint)
+5.  **Gate 5** – Cognitive Pause + 3 Safety Questions
+6.  **Gate 6** – Static Analysis (trufflehog, audit-ci, eslint)
+7.  **Gate 6.5** – **Code Verification** (Run `git diff --cached --quiet` to ensure actual changes exist)
+8.  **Gate 7** – TDD Proof (Vitest + Playwright + `pnpm build`)
+9.  **Gate 8** – Sanity Schema Gate (Deploy schema → Studio refresh)
+10. **Gate 9** – UI Proof (Sanity Studio + Screenshots)
+11. **Gate 9.5** – **Production Verification** (Wait for Vercel READY + Visual proof on production URL)
+12. **Gate 10** – Watchtower (24h post-deploy monitoring: H0, H6, H12, H24)
 
 ### 3. SANITY CMS PROTOCOLS
 
@@ -57,6 +59,7 @@ Violation of any law = **P0 Protocol Breach**
 
 ### 5. CHANGE LOG
 
+- v3.3 — Integrated Gate 6.5 and 9.5 into SSoT; deprecated separate addendums (Jan 30, 2026)
 - v3.2 — Added Appendix A: Git Forensics & Debugging Protocols (Jan 28, 2026)
 - v3.1 — Major cleanup, stronger SSoT language, deletion mandate (Jan 25, 2026)
 
@@ -65,7 +68,7 @@ Violation of any law = **P0 Protocol Breach**
 ## APPENDIX A: GIT FORENSICS & DEBUGGING PROTOCOLS
 
 **Origin:** Lessons from Golden Card RCA (Jan 28, 2026)  
-**Incident:** Critical UI component "disappeared" from production. Root cause: forgotten git stash from 4 days prior.
+**Incident:** Critical UI component "disappeared" from production. Root cause: forgotten git stash.
 
 ### A.1 PHASE 0: STATE VALIDATION (MANDATORY FIRST STEP)
 
@@ -87,7 +90,15 @@ git log --all --oneline --since="30 days ago"
 
 **Rationale:** Code "disappearances" are often **non-integrations** (never merged), not **regressions** (deleted).
 
-### A.2 STASH MANAGEMENT PROTOCOL
+### A.2 PRODUCTION VERIFICATION WORKFLOW (GATE 9.5)
+
+1.  **Wait for Vercel Deployment**: Min 90s.
+2.  **Check Status**: `curl -s https://api.vercel.com/v6/deployments?projectId=<ID> -H "Authorization: Bearer $T" | jq '.deployments[0].state'`
+3.  **Physical Verification**: Curl production HTML and check for specific changes.
+4.  **Screenshot Proof**: Mandatory screenshot showing URL, timestamp, and the change.
+5.  **Report**: Create `docs/reports/production_verification_${ISSUE_NUM}.md`.
+
+### A.3 STASH MANAGEMENT PROTOCOL
 
 **Before Stashing Work:**
 
@@ -101,7 +112,7 @@ git log --all --oneline --since="30 days ago"
 - [ ] Create draft PR if work is substantial
 - [ ] Update issue status to "PAUSED" with stash reference
 
-### A.3 GIT ALIASES (ADD TO .gitconfig)
+### A.4 GIT ALIASES (ADD TO .gitconfig)
 
 ```ini
 [alias]
@@ -110,7 +121,7 @@ git log --all --oneline --since="30 days ago"
   stash-forgotten = "!git stash list --date=format:'%Y-%m-%d' | awk -F: '{print $1, $NF}' | grep -v $(date +%Y-%m-%d)"
 ```
 
-### A.4 PRE-DEPLOYMENT STASH AUDIT
+### A.5 PRE-DEPLOYMENT STASH AUDIT
 
 **Checklist:** Before marking ANY issue as RESOLVED:
 
@@ -118,7 +129,7 @@ git log --all --oneline --since="30 days ago"
 - [ ] Verify all feature branches for `<issue-number>` are merged or archived
 - [ ] Check stash list for WIP commits related to current issue
 
-### A.5 TIMELINE RECONSTRUCTION QUESTIONS
+### A.6 TIMELINE RECONSTRUCTION QUESTIONS
 
 **Ask User Before Debugging:**
 
@@ -128,15 +139,15 @@ git log --all --oneline --since="30 days ago"
 
 **Why:** Prevents assumption failures (assuming "working code" was in `main`).
 
-### A.6 COGNITIVE FAILURE MODES (ANTI-PATTERNS)
+### A.7 COGNITIVE FAILURE MODES (ANTI-PATTERNS)
 
 | Failure Mode                | Description                                    | Prevention                                           |
 | --------------------------- | ---------------------------------------------- | ---------------------------------------------------- |
 | **Assumption Failure**      | Assuming reported "working code" was deployed  | Always verify deployment history vs. local branches  |
 | **Search Strategy Failure** | Only checking commit history, ignoring stashes | Always run Phase 0 first (stash list + branch check) |
-| **Communication Failure**   | Not asking clarifying questions about state    | Use Timeline Reconstruction Questions (A.5)          |
+| **Communication Failure**   | Not asking clarifying questions about state    | Use Timeline Reconstruction Questions (A.6)          |
 
-### A.7 EMERGENCY STASH RECOVERY
+### A.8 EMERGENCY STASH RECOVERY
 
 ```bash
 # Inspect stash contents
@@ -153,7 +164,7 @@ git stash pop stash@{N}
 git checkout --theirs <config-files>  # Keep updated configs
 ```
 
-### A.8 INTEGRATION WITH 10 GATES
+### A.9 INTEGRATION WITH 10 GATES
 
 **Gate 1 Enhancement:** Physical Audit now includes:
 

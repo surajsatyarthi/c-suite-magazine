@@ -1,9 +1,22 @@
 # Exclude from indexing to prevent crashes
 node_modules/
+**/node_modules/**
 .next/
+**/.next/**
 dist/
+**/dist/**
 build/
+**/build/**
 coverage/
 .git/
+**/.git/**
 *.log
 .sanity/
+**/.sanity/**
+.vercel/
+**/.vercel/**
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+*.tsbuildinfo
+

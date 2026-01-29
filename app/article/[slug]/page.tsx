@@ -11,10 +11,11 @@ const client = createClient({
 
 // Enable ISR (Incremental Static Regeneration) with 10-minute revalidation
 // This allows the route to handle dynamic slugs not pre-generated at build time
-export const revalidate = 600
+// Enable ISR (Incremental Static Regeneration) with 1-hour revalidation
+export const revalidate = 3600
 
 // Allow dynamic params to be rendered on-demand (not just build-time paths)
-// Without this, Next.js will return 404 for any slug not in generateStaticParams
+// Without this, Next.js will return 404 for a slug not in generateStaticParams
 export const dynamicParams = true
 
 export default async function ArticleRedirectPage({ params }: { params: Promise<{ slug: string }> }) {
