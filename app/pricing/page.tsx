@@ -1,4 +1,6 @@
 import { Metadata } from 'next'
+import Navigation from '@/components/Navigation'
+import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Executive Feature Packages - C-Suite Magazine',
@@ -15,7 +17,9 @@ export default function Pricing2Page() {
       {/* SEO: Additional noindex safeguard */}
       <meta name="robots" content="noindex, nofollow" />
 
+      <Navigation />
       <div dangerouslySetInnerHTML={{ __html: pricing2HTML }} />
+      <Footer />
     </>
   )
 }
@@ -219,13 +223,8 @@ const pricing2HTML = `
 
         /* Comparison Section */
         .comparison-section {
-            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
+            background: var(--background-white);
             padding: 80px 0;
-        }
-
-        .comparison-section .section-title,
-        .comparison-section .section-subtitle {
-            color: #ffffff;
         }
 
         .section-header {
@@ -311,7 +310,12 @@ const pricing2HTML = `
         /* Feature Comparison Table */
         .features-comparison-section {
             padding: 80px 0;
-            background: var(--background-white);
+            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
+        }
+
+        .features-comparison-section .section-title,
+        .features-comparison-section .section-subtitle {
+            color: #ffffff;
         }
 
         .features-table {
@@ -362,12 +366,7 @@ const pricing2HTML = `
         /* Pricing Section */
         .pricing-section {
             padding: 80px 0;
-            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
-        }
-
-        .pricing-section .section-title,
-        .pricing-section .section-subtitle {
-            color: #ffffff;
+            background: var(--background-white);
         }
 
         .pricing-grid {
@@ -727,12 +726,17 @@ const pricing2HTML = `
         }
 
         /* Guarantee Section */
+        .guarantee-wrapper {
+            background: linear-gradient(to bottom right, #2b6cb0, #020f1a);
+            padding: 80px 0;
+        }
+
         .guarantee-section {
             max-width: 800px;
-            margin: 60px auto;
+            margin: 0 auto;
             padding: 40px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
-            border: 2px solid #10B981;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             text-align: center;
         }
@@ -748,13 +752,13 @@ const pricing2HTML = `
             font-weight: 400;
             line-height: 31px;
             margin-bottom: 16px;
-            color: #10B981;
+            color: #ffffff;
         }
 
         .guarantee-text {
             font-size: 18px;
             line-height: 1.7;
-            color: var(--text-secondary);
+            color: #ffffff;
         }
 
         /* Animations */
@@ -1362,13 +1366,15 @@ const pricing2HTML = `
     </section>
 
     <!-- Guarantee Section -->
-    <section class="guarantee-section">
+    <section class="guarantee-wrapper">
         <div class="container">
-            <div class="guarantee-icon">🛡️</div>
-            <h3 class="guarantee-title">100% Performance Guarantee</h3>
-            <p class="guarantee-text">
-                We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
-            </p>
+            <div class="guarantee-section">
+                <div class="guarantee-icon">🛡️</div>
+                <h3 class="guarantee-title">100% Performance Guarantee</h3>
+                <p class="guarantee-text">
+                    We're so confident in our platform's ability to deliver results that if we don't meet our agreed performance benchmarks within 90 days, we'll run a bonus campaign at no cost.
+                </p>
+            </div>
         </div>
     </section>
 
