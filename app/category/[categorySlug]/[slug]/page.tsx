@@ -5,8 +5,8 @@ import OptimizedImage from '@/components/OptimizedImage'
 import CXOOptimizedImage from '@/components/CXOOptimizedImage'
 import fs from 'fs'
 import path from 'path'
-import dynamic from 'next/dynamic'
-const ArticleProgress = dynamic(() => import('@/components/ArticleProgress'))
+import nextDynamic from 'next/dynamic'
+const ArticleProgress = nextDynamic(() => import('@/components/ArticleProgress'))
 import ReadMoreArticles from '@/components/ReadMoreArticles'
 import Link from 'next/link'
 import EditorialBrandAvatar from "@/components/EditorialBrandAvatar";

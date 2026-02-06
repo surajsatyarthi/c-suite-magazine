@@ -84,6 +84,12 @@ export default function ContactPage() {
                         <p>Za'abeel 2</p>
                         <p>Dubai, United Arab Emirates</p>
                         <div className="h-px bg-gray-200 my-3" />
+                        <h4 className="text-lg font-serif font-bold text-gray-900">Australia</h4>
+                        <p className="font-medium text-gray-800">Adelaide Office</p>
+                        <p>Hub North Adelaide</p>
+                        <p>Level 1, 74 O'Connell Street</p>
+                        <p>North Adelaide, SA 5006</p>
+                        <div className="h-px bg-gray-200 my-3" />
                         <h4 className="text-lg font-serif font-bold text-gray-900">India</h4>
                         <p className="font-medium text-gray-800">Gurugram Office</p>
                         <p>C 1620, 4th Floor, Peach Tree Road,</p>
