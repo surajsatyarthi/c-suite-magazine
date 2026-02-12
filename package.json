@@ -36,7 +36,9 @@
     "sanity:restore": "sanity dataset import $BACKUP_FILE --dataset production --replace --missing --yes",
     "backfill-data": "tsx scripts/backfill-article-data.ts",
     "optimize:heroes": "node scripts/precompute-hero-aspects.js",
-    "prepare": "husky && husky install"
+    "prepare": "husky && husky install",
+    "sync:protocols": "node scripts/sync-protocols.js",
+    "sync:protocols:init": "node scripts/sync-protocols.js --init"
   },
   "engines": {
     "node": "22.x"

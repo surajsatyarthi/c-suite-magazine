@@ -49,3 +49,7 @@ exports/backups/
 .env*.local
 /.credentials/
 gsc-credentials.json
+
+# Protocol sync (synced from GitHub)
+/.agent
+/.protocol-cache
