@@ -972,15 +972,7 @@ const pricing2HTML = `
                                 <td style="text-align: center;">1-2 years</td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span> Forever</td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <strong>Performance Reports</strong><br>
-                                    <span class="feature-description">Analytics and metrics tracking</span>
-                                </td>
-                                <td style="text-align: center;">Basic metrics</td>
-                                <td style="text-align: center;">Basic metrics</td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span> At campaign end</td>
-                            </tr>
+
                             <tr>
                                 <td>
                                     <strong>Pricing Model</strong><br>
@@ -1082,15 +1074,7 @@ const pricing2HTML = `
                                 <td style="text-align: center;"><span class="check-icon">✓</span></td>
                                 <td style="text-align: center;"><span class="check-icon">✓</span></td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <strong>Performance Reports</strong>
-                                    <span class="feature-description">Analytics and engagement tracking</span>
-                                </td>
-                                <td style="text-align: center;">At campaign end</td>
-                                <td style="text-align: center;">At campaign end</td>
-                                <td style="text-align: center;">At campaign end</td>
-                            </tr>
+
                             <tr>
                                 <td>
                                     <strong>Digital Certificate</strong>
@@ -1199,15 +1183,7 @@ const pricing2HTML = `
                                 <td style="text-align: center;">Up to 3</td>
                                 <td style="text-align: center;">Up to 3</td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <strong>Personal Branding Consultation</strong>
-                                    <span class="feature-description">60-minute strategy session</span>
-                                </td>
-                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
-                                <td style="text-align: center;"><span class="cross-icon">✗</span></td>
-                                <td style="text-align: center;"><span class="check-icon">✓</span></td>
-                            </tr>
+
                             <tr>
                                 <td>
                                     <strong>Customer Success Manager</strong>
