@@ -1255,10 +1255,7 @@ const pricing2HTML = `
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">Google, Bing, Yahoo Indexing</span>
                         </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Performance Report (at campaign end)</span>
-                        </li>
+
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">Framed Digital Certificate</span>
@@ -1366,10 +1363,7 @@ const pricing2HTML = `
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">Executive in Focus Placement (7 days)</span>
                         </li>
-                        <li class="feature-item">
-                            <span class="feature-icon">✓</span>
-                            <span class="feature-text">Performance Report (at campaign end)</span>
-                        </li>
+
                         <li class="feature-item">
                             <span class="feature-icon">✓</span>
                             <span class="feature-text">Press Release Distribution (Partner Outlets)</span>
@@ -1381,7 +1375,7 @@ const pricing2HTML = `
                         <ul class="bonus-list">
                             <li>Priority homepage placement extension (+30 days)</li>
                             <li>Free guest article upgrade (standard → featured)</li>
-                            <li>Personal branding consultation (60 minutes)</li>
+
                             <li>LinkedIn ads up to 100K impressions</li>
                         </ul>
                     </div>
