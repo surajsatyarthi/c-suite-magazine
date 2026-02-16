@@ -9,9 +9,16 @@ jobs:
   sentinel:
     runs-on: ubuntu-latest
     env:
+      # Email Configuration
       EMAIL_USER: ${{ secrets.EMAIL_USER }}
       EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
       EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      # Sanity Configuration
+      NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
+      NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET }}
+      NEXT_PUBLIC_SANITY_API_VERSION: ${{ secrets.NEXT_PUBLIC_SANITY_API_VERSION }}
+      SANITY_WRITE_TOKEN: ${{ secrets.SANITY_WRITE_TOKEN }}
+      # Google Search Console
       GOOGLE_SEARCH_CONSOLE_JSON: ${{ secrets.GOOGLE_SEARCH_CONSOLE_JSON }}
 
     steps:
