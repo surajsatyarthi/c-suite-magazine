@@ -53,3 +53,4 @@ gsc-credentials.json
 # Protocol sync (synced from GitHub)
 /.agent
 /.protocol-cache
+.env.local
