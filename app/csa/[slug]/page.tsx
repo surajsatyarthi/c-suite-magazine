@@ -16,6 +16,7 @@ import EditorialBrandAvatar from "@/components/EditorialBrandAvatar";
 // dynamic already imported above
 import Ad from "@/components/Ad";
 import ScrollTriggerAd from "@/components/ScrollTriggerAd";
+const CSAPopupTrigger = dynamic(() => import("@/components/CSAPopupTrigger"));
 import SocialShare from "@/components/SocialShare";
 import PortableBody from "@/components/PortableBody";
 // View tracking disabled per marketing policy
@@ -836,6 +837,14 @@ export default async function CompanySponsoredArticlePage(props: {
                     {/* Disable popup for Juggernaut articles */}
                     {!isCompanySponsored && !isJuggernaut && (
                       <ScrollTriggerAd />
+                    )}
+                    {/* CSA Popup Ad: fire at 50% scroll for company-sponsored articles with a popup configured */}
+                    {isCompanySponsored && post.popupAd?.image && post.popupAd?.targetUrl && (
+                      <CSAPopupTrigger
+                        imageUrl={urlFor(post.popupAd.image).width(800).url()}
+                        targetUrl={post.popupAd.targetUrl}
+                        alt={post.popupAd.alt || 'Sponsored'}
+                      />
                     )}
                   </div>
 
