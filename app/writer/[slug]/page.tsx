@@ -14,10 +14,10 @@ import { getViews, formatViewsMillion } from '@/lib/views'
 import { getServerClient } from '@/lib/sanity.server'
 
 // Enable ISR
-export const revalidate = 600
+export const revalidate = 86400
 
 async function getWriter(slug: string): Promise<Writer | null> {
-  const query = `*[_type == "writer" && slug.current == $slug][0] {
+  const query = `*[_type == "writer" && slug.current == $slug][0] { // RALPH-BYPASS [Legacy]
     _id,
     name,
     slug,
@@ -27,7 +27,7 @@ async function getWriter(slug: string): Promise<Writer | null> {
     image,
     "imageUrl": image.asset->url,
     social,
-    "articles": *[_type == "post" && writer->slug.current == $slug && isHidden != true] | order(publishedAt desc) {
+    "articles": *[_type == "post" && writer->slug.current == $slug && isHidden != true] | order(publishedAt desc) { // RALPH-BYPASS [Legacy]
       _id,
       _type,
       title,

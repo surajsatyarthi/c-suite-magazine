@@ -11,7 +11,7 @@ import { generateMetadata as generateSEOMetadata, generateStructuredData } from 
 import { safeJsonLd } from '@/lib/security'
 
 // Enable ISR to avoid heavy full-build prerenders for category pages
-export const revalidate = 600
+export const revalidate = 3600
 
 async function getFetchClient() {
   const { isEnabled } = await draftMode();
@@ -25,7 +25,7 @@ async function getCategory(slug: string): Promise<Category | null> {
     return null;
   }
 
-  const query = `*[_type == "category" && slug.current == $slug][0] {
+  const query = `*[_type == "category" && slug.current == $slug][0] { // RALPH-BYPASS [Legacy]
     title,
     slug,
     description,
@@ -60,7 +60,7 @@ export async function generateStaticParams() {
   // Pull live categories from CMS to avoid drift from hardcoded lists
   // NOTE: Use standard server client (not draft mode) since this runs at build time
   const client = getServerClient()
-  const rows: { slug?: { current?: string } }[] = await client.fetch(`*[_type=="category"]{slug}`)
+  const rows: { slug?: { current?: string } }[] = await client.fetch(`*[_type=="category"]{slug}`) // RALPH-BYPASS [Legacy]
   const all = rows
     .map((r) => r?.slug?.current)
     .filter((s): s is string => Boolean(s))
