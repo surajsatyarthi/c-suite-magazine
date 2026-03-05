@@ -407,7 +407,7 @@ async function getTrendingPosts(): Promise<
   }
 }
 
-export const revalidate = 600;
+export const revalidate = 3600;
 
 const heroAspectCache = new Map<string, number>();
 
