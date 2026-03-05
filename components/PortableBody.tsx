@@ -71,7 +71,7 @@ const components: PortableTextComponents = {
       const alt = (value as any)?.alt || 'Image'
       const targetUrl = (value as any)?.targetUrl
       const caption = (value as any)?.caption
-      const isPopupTrigger = (value as any)?.isPopupTrigger
+      const isPopupTrigger = (value as any)?.isPopupTrigger || (value as any)?.triggersPopup
 
       if (isPopupTrigger) {
         return (
