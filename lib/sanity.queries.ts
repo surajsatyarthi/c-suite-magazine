@@ -51,14 +51,16 @@ export async function getTagPosts(originalTag: string) {
 }
 
 /**
- * Fetch global site settings (Singleton).
+ * CACHED: Fetch global site settings (Singleton).
+ * Wrapped in React cache to prevent redundant layout requests.
  */
-export async function getSiteSettings() {
+export const getSiteSettings = cache(async () => {
   const query = `*[_id == "siteSettings"][0]{
     title,
     description,
     keywords,
     "ogImage": ogImage.asset->url
   }`
-  return getServerClient().fetch(query)
-}
+  // Revalidate globally once an hour
+  return getServerClient().fetch(query, {}, { next: { revalidate: 3600 } })
+})
