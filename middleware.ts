@@ -27,5 +27,17 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: '/:path*',
+  // Ensure the middleware only runs on actual page routes, not static assets or API calls
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
+     * - images/ (public images folder)
+     * - fonts/ (public fonts folder)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|images|fonts).*)',
+  ],
 };
