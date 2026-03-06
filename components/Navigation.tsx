@@ -76,27 +76,46 @@ export default function Navigation() {
   const [allCategories, setAllCategories] = useState<Array<{ title: string, slug: string }>>([])
   const scrollContainerRef = React.useRef<HTMLElement>(null)
   const [isScrollPaused, setIsScrollPaused] = useState(false)
+  const [isNavVisible, setIsNavVisible] = useState(true)
 
-  // Fetch categories with articles (server-side via API)
+  // Fetch categories — cache in sessionStorage to avoid re-fetching on every page
   useEffect(() => {
     async function fetchCategories() {
       try {
+        const cached = sessionStorage.getItem('csuite:categories')
+        if (cached) {
+          const parsed = JSON.parse(cached)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setAllCategories(parsed)
+            return
+          }
+        }
         const res = await fetch('/api/categories')
         const data = await res.json()
         const cats = Array.isArray(data?.categories) ? data.categories : []
         if (cats.length) {
           setAllCategories(cats)
-          return
+          sessionStorage.setItem('csuite:categories', JSON.stringify(cats))
         }
       } catch (error) {
         console.error('Failed to fetch categories:', error)
       }
-      setAllCategories([])
     }
     fetchCategories()
   }, [])
 
-  // Auto-scroll with pause on hover/click
+  // Pause scroll animation when nav is not visible (off-screen) to save battery
+  useEffect(() => {
+    if (!scrollContainerRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsNavVisible(entry.isIntersecting),
+      { threshold: 0 }
+    )
+    observer.observe(scrollContainerRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  // Auto-scroll with pause on hover/click/off-screen
   useEffect(() => {
     if (!scrollContainerRef.current) return
     
@@ -106,7 +125,7 @@ export default function Navigation() {
     const scrollSpeed = 0.5 // pixels per frame
     
     const animate = () => {
-      if (!isScrollPaused && container) {
+      if (!isScrollPaused && isNavVisible && container) {
         scrollPosition += scrollSpeed
         
         // Reset when we've scrolled halfway (for infinite loop effect)
@@ -128,7 +147,7 @@ export default function Navigation() {
         cancelAnimationFrame(animationId)
       }
     }
-  }, [isScrollPaused])
+  }, [isScrollPaused, isNavVisible])
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -220,7 +239,6 @@ export default function Navigation() {
                     <Link
                       key={`first-${category.slug}`}
                       href={categoryPath}
-                      prefetch
                       className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${isActive
                         ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]'
                         : 'text-[#082945] hover:text-[#9d7e2a] active:text-[#7a6420]'
@@ -240,7 +258,6 @@ export default function Navigation() {
                     <Link
                       key={`second-${category.slug}`}
                       href={categoryPath}
-                      prefetch
                       className={`text-sm font-medium whitespace-nowrap transition-colors px-4 py-3 ${isActive
                         ? 'text-[#c8ab3d] border-b-2 border-[#c8ab3d]'
                         : 'text-[#082945] hover:text-[#9d7e2a] active:text-[#7a6420]'

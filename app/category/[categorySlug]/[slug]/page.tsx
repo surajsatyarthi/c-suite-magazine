@@ -337,7 +337,7 @@ async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' |
 }
 
 export const dynamic = 'force-static'
-export const revalidate = 3600 // Revalidate aggressively (1 hour)
+export const revalidate = 604800 // 1 week - content rarely changes
 export const dynamicParams = true
 
 const heroAspectCache = new Map<string, number>()
@@ -736,7 +736,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                     )}
 
                     {/* Body */}
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody value={cleanedBody} interviewMode={interviewMode} />
                     </div>
 
@@ -950,7 +950,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                       </div>
                     )
                     }
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody value={[]} interviewMode={false} />
                     </div>
                   </div >

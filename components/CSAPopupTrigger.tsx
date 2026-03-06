@@ -26,7 +26,9 @@ export default function CSAPopupTrigger({ imageUrl, targetUrl, alt }: CSAPopupTr
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const handleScroll = () => {
+      let ticking = false
+
+      const checkScroll = () => {
         if (hasTriggered.current || isOpen) return
 
         const scrollTop = window.scrollY
@@ -38,16 +40,26 @@ export default function CSAPopupTrigger({ imageUrl, targetUrl, alt }: CSAPopupTr
 
         if (scrollPercent > 0.5 && isLocaleReady()) {
           hasTriggered.current = true
-          // skipCooldown=true: CSA sponsors paid for guaranteed popup display
           openAd(
             { image: imageUrl, href: targetUrl, title: alt || 'Sponsored' },
-            true // skipCooldown
+            true // skipCooldown: CSA sponsors paid for guaranteed popup display
           )
         }
       }
 
+      const handleScroll = () => {
+        if (hasTriggered.current) return // bail early before RAF if already triggered
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            checkScroll()
+            ticking = false
+          })
+          ticking = true
+        }
+      }
+
       window.addEventListener('scroll', handleScroll, { passive: true })
-      handleScroll() // Check immediately in case already scrolled
+      checkScroll() // Check immediately in case already scrolled
       return () => window.removeEventListener('scroll', handleScroll)
     }, 1000)
 

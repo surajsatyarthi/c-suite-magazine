@@ -408,7 +408,7 @@ async function getTrendingPosts(): Promise<
   }
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800 // 1 week - articles rarely change
 
 const heroAspectCache = new Map<string, number>();
 
@@ -823,7 +823,7 @@ export default async function CompanySponsoredArticlePage(props: {
                     )}
 
                     {/* Body */}
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody
                           value={cleanedBody}
                           interviewMode={interviewMode}
@@ -1139,7 +1139,7 @@ export default async function CompanySponsoredArticlePage(props: {
                         />
                       </div>
                     )}
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody value={[]} interviewMode={false} />
                     </div>
                   </div>
