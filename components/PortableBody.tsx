@@ -75,7 +75,7 @@ const components: PortableTextComponents = {
       const img = (
         <div className="relative w-full my-8">
           <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden">
-            <OptimizedImage src={src} alt={alt} fill className="object-contain" sizes="100vw" />
+            <OptimizedImage src={src} alt={alt} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 800px" />
           </div>
           {caption && (
             <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
@@ -520,7 +520,7 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
   if (blockCount < minBlocksForMidAd) {
     // Short content: render full content without inline ads (ads only in sidebar)
     return (
-      <div className="prose prose-lg max-w-3xl mx-auto">
+      <div className="prose prose-base md:prose-lg max-w-3xl mx-auto">
         <PortableText value={finalBlocks} components={components} />
       </div>
     )
@@ -532,7 +532,7 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
   const secondHalf = normalized.slice(midIndex)
 
   return (
-    <div className="prose prose-lg max-w-3xl mx-auto">
+    <div className="prose prose-base md:prose-lg max-w-3xl mx-auto">
       <PortableText value={interviewModeResolved ? formatInterviewQA(firstHalf) : firstHalf} components={components} />
       <PortableText value={interviewModeResolved ? formatInterviewQA(secondHalf) : secondHalf} components={components} />
     </div>

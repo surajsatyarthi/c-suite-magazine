@@ -125,7 +125,7 @@ export default function AdInterstitialV2() {
             >
                 <button
                     onClick={handleClose}
-                    className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-20 backdrop-blur-md"
+                    className="absolute top-2 right-2 min-w-[44px] min-h-[44px] flex items-center justify-center bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors z-20 backdrop-blur-md"
                     aria-label="Close ad"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

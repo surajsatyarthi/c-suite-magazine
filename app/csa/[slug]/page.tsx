@@ -823,7 +823,7 @@ export default async function CompanySponsoredArticlePage(props: {
                     )}
 
                     {/* Body */}
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody
                           value={cleanedBody}
                           interviewMode={interviewMode}
@@ -1139,7 +1139,7 @@ export default async function CompanySponsoredArticlePage(props: {
                         />
                       </div>
                     )}
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody value={[]} interviewMode={false} />
                     </div>
                   </div>

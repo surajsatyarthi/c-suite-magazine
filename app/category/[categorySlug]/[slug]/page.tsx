@@ -736,7 +736,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                     )}
 
                     {/* Body */}
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody value={cleanedBody} interviewMode={interviewMode} />
                     </div>
 
@@ -950,7 +950,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                       </div>
                     )
                     }
-                    <div className="prose prose-lg max-w-none">
+                    <div className="prose prose-base md:prose-lg max-w-none">
                       <PortableBody value={[]} interviewMode={false} />
                     </div>
                   </div >
