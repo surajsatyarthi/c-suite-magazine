@@ -4,7 +4,6 @@ import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
 import Ad from '@/components/Ad'
-import InArticleAd from '@/components/InArticleAd'
 
 type PortableBodyProps = {
   value: any | undefined
@@ -71,27 +70,6 @@ const components: PortableTextComponents = {
       const alt = (value as any)?.alt || 'Image'
       const targetUrl = (value as any)?.targetUrl
       const caption = (value as any)?.caption
-      const isPopupTrigger = (value as any)?.isPopupTrigger || (value as any)?.triggersPopup
-
-      if (isPopupTrigger) {
-        return (
-          <div className="my-8">
-            <InArticleAd
-              image={src}
-              href={targetUrl || '#'}
-              title={alt}
-              width={800} // Default width for inline images
-              height={500} // Default height
-              className="w-full h-auto rounded-lg object-contain"
-            />
-            {caption && (
-              <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
-                {caption}
-              </div>
-            )}
-          </div>
-        )
-      }
 
       const img = (
         <div className="relative w-full my-8">
