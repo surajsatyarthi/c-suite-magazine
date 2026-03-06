@@ -61,6 +61,6 @@ export const getSiteSettings = cache(async () => {
     keywords,
     "ogImage": ogImage.asset->url
   }`
-  // Revalidate globally once an hour
-  return getServerClient().fetch(query, {}, { next: { revalidate: 3600 } })
+  // Revalidate once per week — site settings almost never change
+  return getServerClient().fetch(query, {}, { next: { revalidate: 604800 } })
 })

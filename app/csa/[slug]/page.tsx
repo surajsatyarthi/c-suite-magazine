@@ -408,7 +408,7 @@ async function getTrendingPosts(): Promise<
   }
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800 // 1 week - articles rarely change
 
 const heroAspectCache = new Map<string, number>();
 

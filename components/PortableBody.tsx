@@ -1,5 +1,6 @@
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import dynamic from 'next/dynamic'
+import { useMemo } from 'react'
 import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
@@ -503,20 +504,18 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
         ? [{ _type: 'block', style: 'normal', markDefs: [], children: [{ _type: 'span', text: String(value), marks: [] }] }]
         : []
 
-  if (!blocks || blocks.length === 0) return null
-  // Sanitize blocks to remove stray image file names/paths and HR markers
-  const sanitized = sanitizeBlocks(blocks)
-  // Fallback: upgrade heading-like paragraphs when content lacks explicit h2/h3 styles
-  const normalized = normalizeBulletLists(normalizeBlocksForHeadings(sanitized))
-  // Mark first paragraph for lead styling
-  const withLeadParagraph = markFirstParagraph(normalized)
-  // Determine if interview formatting should be applied via an env flag as a safeguard
   const envEnabled = String(process.env.NEXT_PUBLIC_INTERVIEW_QA_FORMATTER || '').toLowerCase() === 'true'
   const interviewModeResolved = typeof interviewMode === 'boolean' ? interviewMode : envEnabled
-  const finalBlocks = interviewModeResolved ? formatInterviewQA(withLeadParagraph) : withLeadParagraph
-  const blockCount = withLeadParagraph.length
+
+  const { finalBlocks, normalized, blockCount } = useMemo(() => {
+    const sanitized = sanitizeBlocks(blocks)
+    const norm = normalizeBulletLists(normalizeBlocksForHeadings(sanitized))
+    const withLeadParagraph = markFirstParagraph(norm)
+    const final = interviewModeResolved ? formatInterviewQA(withLeadParagraph) : withLeadParagraph
+    return { finalBlocks: final, normalized: norm, blockCount: withLeadParagraph.length }
+  }, [blocks, interviewModeResolved])
+
   const minBlocksForMidAd = 6
-  const adsEnabled = !!ads
 
   if (blockCount < minBlocksForMidAd) {
     // Short content: render full content without inline ads (ads only in sidebar)
