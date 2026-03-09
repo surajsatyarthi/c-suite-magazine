@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
+// Note: using <img> for intrinsic sizing — next/image fill causes zero height when parent is h-auto
 import { useAdStore } from '@/store/adStore'
 import { usePathname } from 'next/navigation'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
@@ -146,17 +146,11 @@ export default function AdInterstitialV2() {
                         onClick={handleAdClick}
                         title={`Open ${currentAd.title || 'advertisement'} in new tab`}
                     >
-                        {/* next/image with fill+sizes gives WebP, lazy-load and CDN sizing for free */}
-                        <div className="relative w-full" style={{ minHeight: '200px' }}>
-                          <Image
+                        <img
                             src={currentAd.image}
                             alt={currentAd.title || 'Advertisement'}
-                            fill
-                            className="object-contain max-h-[80vh] transition-opacity duration-500"
-                            sizes="(max-width: 768px) 100vw, 800px"
-                            priority
-                          />
-                        </div>
+                            className="w-full h-auto object-contain max-h-[80vh] transition-opacity duration-500 block mx-auto"
+                        />
                         {/* Optional: "Sponsored" label */}
                         <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent text-white text-xs text-center opacity-70">
                             Advertisement {content.length > 1 && `(${currentIndex + 1}/${content.length})`}
