@@ -42,7 +42,7 @@ export default function InArticleAd({ image, href, title, width = 728, height = 
                             triggerAd({
                                 image,
                                 href,
-                                title: title || 'Sponsored'
+                                title: title || ''
                             })
                         }
                     }
@@ -78,7 +78,7 @@ export default function InArticleAd({ image, href, title, width = 728, height = 
                 >
                     <OptimizedImage
                         src={image}
-                        alt={title || 'Sponsored'}
+                        alt=""
                         fill
                         className="rounded object-contain"
                         sizes="(max-width: 1024px) 100vw, 728px"
