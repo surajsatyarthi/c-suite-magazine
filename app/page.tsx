@@ -23,8 +23,8 @@ export const metadata: Metadata = generateMetadata({
   type: 'website'
 })
 
-// Ensure homepage content refreshes periodically and doesn’t freeze test data into static build
-export const revalidate = 3600
+// Revalidate once per day — content doesn’t change hourly, reduces ISR writes significantly
+export const revalidate = 86400
 
 // Helper: wrap Sanity client.fetch with a soft timeout so homepage never stalls
 async function fetchWithTimeout<T>(promise: Promise<T>, ms = 1800, onTimeout?: () => void): Promise<T | null> {
