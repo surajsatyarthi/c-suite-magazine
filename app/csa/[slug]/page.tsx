@@ -169,7 +169,7 @@ async function getPost(slug: string): Promise<Post | null> {
       }
     },
     seo,
-    popupAd{ targetUrl, image, alt }
+    popupAd{ targetUrl, alt, image{ asset->{ url } } }
   }`;
   try {
     const p = await client.fetch(query, { slug });
@@ -841,7 +841,7 @@ export default async function CompanySponsoredArticlePage(props: {
                     {/* CSA Popup Ad: fire at 50% scroll for company-sponsored articles with a popup configured */}
                     {isCompanySponsored && post.popupAd?.image && post.popupAd?.targetUrl && (
                       <CSAPopupTrigger
-                        imageUrl={urlFor(post.popupAd.image).width(800).url()}
+                        imageUrl={post.popupAd.image?.asset?.url || urlFor(post.popupAd.image).width(800).url()}
                         targetUrl={post.popupAd.targetUrl}
                         alt={post.popupAd.alt || 'Sponsored'}
                       />

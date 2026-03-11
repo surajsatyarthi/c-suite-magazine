@@ -41,7 +41,7 @@ export default function CSAPopupTrigger({ imageUrl, targetUrl, alt }: CSAPopupTr
         if (scrollPercent > 0.5 && isLocaleReady()) {
           hasTriggered.current = true
           openAd(
-            { image: imageUrl, href: targetUrl, title: alt || 'Sponsored' },
+            { image: imageUrl, href: targetUrl, title: alt || '' },
             true // skipCooldown: CSA sponsors paid for guaranteed popup display
           )
         }
