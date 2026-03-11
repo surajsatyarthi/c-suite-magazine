@@ -122,9 +122,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    formats: ['image/avif', 'image/webp'],
-    qualities: [85, 88, 90, 95], // PREMIUM: include 88 to match usage
-    deviceSizes: [640, 750, 828, 1080, 1200, 1440, 1920, 2560],
+    formats: ['image/webp'], // avif removed — 10-100x more CPU than webp, not worth it on free tier
+    qualities: [85], // single quality — multiple levels multiply transformation count for no perceptible gain
+    deviceSizes: [640, 828, 1080, 1200, 1920], // reduced from 8 to 5 — cuts transformation variants
     minimumCacheTTL: 31536000,
     remotePatterns: [
       {

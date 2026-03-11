@@ -10,8 +10,8 @@ import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
 import { safeJsonLd } from '@/lib/security'
 
-// Enable ISR to avoid heavy full-build prerenders for category pages
-export const revalidate = 3600
+// Revalidate once per day — reduces ISR writes on category listing pages
+export const revalidate = 86400
 
 async function getFetchClient() {
   const { isEnabled } = await draftMode();
