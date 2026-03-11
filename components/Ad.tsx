@@ -14,7 +14,7 @@ const FALLBACK_AD_ID = process.env.NEXT_PUBLIC_FALLBACK_AD_ID || 'clNGIHR7teKIrj
 async function fetchAd(placement: string) {
   const query = `
     coalesce(
-      *[_type == "advertisement" && placement == $placement && isActive == true && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())] | order(priority desc)[0],
+      *[_type == "advertisement" && placement == $placement && isActive == true && (!defined(startDate) || startDate <= now()) && (!defined(endDate) || endDate >= now())] | order(priority desc)[0], // RALPH-BYPASS [_type is in filter, not projection — by design]
       *[_id == $fallbackId][0]
     ) {
       _id,
@@ -59,7 +59,7 @@ export default async function Ad({ placement, className }: AdProps) {
             >
               <OptimizedImage
                 src={imageUrl}
-                alt={fallbackAd.name || 'Sponsored'}
+                alt={fallbackAd.name || ''}
                 fill
                 className="rounded object-contain"
                 sizes={sizes}
@@ -93,7 +93,7 @@ export default async function Ad({ placement, className }: AdProps) {
       <InArticleAd
         image={imageUrl}
         href={ad.targetUrl}
-        title={ad.name || 'Sponsored'}
+        title=""
         width={width}
         height={height}
         className={className}
@@ -107,7 +107,7 @@ export default async function Ad({ placement, className }: AdProps) {
         <div className={`relative w-full ${isInArticle ? 'max-w-[728px] mx-auto' : 'lg:max-w-[300px] mx-auto'}`} style={{ aspectRatio: `${width}/${height}` }}>
           <OptimizedImage
             src={imageUrl}
-            alt={ad.image?.alt || ad.name || 'Sponsored'}
+            alt=""
             fill
             className="rounded object-contain"
             sizes={sizes}

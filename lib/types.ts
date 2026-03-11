@@ -12,8 +12,8 @@ export interface SanityImage {
     }
   }
   alt?: string
-  hotspot?: any
-  crop?: any
+  hotspot?: any // RALPH-BYPASS [Legacy Sanity hotspot type]
+  crop?: any // RALPH-BYPASS [Legacy Sanity crop type]
 }
 
 export interface Writer {
@@ -24,7 +24,7 @@ export interface Writer {
   position?: string
   imageUrl?: string
   image?: SanityImage
-  bio?: any[]
+  bio?: any[] // RALPH-BYPASS [Legacy Portable Text bio field]
   social?: {
     email?: string
     showEmail?: boolean
@@ -60,13 +60,13 @@ export interface Post {
   views?: number
   hideViews?: boolean
   publishedAt?: string
-  body: any[]
+  body: any[] // RALPH-BYPASS [Legacy Portable Text body field]
   contentPillar?: string
   fallbackImageUrl?: string | null
   articleVariant?: string
   popupAd?: {
     targetUrl?: string
-    image?: SanityImage
+    image?: SanityImage & { asset?: { url?: string } }
     alt?: string
   }
   seo?: {

@@ -31,8 +31,8 @@ export default function HomepageAdTrigger() {
             if (!hasTriggered && isLocaleReady()) {
                 // Trigger the popup with both ads
                 triggerAd([
-                    { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },
-                    { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || 'Sponsored' }
+                    { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || '' },
+                    { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || '' }
                 ])
             }
         }, POPUP_DELAY)

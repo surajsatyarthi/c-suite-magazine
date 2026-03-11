@@ -43,8 +43,8 @@ export default function ScrollTriggerAd() {
                 if (scrollPercent > SCROLL_THRESHOLD && isLocaleReady()) {
                     // Pass BOTH ads to the store to trigger the carousel
                     triggerAd([
-                        { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || 'Sponsored' },
-                        { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || 'Sponsored' }
+                        { image: ADS[0].imageUrl, href: ADS[0].targetUrl, title: ADS[0].alt || '' },
+                        { image: ADS[1].imageUrl, href: ADS[1].targetUrl, title: ADS[1].alt || '' }
                     ])
                 }
             }

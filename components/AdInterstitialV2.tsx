@@ -136,7 +136,6 @@ export default function AdInterstitialV2() {
                 <div
                     className="relative w-full h-auto max-h-[80vh] overflow-y-auto group"
                     aria-live="polite"
-                    aria-label="Advertisement Carousel"
                 >
                     <Link
                         href={currentAd.href || '#'}
@@ -144,17 +143,12 @@ export default function AdInterstitialV2() {
                         rel="noopener noreferrer"
                         className="block w-full h-full"
                         onClick={handleAdClick}
-                        title={`Open ${currentAd.title || 'advertisement'} in new tab`}
                     >
                         <img
                             src={currentAd.image}
-                            alt={currentAd.title || 'Advertisement'}
+                            alt=""
                             className="w-full h-auto object-contain max-h-[80vh] transition-opacity duration-500 block mx-auto"
                         />
-                        {/* Optional: "Sponsored" label */}
-                        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent text-white text-xs text-center opacity-70">
-                            Advertisement {content.length > 1 && `(${currentIndex + 1}/${content.length})`}
-                        </div>
                     </Link>
 
                     {/* Carousel Controls */}
