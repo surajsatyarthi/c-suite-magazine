@@ -59,6 +59,7 @@ export interface Post {
   heroTagline?: string
   views?: number
   hideViews?: boolean
+  contributorName?: string
   publishedAt?: string
   body: any[] // RALPH-BYPASS [Legacy Portable Text body field]
   contentPillar?: string
