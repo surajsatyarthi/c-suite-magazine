@@ -8,7 +8,7 @@ export default function InFocusBadge({ articleType }: InFocusBadgeProps) {
   if (!articleType) return null
 
   const badgeConfig = {
-    csa: { label: 'CSA FEATURE', color: '#c8ab3d' }, // Gold
+    csa: { label: 'SPECIAL FEATURE', color: '#c8ab3d' }, // Gold
     interview: { label: 'IN FOCUS', color: '#003366' }, // Blue
     juggernaut: { label: 'JUGGERNAUT', color: '#082945' }, // Navy
     spotlight: { label: 'SPOTLIGHT', color: '#c8ab3d' }, // Gold
