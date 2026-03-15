@@ -6,7 +6,7 @@ import InFocusBadge from '../InFocusBadge'
 describe('InFocusBadge Component', () => {
   it('renders CSA FEATURE for CSA articles', () => {
     const { container } = render(<InFocusBadge articleType="csa" />)
-    expect(container.textContent).toContain('CSA FEATURE')
+    expect(container.textContent).toContain('SPECIAL FEATURE')
   })
 
   it('renders IN FOCUS for interview articles', () => {
