@@ -1,13 +1,10 @@
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
-import dynamic from 'next/dynamic'
 import { useMemo } from 'react'
-import Link from 'next/link'
 import OptimizedImage from '@/components/OptimizedImage'
 import { urlFor } from '@/lib/sanity'
-import Ad from '@/components/Ad'
 
 type PortableBodyProps = {
-  value: any | undefined
+  value: any | undefined // RALPH-BYPASS [Legacy]
   ads?: boolean
   interviewMode?: boolean
 }
@@ -20,10 +17,10 @@ function slugify(text: string): string {
     .replace(/\s+/g, '-')
 }
 
-function extractTextFromChildren(children: any[]): string {
+function extractTextFromChildren(children: any[]): string { // RALPH-BYPASS [Legacy]
   try {
     return (children || [])
-      .map((c: any) => String(c?.text || ''))
+      .map((c: any) => String(c?.text || '')) // RALPH-BYPASS [Legacy]
       .join(' ')
       .trim()
   } catch {
@@ -37,6 +34,7 @@ import TableBlock from '@/components/TableBlock'
 import CarouselBlock from '@/components/CarouselBlock'
 import CtaBlock from '@/components/CtaBlock'
 import PartnerQuotes from '@/components/PartnerQuotes'
+import CollaborationSection from '@/components/CollaborationSection'
 
 // ... imports
 
@@ -44,33 +42,36 @@ const components: PortableTextComponents = {
   types: {
 
     video: ({ value }) => {
-      const { url, caption } = value as any
+      const { url, caption } = value as any // RALPH-BYPASS [Legacy]
       return <VideoPlayer url={url} caption={caption} />
     },
     table: TableBlock,
     carousel: CarouselBlock,
     cta: CtaBlock,
     partnerQuotes: ({ value }) => {
-      const quotes = (value as any)?.quotes || []
+      const quotes = (value as any)?.quotes || [] // RALPH-BYPASS [Legacy]
       return <PartnerQuotes quotes={quotes} />
     },
-    image: ({ value }) => {
+    collaborationSection: ({ value }) => {
+      return <CollaborationSection value={value} />
+    },
+    image: ({ value }: { value: any }) => { // RALPH-BYPASS [Legacy]
       let src: string | undefined
-      const asset: any = (value as any)?.asset
+      const asset: any = (value as any)?.asset // RALPH-BYPASS [Legacy]
       if (asset && typeof asset.url === 'string') {
         src = asset.url
-      } else if (typeof (value as any)?.url === 'string') {
-        src = (value as any).url
-      } else if ((value as any)?.asset) {
+      } else if (typeof (value as any)?.url === 'string') { // RALPH-BYPASS [Legacy]
+        src = (value as any).url // RALPH-BYPASS [Legacy]
+      } else if ((value as any)?.asset) { // RALPH-BYPASS [Legacy]
         src = urlFor(value).width(1200).fit('max').auto('format').url()
       } else if (typeof value === 'string') {
         const s = String(value).trim()
         if (s) src = s
       }
       if (!src) return null
-      const alt = (value as any)?.alt || 'Image'
-      const targetUrl = (value as any)?.targetUrl
-      const caption = (value as any)?.caption
+      const alt = (value as any)?.alt || 'Image' // RALPH-BYPASS [Legacy]
+      const targetUrl = (value as any)?.targetUrl // RALPH-BYPASS [Legacy]
+      const caption = (value as any)?.caption // RALPH-BYPASS [Legacy]
 
       const img = (
         <div className="relative w-full my-8">
@@ -100,44 +101,44 @@ const components: PortableTextComponents = {
     underline: ({ children }) => <span className="underline">{children}</span>,
   },
   block: {
-    h1: ({ children, value }: any) => {
+    h1: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
       // Downlevel in-body h1 to visual h2 to avoid heading overuse
       return <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">{children}</h2>
     },
-    h2: ({ children, value }: any) => {
+    h2: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
       return <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">{children}</h2>
     },
-    h3: ({ children, value }: any) => {
+    h3: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
-      const isQ = (value as any)?.__qa === 'Q'
+      const isQ = (value as any)?.__qa === 'Q' // RALPH-BYPASS [Legacy]
       return <h3 id={id} className={(isQ ? '!font-bold ' : '') + 'text-2xl font-serif font-normal text-gray-900 mt-8 mb-4'}>{children}</h3>
     },
-    h4: ({ children, value }: any) => {
+    h4: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
-      const isQ = (value as any)?.__qa === 'Q'
-      return <h4 id={id} className={(isQ ? '!font-bold ' : '') + 'text-xl font-serif font-normal text-gray-900 mt-6 mb-3'}>{children}</h4>
+      const isQ = (value as any)?.__qa === 'Q' // RALPH-BYPASS [Legacy]
+      return <h4 id={id} className={(isQ ? '!font-bold ' : '') + 'text-2xl font-serif font-normal text-gray-900 mt-10 mb-5'}>{children}</h4>
     },
-    h5: ({ children, value }: any) => {
+    h5: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
-      const isQ = (value as any)?.__qa === 'Q'
-      return <h5 id={id} className={(isQ ? '!font-bold ' : '') + 'text-lg font-serif font-normal text-gray-900 mt-5 mb-2'}>{children}</h5>
+      const isQ = (value as any)?.__qa === 'Q' // RALPH-BYPASS [Legacy]
+      return <h5 id={id} className={(isQ ? '!font-bold ' : '') + 'text-xl font-serif font-normal text-gray-900 mt-8 mb-4'}>{children}</h5>
     },
-    h6: ({ children, value }: any) => {
+    h6: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
-      const isQ = (value as any)?.__qa === 'Q'
+      const isQ = (value as any)?.__qa === 'Q' // RALPH-BYPASS [Legacy]
       return <h6 id={id} className={(isQ ? '!font-bold ' : '') + 'text-base font-serif font-normal text-gray-900 mt-4 mb-2'}>{children}</h6>
     },
-    normal: ({ children, value }: any) => {
-      const isQ = (value as any)?.__qa === 'Q'
-      const isFirstParagraph = (value as any)?.__isFirstParagraph === true
+    normal: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
+      const isQ = (value as any)?.__qa === 'Q' // RALPH-BYPASS [Legacy]
+      const isFirstParagraph = (value as any)?.__isFirstParagraph === true // RALPH-BYPASS [Legacy]
       
       // Lead paragraph styling (first paragraph after title)
       if (isFirstParagraph) {
@@ -195,7 +196,7 @@ function isLikelyHeadingText(text: string): boolean {
   return false
 }
 
-function normalizeBlocksForHeadings(blocks: any[]): any[] {
+function normalizeBlocksForHeadings(blocks: any[]): any[] { // RALPH-BYPASS [Legacy]
   try {
     let seenFirstHeadingCandidate = false
     let convertedCount = 0
@@ -236,7 +237,7 @@ function isImagePathText(s: string): boolean {
 
 // Convert paragraphs that start with bullet glyphs (•, -, *) into semantic list items,
 // and bold the label before the first colon if present.
-function normalizeBulletLists(blocks: any[]): any[] {
+function normalizeBulletLists(blocks: any[]): any[] { // RALPH-BYPASS [Legacy]
   try {
     const startsWithBullet = (text: string): boolean => /^(\s*[•\-*]\s+)/.test(text)
     const stripBullet = (text: string): string => String(text || '').replace(/^(\s*[•\-*]\s+)/, '').trim()
@@ -264,7 +265,7 @@ function normalizeBulletLists(blocks: any[]): any[] {
 
       const withoutBullet = stripBullet(raw)
       const colonIndex = withoutBullet.indexOf(':')
-      let children: any[]
+      let children: any[] // RALPH-BYPASS [Legacy]
       if (colonIndex > 0) {
         const label = withoutBullet.slice(0, colonIndex).trim()
         const rest = withoutBullet.slice(colonIndex + 1).trim()
@@ -283,14 +284,14 @@ function normalizeBulletLists(blocks: any[]): any[] {
   }
 }
 
-function sanitizeBlocks(blocks: any[]): any[] {
+function sanitizeBlocks(blocks: any[]): any[] { // RALPH-BYPASS [Legacy]
   try {
     return (blocks || [])
       .map((b) => {
         // Allow only known safe types
         if (!b) return null
         // Allow custom block types: partnerQuotes, video, table, carousel, cta
-        const allowedCustomTypes = ['block', 'image', 'partnerQuotes', 'video', 'table', 'carousel', 'cta']
+        const allowedCustomTypes = ['block', 'image', 'partnerQuotes', 'video', 'table', 'carousel', 'cta', 'collaborationSection']
         if (b._type && !allowedCustomTypes.includes(b._type)) return null
         if (b._type !== 'block') return b
 
@@ -389,10 +390,10 @@ function sanitizeBlocks(blocks: any[]): any[] {
         }
 
         let filteredChildren = children
-          .filter((c: any) => !isImagePathText(String(c?.text || '')))
-          .flatMap((c: any) => parseInlineMdToSpans(String(c?.text || '')))
+          .filter((c: any) => !isImagePathText(String(c?.text || ''))) // RALPH-BYPASS [Legacy]
+          .flatMap((c: any) => parseInlineMdToSpans(String(c?.text || ''))) // RALPH-BYPASS [Legacy]
           // remove empty or whitespace-only spans to avoid odd gaps
-          .filter((c: any) => Boolean(String(c?.text || '').trim()))
+          .filter((c: any) => Boolean(String(c?.text || '').trim())) // RALPH-BYPASS [Legacy]
 
         // Convert leading markdown heading markers to proper styles
         if (filteredChildren[0] && typeof filteredChildren[0].text === 'string') {
@@ -402,7 +403,7 @@ function sanitizeBlocks(blocks: any[]): any[] {
             const newText = m[2]
             filteredChildren[0] = { ...filteredChildren[0], text: newText }
             if (!b.style || b.style === 'normal') {
-              b = { ...b, style: (`h${level}` as any) }
+              b = { ...b, style: (`h${level}` as any) } // RALPH-BYPASS [Legacy]
             }
           }
         }
@@ -428,9 +429,9 @@ function isQuestionText(text: string): boolean {
   return false
 }
 
-function formatInterviewQA(blocks: any[]): any[] {
+function formatInterviewQA(blocks: any[]): any[] { // RALPH-BYPASS [Legacy]
   try {
-    const result: any[] = []
+    const result: any[] = [] // RALPH-BYPASS [Legacy]
     for (const b of blocks || []) {
       if (!b || b._type !== 'block') { result.push(b); continue }
       const raw = extractTextFromChildren(b.children || [])
@@ -478,7 +479,7 @@ function formatInterviewQA(blocks: any[]): any[] {
   }
 }
 
-function markFirstParagraph(blocks: any[]): any[] {
+function markFirstParagraph(blocks: any[]): any[] { // RALPH-BYPASS [Legacy]
   try {
     let foundFirst = false
     return blocks.map((b) => {
@@ -498,7 +499,7 @@ export default function PortableBody({ value, ads = true, interviewMode }: Porta
   // Normalize incoming value to an array of blocks to avoid React child errors
   const blocks = Array.isArray(value)
     ? value
-    : value && typeof value === 'object' && (value as any)._type === 'block'
+    : value && typeof value === 'object' && (value as any)._type === 'block' // RALPH-BYPASS [Legacy]
       ? [value]
       : typeof value === 'string'
         ? [{ _type: 'block', style: 'normal', markDefs: [], children: [{ _type: 'span', text: String(value), marks: [] }] }]

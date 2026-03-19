@@ -13,14 +13,12 @@ import { ctaType } from './ctaType'
 import { executiveInFocusType } from './executiveInFocusType'
 import { executiveInFocusConfigType } from './executiveInFocusConfigType'
 import { partnerQuotesType } from './partnerQuotesType'
-
+import { collaborationSectionType } from './collaborationSectionType'
 import { advertisementType } from './advertisementType'
-
 import { industryJuggernautConfigType } from './industryJuggernautConfigType'
 import { systemLogType } from './systemLogType'
-
-import { siteSettingsType } from "./siteSettingsType";
+import { siteSettingsType } from './siteSettingsType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType, executiveInFocusType, executiveInFocusConfigType, industryJuggernautConfigType, partnerQuotesType, systemLogType, siteSettingsType],
+  types: [blockContentType, categoryType, postType, csaType, writerType, advertisementType, spotlightConfigType, videoType, carouselType, ctaType, executiveInFocusType, executiveInFocusConfigType, industryJuggernautConfigType, partnerQuotesType, collaborationSectionType, systemLogType, siteSettingsType],
 }

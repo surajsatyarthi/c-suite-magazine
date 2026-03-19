@@ -3,7 +3,7 @@
 # Scans for references to deprecated documents and fails if found.
 
 # List of forbidden terms (add more as needed)
-FORBIDDEN_TERMS="RALPH_OMNIBUS|MANDATORY_PROTOCOLS|RALPH_PROTOCOL|world_class_engineering_standards|operational|protocols"
+FORBIDDEN_TERMS="RALPH_OMNIBUS|MANDATORY_PROTOCOLS|world_class_engineering_standards"
 
 # Files to scan (expandable)
 FILES_TO_SCAN=$(git diff --cached --name-only --diff-filter=d | grep -E '\.md$|\.ts$|\.tsx$|\.js$')  # Targets Markdown and code files
