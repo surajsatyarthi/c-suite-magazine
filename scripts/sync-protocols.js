@@ -6,16 +6,16 @@
  * Syncs protocol files from central GitHub repository to local .agent folder
  *
  * Usage:
- *   npm run sync:protocols           # Pull latest and sync
- *   npm run sync:protocols -- --init # First-time setup (clone repo)
+ *   npm run sync:standards           # Pull latest and sync
+ *   npm run sync:standards -- --init # First-time setup (clone repo)
  *
  * How it works:
- *   1. Clones/pulls from GitHub repo (ralph-protocols)
+ *   1. Clones/pulls from GitHub repo (ralph-standards)
  *   2. Copies all files from cloned repo to .agent folder
  *   3. Preserves local .gitignore for .agent folder
  *
  * Prerequisites:
- *   - GitHub repo created: https://github.com/YOUR_USERNAME/ralph-protocols
+ *   - GitHub repo created: https://github.com/YOUR_USERNAME/ralph-standards
  *   - Local protocol folder pushed to GitHub
  */
 
@@ -25,7 +25,7 @@ const path = require('path');
 
 // Configuration
 const CONFIG = {
-  GITHUB_REPO: 'https://github.com/surajsatyarthi/ralph-protocols.git',
+  GITHUB_REPO: 'https://github.com/surajsatyarthi/ralph-standards.git',
   LOCAL_CACHE_DIR: path.join(__dirname, '..', '.protocol-cache'),
   TARGET_DIR: path.join(__dirname, '..', '.agent'),
 };
@@ -46,7 +46,7 @@ function log(message, color = 'reset') {
 
 function exec(command, silent = false) {
   try {
-    return execSync(command, {
+    return execSync(command, { // eslint-disable-line sonarjs/os-command
       encoding: 'utf8',
       stdio: silent ? 'pipe' : 'inherit',
     });
@@ -60,14 +60,14 @@ function validateGitHubRepo() {
   if (CONFIG.GITHUB_REPO.includes('YOUR_USERNAME')) {
     log('❌ Error: GitHub repository URL not configured', 'red');
     log('', 'reset');
-    log('Please update scripts/sync-protocols.js:', 'yellow');
-    log('  GITHUB_REPO: "https://github.com/YOUR_USERNAME/ralph-protocols.git"', 'yellow');
+    log('Please update scripts/sync-standards.js:', 'yellow');
+    log('  GITHUB_REPO: "https://github.com/YOUR_USERNAME/ralph-standards.git"', 'yellow');
     log('', 'reset');
     log('Steps to set up:', 'cyan');
-    log('  1. Create GitHub repo: ralph-protocols', 'cyan');
+    log('  1. Create GitHub repo: ralph-standards', 'cyan');
     log('  2. Push /Users/surajsatyarthi/Desktop/Projects/protocol to GitHub', 'cyan');
     log('  3. Update GITHUB_REPO in this script', 'cyan');
-    log('  4. Run: npm run sync:protocols -- --init', 'cyan');
+    log('  4. Run: npm run sync:standards -- --init', 'cyan');
     process.exit(1);
   }
 }
@@ -90,7 +90,7 @@ function cloneOrPullRepo(isInit = false) {
 }
 
 function copyProtocols() {
-  log('📋 Syncing protocols to .agent folder...', 'cyan');
+  log('📋 Syncing standards to .agent folder...', 'cyan');
 
   // Ensure target directory exists
   if (!fs.existsSync(CONFIG.TARGET_DIR)) {
@@ -158,7 +158,7 @@ function showSyncStatus() {
   log(`  Protocol files in .agent: ${agentFiles.length}`, 'cyan');
   log('', 'reset');
 
-  log('Key protocols:', 'bright');
+  log('Key standards:', 'bright');
   const keyProtocols = [
     'RALPH_PROTOCOL.md',
     'PM_PROTOCOL.md',
@@ -191,7 +191,7 @@ function main() {
     // Step 2: Clone or pull repository
     cloneOrPullRepo(isInit);
 
-    // Step 3: Copy protocols to .agent
+    // Step 3: Copy standards to .agent
     copyProtocols();
 
     // Step 4: Show status
@@ -205,9 +205,9 @@ function main() {
 
     if (isInit) {
       log('Next steps:', 'cyan');
-      log('  1. Review synced protocols in .agent folder', 'cyan');
+      log('  1. Review synced standards in .agent folder', 'cyan');
       log('  2. Commit .gitignore changes (if any)', 'cyan');
-      log('  3. Run sync periodically: npm run sync:protocols', 'cyan');
+      log('  3. Run sync periodically: npm run sync:standards', 'cyan');
     }
 
   } catch (error) {
