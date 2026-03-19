@@ -35,6 +35,7 @@ import CarouselBlock from '@/components/CarouselBlock'
 import CtaBlock from '@/components/CtaBlock'
 import PartnerQuotes from '@/components/PartnerQuotes'
 import CollaborationSection from '@/components/CollaborationSection'
+import PopupTriggerImage from '@/components/PopupTriggerImage'
 
 // ... imports
 
@@ -72,6 +73,12 @@ const components: PortableTextComponents = {
       const alt = (value as any)?.alt || 'Image' // RALPH-BYPASS [Legacy]
       const targetUrl = (value as any)?.targetUrl // RALPH-BYPASS [Legacy]
       const caption = (value as any)?.caption // RALPH-BYPASS [Legacy]
+      const triggersPopup = (value as any)?.triggersPopup === true // RALPH-BYPASS [Legacy]
+
+      // CSA inline ad image — fires csa-popup-trigger event when it enters viewport
+      if (triggersPopup) {
+        return <PopupTriggerImage src={src} alt={alt} />
+      }
 
       const img = (
         <div className="relative w-full my-8">

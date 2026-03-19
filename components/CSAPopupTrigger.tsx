@@ -12,8 +12,11 @@ interface CSAPopupTriggerProps {
 
 /**
  * CSAPopupTrigger
- * Triggers the full-screen popup ad for Company Sponsored Articles (CSA).
- * Fires at 50% scroll depth. Bypasses the 2-hour cooldown since CSA sponsors paid for popup placement.
+ * Triggers the sponsor-specific popup ad for CSA articles.
+ * Fires when the inline ad image (triggersPopup=true) enters the viewport —
+ * NOT at a fixed scroll percentage. This keeps CSA popup behaviour separate
+ * from the site-wide generic scroll popup.
+ * Bypasses the 2-hour cooldown since CSA sponsors paid for guaranteed placement.
  * Only fires once per page load.
  */
 export default function CSAPopupTrigger({ imageUrl, targetUrl, alt }: CSAPopupTriggerProps) {
@@ -25,45 +28,17 @@ export default function CSAPopupTrigger({ imageUrl, targetUrl, alt }: CSAPopupTr
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      let ticking = false
+    const handleTrigger = () => {
+      if (hasTriggered.current || isOpen || !isLocaleReady()) return
+      hasTriggered.current = true
+      openAd(
+        { image: imageUrl, href: targetUrl, title: alt || '' },
+        true // skipCooldown: CSA sponsors paid for guaranteed popup display
+      )
+    }
 
-      const checkScroll = () => {
-        if (hasTriggered.current || isOpen) return
-
-        const scrollTop = window.scrollY
-        const docHeight = document.documentElement.scrollHeight
-        const winHeight = window.innerHeight
-        if (docHeight <= winHeight) return
-
-        const scrollPercent = scrollTop / (docHeight - winHeight)
-
-        if (scrollPercent > 0.5 && isLocaleReady()) {
-          hasTriggered.current = true
-          openAd(
-            { image: imageUrl, href: targetUrl, title: alt || '' },
-            true // skipCooldown: CSA sponsors paid for guaranteed popup display
-          )
-        }
-      }
-
-      const handleScroll = () => {
-        if (hasTriggered.current) return // bail early before RAF if already triggered
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            checkScroll()
-            ticking = false
-          })
-          ticking = true
-        }
-      }
-
-      window.addEventListener('scroll', handleScroll, { passive: true })
-      checkScroll() // Check immediately in case already scrolled
-      return () => window.removeEventListener('scroll', handleScroll)
-    }, 1000)
-
-    return () => clearTimeout(timer)
+    window.addEventListener('csa-popup-trigger', handleTrigger)
+    return () => window.removeEventListener('csa-popup-trigger', handleTrigger)
   }, [imageUrl, targetUrl, alt, openAd, isOpen])
 
   return null
