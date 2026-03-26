@@ -81,15 +81,17 @@ const components: PortableTextComponents = {
       }
 
       const img = (
-        <div className="relative w-full my-8">
-          <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden">
-            <OptimizedImage src={src} alt={alt} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 800px" />
-          </div>
-          {caption && (
-            <div className="mt-2 text-sm text-gray-500 text-center italic font-serif">
-              {caption}
+        <div className="my-16 px-4 md:px-16">
+          <div className="relative bg-gradient-to-br from-[#082945]/5 to-[#082945]/10 border-l-4 border-[#c8ab3d] rounded-r-lg p-6 md:p-8">
+            <div className="relative w-full h-[350px] md:h-[450px]">
+              <OptimizedImage src={src} alt={alt} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 60vw, 800px" />
             </div>
-          )}
+            {caption && (
+              <div className="mt-4 text-sm text-gray-700 text-center italic font-serif">
+                {caption}
+              </div>
+            )}
+          </div>
         </div>
       )
 

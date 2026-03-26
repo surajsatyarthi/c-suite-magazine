@@ -29,8 +29,8 @@ function hashCode(str: string): number {
 export function getViewCountValue(realViews?: number | null, slug?: string): number {
   const real = typeof realViews === 'number' && isFinite(realViews) ? realViews : 0
   
-  // 1. If real data is massive, return it directly
-  if (real >= 5000000) return real
+// 1. If real data is massive, return it directly
+  if (real >= 1000000) return real
 
   // 2. Jitter Logic (Must match formatViewsMillion)
   if (slug) {
@@ -54,5 +54,5 @@ export function formatViewsMillion(n?: number | null, slug?: string): string {
   if (val >= 5000000) return '5M+'
   
   const millions = val / 1000000
-  return `${millions.toFixed(1)} M`
+  return `${millions.toFixed(1)}M`
 }
