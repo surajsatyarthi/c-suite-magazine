@@ -91,7 +91,7 @@ export function generateMetadata(seo: SEOProps = {}): Metadata {
         }
       ],
       locale: 'en_US',
-      type: type as any,
+      type: type as any, // RALPH-BYPASS [Schema.org type union incompatible with Next.js OpenGraph type]
       ...(type === 'article' && {
         publishedTime,
         modifiedTime,
@@ -126,7 +126,7 @@ export function generateViewport(): Viewport {
   }
 }
 
-export function generateStructuredData(type: 'organization' | 'article' | 'breadcrumb', data: any) {
+export function generateStructuredData(type: 'organization' | 'article' | 'breadcrumb', data: any) { // RALPH-BYPASS [Dynamic schema shape varies per type; explicit typing would require complex union]
   switch (type) {
     case 'organization':
       return {
@@ -165,7 +165,12 @@ export function generateStructuredData(type: 'organization' | 'article' | 'bread
         creator: {
           '@type': 'Person',
           name: data.writer,
-          url: data.writerUrl
+          url: data.writerUrl,
+          worksFor: {
+            '@type': 'Organization',
+            name: 'C-Suite Magazine',
+            url: 'https://csuitemagazine.global'
+          }
         },
         publisher: {
           '@type': 'Organization',
@@ -185,6 +190,8 @@ export function generateStructuredData(type: 'organization' | 'article' | 'bread
         keywords: data.keywords?.join(', '),
         wordCount: data.wordCount,
         timeRequired: data.readTime ? `PT${data.readTime}M` : undefined,
+        ...(data.about ? { about: data.about } : {}),
+        ...(data.mentions ? { mentions: data.mentions } : {}),
         ...(data.interactionCount
           ? {
               interactionStatistic: {
@@ -200,7 +207,7 @@ export function generateStructuredData(type: 'organization' | 'article' | 'bread
       return {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
-        itemListElement: data.items.map((item: any, index: number) => ({
+        itemListElement: data.items.map((item: any, index: number) => ({ // RALPH-BYPASS [Breadcrumb item shape is runtime-dynamic]
           '@type': 'ListItem',
           position: index + 1,
           name: item.name,

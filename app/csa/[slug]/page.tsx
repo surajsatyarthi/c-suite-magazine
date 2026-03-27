@@ -672,6 +672,19 @@ export default async function CompanySponsoredArticlePage(props: {
                 wordCount,
                 readTime,
                 interactionCount: getViewCountValue(post.views, post.slug.current),
+                ...(post.slug.current === 'mahesh-kumar-tiger-analytics' ? {
+                  about: [
+                    { "@type": "Person", "name": "Mahesh Kumar" },
+                    { "@type": "Organization", "name": "Tiger Analytics", "url": "https://www.tigeranalytics.com/" }
+                  ],
+                  mentions: [
+                    { "@type": "Organization", "name": "Databricks" },
+                    { "@type": "Organization", "name": "Microsoft Azure" },
+                    { "@type": "Organization", "name": "Amazon Web Services" },
+                    { "@type": "Organization", "name": "Google Cloud" },
+                    { "@type": "EducationalOrganization", "name": "Massachusetts Institute of Technology (MIT)" }
+                  ]
+                } : {})
               }),
             )}
           />
