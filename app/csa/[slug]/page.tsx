@@ -414,6 +414,7 @@ async function getTrendingPosts(): Promise<
 export const revalidate = 604800 // 1 week - articles rarely change
 
 const heroAspectCache = new Map<string, number>();
+// Forced cache invalidation for AEO inline structural repair
 
 export default async function CompanySponsoredArticlePage(props: {
   params: Promise<{ slug: string }>;
