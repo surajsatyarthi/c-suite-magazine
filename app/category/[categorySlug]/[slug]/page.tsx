@@ -319,9 +319,10 @@ async function getRelatedPosts(
 
 async function getTrendingPosts(): Promise<Pick<Post, '_id' | 'title' | 'slug' | 'views' | 'categories'>[]> {
   // Show actual trending articles (most viewed) instead of recent interviews
-  const trendingQuery = `*[_type == "post" && isHidden != true && defined(views) && views > 0] // RALPH-BYPASS [Multi-line GROQ] 
+  const trendingQuery = `*[_type in ["post", "csa"] && isHidden != true && defined(views) && views > 0] // RALPH-BYPASS [Multi-line GROQ]
     | order(views desc)[0...5] {
     _id,
+    _type,
     title,
     slug,
     views,
@@ -863,9 +864,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                       <div className="space-y-4">
                         {trendingPosts && trendingPosts.length > 0 ? (
                           trendingPosts.map((tp, idx) => {
-                            const catSlug = String((tp.categories?.[0]?.slug?.current ?? tp.categories?.[0]?.slug ?? 'general'))
-                            const postSlug = String((tp.slug?.current ?? tp.slug ?? ''))
-                            const href = `/category/${catSlug}/${postSlug}`
+                            const href = getArticleUrl(tp)
                             const content = (
                               <div className="flex gap-3">
                                 <span className="text-2xl font-bold text-[#c8ab3d] flex-shrink-0">{idx + 1}</span>
@@ -876,7 +875,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                                 </div>
                               </div>
                             )
-                            return postSlug ? (
+                            return href && href !== '/archive' ? (
                               <Link key={tp._id} href={href} prefetch={false} className="block group">
                                 {content}
                               </Link>

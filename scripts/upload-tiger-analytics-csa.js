@@ -213,8 +213,13 @@ async function main() {
     _ref: result._id,
   };
 
-  const newItems = [...config.items];
-  newItems.splice(sukhinderIndex, 0, tigerItem);
+  // Remove Tiger Analytics from the list first (in case it was already added) to prevent duplicates
+  const itemsWithoutTiger = config.items.filter(item => item._ref !== result._id);
+  const freshSukhinderIndex = itemsWithoutTiger.findIndex(item => item._ref === sukhinderDoc._id);
+  const insertAt = freshSukhinderIndex !== -1 ? freshSukhinderIndex : 0;
+
+  const newItems = [...itemsWithoutTiger];
+  newItems.splice(insertAt, 0, tigerItem);
 
   await client.patch(config._id).set({ items: newItems }).commit();
 

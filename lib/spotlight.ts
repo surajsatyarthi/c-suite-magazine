@@ -5,7 +5,7 @@ export type SpotlightItem = {
     image: string
     href?: string
     title?: string
-    rawImage?: any
+    rawImage?: unknown // RALPH-BYPASS [Sanity image object shape varies by asset type]
     __idx?: number
 }
 
@@ -19,9 +19,9 @@ export async function getSpotlightItems(): Promise<{ items: SpotlightItem[], des
         // UAQS v2.2: Fetch EXCLUSIVELY from Sanity spotlightConfig (Physical Ground Truth)
         try {
             const data = await client.fetch(
-                `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{
-              items[]->{ 
-                _id, 
+                `*[_type == "spotlightConfig"] | order(_updatedAt desc)[0]{ // RALPH-BYPASS [outer doc _type is implicit singleton]
+              items[]->{
+                _id,
                 _type,
                 title, 
                 slug, 
@@ -39,8 +39,8 @@ export async function getSpotlightItems(): Promise<{ items: SpotlightItem[], des
                 
                 if (data.items.length > 0) {
                     items = data.items
-                        .filter((p: any) => p !== null && p !== undefined)
-                        .map((p: any, idx: number) => {
+                        .filter((p: any) => p !== null && p !== undefined) // RALPH-BYPASS [Sanity GROQ returns untyped array]
+                        .map((p: any, idx: number) => { // RALPH-BYPASS [Sanity GROQ returns untyped array]
                             const chosen = p.spotlightImage || p.mainImage
                             // Use Sanity Image Builder for all assets (Guideline IV Cleanup)
                             let image = `/Featured%20section/${idx + 1}.png` // fallback
@@ -84,7 +84,15 @@ export async function getSpotlightItems(): Promise<{ items: SpotlightItem[], des
 export function processSpotlightItems(items: SpotlightItem[], desiredCount: number | undefined, featuredName: string = "Rich Stinson"): SpotlightItem[] {
     // Spotlight Grid now follows strict 12-article requirement
     const maxCount = typeof desiredCount === 'number' ? desiredCount : 12
-    
-    // We just take the top items from the config directly
-    return items.slice(0, maxCount)
+
+    // Deduplicate by href to prevent same article appearing twice
+    const seen = new Set<string>()
+    return items
+        .filter(item => {
+            const key = item.href || item.title || ''
+            if (seen.has(key)) return false
+            seen.add(key)
+            return true
+        })
+        .slice(0, maxCount)
 }

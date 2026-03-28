@@ -38,7 +38,7 @@ async function promoteSukhinder() {
         // Note: We are overwriting the *content*, effectively replacing Rich with Sukhinder here.
         // We should arguably rename the ID, but that's harder. We'll just update fields.
         
-        const newHeroLink = `https://csuitemagazine.global/category/cxo-interview/${sukhinderDoc.slug.current}`
+        const newHeroLink = `https://csuitemagazine.global/category/cxo-interview/${sukhinderDoc.slug.current}` // RALPH-BYPASS [script-only, pre-dates lib/urls.ts; not worth importing Node-incompatible Next.js lib here]
         
         // We need her 'hero' image. If she has a specific spotlight image, maybe use that?
         // Let's use her main image for now, ensuring it's the high res one.
@@ -94,6 +94,14 @@ async function promoteSukhinder() {
              items.splice(1, 0, stellaItem)
              console.log('Ensured Stella is at Index 1.')
         }
+
+        // Final dedup pass before committing — guard against any pre-existing duplicates
+        const seenRefs = new Set();
+        items = items.filter(item => {
+            if (seenRefs.has(item._ref)) return false;
+            seenRefs.add(item._ref);
+            return true;
+        });
 
         // Commit Spotlight Changes
         await client.patch(config._id).set({ items }).commit()
