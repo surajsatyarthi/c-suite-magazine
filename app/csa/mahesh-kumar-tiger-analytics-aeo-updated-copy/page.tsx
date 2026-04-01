@@ -427,7 +427,7 @@ export default async function CompanySponsoredArticlePage(props: {
 
     if (post) {
       post.title = "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse [AEO Updated \u2013 Safety Copy]";
-      post.slug = { current: "mahesh-kumar-tiger-analytics-aeo-updated-copy", _type: "slug" };
+      post.slug = { current: "mahesh-kumar-tiger-analytics-aeo-updated-copy" };
     }
 
     const isCXOInterview = false; // Never true for CSA
