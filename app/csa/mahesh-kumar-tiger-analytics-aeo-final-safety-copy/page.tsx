@@ -414,8 +414,8 @@ export default async function CompanySponsoredArticlePage(props: {
     let post = await getPost("mahesh-kumar-tiger-analytics");
 
     if (post) {
-      post.title = "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse [AEO Final Improved]";
-      post.slug = { current: "mahesh-kumar-tiger-analytics-aeo-final-improved" };
+      post.title = "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse";
+      post.slug = { current: "mahesh-kumar-tiger-analytics-aeo-final-safety-copy" };
     }
 
     const isCXOInterview = false; // Never true for CSA
@@ -1383,7 +1383,7 @@ export async function generateMetadata(props: {
   return generateSEOMetadata({
     metaTitle: (post as any)?.seo?.metaTitle, // RALPH-BYPASS [Legacy]
     metaDescription: (post as any)?.seo?.metaDescription, // RALPH-BYPASS [Legacy]
-    title: "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse [AEO Final Improved]",
+    title: "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse",
     description: post.excerpt || post.body?.[0]?.children?.[0]?.text,
     keywords: post.tags || [],
     image:
@@ -1391,11 +1391,11 @@ export async function generateMetadata(props: {
       (post.mainImage
         ? urlFor(post.mainImage).auto("format").url()
         : undefined),
-    url: `https://csuitemagazine.global/csa/${slug}`,
+    url: `https://csuitemagazine.global/csa/mahesh-kumar-tiger-analytics-aeo-final-safety-copy`,
     type: "article",
     publishedTime: post.publishedAt,
     writer: (post as any)?.writer?.name, // RALPH-BYPASS [Legacy]
     section: post.categories?.[0]?.title,
-    noIndex: shouldNoIndex(slug), // Temporarily hide problematic articles from search engines
+    noIndex: true, // Safety copy should not be indexed 
   });
 }
