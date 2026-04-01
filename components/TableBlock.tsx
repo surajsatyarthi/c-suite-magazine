@@ -17,11 +17,11 @@ export default function TableBlock({ value }: TableBlockProps) {
         <div className="my-8 overflow-x-auto">
             <table className="min-w-full border-collapse border border-gray-200 text-left text-sm">
                 <thead>
-                    <tr className="bg-gray-50">
+                    <tr style={{ backgroundColor: '#c8ab3d' }}>
                         {headerRow.cells.map((cell, index) => (
                             <th
                                 key={index}
-                                className="border-b border-gray-200 px-4 py-3 font-serif font-bold text-gray-900"
+                                className="border-b border-[#b09530] px-4 py-3 font-serif font-bold text-white"
                             >
                                 {cell}
                             </th>

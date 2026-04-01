@@ -117,6 +117,18 @@ const components: PortableTextComponents = {
     h2: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
       const text = extractTextFromChildren(value?.children || [])
       const id = slugify(text)
+      const isGold = text === 'Key Takeaways' || text.startsWith('Frequently Asked Questions')
+      if (isGold) {
+        return (
+          <h2
+            id={id}
+            className="text-3xl font-serif font-normal mt-12 mb-6 border-b-2 pb-2"
+            style={{ color: '#c8ab3d', borderColor: '#c8ab3d' }}
+          >
+            {children}
+          </h2>
+        )
+      }
       return <h2 id={id} className="text-3xl font-serif font-normal text-gray-900 mt-12 mb-6">{children}</h2>
     },
     h3: ({ children, value }: any) => { // RALPH-BYPASS [Legacy]
