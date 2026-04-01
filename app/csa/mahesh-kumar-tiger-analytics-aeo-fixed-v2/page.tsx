@@ -426,7 +426,6 @@ export default async function CompanySponsoredArticlePage(props: {
     let post = await getPost("mahesh-kumar-tiger-analytics");
 
     if (post) {
-      post.title = "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse [AEO Fixed \u2013 Full Length v2]";
       post.slug = { current: "mahesh-kumar-tiger-analytics-aeo-fixed-v2" };
     }
 
@@ -1374,7 +1373,7 @@ export async function generateMetadata(props: {
   return generateSEOMetadata({
     metaTitle: (post as any)?.seo?.metaTitle, // RALPH-BYPASS [Legacy]
     metaDescription: (post as any)?.seo?.metaDescription, // RALPH-BYPASS [Legacy]
-    title: "The Certainty Code: How Mahesh Kumar Built Tiger Analytics Into a $750M AI Powerhouse [AEO Fixed \u2013 Full Length v2]",
+    title: post.title,
     description: post.excerpt || post.body?.[0]?.children?.[0]?.text,
     keywords: post.tags || [],
     image:
