@@ -2,7 +2,6 @@ import OptimizedImage from '@/components/OptimizedImage'
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
 import InArticleAd from '@/components/InArticleAd'
-import { ADS } from '@/lib/adInterstitial/constants'
 
 type AdProps = {
   placement: 'article-sidebar-large' | 'in-article'
@@ -33,7 +32,7 @@ async function fetchAd(placement: string) {
       placement, 
       fallbackId: placement === 'article-sidebar-large' ? FALLBACK_AD_ID : null 
     },
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 604800 } }
   )
 }
 

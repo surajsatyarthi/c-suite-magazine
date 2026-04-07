@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
-export const revalidate = 86400 // Revalidate once per day
+export const revalidate = 604800 // Revalidate once per week — deployment flushes cache on every publish
 
 /**
  * Generate metadata for SEO

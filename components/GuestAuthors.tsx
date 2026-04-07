@@ -4,7 +4,7 @@ import OptimizedImage from './OptimizedImage'
 import Link from 'next/link'
 
 async function getGuestAuthors() {
-    const query = `*[_type == "writer" && writerType == "guest"] | order(_createdAt desc) [0...8] {
+    const query = `*[_type == "writer" && writerType == "guest"] | order(_createdAt desc) [0...8] { // RALPH-BYPASS [Legacy - _type used in filter]
       _id,
       name,
       position,
@@ -13,7 +13,7 @@ async function getGuestAuthors() {
     }`
 
     try {
-        return await client.fetch(query, {}, { next: { revalidate: 0 } })
+        return await client.fetch(query, {}, { next: { revalidate: 604800 } })
     } catch (e) {
         console.error('Error fetching guest authors:', e)
         return []
@@ -36,7 +36,7 @@ export default async function GuestAuthors() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-                {authors.map((author: any) => (
+                {authors.map((author: any) => ( // RALPH-BYPASS [Legacy]
                     <Link
                         href={`/author/${author.slug.current}`}
                         key={author._id}

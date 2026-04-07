@@ -3,7 +3,7 @@
 import Navigation from '@/components/Navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { submitContactForm } from '@/app/actions/contact'
 
 const initialState = {
@@ -13,6 +13,13 @@ const initialState = {
 
 export default function ContactPage() {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
+  const [loadedAt, setLoadedAt] = useState('')
+
+  // Record when the form was displayed — used server-side to reject
+  // submissions that arrive too quickly (bot behaviour).
+  useEffect(() => {
+    setLoadedAt(Date.now().toString())
+  }, [])
 
   return (
     <>
@@ -125,6 +132,17 @@ export default function ContactPage() {
                 )}
 
                 <form action={formAction} className="space-y-6">
+                  {/* Timing token — set on mount, checked server-side */}
+                  <input type="hidden" name="_loadedAt" value={loadedAt} />
+
+                  {/* Honeypot — invisible to real users, bots fill it automatically.
+                      Off-screen positioning is used intentionally (not display:none,
+                      which bots detect and skip). */}
+                  <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }} aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>

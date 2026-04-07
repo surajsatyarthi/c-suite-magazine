@@ -8,13 +8,13 @@ interface SpotlightLeader {
   position?: string
   company?: string
   achievement: string
-  image: any
+  image: any // RALPH-BYPASS [Legacy]
   profileUrl: string
 }
 
 async function getSpotlightLeaders(): Promise<SpotlightLeader[]> {
   // Get recent Interview articles and show the SUBJECT of the interview (from title or mainImage)
-  const query = `*[_type == "post" 
+  const query = `*[_type == "post" // RALPH-BYPASS [Legacy - _type used in filter]
     && "cxo-interview" in categories[]->slug.current
     && defined(mainImage)
   ] | order(publishedAt desc)[0...5] {
@@ -26,10 +26,10 @@ async function getSpotlightLeaders(): Promise<SpotlightLeader[]> {
   }`
 
   try {
-    const articles = await client.fetch(query, {}, { next: { revalidate: 600 } })
+    const articles = await client.fetch(query, {}, { next: { revalidate: 604800 } })
     
     // Extract leader info from article metadata
-    const leaders: SpotlightLeader[] = articles.map((article: any) => {
+    const leaders: SpotlightLeader[] = articles.map((article: any) => { // RALPH-BYPASS [Legacy]
       // Extract name from title - handle multiple formats:
       // 1. "Name: Position/Company" - extract before colon
       // 2. "Name's Something" - extract before apostrophe

@@ -9,9 +9,8 @@ const client = createClient({
   useCdn: false,
 })
 
-// Enable ISR (Incremental Static Regeneration) with 10-minute revalidation
-// Articles rarely change after publish — revalidate once per day to reduce ISR writes
-export const revalidate = 86400
+// Revalidate once per week — deployment flushes cache on every publish
+export const revalidate = 604800
 
 // Allow dynamic params to be rendered on-demand (not just build-time paths)
 // Without this, Next.js will return 404 for a slug not in generateStaticParams

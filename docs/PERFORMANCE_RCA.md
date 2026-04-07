@@ -1,5 +1,78 @@
 # Performance Root Cause Analysis & Fixes
 
+---
+
+## RCA #2 — Vercel CPU + Neon Compute Overrun
+
+**Date**: 2026-04-07
+**Alerts**: Vercel free tier at 75% Fluid Active CPU · Neon at 80% of 100 CU-hours/month
+**Status**: ✅ Fixed
+
+### Root Cause
+
+`IndustryJuggernauts.tsx` and `GuestAuthors.tsx` both had `revalidate: 0` on their Sanity fetches. In Next.js, a single child component with `revalidate: 0` cascades up and forces the **entire parent page** into dynamic rendering — overriding the page-level `revalidate: 86400`. The homepage was being fully re-rendered on every single visitor request.
+
+Consequence 1 (Vercel CPU): Every homepage visit = fresh Sanity fetches for every component on the page.
+Consequence 2 (Neon CU-hours): Every homepage visit also triggered `getAllExecutivesWithCompensation()` — a LATERAL JOIN query fetching up to 10,000 rows — keeping the Neon compute active continuously.
+
+### Additional Neon Finding
+
+The homepage fetched 10,000 executive rows but only used 3 (`.slice(0, 3)`). The database was doing 10,000× more work than needed.
+
+### Fixes Applied
+
+| File | Change |
+|------|--------|
+| `components/IndustryJuggernauts.tsx` | `revalidate: 0` → `revalidate: 604800` |
+| `components/GuestAuthors.tsx` | `revalidate: 0` → `revalidate: 604800` |
+| `components/SpotlightsWidget.tsx` | `revalidate: 600` → `revalidate: 604800` |
+| `components/ReadMoreArticles.tsx` | `revalidate: 600` → `revalidate: 604800` |
+| `components/Ad.tsx` | `revalidate: 3600` → `revalidate: 604800` |
+| `app/page.tsx` | Page-level `revalidate: 86400` → `revalidate: 604800`; fetch calls `600` → `604800` |
+| `app/article/[slug]/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/executive-salaries/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/executive-salaries/[slug]/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/writer/[slug]/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/tag/[tagSlug]/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/tag/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/category/[categorySlug]/page.tsx` | `revalidate: 86400` → `revalidate: 604800` |
+| `app/page.tsx:153` | Homepage query limit `10,000` → `3` rows |
+
+### Why 1 Week is Safe
+
+The site follows a **deploy-on-publish workflow** — a Vercel deployment is triggered after every content change. Deployments flush the ISR cache entirely, so `revalidate: 604800` is a dead-man's switch that rarely fires. The 1-week window is only a fallback for the case where content is changed in Sanity without a redeploy.
+
+### SOP — Cache Invalidation
+
+> Every content change in Sanity (article, ad, author, config) **must** be followed by a Vercel redeploy. The redeploy flushes the ISR cache and is the primary cache-busting mechanism. The `revalidate` timer is a safety net only.
+
+### Remaining Risk
+
+Neon Sentry monitoring not yet set up (T-117). If Sanity is briefly unavailable during a page regeneration, the broken state could be cached for up to a week with no alert. Fix in next session.
+
+---
+
+## RCA #3 — Neon Database Client
+
+**Date**: 2026-04-07
+**Issue**: `@vercel/postgres` routes queries through Vercel's proxy layer, adding latency and holding Neon compute active longer per query.
+**Status**: ✅ Fixed
+
+### Fix
+
+- Replaced `@vercel/postgres` with `@neondatabase/serverless` (direct HTTP to Neon)
+- Switched from pooler URL (`POSTGRES_URL`) to direct URL (`POSTGRES_URL_NON_POOLING`) — HTTP client doesn't use TCP so pgBouncer adds no value
+- Added explicit error message if env var is missing (replaces silent `!` assertion)
+
+### Known Limitations
+
+- `@neondatabase/serverless` HTTP mode does not support transactions (see T-119)
+- `@vercel/postgres` still present in `package.json` for 8 legacy data-import scripts (see T-120)
+
+---
+
+## RCA #1 — High CPU usage and temperature
+
 **Date**: 2026-01-26
 **Issue**: High CPU usage and temperature
 **Status**: ✅ Fixed

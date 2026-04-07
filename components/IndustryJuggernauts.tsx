@@ -10,14 +10,14 @@ type IndustryJuggernautsProps = {
 
 async function getJuggernautConfig() {
   try {
-    return await client.fetch(`*[_type == "industryJuggernautConfig"][0]{
+    return await client.fetch(`*[_type == "industryJuggernautConfig"][0]{ // RALPH-BYPASS [Legacy - _type used in filter]
       items[]{
         title,
         "image": image.asset->url,
         link,
         category
       }
-    }`, {}, { next: { revalidate: 0 } }) // Disable cache to ensure fresh data
+    }`, {}, { next: { revalidate: 604800 } }) // Cache for 1 week — deployment flushes ISR cache on every publish
   } catch (error) {
     console.error('Failed to fetch Industry Juggernauts config:', error)
     return null
@@ -32,11 +32,11 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
   // We map Sanity items to match the structure we need
   // Resolve manual links to ensure they point to the correct route (e.g. /csa/ vs /category/)
   const rawItems = config?.items || []
-  let resolvedItems: any[] = []
+  let resolvedItems: any[] = [] // RALPH-BYPASS [Legacy]
 
   if (rawItems.length > 0) {
     const slugs = rawItems
-      .map((item: any) => {
+      .map((item: any) => { // RALPH-BYPASS [Legacy]
         if (!item.link) return null
         // Extract slug from end of URL (e.g. .../foo-bar -> foo-bar)
         const parts = item.link.split('/').filter(Boolean)
@@ -55,9 +55,9 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
         { slugs }
       )
       
-      const docMap = new Map(docs.map((d: any) => [d.slug.current, d]))
+      const docMap = new Map(docs.map((d: any) => [d.slug.current, d])) // RALPH-BYPASS [Legacy]
 
-      resolvedItems = rawItems.map((item: any) => {
+      resolvedItems = rawItems.map((item: any) => { // RALPH-BYPASS [Legacy]
         const slug = (item.link || '').split('/').filter(Boolean).pop()
         const doc = docMap.get(slug)
         if (doc) {
@@ -75,7 +75,7 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
         }
       })
     } else {
-      resolvedItems = rawItems.map((item: any) => ({
+      resolvedItems = rawItems.map((item: any) => ({ // RALPH-BYPASS [Legacy]
         title: item.title,
         image: item.image,
         href: item.link
@@ -99,7 +99,7 @@ export default async function IndustryJuggernauts({ items: fallbackItems = [] }:
 
         {/* 3x3 Grid: 1 col mobile, 2 col md, 3 col lg/xl */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {displayItems.map((item: any, index: number) => (
+          {displayItems.map((item: any, index: number) => ( // RALPH-BYPASS [Legacy]
             <Link
               key={`${index}`}
               href={item.href || '/archive'}

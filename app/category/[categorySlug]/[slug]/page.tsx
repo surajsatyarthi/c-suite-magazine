@@ -15,7 +15,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import Footer from '@/components/Footer'
 // dynamic already imported above
 import Ad from '@/components/Ad'
-import ScrollTriggerAd from '@/components/ScrollTriggerAd'
+import ScrollTriggerAdProvider from '@/components/ScrollTriggerAdProvider'
 import SocialShare from '@/components/SocialShare'
 import PortableBody from "@/components/PortableBody";
 // View tracking disabled per marketing policy
@@ -746,7 +746,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
 
                     {/* Normal Articles: Trigger Popup on 50% Scroll */}
                     {/* Disable popup for Juggernaut articles */}
-                    {!isCompanySponsored && !isJuggernaut && <ScrollTriggerAd />}
+                    {!isCompanySponsored && !isJuggernaut && <ScrollTriggerAdProvider />}
                   </div>
 
                   {/* Sidebar */}

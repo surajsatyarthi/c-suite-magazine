@@ -58,8 +58,14 @@
 | **#55** | **Plans Page FAQ Content Update**      | P2       | ✅ RESOLVED | 1h   | Update interview format and revision policy text.                                                          |
 | **#57** | **FAANG Post-Launch Review Adoptions** | P0       | ✅ RESOLVED | --   | [PR #57](https://github.com/surajsatyarthi/c-suite-magazine/pull/57)                                       |
 
+| **#58** | **Contact Form Spam Protection**       | P1       | ✅ RESOLVED | 1h   | 4-layer defence: honeypot, timing check (3s), rate limit (3/IP/hr), 18-keyword filter. Silent-accept on bot hits. |
+| **#59** | **Vercel CPU + Neon Compute Overrun**  | P0       | ✅ RESOLVED | 2h   | Root cause: `revalidate: 0` on IndustryJuggernauts/GuestAuthors forced homepage dynamic on every visit. All revalidates bumped to 604800 (1 week). SOP: redeploy after every content/ad change flushes ISR cache. |
+| **#60** | **Neon DB Client Migration**           | P1       | ✅ RESOLVED | 1h   | Switched `@vercel/postgres` → `@neondatabase/serverless` with direct URL (`POSTGRES_URL_NON_POOLING`). Homepage query limit 10,000 → 3 rows. |
+| **#61** | **Popup Ads: Hardcoded → Sanity**      | P1       | ✅ RESOLVED | 2h   | IBM watsonx + Luxwing ads compressed (66%/71%), uploaded to Sanity as `advertisement` docs (`placement: popup`). `PopupAdsProvider` + `ScrollTriggerAdProvider` server components fetch live from CMS. Dead code (`useImagePreloader`, `index.ts`) removed. |
+
 ## Active Roadmap (Next Steps)
 
 **🎉 ALL CRITICAL ISSUES RESOLVED**
 
 1. **#18 Sanity Preview** (P2 - ON HOLD) - Preview sync debugging (deferred, complex).
+2. **T-117 Sentry Setup** (Next session priority) — error monitoring not yet wired up despite package being installed.

@@ -8,8 +8,8 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
 import { slugifyTag, normalizeDisplayTag } from '@/lib/tag-utils'
 import { getAllUniqueTags, getTagFromSlug, getTagPosts } from '@/lib/sanity.queries'
 
-// Tag pages change rarely — revalidate once per day to reduce ISR writes
-export const revalidate = 86400
+// Revalidate once per week — deployment flushes cache on every publish
+export const revalidate = 604800
 
 // Local interface if not exported
 interface TagPayload {

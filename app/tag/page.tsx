@@ -7,8 +7,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { normalizeDisplayTag } from '@/lib/tag-utils'
 
-// ISR: Revalidate every hour since tags don't change often
-export const revalidate = 86400
+// Revalidate once per week — deployment flushes cache on every publish
+export const revalidate = 604800
 
 export const metadata: Metadata = {
   title: 'Industry Tags | C-Suite Magazine',

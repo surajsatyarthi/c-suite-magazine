@@ -33,6 +33,58 @@ This runbook documents the standard operating procedures for DNS, deployments, e
   - `npx vercel domains inspect csuitemagazine.global`
   - Apex should serve latest prod; `www` redirects to apex.
 
+## Cache Invalidation SOP (CRITICAL)
+
+The site uses ISR with `revalidate: 604800` (1 week) across all pages and components. This means:
+
+- **Content change in Sanity** (article, author, ad, config) → **must trigger a Vercel redeploy**
+- **Redeploy flushes the ISR cache** — this is the primary cache-busting mechanism
+- The 1-week revalidate is a dead-man's switch only
+
+**Steps after any Sanity content change:**
+1. Publish/save in Sanity Studio
+2. Go to Vercel dashboard → project → Deployments → Redeploy latest
+3. OR push a commit to `main` (triggers auto-deploy via GitHub integration)
+
+**What breaks if you forget:** Visitors see stale content for up to 1 week with no error shown.
+
+---
+
+## Managing Popup Ads
+
+Popup ads are managed entirely in Sanity. No code changes required.
+
+**To change a popup ad:**
+1. Go to Sanity Studio → Advertisements
+2. Find the ad with `placement: Popup (Interstitial)`
+3. Update the image, target URL, or toggle `isActive`
+4. Redeploy (see Cache Invalidation SOP above)
+
+**To add a new popup ad:**
+1. Create a new Advertisement document
+2. Set `placement: Popup (Interstitial)`, `isActive: true`
+3. Set `priority` — higher number shows first in the carousel
+4. Upload the ad image (compress first — target under 300KB for PNG)
+5. Set `targetUrl` to the advertiser's homepage
+6. Redeploy
+
+**Image compression before upload:**
+```bash
+node -e "
+const sharp = require('sharp');
+sharp('input.png').png({ compressionLevel: 9, effort: 10 }).toFile('output.png')
+  .then(i => console.log(i.size, 'bytes'));
+"
+```
+
+**Current popup ads (as of 2026-04-07):**
+| Brand | Target URL | Priority |
+|-------|-----------|----------|
+| IBM watsonx | https://www.ibm.com/watsonx | 10 |
+| Luxwing Private Charter | https://luxwing.com | 9 |
+
+---
+
 ## Deployments
 - Preferred (no waiting): connect GitHub repo to Vercel project `ceo-magazine` and set Production branch to `main`.
   - Every push → cloud build → auto expose to `csuitemagazine.global`.

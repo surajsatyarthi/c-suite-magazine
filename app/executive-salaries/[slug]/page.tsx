@@ -36,7 +36,7 @@ export async function generateStaticParams() {
   }
 }
 
-export const revalidate = 86400 // Revalidate once per day (24 hours)
+export const revalidate = 604800 // Revalidate once per week — deployment flushes cache on every publish
 export const dynamicParams = true // Generate others on-demand
 
 /**

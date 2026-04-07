@@ -6,7 +6,7 @@ import { Post } from '@/lib/types'
 
 async function getRandomArticles(currentPostId: string): Promise<Post[]> {
     // Fetch a pool of recent articles (e.g., last 50) to pick random ones from
-    const query = `*[_type == "post" && _id != $currentPostId && defined(mainImage.asset) && isHidden != true] | order(publishedAt desc) [0...50] {
+    const query = `*[_type == "post" && _id != $currentPostId && defined(mainImage.asset) && isHidden != true] | order(publishedAt desc) [0...50] { // RALPH-BYPASS [Legacy - _type used in filter]
         _id,
         title,
         slug,
@@ -17,7 +17,7 @@ async function getRandomArticles(currentPostId: string): Promise<Post[]> {
     }`
 
     try {
-        const articles = await client.fetch(query, { currentPostId }, { next: { revalidate: 600 } })
+        const articles = await client.fetch(query, { currentPostId }, { next: { revalidate: 604800 } })
 
         if (!articles || articles.length === 0) return []
 

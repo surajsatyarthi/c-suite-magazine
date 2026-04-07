@@ -1,14 +1,22 @@
 import 'server-only'
 /**
- * Database Client - Vercel Postgres
+ * Database Client - Neon Serverless
  *
- * This module provides database access for the executive compensation
- * programmatic SEO feature using Vercel Postgres.
+ * Uses @neondatabase/serverless instead of @vercel/postgres.
+ * Direct HTTP connection to Neon — no Vercel proxy layer, lower latency,
+ * shorter compute hold time = fewer CU-hours consumed on the free tier.
  */
 
-import { sql } from '@vercel/postgres'
+import { neon } from '@neondatabase/serverless'
 import { guardian } from './guardian'
-export { sql }
+
+// Use the non-pooling direct URL — the HTTP client doesn't use TCP connections
+// so pgBouncer pooling adds no value, just an unnecessary network hop.
+const connectionString = process.env.POSTGRES_URL_NON_POOLING
+if (!connectionString) {
+  throw new Error('[db] POSTGRES_URL_NON_POOLING is not set. Check your environment variables.')
+}
+const sql = neon(connectionString)
 
 // Type definitions
 export interface Executive {
@@ -111,7 +119,7 @@ export interface ExecutiveWithCompensation extends Executive {
  */
 export async function getExecutiveBySlug(slug: string): Promise<ExecutiveWithCompensation | null> {
   try {
-    const result = await sql`
+    const rows = await sql`
       SELECT
         e.id,
         e.full_name,
@@ -175,11 +183,11 @@ export async function getExecutiveBySlug(slug: string): Promise<ExecutiveWithCom
       LIMIT 1
     `
 
-    if (result.rows.length === 0) {
+    if (rows.length === 0) {
       return null
     }
 
-    return result.rows[0] as ExecutiveWithCompensation
+    return rows[0] as ExecutiveWithCompensation
   } catch (error) {
     console.error('[db] Failed to fetch executive:', error)
     return null
@@ -191,13 +199,13 @@ export async function getExecutiveBySlug(slug: string): Promise<ExecutiveWithCom
  */
 export async function getExecutiveSlugs(limit: number = 100): Promise<string[]> {
   try {
-    const result = await sql`
+    const rows = await sql`
       SELECT slug
       FROM executives
       ORDER BY created_at DESC
       LIMIT ${limit}
     `
-    return result.rows.map((row) => row.slug as string)
+    return rows.map((row) => row.slug as string)
   } catch (error) {
     console.error('[db] Failed to fetch executive slugs:', error)
     return []
@@ -209,13 +217,13 @@ export async function getExecutiveSlugs(limit: number = 100): Promise<string[]> 
  */
 export async function getAllExecutives(limit: number = 5): Promise<Partial<Executive>[]> {
   try {
-    const result = await sql`
+    const rows = await sql`
       SELECT id, full_name, slug, current_title
       FROM executives
       ORDER BY full_name
       LIMIT ${limit}
     `
-    return result.rows as Partial<Executive>[]
+    return rows as Partial<Executive>[]
   } catch (error) {
     console.error('[db] Failed to fetch executives:', error)
     return []
@@ -227,13 +235,13 @@ export async function getAllExecutives(limit: number = 5): Promise<Partial<Execu
  */
 export async function getAllCompanies(limit: number = 5): Promise<Partial<Company>[]> {
   try {
-    const result = await sql`
+    const rows = await sql`
       SELECT id, name, ticker_symbol
       FROM companies
       ORDER BY name
       LIMIT ${limit}
     `
-    return result.rows as Partial<Company>[]
+    return rows as Partial<Company>[]
   } catch (error) {
     console.error('[db] Failed to fetch companies:', error)
     return []
@@ -245,13 +253,13 @@ export async function getAllCompanies(limit: number = 5): Promise<Partial<Compan
  */
 export async function getCompensationRecords(limit: number = 5): Promise<Partial<Compensation>[]> {
   try {
-    const result = await sql`
+    const rows = await sql`
       SELECT id, fiscal_year, total_compensation
       FROM compensation
       ORDER BY fiscal_year DESC
       LIMIT ${limit}
     `
-    return result.rows as Partial<Compensation>[]
+    return rows as Partial<Compensation>[]
   } catch (error) {
     console.error('[db] Failed to fetch compensation:', error)
     return []
@@ -277,7 +285,7 @@ export interface ExecutiveForHub {
 
 export async function getAllExecutivesWithCompensation(limit: number = 10000): Promise<ExecutiveForHub[]> {
   try {
-    const result = await guardian.monitor(sql`
+    const rows = await guardian.monitor(sql`
       SELECT
         e.id,
         e.full_name,
@@ -313,12 +321,9 @@ export async function getAllExecutivesWithCompensation(limit: number = 10000): P
       ORDER BY latest.total_compensation DESC NULLS LAST
       LIMIT ${limit}
     `, 'getAllExecutivesWithCompensation')
-    return result.rows as ExecutiveForHub[]
+    return rows as ExecutiveForHub[]
   } catch (error) {
     console.error('[db] Failed to fetch executives with compensation:', error)
     return []
   }
 }
-
-// Export sql already handled at top
-

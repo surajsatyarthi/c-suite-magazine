@@ -14,7 +14,7 @@ import path from 'path'
 import fs from 'fs/promises'
 import { getAllExecutivesWithCompensation } from '@/lib/db'
 import { getSpotlightItems, processSpotlightItems } from '@/lib/spotlight'
-import HomepageAdTrigger from '@/components/HomepageAdTrigger'
+import PopupAdsProvider from '@/components/PopupAdsProvider'
 
 export const metadata: Metadata = generateMetadata({
   title: 'C-Suite Magazine - Leadership, Innovation & Executive Insights',
@@ -23,8 +23,8 @@ export const metadata: Metadata = generateMetadata({
   type: 'website'
 })
 
-// Revalidate once per day — content doesn’t change hourly, reduces ISR writes significantly
-export const revalidate = 86400
+// Revalidate once per week — deployment flushes ISR cache on every publish, so this is just a safety net
+export const revalidate = 604800
 
 // Helper: wrap Sanity client.fetch with a soft timeout so homepage never stalls
 async function fetchWithTimeout<T>(promise: Promise<T>, ms = 1800, onTimeout?: () => void): Promise<T | null> {
@@ -53,7 +53,7 @@ async function getLatestPosts(): Promise<Post[]> {
     const excludeSlugs = [...new Set([...spotlightSlugs, ...juggernautSlugs])]
 
     const allResults = await fetchWithTimeout(
-      client.fetch(query, { excludeSlugs }, { next: { revalidate: 600 } }),
+      client.fetch(query, { excludeSlugs }, { next: { revalidate: 604800 } }),
       1500
     )
 
@@ -113,7 +113,7 @@ async function getJuggernautExcludeSlugs(): Promise<string[]> {
     const config = await client.fetch(
       `*[_type == "industryJuggernautConfig"][0].items[].link`, // RALPH-BYPASS [Legacy]
       {},
-      { next: { revalidate: 600 } }
+      { next: { revalidate: 604800 } }
     )
 
     if (!Array.isArray(config)) return []
@@ -149,9 +149,8 @@ export default async function Home() {
   const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
   const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
 
-  // Fetch top 3 executives by compensation from database
-  const allExecutives = await getAllExecutivesWithCompensation()
-  const topExecutives = allExecutives.slice(0, 3)
+  // Fetch only the top 3 executives needed for the homepage widget
+  const topExecutives = await getAllExecutivesWithCompensation(3)
 
   return (
     <>
@@ -177,7 +176,7 @@ export default async function Home() {
         <MagazineGallery items={spotlightItems} />
 
         {/* Homepage Popup Ad Trigger (A/B Test Variant) */}
-        <HomepageAdTrigger />
+        <PopupAdsProvider />
 
         {/* Industry Juggernauts */}
         <IndustryJuggernauts items={spotlightItems} />

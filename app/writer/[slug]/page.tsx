@@ -13,8 +13,8 @@ import { getViews, formatViewsMillion } from '@/lib/views'
 
 import { getServerClient } from '@/lib/sanity.server'
 
-// Enable ISR
-export const revalidate = 86400
+// Revalidate once per week — deployment flushes cache on every publish
+export const revalidate = 604800
 
 async function getWriter(slug: string): Promise<Writer | null> {
   const query = `*[_type == "writer" && slug.current == $slug][0] { // RALPH-BYPASS [Legacy]

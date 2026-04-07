@@ -16,6 +16,9 @@ importers:
       '@google-analytics/data':
         specifier: ^5.2.1
         version: 5.2.1
+      '@neondatabase/serverless':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@portabletext/react':
         specifier: ^4.0.3
         version: 4.0.3(react@19.2.4)
@@ -1871,6 +1874,10 @@ packages:
 
   '@neondatabase/serverless@0.9.5':
     resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
+
+  '@neondatabase/serverless@1.0.2':
+    resolution: {integrity: sha512-I5sbpSIAHiB+b6UttofhrN/UJXII+4tZPAq1qugzwCwLIL8EZLV7F/JyHUrEIiGgQpEXzpnjlJ+zwcEhheGvCw==}
+    engines: {node: '>=19.0.0'}
 
   '@next/env@16.1.6':
     resolution: {integrity: sha512-N1ySLuZjnAtN3kFnwhAwPvZah8RJxKasD7x1f8shFqhncnWZn4JMfg37diLNuoHsLAlrDfM3g4mawVdtAG8XLQ==}
@@ -9844,6 +9851,11 @@ snapshots:
     dependencies:
       '@types/pg': 8.11.6
 
+  '@neondatabase/serverless@1.0.2':
+    dependencies:
+      '@types/node': 22.19.7
+      '@types/pg': 8.11.6
+
   '@next/env@16.1.6': {}
 
   '@next/eslint-plugin-next@16.0.1':
@@ -11705,7 +11717,7 @@ snapshots:
 
   '@types/pg-pool@2.0.6':
     dependencies:
-      '@types/pg': 8.6.1
+      '@types/pg': 8.11.6
 
   '@types/pg@8.11.6':
     dependencies:

@@ -10,8 +10,8 @@ import type { Metadata } from 'next'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
 import { safeJsonLd } from '@/lib/security'
 
-// Revalidate once per day — reduces ISR writes on category listing pages
-export const revalidate = 86400
+// Revalidate once per week — deployment flushes cache on every publish
+export const revalidate = 604800
 
 async function getFetchClient() {
   const { isEnabled } = await draftMode();

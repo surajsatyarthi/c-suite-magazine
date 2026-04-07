@@ -15,7 +15,7 @@ import Footer from "@/components/Footer";
 import EditorialBrandAvatar from "@/components/EditorialBrandAvatar";
 // dynamic already imported above
 import Ad from "@/components/Ad";
-import ScrollTriggerAd from "@/components/ScrollTriggerAd";
+import ScrollTriggerAdProvider from "@/components/ScrollTriggerAdProvider";
 const CSAPopupTrigger = dynamic(() => import("@/components/CSAPopupTrigger"));
 import SocialShare from "@/components/SocialShare";
 import PortableBody from "@/components/PortableBody";
@@ -853,7 +853,7 @@ export default async function CompanySponsoredArticlePage(props: {
                     {/* Normal Articles: Trigger Popup on 50% Scroll */}
                     {/* Disable popup for Juggernaut articles */}
                     {!isCompanySponsored && !isJuggernaut && (
-                      <ScrollTriggerAd />
+                      <ScrollTriggerAdProvider />
                     )}
                     {/* CSA Popup Ad: fire at 50% scroll for company-sponsored articles with a popup configured */}
                     {isCompanySponsored && post.popupAd?.image && post.popupAd?.targetUrl && (

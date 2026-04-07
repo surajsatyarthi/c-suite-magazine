@@ -15,7 +15,7 @@ export const guardian = {
    * @param queryPromise - The promise result of sql`...`
    * @param context - Description of the query (e.g., function name)
    */
-  async monitor<T extends { rows: unknown[] }>(queryPromise: Promise<T>, context: string = 'Anonymous Query'): Promise<T> {
+  async monitor<T extends unknown[]>(queryPromise: Promise<T>, context: string = 'Anonymous Query'): Promise<T> {
     // Only active in development to avoid spamming production logs
     // (User requested: "I want my local environment to scream at me")
     if (process.env.NODE_ENV === 'production') {
@@ -32,7 +32,7 @@ export const guardian = {
     }
 
     const duration = performance.now() - start;
-    const rowCount = result.rows.length;
+    const rowCount = result.length;
 
     // LAW 1: Speed Limit (100ms)
     if (duration > 100) {
