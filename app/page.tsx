@@ -146,11 +146,11 @@ import { safeJsonLd, sanitizeHtml } from '@/lib/security'
 
 export default async function Home() {
   const latestArticles = await getLatestPosts()
-  const { items: rawSpotlightItems, desiredCount } = await getSpotlightItems()
+  const [{ items: rawSpotlightItems, desiredCount }, topExecutives] = await Promise.all([
+    getSpotlightItems(),
+    getAllExecutivesWithCompensation(3),
+  ])
   const spotlightItems = processSpotlightItems(rawSpotlightItems, desiredCount)
-
-  // Fetch only the top 3 executives needed for the homepage widget
-  const topExecutives = await getAllExecutivesWithCompensation(3)
 
   return (
     <>

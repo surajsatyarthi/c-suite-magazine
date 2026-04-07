@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { client } from '@/lib/sanity'
 
-export const revalidate = 0
+export const revalidate = 60
 
 export async function GET(request: Request) {
   try {

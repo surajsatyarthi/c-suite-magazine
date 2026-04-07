@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import OptimizedImage from '@/components/OptimizedImage'
-import CXOOptimizedImage from '@/components/CXOOptimizedImage'
 import fs from 'fs'
 import path from 'path'
 import nextDynamic from 'next/dynamic'
@@ -25,7 +24,6 @@ import { urlFor } from '@/lib/sanity'
 import { getArticleUrl } from '@/lib/urls'
 import { getArticleType, getHeroTagline } from '@/lib/articleHelpers'
 import { draftMode } from 'next/headers'
-import { getViews, formatViewsMillion } from '@/lib/views'
 import { sanitizeExcerpt, sanitizeTitle } from '@/lib/text'
 import { Post, SanityImage } from '@/lib/types'
 import { generateMetadata as generateSEOMetadata, generateStructuredData } from '@/lib/seo'
@@ -71,7 +69,6 @@ function shouldNoIndex(slug: string): boolean {
   return NOINDEX_ARTICLES.includes(slug);
 }
 import TagChips from '@/components/TagChips'
-import IncrementViews from '@/components/IncrementViews'
 import { getHeroAspectRatio } from '@/lib/heroAspects'
 import { resolveFeaturedHeroImage, resolveFeaturedSectionImage } from '@/lib/resolveFeaturedHeroImage'
 
@@ -526,7 +523,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
         <Navigation />
 
         <main className="bg-white">
-          <IncrementViews slug={post.slug.current} />
           <ArticleProgress />
           <script
             type="application/ld+json"
@@ -575,7 +571,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                             <div className="flex items-center gap-3">
                               <div className="relative w-8 h-8 rounded-full overflow-hidden border border-[#d4d0c7] bg-[#082945] text-white flex items-center justify-center">
                                 {post.writer.image ? (
-                                  <CXOOptimizedImage
+                                  <OptimizedImage
                                     src={urlFor(post.writer.image).width(100).height(100).auto('format').url()}
                                     alt={post.writer.name}
                                     fill
@@ -609,14 +605,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                           )}
                           <span className="hidden md:inline text-[#d4d0c7] font-light">|</span>
                           <div className="flex items-center gap-4 font-medium text-gray-500">
-                            <span className="flex items-center gap-1.5">
-                              <svg className="w-4 h-4 text-[#c8ab3d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                              </svg>
-                              {formatViewsMillion(post.views, post.slug.current)}
-                            </span>
-                            <span aria-hidden className="text-[#d4d0c7]">•</span>
                             <span>{readTime} min read</span>
                           </div>
 
@@ -666,7 +654,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                                 })()
                               }}
                             >
-                              <CXOOptimizedImage
+                              <OptimizedImage
                                 src={
                                   (() => {
                                     if (featuredHeroSrc) return featuredHeroSrc
@@ -682,7 +670,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                                 fill
                                 className="object-contain object-center"
                                 quality={95}
-                                hero={true}
                                 priority={true}
                                 sizes="(max-width: 768px) 80vw, (max-width: 1024px) 70vw, 800px"
                               />
@@ -699,7 +686,7 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                             return { aspectRatio: meta || 16 / 9 }
                           })()}
                         >
-                          <CXOOptimizedImage
+                          <OptimizedImage
                             src={
                               (() => {
                                 if (featuredHeroSrc) return featuredHeroSrc
@@ -715,7 +702,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                             fill
                             className={'object-cover object-center'}
                             quality={95}
-                            hero={true}
                             priority={true}
                             sizes={(() => {
                               return featuredHeroSrc
@@ -832,20 +818,6 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                                 {relatedPost.title}
                               </h4>
                               <div className="flex items-center text-sm text-gray-500 font-sans">
-                                {(() => {
-                                  const slug = relatedPost.slug?.current || (relatedPost.slug as any) // RALPH-BYPASS [Legacy]
-                                  const v = getViews(slug, relatedPost.views)
-                                  const formatted = formatViewsMillion(v, slug)
-                                  return formatted ? (
-                                    <span className="flex items-center gap-1">
-                                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                      </svg>
-                                      {formatted}
-                                    </span>
-                                  ) : null
-                                })()}
                               </div>
                             </Link>
                           ))}
@@ -936,13 +908,12 @@ export default async function CategoryArticlePage(props: { params: Promise<{ cat
                         className={'relative w-full rounded-lg overflow-hidden mb-10'}
                         style={{ aspectRatio: featuredHeroAspect || 16 / 9 }}
                       >
-                        <CXOOptimizedImage
+                        <OptimizedImage
                           src={featuredHeroSrc}
                           alt={stub.title}
                           fill
                           className={'object-cover object-center'}
                           quality={95}
-                          hero={true}
                           priority={true}
                           sizes={'(max-width: 768px) 95vw, (max-width: 1024px) 70vw, 1000px'}
                         />

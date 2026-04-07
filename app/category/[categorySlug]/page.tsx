@@ -12,6 +12,7 @@ import { safeJsonLd } from '@/lib/security'
 
 // Revalidate once per week — deployment flushes cache on every publish
 export const revalidate = 604800
+export const dynamicParams = true
 
 async function getFetchClient() {
   const { isEnabled } = await draftMode();

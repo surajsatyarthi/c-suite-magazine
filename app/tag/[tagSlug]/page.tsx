@@ -10,6 +10,7 @@ import { getAllUniqueTags, getTagFromSlug, getTagPosts } from '@/lib/sanity.quer
 
 // Revalidate once per week — deployment flushes cache on every publish
 export const revalidate = 604800
+export const dynamicParams = true
 
 // Local interface if not exported
 interface TagPayload {

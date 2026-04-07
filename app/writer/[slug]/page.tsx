@@ -9,12 +9,11 @@ import { getArticleUrl } from '@/lib/urls'
 import PortableBody from '@/components/PortableBody'
 import { sanitizeExcerpt } from '@/lib/text'
 import { Writer, Post } from '@/lib/types'
-import { getViews, formatViewsMillion } from '@/lib/views'
-
 import { getServerClient } from '@/lib/sanity.server'
 
 // Revalidate once per week — deployment flushes cache on every publish
 export const revalidate = 604800
+export const dynamicParams = true
 
 async function getWriter(slug: string): Promise<Writer | null> {
   const query = `*[_type == "writer" && slug.current == $slug][0] { // RALPH-BYPASS [Legacy]
@@ -185,13 +184,6 @@ export default async function WriterPage({ params }: { params: Promise<{ slug: s
                               <p className="mt-2 text-sm text-gray-600 line-clamp-3">{excerptText}</p>
                             )}
                             <div className="flex items-center justify-between text-sm text-gray-500 mt-4">
-                              <span className="flex items-center gap-1">
-                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                {formatViewsMillion(article.views, article.slug.current)}
-                              </span>
                             </div>
                           </div>
                         </Link>
