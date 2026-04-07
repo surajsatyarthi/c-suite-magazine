@@ -1,25 +1,39 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const ADMIN_COOKIE = 'admin_session';
+
 export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // --- Admin route protection ---
+  // All /admin/* routes require authentication, except /admin/login
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    const session = req.cookies.get(ADMIN_COOKIE)?.value;
+    const secret = process.env.ADMIN_SECRET;
+
+    if (!secret || !session || session !== secret) {
+      const loginUrl = new URL('/admin/login', req.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // --- Bot blocking (saves compute on free tier) ---
   const userAgent = req.headers.get('user-agent')?.toLowerCase() || '';
-  
-  // List of bots to block to save compute
-  // These bots are known to be aggressive and provide little value to a content site
   const forbiddenBots = [
-    'gptbot', 
-    'bytespider', 
-    'claudebot', 
-    'anthropic-ai', 
-    'omgili', 
+    'gptbot',
+    'bytespider',
+    'claudebot',
+    'anthropic-ai',
+    'omgili',
     'omgilibot',
-    'facebookexternalhit', // Optional: Blocks FB previews/scraping if high load
+    'facebookexternalhit',
     'mj12bot',
     'semrushbot',
-    'dotbot'
+    'dotbot',
   ];
 
-  if (forbiddenBots.some(bot => userAgent.includes(bot))) {
+  if (forbiddenBots.some((bot) => userAgent.includes(bot))) {
     return new NextResponse('Access Denied: Bot Traffic Blocked to Save Resources', { status: 403 });
   }
 
@@ -28,7 +42,7 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // Only run on page routes — exclude API, Next.js internals, all static file extensions, and public asset folders
+    // Only run on page routes — exclude API, Next.js internals, static files, and public assets
     '/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|sitemap\\.xml|robots\\.txt|images|fonts|icons|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg|ico|woff2?|ttf|otf|mp4|pdf|json)).*)',
   ],
 };

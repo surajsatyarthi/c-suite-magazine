@@ -34,24 +34,24 @@ Higher RICE = do first. Security tasks are **mandatory** regardless of score.
 |----|------|------:|-------:|-----:|-------:|---------:|------|--------|--------|
 | **T-137** | ⚠️ MANDATORY SECURITY — Protect `/admin/*` routes — zero auth, anyone can access | 10 | 3 | 0.9 | 0.25 d | **108** | 2 h | 🔴 Open | Audit 2026-04-08 |
 | **T-145** | ⚠️ MANDATORY SECURITY — Audit and scope Sanity write token permissions | 10 | 3 | 0.9 | 0.063 d | **429** | 30 m | 🔴 Open | Audit 2026-04-08 |
-| **T-102** | ⚠️ MANDATORY SECURITY — `z.any()` in admin API route allows arbitrary payloads | 10 | 3 | 0.9 | 0.5 d | **54** | 30 min | 🔴 Open | `.agent/legacy_reports/LEGACY_AUDIT_BACKLOG.md` |
+| **T-102** | ⚠️ MANDATORY SECURITY — `z.any()` in admin API route allows arbitrary payloads | 10 | 3 | 0.9 | 0.5 d | **54** | 30 min | ✅ N/A — referenced file never existed | `.agent/legacy_reports/LEGACY_AUDIT_BACKLOG.md` |
 | **T-121** | Add slug indexes on `post`, `csa`, `category`, `writer` in Sanity Manage — biggest perf gain per effort on site | 5,000 | 1 | 0.9 | 0.031 d | **145,161** | 15 m | 🔴 Open | Audit 2026-04-08 |
 | **T-122** | Push category filtering to GROQ on homepage — remove client-side filter that over-fetches all posts | 5,000 | 1 | 0.9 | 0.125 d | **36,000** | 1 h | 🔴 Open | Audit 2026-04-08 |
-| **T-123** | Remove unused `systemLogType` Sanity schema — defined but never queried or populated | 5,000 | 0.25 | 0.9 | 0.031 d | **36,290** | 15 m | 🔴 Open | Audit 2026-04-08 |
-| **T-124** | Delete `lib/jules-client.ts` — 140 LOC, no imports anywhere in codebase | 5,000 | 0.25 | 0.9 | 0.031 d | **36,290** | 15 m | 🔴 Open | Audit 2026-04-08 |
-| **T-125** | `Promise.all()` on homepage parallel fetches — spotlight + executives fetched sequentially | 5,000 | 0.5 | 0.9 | 0.063 d | **35,714** | 30 m | 🔴 Open | Audit 2026-04-08 |
-| **T-126** | Add `.required()` validation to `writerType` `name` and `slug` fields in Sanity schema | 5,000 | 0.5 | 0.8 | 0.063 d | **31,746** | 30 m | 🔴 Open | Audit 2026-04-08 |
+| **T-123** | Remove unused `systemLogType` Sanity schema — defined but never queried or populated | 5,000 | 0.25 | 0.9 | 0.031 d | **36,290** | 15 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
+| **T-124** | Delete `lib/jules-client.ts` — 140 LOC, no imports anywhere in codebase | 5,000 | 0.25 | 0.9 | 0.031 d | **36,290** | 15 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
+| **T-125** | `Promise.all()` on homepage parallel fetches — spotlight + executives fetched sequentially | 5,000 | 0.5 | 0.9 | 0.063 d | **35,714** | 30 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
+| **T-126** | Add `.required()` validation to `writerType` `name` and `slug` fields in Sanity schema | 5,000 | 0.5 | 0.8 | 0.063 d | **31,746** | 30 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
 | **T-117** | 🚨 NEXT SESSION — Sentry error monitoring — catch silent server errors & broken cached pages before readers do | 5,000 | 2 | 0.9 | 0.5 d | **18,000** | 2 h | 🔴 Open | Session 2026-04-07 |
-| **T-127** | Merge `OptimizedImage` + `CXOOptimizedImage` — 80% identical, only differ on `quality` prop | 5,000 | 0.5 | 0.9 | 0.125 d | **18,000** | 1 h | 🔴 Open | Audit 2026-04-08 |
-| **T-128** | Add explicit `dynamicParams` config to all dynamic routes — currently implicit/inconsistent | 5,000 | 0.25 | 0.9 | 0.063 d | **17,857** | 30 m | 🔴 Open | Audit 2026-04-08 |
-| **T-129** | Delete `lib/articleImageService.ts` — 385 LOC, never imported anywhere | 5,000 | 0.25 | 0.9 | 0.063 d | **17,857** | 30 m | 🔴 Open | Audit 2026-04-08 |
-| **T-130** | Remove `lib/views.ts` + `IncrementViews` component — view tracking disabled per marketing policy | 5,000 | 0.25 | 0.9 | 0.063 d | **17,857** | 30 m | 🔴 Open | Audit 2026-04-08 |
+| **T-127** | Merge `OptimizedImage` + `CXOOptimizedImage` — 80% identical, only differ on `quality` prop | 5,000 | 0.5 | 0.9 | 0.125 d | **18,000** | 1 h | ✅ Done 2026-04-08 | Audit 2026-04-08 |
+| **T-128** | Add explicit `dynamicParams` config to all dynamic routes — currently implicit/inconsistent | 5,000 | 0.25 | 0.9 | 0.063 d | **17,857** | 30 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
+| **T-129** | Delete `lib/articleImageService.ts` — 385 LOC, never imported anywhere | 5,000 | 0.25 | 0.9 | 0.063 d | **17,857** | 30 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
+| **T-130** | Remove `lib/views.ts` + `IncrementViews` component — view tracking disabled per marketing policy | 5,000 | 0.25 | 0.9 | 0.063 d | **17,857** | 30 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
 | **T-131** | Fix Navigation category fetch — refetches on every route change, no expiry on sessionStorage cache | 5,000 | 0.5 | 0.8 | 0.125 d | **16,000** | 1 h | 🔴 Open | Audit 2026-04-08 |
-| **T-132** | Cache search API results — `revalidate: 0` hits Sanity live on every identical search query | 1,000 | 0.5 | 0.9 | 0.031 d | **14,516** | 15 m | 🔴 Open | Audit 2026-04-08 |
+| **T-132** | Cache search API results — `revalidate: 0` hits Sanity live on every identical search query | 1,000 | 0.5 | 0.9 | 0.031 d | **14,516** | 15 m | ✅ Done 2026-04-08 | Audit 2026-04-08 |
 | **T-101** | OG / social share preview shows favicon instead of article hero image | 5,000 | 2 | 0.9 | 1 d | **9,000** | 1 h | 🔴 Open | New |
 | **T-135** | Consolidate 4 Sanity clients (`sanity.ts`, `sanity.server.ts`, `sanity.admin.ts`, `sanityWrite.ts`) into one file | 5,000 | 0.5 | 0.8 | 0.25 d | **8,000** | 2 h | 🔴 Open | Audit 2026-04-08 |
 | **T-133** | Convert `Navigation` from `'use client'` to server component — only reads data, adds unnecessary JS bundle | 5,000 | 2 | 0.7 | 1 d | **7,000** | 8 h | 🔴 Open | Audit 2026-04-08 |
-| **T-134** | Fix `IncrementViews` race condition — view count lost if user navigates away before fetch completes | 5,000 | 0.25 | 0.7 | 0.125 d | **7,000** | 1 h | 🔴 Open | Audit 2026-04-08 |
+| **T-134** | Fix `IncrementViews` race condition — view count lost if user navigates away before fetch completes | 5,000 | 0.25 | 0.7 | 0.125 d | **7,000** | 1 h | ✅ N/A — IncrementViews deleted (T-130) | Audit 2026-04-08 |
 | **T-136** | Add 300ms debounce to Search component — fires `/api/search` on every keystroke | 1,000 | 1 | 0.8 | 0.125 d | **6,400** | 1 h | 🔴 Open | Audit 2026-04-08 |
 | **T-105** | Issue #22 — Backfill `spotlightImage` for 186 articles missing it | 5,000 | 1 | 0.8 | 1 d | **4,000** | 1 h | 🟡 Awaiting approval | `issues/issue-22-rfc.md` |
 | **T-138** | Tighten CSP headers — `unsafe-eval` and `unsafe-inline` currently allowed for scripts | 5,000 | 0.5 | 0.7 | 0.375 d | **4,667** | 3 h | 🔴 Open | Audit 2026-04-08 |
